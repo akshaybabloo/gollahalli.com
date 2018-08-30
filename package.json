@@ -1,0 +1,17 @@
+{
+  "name": "akshaybabloo",
+  "version": "1.0.0",
+  "description": "My website",
+  "main": "index.js",
+  "repository": "git@github.com:akshaybabloo/akshaybabloo.git",
+  "author": "Akshay Raj Gollahalli <akshay@gollahalli.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "",
+    "deploy": "",
+    "clean": ""
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}

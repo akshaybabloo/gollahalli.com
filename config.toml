@@ -1,0 +1,22 @@
+baseURL = "https://www.gollahalli.com/"
+languageCode = "en-us"
+title = "Akshay Raj Gollahalli"
+theme = "bnc"
+
+[outputFormats]
+  [outputFormats.searchindex]
+    mediaType= "application/json"
+    baseName= "searchindex"
+    isPlainText= true
+
+
+[outputs]
+  home= ["HTML","RSS", "searchindex"]
+
+[params]
+    amp = true
+    github = ""
+    linkedin = ""
+    twitter = ""
+    logoImage = "img/background.jpg"
+    

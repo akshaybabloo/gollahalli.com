@@ -1,0 +1,18 @@
+<nav class="uk-container uk-margin-top">
+    <div class="uk-comment">
+            <header class="uk-comment-header uk-grid-small uk-flex-middle" uk-grid>
+                <div class="uk-width-auto">
+                        <img class="uk-comment-avatar" src="{{ `img/gollahalli-logo.jpg` | relURL }}" width="200" alt="Logo">
+                    <!-- <img class="uk-comment-avatar" src="images/avatar.jpg" width="80" height="80" alt=""> -->
+                </div>
+                <div class="uk-width-expand">
+                    <h1 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">{{.Site.Title}}</a></h1>
+                    <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                            {{ range .Site.Menus.main }}
+                            <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+                            {{ end }}
+                    </ul>
+                </div>
+            </header>
+        </div>
+</nav>

@@ -1,0 +1,42 @@
+html {
+  font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif !important;
+}
+
+.gol-navbar-container:not(.uk-navbar-transparent) {
+  background: #0f0f0f;
+}
+.gol-text-large{
+  font-weight: 800 !important;
+  font-size: 84px;
+}
+
+.gol-padding-top-pageTitle {
+    padding-top: 150px !important;
+}
+
+.gol-padding-top {
+    padding-top: 100px !important;
+}
+
+.gol-text-weight-900{
+    font-weight: 900 !important;
+}
+
+.gol-text-weight-900 > a,
+.uk-link {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.gol-text-weight-900 > a:hover,
+.uk-link:hover {
+  color: black;
+  text-decoration: none;
+}
+
+.uk-description-list > dt {
+    font-size: 1.5rem !important;
+}
+
+
