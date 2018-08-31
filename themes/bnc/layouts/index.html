@@ -33,9 +33,18 @@
             </p>
         {{end}}
         <p>
-            <a href="{{ .Site.Params.github }}" class="uk-margin-small-right" uk-icon="icon: github; ratio: 1.5"></a>
-            <a href="{{ .Site.Params.linkedin }}" class="uk-margin-small-right" uk-icon="icon: linkedin; ratio: 1.5"></a>
-            <a href="{{ .Site.Params.twitter }}" class="uk-margin-small-right" uk-icon="icon: twitter; ratio: 1.5"></a>
+            {{ if .Site.Params.github }}
+                <a href="{{ .Site.Params.github }}" class="uk-margin-small-right" uk-icon="icon: github; ratio: 1.5"></a>
+            {{end}}
+            {{ if .Site.Params.linkedin }}
+                <a href="{{ .Site.Params.linkedin }}" class="uk-margin-small-right" uk-icon="icon: linkedin; ratio: 1.5"></a>
+            {{end}}
+            {{ if .Site.Params.twitter }}
+                <a href="{{ .Site.Params.twitter }}" class="uk-margin-small-right" uk-icon="icon: twitter; ratio: 1.5"></a>
+            {{end}}
+            {{ if .Site.Params.email }}
+                <a href="mailto:{{ .Site.Params.email }}" class="uk-margin-small-right" uk-icon="icon: mail; ratio: 1.5"></a>
+            {{end}}
         </p>
     </div>
 </div>

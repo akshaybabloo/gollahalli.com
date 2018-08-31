@@ -15,9 +15,10 @@ theme = "bnc"
 
 [params]
     amp = true
-    github = ""
-    linkedin = ""
-    twitter = ""
+    github = "https://github.com/akshybabloo"
+    linkedin = "https://linkedin.com/in/gollahalli"
+    twitter = "http://twitter.com/akshaybabloo"
+    email = "akshay@gollahalli.com"
     pgp = "3570 2F7C E0CF 2579 BF7D 05DD A603 9E24 179E E13D"
     logoImage = "img/logo.svg"
     intro = """
