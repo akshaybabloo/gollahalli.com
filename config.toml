@@ -18,5 +18,9 @@ theme = "bnc"
     github = ""
     linkedin = ""
     twitter = ""
-    logoImage = "img/background.jpg"
+    pgp = "3570 2F7C E0CF 2579 BF7D 05DD A603 9E24 179E E13D"
+    logoImage = "img/logo.svg"
+    intro = """
+    
+    """
     
