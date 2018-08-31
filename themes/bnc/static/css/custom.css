@@ -1,5 +1,5 @@
 html {
-  font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif !important;
+    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif !important;
 }
 
 body {
@@ -7,16 +7,16 @@ body {
     background-color: #1d1f21 !important;
 }
 
-.gol-subnav a{
+.gol-subnav a {
     color: #A36441 !important;
 }
 
 /* Hover + Focus */
 .gol-subnav a:hover,
 .gol-subnav a:focus {
-  color: #997953 !important;;
-  text-decoration: underline;
-  outline: none;
+    color: #997953 !important;
+    text-decoration: underline;
+    outline: none;
 }
 
 .gol-subnav > ::before {
@@ -25,4 +25,47 @@ body {
 
 .uk-light {
     color: #c9cacc !important;
+}
+
+.uk-section-default {
+    background-color: #1d1f21 !important;
+}
+
+.uk-card-default {
+    background-color: #1d1f21 !important;
+}
+
+.uk-link-text {
+    color: #A36441 !important;
+}
+
+.uk-link-text:hover,
+.uk-link-text:focus {
+    color: #997953 !important;
+}
+
+.uk-label {
+    background-color: #997953 !important;
+    font-size: x-small;
+}
+
+.uk-label a {
+    color: #c9cacc !important;
+}
+
+.uk-label a:hover,
+.uk-label a:focus {
+    color: #c9cacc !important;
+}
+
+.gol-links a {
+    color: #c9cacc !important;
+    text-decoration: none;
+    border-bottom: 2px solid #c9cacc !important;
+}
+
+.gol-links a:hover,
+.gol-links a:focus {
+    text-decoration: none;
+    border-bottom: 3px solid #A36441 !important;
 }
