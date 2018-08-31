@@ -1,18 +1,53 @@
-<nav class="uk-container uk-margin-top">
-    <div class="uk-comment">
-            <header class="uk-comment-header uk-grid-small uk-flex-middle" uk-grid>
-                <div class="uk-width-auto">
-                        <img class="uk-comment-avatar" src="{{ `img/gollahalli-logo.jpg` | relURL }}" width="200" alt="Logo">
-                    <!-- <img class="uk-comment-avatar" src="images/avatar.jpg" width="80" height="80" alt=""> -->
+<nav class="uk-navbar-container uk-navbar-transparent">
+    <div class="uk-container">
+        <div class="uk-navbar">
+            <div class="uk-navbar-center">
+
+                <ul class="uk-navbar-nav uk-visible@m">
+                    <li>
+                        <a href="{{ .Site.BaseURL }}" class="uk-link-text">
+                            <span class="uk-icon uk-margin-small-right" uk-icon="icon: home"></span>
+                            Home
+                        </a>
+                    </li>
+                    {{ range .Site.Menus.main }}
+                    <li><a href="{{ .URL }}" class="uk-link-text">{{ .Name }}</a></li>
+                    {{ end }}
+                </ul>
+
+            </div>
+            <div class="uk-navbar-right">
+                <div>
+                    <a class="uk-navbar-toggle uk-link-text" uk-search-icon href="#"></a>
+                    <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
+                        <form class="uk-search uk-search-navbar uk-width-1-1">
+                            <input class="uk-search-input" type="search" placeholder="Search..." autofocus>
+                        </form>
+                    </div>
                 </div>
-                <div class="uk-width-expand">
-                    <h1 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">{{.Site.Title}}</a></h1>
-                    <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
-                            {{ range .Site.Menus.main }}
-                            <li><a href="{{ .URL }}">{{ .Name }}</a></li>
-                            {{ end }}
-                    </ul>
-                </div>
-            </header>
+                <a class="uk-navbar-toggle uk-link-text uk-hidden@m" href="#offcanvas" uk-navbar-toggle-icon uk-toggle></a>
+            </div>
+
         </div>
+    </div>
 </nav>
+
+<div id="offcanvas" uk-offcanvas="flip: true; overlay: true">
+    <div class="uk-offcanvas-bar">
+
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+        <ul class="uk-nav uk-nav-default">
+            <li>
+                <a href="{{ .Site.BaseURL }}" class="uk-link-text">
+                    <span class="uk-icon uk-margin-small-right" uk-icon="icon: home"></span>
+                    Home
+                </a>
+            </li>
+            {{ range .Site.Menus.main }}
+            <li><a href="{{ .URL }}" class="uk-link-text">{{ .Name }}</a></li>
+            {{ end }}
+        </ul>
+
+    </div>
+</div>
