@@ -1,19 +1,75 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
+
     <link rel="shortcut icon" href="{{`favicon.ico` | relURL}}">
     <link rel="stylesheet" href="{{`css/uikit.css` | relURL}}">
     <link rel="stylesheet" href="{{ `css/custom.css` | relURL}}">
     <title>{{.Site.Title}}</title>
 </head>
 <body>
-        {{ partial "nav.html" . }}
+<div class="uk-height-viewport uk-background-cover uk-background-primary uk-overflow-hidden uk-light uk-flex uk-flex-top"
+    style="background: #1d1f21">
+    <div class="uk-width-1-2@xl uk-text-center uk-margin-auto uk-margin-auto-vertical">
+        <h1 hidden>{{.Site.Title}}</h1>
+        <img src="{{ .Site.Params.logoImage | relURL }}" alt="Akshay Raj Gollahalli logo" uk-svg width="400" height="100">
+        <ul class="uk-subnav uk-subnav-divider uk-flex-center uk-visible@m gol-subnav">
+            {{ range .Site.Menus.main }}
+                <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+            {{ end }}
+        </ul>
+        {{ if .Site.Params.intro }}
+            <p class="uk-text-justify">
+                {{.Site.Params.intro}}
+            </p>
+        {{end}}
+        {{ if .Site.Params.pgp }}
+            <p>
+                PGP: {{ .Site.Params.pgp }}
+            </p>
+        {{end}}
+        <p>
+            <a href="{{ .Site.Params.github }}" class="uk-margin-small-right" uk-icon="icon: github; ratio: 1.5"></a>
+            <a href="{{ .Site.Params.linkedin }}" class="uk-margin-small-right" uk-icon="icon: linkedin; ratio: 1.5"></a>
+            <a href="{{ .Site.Params.twitter }}" class="uk-margin-small-right" uk-icon="icon: twitter; ratio: 1.5"></a>
+        </p>
+    </div>
+</div>
 
-        {{ partial "scripts.html" . }}
+
+<!--search console-->
+<div class="uk-position-medium uk-position-top-right uk-visible@m">
+    <a class="uk-search-toggle" uk-search-icon href="#"></a>
+    <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
+        <form class="uk-search uk-search-navbar uk-width-1-1">
+            <input class="uk-search-input" type="search" placeholder="Search..." autofocus>
+        </form>
+    </div>
+</div>
+<!--end search console-->
+
+<!--menu toggle-->
+<a class="uk-position-medium uk-position-top-right uk-hidden@m" href="#offcanvas" uk-navbar-toggle-icon uk-toggle></a>
+<div id="offcanvas" uk-offcanvas="flip: true; overlay: true">
+    <div class="uk-offcanvas-bar">
+
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+        <ul class="uk-nav uk-nav-default">
+            {{ range .Site.Menus.main }}
+            <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+            {{ end }}
+        </ul>
+
+    </div>
+</div>
+<!--end menu toggle-->
+
+{{ partial "scripts.html" . }}
 </body>
+
 </html>
