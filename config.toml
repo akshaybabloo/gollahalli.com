@@ -3,6 +3,9 @@ languageCode = "en-us"
 title = "Akshay Raj Gollahalli"
 theme = "bnc"
 
+googleAnalytics = "UA-74123356-1" # Optional
+disqusShortname = "gollahalli-com" # Optional
+
 [outputFormats]
   [outputFormats.searchindex]
     mediaType= "application/json"
@@ -15,12 +18,12 @@ theme = "bnc"
 
 [params]
     amp = true
-    github = "https://github.com/akshybabloo"
-    linkedin = "https://linkedin.com/in/gollahalli"
-    twitter = "http://twitter.com/akshaybabloo"
-    email = "akshay@gollahalli.com"
-    pgp = "3570 2F7C E0CF 2579 BF7D 05DD A603 9E24 179E E13D"
-    logoImage = "img/logo.svg"
+    github = "https://github.com/akshybabloo" # Optional
+    linkedin = "https://linkedin.com/in/gollahalli" # Optional
+    twitter = "http://twitter.com/akshaybabloo" # Optional
+    email = "akshay@gollahalli.com" # Optional
+    pgp = "3570 2F7C E0CF 2579 BF7D 05DD A603 9E24 179E E13D" # Optional
+    logoImage = "img/logo.svg" # Optional
     intro = """
     
     """
