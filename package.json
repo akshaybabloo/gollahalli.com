@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "build": "hugo -v --minify --gc",
-    "deploy": "",
+    "deploy": "firebase deploy",
     "clean": "",
     "serve": "hugo serve -D --disableFastRender -v "
   },
