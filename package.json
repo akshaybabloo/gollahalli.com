@@ -7,9 +7,10 @@
   "author": "Akshay Raj Gollahalli <akshay@gollahalli.com>",
   "license": "MIT",
   "scripts": {
-    "build": "",
+    "build": "hugo build --minify --gc",
     "deploy": "",
-    "clean": ""
+    "clean": "",
+    "serve": "hugo serve -D --disableFastRender -v "
   },
   "devDependencies": {
     "gulp": "^4.0.0"
