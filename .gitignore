@@ -6,3 +6,5 @@ public/
 \.idea/
 
 node_modules/
+
+*.log
