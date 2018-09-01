@@ -1,7 +1,7 @@
 ---
 title: "Part 1.2 Car Nd Masking and Colouring a Region of the Image"
 date: 2018-07-05T12:55:25+12:00
-draft: true
+draft: false
 categories: ["Tutorial"]
 tags: ["Python-3", "Machine-Learning", "Computer-Vision"]
 description: ""

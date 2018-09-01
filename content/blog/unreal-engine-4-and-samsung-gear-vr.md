@@ -1,7 +1,7 @@
 ---
 title: "Unreal Engine 4 and Samsung Gear VR"
-date: 2018-07-05T11:20:47+12:00
-draft: true
+date: 2017-07-05T11:20:47+12:00
+draft: false
 categories: ["Tutorial"]
 tags: ["UnrealEngine4", "VR", "Android"]
 description: "Deploying games from Unreal Engine 4 to Samsung Gear VR."
