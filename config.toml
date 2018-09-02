@@ -23,7 +23,8 @@ disqusShortname = "gollahalli-com" # Optional
     twitter = "http://twitter.com/akshaybabloo" # Optional
     email = "akshay@gollahalli.com" # Optional
     pgp = "3570 2F7C E0CF 2579 BF7D 05DD A603 9E24 179E E13D" # Optional
-    logoImage = "img/logo.svg" # Optional
+    logoSVG = "img/logo.svg" # # Use logoSVG or logo. Optional
+    logo = "" # Use logoSVG or logo. Optional
     intro = """
     
     """

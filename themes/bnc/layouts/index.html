@@ -15,8 +15,13 @@
 <div class="uk-height-viewport uk-background-cover uk-background-primary uk-overflow-hidden uk-light uk-flex uk-flex-top"
     style="background: #1d1f21">
     <div class="uk-width-1-2@xl uk-text-center uk-margin-auto uk-margin-auto-vertical">
-        <h1 hidden>{{.Site.Title}}</h1>
-        <img src="{{ .Site.Params.logoImage | relURL }}" alt="Akshay Raj Gollahalli logo" uk-svg width="400" height="100">
+        <h1 hidden>{{.Title}}</h1>
+        {{ if .Site.Params.logoSVG }}
+        <img src="{{ .Site.Params.logoSVG | relURL }}" alt="Akshay Raj Gollahalli logo" uk-svg width="400" height="100">
+        {{ else }}
+        <img src="{{ .Site.Params.logoSVG | relURL }}" alt="Akshay Raj Gollahalli logo" width="400" height="100">
+        {{ end }}
+
         <ul class="uk-subnav uk-subnav-divider uk-flex-center uk-visible@m gol-subnav">
             {{ range .Site.Menus.main }}
                 <li><a href="{{ .URL }}">{{ .Name }}</a></li>
