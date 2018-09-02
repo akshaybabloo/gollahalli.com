@@ -9,7 +9,11 @@
     <link rel="shortcut icon" href="{{`favicon.ico` | relURL}}">
     <link rel="stylesheet" href="{{`css/uikit.css` | relURL}}">
     <link rel="stylesheet" href="{{ `css/custom.css` | relURL}}">
-    <title>{{.Site.Title}}</title>
+    <title>{{.Site.Title}}
+        {{ if ne .Site.Title .Title }}
+        - {{.Title}}
+        {{ end }}
+    </title>
 </head>
 <body>
 <div class="uk-height-viewport uk-background-cover uk-background-primary uk-overflow-hidden uk-light uk-flex uk-flex-top"
