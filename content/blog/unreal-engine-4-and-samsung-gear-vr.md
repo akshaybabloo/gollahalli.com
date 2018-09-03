@@ -124,7 +124,7 @@ In this tutorial, I will be going to develop a simple environment where the firs
 
 Make sure you have your phone connected to the computer, and the `USB debugging` is switched on. Open `Terminal` and type in `adb devices`, this will print an alphanumeric/numeric key something like this.
 
-```
+```md
 List of devices attached
 1234567891011123    device
 ```
@@ -143,7 +143,7 @@ Goto `/Users/Shared/UnrealEngine/4.10/Engine/Extras/AndroidWorks/Mac/`. Open `An
 
 This is what I have installed:
 
-```
+```md
 The following components are installed:
 Android SDK
     +Android SDK Base 24.2.0

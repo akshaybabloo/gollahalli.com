@@ -15,7 +15,7 @@ I don't want others to have the same problem. Follow these steps to setup up you
 
 Make sure you have your username, password, proxy IP and WiFi SSID. For the sake of this tutorial let's consider a username, password, proxy IP and WiFi SSID.
 
-```
+```md
 Username: user
 Password: 123456
 IP: 123.456.789.012:1234
@@ -28,7 +28,7 @@ Ask your company for a proxy address (It's usually an IP address). Once you have
 
 - Open Terminal, and type sudo nano ~/.bashrc. Go to the end of the nano editor and type the following
 
-```
+```md
 export HTTP_PROXY="http://user:123456@123.456.789.012:1234"
 export HTTPS_PROXY="http://user:123456@123.456.789.012:1234"
 ```
@@ -36,7 +36,7 @@ export HTTPS_PROXY="http://user:123456@123.456.789.012:1234"
 - Save it by doing <kbd class="uk-label">ctrl</kbd>+<kbd class="uk-label">X</kbd>, return and return.
 - Next go to sudo nano /etc/apt/apt.conf.d/10proxy, in that type in the following:
 
-```
+```md
 Acquire::http:Proxy "http://user:123456@123.456.789.012:1234"
 Acquire::https:Proxy "https://user:123456@123.456.789.012:1234"
 ```
@@ -47,7 +47,7 @@ Acquire::https:Proxy "https://user:123456@123.456.789.012:1234"
 
 Type in the following
 
-```
+```md
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
@@ -55,7 +55,7 @@ If the file is already in that location you would see some text in it, if not yo
 
 In that type int following:
 
-```
+```md
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 

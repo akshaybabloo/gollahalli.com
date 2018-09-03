@@ -72,7 +72,7 @@ Most popular Computer Vision library is the OpenCV, written in C++ it also has a
 
 In this example, we will use [matplotlib](http://matplotlib.org/) and [NumPy](http://www.numpy.org/) to get the bright colours in an image.
 
-{{< highlight python >}}
+```python
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
@@ -110,7 +110,7 @@ plt.title("Gradient image")
 
 plt.show()
 
-{{< /highlight >}}
+```
 
 Output for the example Python code.
 

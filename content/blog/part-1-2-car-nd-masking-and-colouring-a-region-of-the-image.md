@@ -41,20 +41,21 @@ A polynomial equation looks something like this (lets call it equation 1):
     <mn>1</mn>
 </mrow>
 </math>
+
 ## 2 Let's Code
 
 Let's import all the necessary libraries
 
-{{< highlight python >}}
+```python
     import matplotlib.pyplot as plt
     import matplotlib.image as mpimg
     import numpy as np
     import sys
-{{< /highlight >}}
+```
 
 Now, let load in the image and get its shape and also while we are at it make a copy of the image. lets call the copies as `color_select` & `line_image`
 
-{{< highlight python >}}
+```python
     try:
         image = mpimg.imread('test.jpg')
     except FileNotFoundError as e:
@@ -66,11 +67,11 @@ Now, let load in the image and get its shape and also while we are at it make a 
     xsize = image.shape[1]
     color_select = np.copy(image)
     line_image = np.copy(image)
-{{< /highlight >}}
+```
 
 Let's initialize threshold values and a triangle coordinates.
 
-{{< highlight python >}}
+```python
     red_threshold = 200
     green_threshold = 200
     blue_threshold = 200
@@ -80,50 +81,50 @@ Let's initialize threshold values and a triangle coordinates.
     left_bottom = [100, 525]  # [0, 539]
     right_bottom = [850, 550]  # [900, 539]
     apex = [460, 310]  # [475, 320]
-{{< /highlight >}}
+```
 
 Let's get the threshold color image by taking RBG arrays of the image and getting all the values less then the predefined threshold values.
 
-{{< highlight python >}}
+```python
     color_thresholds = (image[:, :, 0] < rgb_threshold[0]) | (image[:, :, 1] < rgb_threshold[1]) | (image[:, :, 2] < rgb_threshold[2])
-{{< /highlight >}}
+```
 
 Using Numpy's polyfit (more on that [here][6]) at `1` degree
 
-{{< highlight python >}}
+```python
     fit_left = np.polyfit((left_bottom[0], apex[0]), (left_bottom[1], apex[1]), 1)
     fit_right = np.polyfit((right_bottom[0], apex[0]), (right_bottom[1], apex[1]), 1)
     fit_bottom = np.polyfit((left_bottom[0], right_bottom[0]), (left_bottom[1], right_bottom[1]), 1)
-{{< /highlight >}}
+```
 
 Using Numpy's Meshgrid (more on that [here][7]), let's create a mesh
 
-{{< highlight python >}}
+```python
     xx, yy = np.meshgrid(np.arange(0, xsize), np.arange(0, ysize))
-{{< /highlight >}}
+```
 
 Getting the regional threshold is done by doing
 
-{{< highlight python >}}
+```python
     region_thresholds = (yy > (xx * fit_left[0] + fit_left[1])) & (yy > (xx * fit_right[0] + fit_right[1])) & (
     yy < (xx * fit_bottom[0] + fit_bottom[1]))
-{{< /highlight >}}
+```
 
 Before plotting the images, the final thing to do is
 
 - Masking the threshold region based on the triangle
 - And then masking the original image with the colored lines.
 
-{{< highlight python >}}
+```python
     # Mask color selection
     color_select[color_thresholds | ~region_thresholds] = [0, 0, 0]
     # Find where image is both colored right and in the region
     line_image[~color_thresholds & region_thresholds] = [255, 0, 0]
-{{< /highlight >}}
+```
 
 And finally, plot them
 
-{{< highlight python >}}
+```python
     # Show figures
     f = plt.figure()
     x = [left_bottom[0], right_bottom[0], apex[0], left_bottom[0]]
@@ -151,11 +152,11 @@ And finally, plot them
     plt.title("Final: Original image with masked color")
 
     plt.show()
-{{< /highlight >}}
+```
 
 ### 2.1 Complete Code
 
-{{< highlight python >}}
+```python
     import matplotlib.pyplot as plt
     import matplotlib.image as mpimg
     import numpy as np
@@ -228,7 +229,7 @@ And finally, plot them
     plt.title("Final: Original image with masked color")
 
     plt.show()
-{{< /highlight >}}
+```
 
 ### 2.2 Output
 
