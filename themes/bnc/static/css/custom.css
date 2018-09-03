@@ -90,3 +90,7 @@ h2 {
 h1 {
     color: #997953 !important;
 }
+
+blockquote {
+    color: gray !important;
+}
