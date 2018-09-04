@@ -1,0 +1,10 @@
+---
+title: "SML: Spikes Markup Language for Spiking Neural Network"
+date: 2018-09-04T11:56:53+12:00
+draft: true
+categories: ["Software"]
+tags: ["XML"]
+description: "Spikes Markup Language for Spiking Neural Network framework - Spikes."
+relImage: ""
+sitemapImage: []
+---
