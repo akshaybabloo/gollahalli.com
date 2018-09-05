@@ -1,5 +1,22 @@
 {{ define "main" }}
 
-{{.Content}}
+<div class="uk-section uk-section-default">
+    <div class="uk-container uk-container-xsmall uk-text-justify">
+          {{ range $taxonomyname, $taxonomy := .Site.Taxonomies }}
+            {{ if eq "categories" $taxonomyname }}
+              {{ range $key, $value := $taxonomy }}
+                <h2>{{ $key | title }}</h2>
+                {{ range $value.Pages }}
+                    <ul class="uk-list gol-links">
+                        <li><a href="{{.Permalink}}">{{ .Title }}</a></li>
+                    </ul>
+                {{ end }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
 
-{{ end }}
+    </div>
+</div>
+
+
+{{end}}
