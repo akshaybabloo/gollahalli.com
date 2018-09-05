@@ -18,7 +18,6 @@ description: "My publications"
 
 2017 - Ravi V. Sengupta N. **Gollahalli A. R.** Khansama, R. and N. Kasabov. A combined adaptive neural network and nonlinear model predictive control for multirate networked industrial process control. IEEE Transactions on Neural Networks and Learning Systems, 2017.
 
-
 ## Poster
 
 2015 - **Gollahalli, A. R.**, & Kasabov, N. (2015). EEGRotor: A virtual Quad-Copter based on Brain Computer Interface. presented at the meeting of the 13th International Conference on Neuro-Computing and Evolving Intelligence 2015 (NCEI ‘15) Auckland.
