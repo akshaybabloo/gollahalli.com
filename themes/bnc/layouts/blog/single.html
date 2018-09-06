@@ -10,6 +10,12 @@
             {{.Content}}
 
         </article>
+
+        <article class="uk-comment gol-links">
+            <div class="uk-comment-body">
+                {{ template "_internal/disqus.html" . }}
+            </div>
+        </article>
     </div>
 </div>
 {{end}}
