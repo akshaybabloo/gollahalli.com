@@ -2,18 +2,17 @@
 
 <div class="uk-section uk-section-default">
     <div class="uk-container uk-container-xsmall uk-text-justify">
-          {{ range $taxonomyname, $taxonomy := .Site.Taxonomies }}
-            {{ if eq "categories" $taxonomyname }}
-              {{ range $key, $value := $taxonomy }}
-                <h2>{{ $key | title }}</h2>
-                {{ range $value.Pages }}
-                    <ul class="uk-list gol-links">
-                        <li><a href="{{.Permalink}}">{{ .Title }}</a></li>
-                    </ul>
-                {{ end }}
-              {{ end }}
+
+        {{ range .Data.Pages.GroupByParam "projectcategory" }}
+        <h2>{{.Key}}</h2>
+        <ul class="uk-list gol-links">
+            {{ range .Pages }}
+            <li>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+            </li>
             {{ end }}
-          {{ end }}
+        </ul>
+        {{ end }}
 
     </div>
 </div>
