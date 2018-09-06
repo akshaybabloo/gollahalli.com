@@ -96,3 +96,7 @@ h1 {
 blockquote {
     color: gray !important;
 }
+
+time{
+    color: gray;
+}
