@@ -10,6 +10,8 @@ body {
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: #A36441 !important;
     opacity: 1; /* Firefox */
+    text-transform: uppercase;
+    font-size: 0.875rem;
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
