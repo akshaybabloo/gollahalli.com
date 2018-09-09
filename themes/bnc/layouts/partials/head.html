@@ -3,7 +3,11 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-<title>{{.Title}} - {{.Site.Title}}</title>
+<title>{{.Site.Title}}
+        {{ if ne .Site.Title .Title }}
+        - {{.Title}}
+        {{ end }}
+    </title>
 {{- if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production") -}}
 <meta name="robots" content="index, follow"> {{- else -}}
 <meta name="robots" content="noindex, nofollow"> {{- end -}}
