@@ -1,0 +1,44 @@
+{
+  "Experience": [
+    {
+      "title": "Jr. Systems Engineer",
+      "company": "Cheminnova Group of Companies.",
+      "where": "Hyderabad, India",
+      "from": "May, 2012",
+      "to": "February, 2013",
+      "current": false
+    },
+    {
+      "title": "Research Assistant",
+      "company": "Knowledge Engineering and Discovery Research Institute (KEDRI), AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "July, 2015",
+      "to": "December, 2015",
+      "current": false
+    },
+    {
+      "title": "Technical Support",
+      "company": "Knowledge Engineering and Discovery Research Institute (KEDRI), AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "2015",
+      "to": "Present",
+      "current": true
+    },
+    {
+      "title": "Research Assistant",
+      "company": "Knowledge Engineering and Discovery Research Institute (KEDRI), AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "April, 2016",
+      "to": "October, 2016",
+      "current": false
+    },
+    {
+      "title": "Teaching Assistant",
+      "company": "Computer and Mathematical Sciences , AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "July, 2016",
+      "to": "November, 2016",
+      "current": false
+    }
+  ]
+}

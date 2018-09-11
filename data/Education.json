@@ -1,0 +1,32 @@
+{
+  "Education": [
+    {
+      "title": "Bachelor of Technology (B.Tech)",
+      "current": false,
+      "where": "Jawaharlal Nehru Technological University, Hyderabad",
+      "from": 2007,
+      "to": 2011
+    },
+    {
+      "title": "Postgraduate Diploma in Computer and Information Sciences (PgDipCIS)",
+      "current": false,
+      "where": "Auckland University of Technology",
+      "from": 2013,
+      "to": 2014
+    },
+    {
+      "title": "Master of Computer and Information Sciences (MCIS) (First Class Honors)",
+      "current": false,
+      "where": "Auckland University of Technology",
+      "from": 2014,
+      "to": 2015
+    },
+    {
+      "title": "Doctor of Philosophy (PhD)",
+      "current": true,
+      "where": "Auckland University of Technology",
+      "from": 2016,
+      "to": "Present"
+    }
+  ]
+}
