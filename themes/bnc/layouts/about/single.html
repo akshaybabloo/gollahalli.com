@@ -7,7 +7,17 @@
 
         {{.Content}}
 
+        {{ range $k, $i := .Site.Data.Experience }}
+            <h2>{{$k}}</h2>
+            {{ partial "data.html" . }}
+        {{ end }}
+
+        {{ range $k, $i := .Site.Data.Education }}
+            <h2>{{$k}}</h2>
+            {{ partial "data.html" . }}
+        {{ end }}
+
     </div>
 </div>
-dfvdsfbsdfbd
+
 {{ end }}
