@@ -3,7 +3,7 @@
     <h1 hidden>{{.Title}}</h1>
 
         <div class="uk-section uk-section-default">
-            <div class="uk-container uk-container-xsmall uk-text-justify">
+            <div class="uk-container uk-container-xsmall uk-text-justify" uk-height-viewport="offset-bottom: 32">
 
                 {{ range .Pages.GroupByPublishDate "2006" }}
                 <h2>{{.Key}}</h2>
