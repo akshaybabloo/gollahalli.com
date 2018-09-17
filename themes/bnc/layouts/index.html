@@ -65,9 +65,13 @@
 <div class="uk-position-medium uk-position-top-right uk-visible@m">
     <a class="uk-search-toggle" uk-search-icon href="#"></a>
     <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
-        <form class="uk-search uk-search-navbar uk-width-1-1">
-            <input class="uk-search-input" type="search" placeholder="Search..." autofocus>
-        </form>
+        <div class="uk-search uk-search-navbar uk-width-1-1">
+            <input class="uk-search-input" type="search" id="search-input">
+            <div uk-dropdown="mode: click">
+                <div id="hits"></div> <br/>
+                <img class="uk-margin-remove uk-align-right uk-preserve" src="{{`img/algolia-powered-by-8762ce8b.svg` | relURL}}" uk-svg alt="Algolia logo">
+            </div>
+        </div>
     </div>
 </div>
 <!--end search console-->
@@ -83,11 +87,25 @@
             {{ range .Site.Menus.main }}
             <li><a href="{{ .URL }}">{{ .Name }}</a></li>
             {{ end }}
+            <li><a class="uk-navbar-toggle" href="#modal-full" uk-search-icon uk-toggle></a></li>
         </ul>
 
     </div>
 </div>
 <!--end menu toggle-->
+
+<!--search model-->
+<div id="modal-full" class="uk-modal-full uk-modal" uk-modal>
+    <div class="uk-modal-dialog uk-flex uk-flex-center uk-flex-middle" uk-height-viewport>
+        <button class="uk-modal-close-full" type="button" uk-close></button>
+        <div class="uk-search uk-search-large">
+            <input class="uk-search-input uk-text-center" type="search" id="search-input-sidenav" placeholder="Search..." autofocus>
+            <div id="hits-sidenav"></div> <br/>
+            <img class="uk-margin-remove uk-align-right uk-preserve" src="{{`img/algolia-powered-by-8762ce8b.svg` | relURL}}" uk-svg alt="Algolia logo">
+        </div>
+    </div>
+</div>
+<!--end search model-->
 
 {{ partial "scripts.html" . }}
 </body>
