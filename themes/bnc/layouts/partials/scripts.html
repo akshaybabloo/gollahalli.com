@@ -1,5 +1,11 @@
-<script src="{{ `js/uikit.js` | relURL}}"></script>
-<script src="{{ `js/uikit-icons.js` | relURL}}"></script>
+{{ if eq (getenv "HUGO_ENV") "production" }}
+    <script src="{{ `js/uikit.min.js` | relURL}}"></script>
+    <script src="{{ `js/uikit-icons.min.js` | relURL}}"></script>
+{{else}}
+    <script src="{{ `js/uikit.js` | relURL}}"></script>
+    <script src="{{ `js/uikit-icons.js` | relURL}}"></script>
+{{end}}
+
 <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.2"></script>
 <script>
     const search = instantsearch({
