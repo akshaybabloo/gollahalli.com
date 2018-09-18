@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory = $true)][string]$build,
+    [string]$build,
     [bool]$deploy,
     [bool]$clean
 )
@@ -26,7 +26,7 @@ if ($build -eq "production") {
     BuildHugo
 }
 
-if ($build -eq "production" -and $deploy ) {
+if ($deploy) {
     BuildHugo
 
     Write-Host "Deploying website..." -ForegroundColor Magenta
