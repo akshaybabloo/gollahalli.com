@@ -7,8 +7,8 @@
   "author": "Akshay Raj Gollahalli <akshay@gollahalli.com>",
   "license": "MIT",
   "scripts": {
-    "build": "hugo -v --minify --gc",
-    "deploy": "firebase deploy",
+    "build": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./script.ps1 -build production",
+    "deploy": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./script.ps1 -deploy 1",
     "clean": "",
     "serve": "hugo serve -D --disableFastRender -v "
   },
