@@ -21,7 +21,7 @@ enableRobotsTXT = true
 [params]
     amp = true
     year = 2018
-    github = "https://github.com/akshybabloo" # Optional
+    github = "https://github.com/akshaybabloo" # Optional
     linkedin = "https://linkedin.com/in/gollahalli" # Optional
     twitter = "http://twitter.com/akshaybabloo" # Optional
     email = "akshay@gollahalli.com" # Optional
