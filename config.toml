@@ -6,6 +6,7 @@ theme = "bnc"
 googleAnalytics = "UA-74123356-1" # Optional
 disqusShortname = "gollahalli-com" # Optional
 pygmentsCodeFences = true
+enableRobotsTXT = true
 
 [outputFormats]
   [outputFormats.searchindex]
