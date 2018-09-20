@@ -13,6 +13,5 @@
     "serve": "hugo serve -D --disableFastRender -v "
   },
   "devDependencies": {
-    "gulp": "^4.0.0"
   }
 }
