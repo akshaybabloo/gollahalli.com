@@ -31,6 +31,9 @@
             </p>
         {{end}}
         <p>
+            {{ .Content }}
+        </p>
+        <p>
             {{ if .Site.Params.github }}
                 <a href="{{ .Site.Params.github }}" class="uk-margin-small-right" uk-icon="icon: github; ratio: 1.5"></a>
             {{end}}
