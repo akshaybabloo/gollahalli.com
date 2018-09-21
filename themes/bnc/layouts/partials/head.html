@@ -9,6 +9,14 @@
 
 <link rel="shortcut icon" href="{{`favicon.ico` | relURL}}">
 
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{ template "_internal/google_analytics_async.html" . }}
+{{ template "_internal/google_news.html" . }}
+{{ template "_internal/opengraph.html" . }}
+{{ template "_internal/schema.html" . }}
+{{ template "_internal/twitter_cards.html" . }}
+
 <style>
 /* vietnamese */
 @font-face {
@@ -71,16 +79,3 @@
         {{ .Content | safeCSS }}
     </style>
 {{end}}
-
-<link rel="canonical" href="{{ .Permalink }}">
-
-<!-- {{ partial "seo/open_graph.html" . }}
-{{ partial "seo/schema.html" . }}
-{{ partial "seo/twitter_cards.html" . }}
-{{ partial "seo/google_news.html" . }} -->
-
-{{ template "_internal/google_analytics_async.html" . }}
-{{ template "_internal/google_news.html" . }}
-{{ template "_internal/opengraph.html" . }}
-{{ template "_internal/schema.html" . }}
-{{ template "_internal/twitter_cards.html" . }}
