@@ -10,7 +10,7 @@
     "build": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./script.ps1 -build production",
     "deploy": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./script.ps1 -deploy 1",
     "clean": "",
-    "serve": "hugo serve -D --disableFastRender -v "
+    "serve": "hugo serve -D -v "
   },
   "devDependencies": {
   }
