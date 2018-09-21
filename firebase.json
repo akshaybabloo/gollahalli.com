@@ -2,6 +2,7 @@
   "hosting": {
     "public": "public",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "cleanUrls": true,
     "headers": [
       {
         "source": "**/*.html",
@@ -13,7 +14,7 @@
         ]
       },
       {
-        "source": "**/*.@(jpg|jpeg|gif|png|ico|svg)",
+        "source": "**/*.@(jpg|jpeg|gif|png|ico|svg|JPG)",
         "headers": [
           {
             "key": "Cache-Control",
