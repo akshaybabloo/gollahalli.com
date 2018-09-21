@@ -5,6 +5,6 @@ draft: false
 categories: []
 tags: []
 description: "Akshay Raj Gollahalli is a Computer Science researcher currently doing his Ph.D. This website showcases his work."
-relImage: ""
 sitemapImage: []
+images: ["/img/akshay.jpg"]
 ---
