@@ -1,6 +1,7 @@
 $primary: #A36441;
 $secondary: #997953;
 $background-color: #1d1f21;
+$background-color-light: #272a2c;
 $text-color: #c9cacc;
 $sub-text-color: gray;
 
@@ -54,7 +55,7 @@ body {
 }
 
 .uk-card-default {
-    background-color: $background-color !important;
+    background-color: $background-color-light !important;
 }
 
 .uk-link-text {
