@@ -5,6 +5,5 @@ draft: true
 categories: []
 tags: []
 description: ""
-relImage: ""
-sitemapImage: []
+images: []
 ---
