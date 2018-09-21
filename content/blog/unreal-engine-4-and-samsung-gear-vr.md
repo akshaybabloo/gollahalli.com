@@ -1,6 +1,6 @@
 ---
 title: "Unreal Engine 4 and Samsung Gear VR"
-date: 2017-07-05T11:20:47+12:00
+date: 2016-09-05T11:20:47+12:00
 draft: false
 categories: ["Tutorial"]
 tags: ["UnrealEngine4", "VR", "Android"]
@@ -47,36 +47,36 @@ In this tutorial, I will be going to develop a simple environment where the firs
 
 ### 2.1 General
 
-1.  A 2015 Samsung Galaxy phone i.e. S6, S6 edge, S6 edge+ or Note 5.
-2.  Samsung Gear VR.
-3.  Experience with Unreal Engine 4. If you don't have any previous experience, you can go through my tutorial on Unreal Engine 4 [here](https://github.com/akshaybabloo/UnrealEngine_4_Notes)
+1. A 2015 Samsung Galaxy phone i.e. S6, S6 edge, S6 edge+ or Note 5.
+2. Samsung Gear VR.
+3. Experience with Unreal Engine 4. If you don't have any previous experience, you can go through my tutorial on Unreal Engine 4 [here](https://github.com/akshaybabloo/UnrealEngine_4_Notes)
 
 ### 2.2 Mac
 
 **Software**
 
-1.  [Unreal Engine 4](https://www.unrealengine.com/dashboard)
-2.  [Android Studio](http://developer.android.com/sdk/index.html)
-3.  AndroidWorks
+1. [Unreal Engine 4](https://www.unrealengine.com/dashboard)
+2. [Android Studio](http://developer.android.com/sdk/index.html)
+3. AndroidWorks
 
 **Hardware**
 
-1.  A 2015 Samsung Galaxy phone i.e. S6, S6 edge, S6 edge+ or Note 5.
-2.  Samsung Gear VR.
+1. A 2015 Samsung Galaxy phone i.e. S6, S6 edge, S6 edge+ or Note 5.
+2. Samsung Gear VR.
 
 ### 2.3 Windows
 
 **Software**
 
-1.  [Unreal Engine 4](https://www.unrealengine.com/dashboard)
-2.  [Android Studio](http://developer.android.com/sdk/index.html)
-3.  AndroidWorks
-4.  Samsung drivers
+1. [Unreal Engine 4](https://www.unrealengine.com/dashboard)
+2. [Android Studio](http://developer.android.com/sdk/index.html)
+3. AndroidWorks
+4. Samsung drivers
 
 **Hardware**
 
-1.  A 2015 Samsung Galaxy phone i.e. S6, S6 edge, S6 edge+, S7, S7 edge or Note 5.
-2.  Samsung Gear VR.
+1. A 2015 Samsung Galaxy phone i.e. S6, S6 edge, S6 edge+, S7, S7 edge or Note 5.
+2. Samsung Gear VR.
 
 ## 3 Instillation
 
@@ -84,17 +84,17 @@ In this tutorial, I will be going to develop a simple environment where the firs
 
 #### 3.1.1 Android Studio
 
-1.  Download [Android Studio](http://developer.android.com/sdk/index.html).
-2.  Open it and move it to `Application`.
-3.  Open the application and follow the installation process.
-4.  Once the installation process is done, open the application and do the follow
-5.  Click on `Android Studio -> Preference`
-6.  Click on `Appreance & Behavior -> System Settings -> Android SDK` and tick on `Android 5.0.1` and `Android 5.1.1`.
+1. Download [Android Studio](http://developer.android.com/sdk/index.html).
+2. Open it and move it to `Application`.
+3. Open the application and follow the installation process.
+4. Once the installation process is done, open the application and do the follow
+5. Click on `Android Studio -> Preference`
+6. Click on `Appreance & Behavior -> System Settings -> Android SDK` and tick on `Android 5.0.1` and `Android 5.1.1`.
 
 **Installing command line tools**
 
-1.  Open `Terminal`.
-2.  Type `nano .bash_profile` and type the following in it:
+1. Open `Terminal`.
+2. Type `nano .bash_profile` and type the following in it:
 
 ```shell
   # Android
@@ -104,21 +104,25 @@ In this tutorial, I will be going to develop a simple environment where the firs
 
 > Note 2: `<user>` should be replaced by your username.
 
-4.  To save press `Control + x` and then press `y`.
-5.  Restart `Terminal` and type `android` to see if the tools are working.
+4. To save press `Control + x` and then press `y`.
+5. Restart `Terminal` and type `android` to see if the tools are working.
 
 ### 3.2 Enabling Android Developer Options
 
-1.  Go to `Settings -> About -> Software Info` and click on `Build Number` **seven** times.
-2.  Now go back, You should now see `Developer Options`.
+1. Go to `Settings -> About -> Software Info` and click on `Build Number` **seven** times.
+2. Now go back, You should now see `Developer Options`.
 
-  <p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/DevOpti.png" alt="New Project" width="300"></p>
+<div align="center">
+  {{< figure src="/img/blog/DevOpti.png" title="Setting menu" alt="Setting menu" width="300" >}}
+</div>
 
-3.  Click on `Developer Options` and enable `USB debugging.'
+3. Click on `Developer Options` and enable `USB debugging.'
 
-  <p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/USBDebug.png" alt="New Project" width="300"></p>
+<div align="center">
+  {{< figure src="/img/blog/USBDebug.png" title="Debug enable" alt="Debug enable" width="300" >}}
+</div>
 
-4.  Once you connect your phone to the system, it will ask you to confirm the connected computers RSA KEY. Click `Ok` to continue.
+4. Once you connect your phone to the system, it will ask you to confirm the connected computers RSA KEY. Click `Ok` to continue.
 
 ### 3.3 Getting device ID
 
@@ -171,37 +175,53 @@ Once you have completed designing the game do the following:
 
 Open `Plugins`
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/Plugins.png" alt="New Project" width="700"></p>
+<div align="center">
+  {{< figure src="/img/blog/Plugins.png" title="Package configuration" alt="Package configuration" >}}
+</div>
 
 Then, make sure you have enabled the following:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/Plugins1.png" alt="New Project" width="700"></p>
+<div align="center">
+  {{< figure src="/img/blog/Plugins1.png" title="Package configuration" alt="Package configuration" >}}
+</div>
 
 Next open your `Project Settings...`, Go to `Target Hardware` and do the following:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/TargetHardware.png" alt="New Project" width="700"></p>
+<div align="center">
+  {{< figure src="/img/blog/TargetHardware.png" title="Target hardware" alt="Target hardware" >}}
+</div>
 
 Then do this:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/ProjectSettingsMenu.png" alt="New Project" width="700"></p>
+<div align="center">
+  {{< figure src="/img/blog/ProjectSettingsMenu.png" title="Project Settings Menu" alt="Project Settings Menu" >}}
+</div>
 
 Then do the following:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/AndroidPlatform.png" alt="New Project" width="700"></p>
+<div align="center">
+  {{< figure src="/img/blog/AndroidPlatform.png" title="Android Platform" alt="Android Platform" >}}
+</div>
 
 Then do this:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/AndroidPlatform1.png" alt="New Project" width="700"></p>
+<div align="center">
+  {{< figure src="/img/blog/AndroidPlatform1.png" title="Android Platform" alt="Android Platform" >}}
+</div>
 
 And then this:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/AndroidPlatformSDK.png" alt="New Project" width="700"></p>
+<div align="center">
+  {{< figure src="/img/blog/AndroidPlatformSDK.png" title="Android Platform SDK" alt="Android Platform SDK" >}}
+</div>
 
 ### 5.2 Packing
 
 Do the following:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/GearVR-UnrealEngine4/master/Screenshots/Packing.png" alt="New Project" width="700"></p>
+<div align="center">
+  {{< figure src="/img/blog/Packing.png" title="Packing" alt="Packing" >}}
+</div>
 
 ## 6 Installing it on Android
 

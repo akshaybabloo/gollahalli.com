@@ -1,6 +1,6 @@
 ---
 title: "Emotiv and Matlab"
-date: 2018-07-04T16:29:14+12:00
+date: 2016-06-06T16:29:14+12:00
 draft: false
 categories: ["Software"]
 tags: ["Matlab"]

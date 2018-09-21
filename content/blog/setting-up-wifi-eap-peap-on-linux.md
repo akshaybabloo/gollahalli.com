@@ -1,7 +1,7 @@
 ---
 title: "Setting up WiFi EAP-PEAP on Linux"
 description: "This post is the secret to enabling EAP-PEAP WiFi connection."
-date: 2018-07-04T18:29:02+12:00
+date: 2016-06-25T18:29:02+12:00
 draft: false
 tags: ["Linux"]
 categories: ["Tutorial"]
@@ -34,7 +34,7 @@ export HTTP_PROXY="http://user:123456@123.456.789.012:1234"
 export HTTPS_PROXY="http://user:123456@123.456.789.012:1234"
 ```
 
-- Save it by doing <kbd class="uk-label">ctrl</kbd>+<kbd class="uk-label">X</kbd>, return and return.
+- Save it by doing <kbd class="uk-label">ctrl</kbd>+<kbd class="uk-label">X</kbd>, <kbd class="uk-label">return</kbd> and <kbd class="uk-label">return</kbd>.
 - Next go to sudo nano /etc/apt/apt.conf.d/10proxy, in that type in the following:
 
 ```md
@@ -42,7 +42,7 @@ Acquire::http:Proxy "http://user:123456@123.456.789.012:1234"
 Acquire::https:Proxy "https://user:123456@123.456.789.012:1234"
 ```
 
-- Save it by doing <kbd class="uk-label">ctrl</kbd>+<kbd class="uk-label">X</kbd>, return and return.
+- Save it by doing <kbd class="uk-label">ctrl</kbd>+<kbd class="uk-label">X</kbd>, <kbd class="uk-label">return</kbd> and <kbd class="uk-label">return</kbd>.
 
 ## Step 3: Setting up WPA Supplicant (WiFi Manager)
 
@@ -72,6 +72,6 @@ network={
 }
 ```
 
-Save it by doing <kbd class="uk-label">ctrl</kbd>+<kbd class="uk-label">X</kbd>, return and return.
+Save it by doing <kbd class="uk-label">ctrl</kbd>+<kbd class="uk-label">X</kbd>, <kbd class="uk-label">return</kbd> and <kbd class="uk-label">return</kbd>.
 
 Make sure you have connected your WiFi dongle. You should now be able to use the internet.

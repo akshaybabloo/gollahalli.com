@@ -1,6 +1,6 @@
 ---
 title: "Retrieving Dns Records Using Python"
-date: 2018-07-05T11:34:26+12:00
+date: 2016-09-16T11:34:26+12:00
 draft: false
 categories: ["Tutorial"]
 tags: ["Python-3"]

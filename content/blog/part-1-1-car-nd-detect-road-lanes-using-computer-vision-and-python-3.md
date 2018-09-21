@@ -1,6 +1,6 @@
 ---
 title: "Part 1.1 Car Nd Detect Road Lanes Using Computer Vision and Python 3"
-date: 2018-07-05T11:46:09+12:00
+date: 2017-02-24T11:46:09+12:00
 draft: false
 categories: ["Tutorial"]
 tags: ["Python-3", "Machine-Learning", "Computer-Vision"]

@@ -1,6 +1,6 @@
 ---
 title: "Part 1.2 Car Nd Masking and Colouring a Region of the Image"
-date: 2018-07-05T12:55:25+12:00
+date: 2017-05-09T12:55:25+12:00
 draft: false
 categories: ["Tutorial"]
 tags: ["Python-3", "Machine-Learning", "Computer-Vision"]
@@ -234,6 +234,14 @@ And finally, plot them
 ### 2.2 Output
 
 Masking and region colouring:
+
+{{< figure src="/img/blog/masking_colouring_region-1.png" title="Masking regions" >}}
+
+## 3. What's Next?
+
+[Canny edge detection](https://en.wikipedia.org/wiki/Canny_edge_detector), which looks something like:
+
+{{< figure src="/img/blog/canny_edge.png" title="Canny edges." >}}
 
 [0]: #1-basic-math
 [1]: #11-one-degree-polynomial

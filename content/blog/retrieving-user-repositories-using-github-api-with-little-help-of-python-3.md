@@ -1,6 +1,6 @@
 ---
 title: Retrieving User Repositories Using Github Api With Little Help of Python 3
-date: 2018-06-30T11:20:32+12:00
+date: 2016-02-02T11:20:32+12:00
 draft: false
 categories: ["Tutorial"]
 tags: ["Python-3"]
@@ -9,11 +9,11 @@ description: "How to retrieve GitHub users repository? If thats the question you
 
 There are different ways to retrieve user repositories; one such is using Python libraries, but they usually need your API keys even though your repository is public. We could do this by using GitHub's API v3 HTTP request.
 
-For example, to retrieve my public libraries I would use https://api.github.com/users/akshaybabloo/repos, this returns a JSON array; we just have to use the Python's json library to get the desired key-value pairs (in Python's terminology - Dictionary).
+For example, to retrieve my public libraries I would use https://api.github.com/users/akshaybabloo/repos, this returns a JSON array; we just have to use the Python's **json** standard library to get the desired key-value pairs (in Python's terminology - Dictionary).
 
 ## Code
 
-Lets build a custom iterator for the class GitHubRepo.
+Lets build a custom iterator for the class **GitHubRepo**.
 
 ```python
 class GitHubRepo:
@@ -42,9 +42,9 @@ class GitHubRepo:
         return self.data[self.index]
 ```
 
-iter and next are the built-in iterator types.
+[iter](https://docs.python.org/3.5/library/stdtypes.html#iterator.__iter__) and [next](https://docs.python.org/3.5/library/stdtypes.html#iterator.__next__) are the built-in iterator types.
 
-You are essentially making the GitHubRepo object loopable, for example, let us consider the following snippet:
+You are essentially making the **GitHubRepo** object loopable, for example, let us consider the following snippet:
 
 ```
 >>> x = [1, 2, 3]
@@ -61,7 +61,7 @@ Traceback (most recent call last):
 StopIteration
 ```
 
-Once there are no more indexes to reach, the program raises a StopIteration exception and exits. The above terminal code can be written as:
+Once there are no more indexes to reach, the program raises a **StopIteration** exception and exits. The above terminal code can be written as:
 
 ```python
 x = [1, 2, 3]
