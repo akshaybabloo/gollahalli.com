@@ -6,6 +6,7 @@ categories: ["Tutorial"]
 tags: ["Python-3", "Machine-Learning", "Computer-Vision"]
 description: "Road lane detection using computer vision in Python 3."
 relImage: ""
+ads: true
 ---
 
 This blog is few part series in the field of Computer Vision and Deep Learning. In this blog, we will try to understand the following questions:

@@ -5,6 +5,7 @@ draft: false
 categories: ["Tutorial"]
 tags: ["Maths"]
 description: "Everything you wanted to know about Collatz conjecture."
+ads: true
 ---
 
 Before we look into what a Collatz conjecture is, I highly recommend watching the (below) video by Numberphile.

@@ -5,6 +5,7 @@ draft: false
 categories: ["Tutorial"]
 tags: ["C++"]
 description: "Using Dirent With Msvc Compilers"
+ads: true
 ---
 
 At the time of writing this blog, I am developing a C++ version of my [Spiks](https://github.com/akshaybabloo/Spikes) library - [libSpikes](https://github.com/akshaybabloo/libSpikes). I was compiling the `libSpikes` using [Cygwin](https://www.cygwin.com/) and [MinGW](http://www.mingw.org/). 

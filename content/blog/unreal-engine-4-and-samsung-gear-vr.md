@@ -5,6 +5,7 @@ draft: false
 categories: ["Tutorial"]
 tags: ["UnrealEngine4", "VR", "Android"]
 description: "Deploying games from Unreal Engine 4 to Samsung Gear VR."
+ads: true
 ---
 
 A simple game using Unreal Engine 4.10.\* and 4.11.2 for GearVR

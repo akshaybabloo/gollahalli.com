@@ -5,6 +5,7 @@ draft: false
 categories: ["Software"]
 tags: ["Matlab"]
 description: "Collecting data from Emotiv via Matlab."
+ads: true
 ---
 
 **The code can be found at [https://github.com/akshaybabloo/Emotiv-Matlab](https://github.com/akshaybabloo/Emotiv-Matlab)**

@@ -19,6 +19,7 @@ enableRobotsTXT = true
   home= ["HTML","RSS", "searchindex"]
 
 [params]
+    googleAds = "ca-pub-7450383714878520" # Optional
     amp = true
     year = 2018
     github = "https://github.com/akshaybabloo" # Optional

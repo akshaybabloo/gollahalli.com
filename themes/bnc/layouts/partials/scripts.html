@@ -47,3 +47,7 @@
         {{ .Content | safeJS }}
     </script>
 {{end}}
+
+{{ if .Params.ads }}
+    {{- partial "ads.html" . -}}
+{{ end }}

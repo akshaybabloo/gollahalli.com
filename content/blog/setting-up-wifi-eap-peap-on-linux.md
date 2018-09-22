@@ -6,6 +6,7 @@ draft: false
 tags: ["Linux"]
 categories: ["Tutorial"]
 description: "Do you have problem accessing enterprise WiFi on Linux? Then this article is for you."
+ads: true
 ---
 
 A few months ago I was trying to setup up WiFi on my Raspberry Pi. That time I didn't know that Pi has problems with Enterprise WiFi and my university did not provide support to Linux distribution. Thanks to Google I fond the answer.
