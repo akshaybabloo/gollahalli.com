@@ -5,9 +5,11 @@ draft: false
 categories: ["Software"]
 tags: ["Utility", "Python 3"]
 description: "If you have forgotten to write CHANGELOG.md for your project, but you have written release notes, then this blog post is for you."
-images: []
+images: ["/img/blog/release-exporter.png"]
 ads: true
 ---
+
+{{< figure src="/img/blog/release-exporter.png" alt="Release Exporter" >}}
 
 The repository can be found at [https://github.com/akshaybabloo/release-exporter](https://github.com/akshaybabloo/release-exporter).
 

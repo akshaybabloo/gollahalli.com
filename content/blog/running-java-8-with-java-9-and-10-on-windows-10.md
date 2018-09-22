@@ -5,9 +5,11 @@ draft: false
 categories: ["Tutorial"]
 tags: ["Java"]
 description: "Java 9+ and problems with it's path."
-images: ["/img/blog/edit_string.JPG", "/img/blog/regedit.JPG"]
+images: ["/img/blog/java_path.jpg", "/img/blog/edit_string.JPG", "/img/blog/regedit.JPG"]
 ads: true
 ---
+
+{{< figure src="/img/blog/java_path.jpg" alt="Running different version of java" >}}
 
 Oracle has decided that from Java 9 there will be a new java version every six months and the third release would be an LTS release (?). More on it [here](https://medium.com/codefx-weekly/radical-new-plans-for-java-5f237ab05b0).
 

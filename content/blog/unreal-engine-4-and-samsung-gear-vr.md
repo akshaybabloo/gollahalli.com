@@ -5,8 +5,11 @@ draft: false
 categories: ["Tutorial"]
 tags: ["UnrealEngine4", "VR", "Android"]
 description: "Deploying games from Unreal Engine 4 to Samsung Gear VR."
+images: ["/img/blog/UnrealEngine4.gif", "/img/blog/DevOpti.png", "/img/blog/USBDebug.png", "/img/blog/Plugins.png", "/img/blog/Plugins1.png", "/img/blog/TargetHardware.png", "/img/blog/ProjectSettingsMenu.png", "/img/blog/AndroidPlatform.png", "/img/blog/AndroidPlatform.png", "/img/blog/AndroidPlatform1.png", "/img/blog/AndroidPlatformSDK.png", "/img/blog/Packing.png"]
 ads: true
 ---
+
+{{< figure src="/img/blog/UnrealEngine4.gif" alt="UnrealEngine 4 and Samsung GearVR" >}}
 
 A simple game using Unreal Engine 4.10.\* and 4.11.2 for GearVR
 
@@ -114,7 +117,7 @@ In this tutorial, I will be going to develop a simple environment where the firs
 2. Now go back, You should now see `Developer Options`.
 
 <div align="center">
-  {{< figure src="/img/blog/DevOpti.png" title="Setting menu" alt="Setting menu" width="300" >}}
+  {{< figure src="/img/blog/DevOpti.png" title="Settings menu" alt="Settings menu" width="300" >}}
 </div>
 
 3. Click on `Developer Options` and enable `USB debugging.'
