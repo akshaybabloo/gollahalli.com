@@ -8,10 +8,9 @@ description: "Everything you wanted to know about Collatz conjecture."
 ads: true
 ---
 
-Before we look into what a Collatz conjecture is, I highly recommend watching the (below) video by Numberphile.
+Before we look into what a Collatz conjecture is, I highly recommend watching the (below video by Numberphile.
 
 {{< youtube 5mFpVDpKX70 >}}
-
 
 Collatz conjecture also called as $3n+1$ problem, $3x+1$ mapping, Hasse's algorithm, Kakutani's problem, Syracuse algorithm, Syracuse problem, Thwaites conjecture, and Ulam's problem.
 
