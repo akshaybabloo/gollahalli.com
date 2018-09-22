@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Tutorials"
 tags: ["Ruby 4"]
 description: "An introduction to Ruby 2 programming language."
-relImage: ""
-sitemapImage: []
+images: []
 ---

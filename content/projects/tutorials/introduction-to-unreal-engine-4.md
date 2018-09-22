@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Tutorials"
 tags: ["C++"]
 description: "A tutorial on using node based Unreal Engine 4"
-relImage: ""
-sitemapImage: []
+images: []
 ---

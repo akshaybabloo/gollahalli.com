@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Upcoming Projects and Tutorials"
 tags: ["Software", "Python 3"]
 description: "Visualise clusters in a better way."
-relImage: ""
-sitemapImage: []
+images: []
 ---

@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Upcoming Projects and Tutorials"
 tags: [ "Lua", "Tutorial"]
 description: "A complete introduction to Lua programming language"
-relImage: ""
-sitemapImage: []
+images: []
 ---

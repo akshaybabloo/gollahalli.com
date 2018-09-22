@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Tutorials"
 tags: ["Python 3"]
 description: "A brief introduction on using OpenGL with Python 3."
-relImage: ""
-sitemapImage: []
+images: []
 ---

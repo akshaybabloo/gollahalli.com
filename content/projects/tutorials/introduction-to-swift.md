@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Tutorials"
 tags: ["Swift"]
 description: "Complete how-to tutorial on using Apple's new programming language - Swift."
-relImage: ""
-sitemapImage: []
+images: []
 ---

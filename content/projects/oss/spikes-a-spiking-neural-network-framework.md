@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Open-Source Software"
 tags: ["Python 3"]
 description: "An Spiking Neural Network framework written in Python 3."
-relImage: ""
-sitemapImage: []
+images: []
 ---

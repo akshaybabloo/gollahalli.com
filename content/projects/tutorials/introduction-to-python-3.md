@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Tutorials"
 tags: ["Python 3"]
 description: "A complete guide to programming in Python 3."
-relImage: ""
-sitemapImage: []
+images: []
 ---

@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Tutorials"
 tags: ["Java 8"]
 description: "An introduction to JavaFx 8."
-relImage: ""
-sitemapImage: []
+images: []
 ---

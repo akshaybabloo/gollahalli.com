@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Open-Source Software"
 tags: ["Python 3"]
 description: "Also comes with SML parser."
-relImage: ""
-sitemapImage: []
+images: []
 ---

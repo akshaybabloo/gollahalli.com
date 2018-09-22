@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Upcoming Projects and Tutorials"
 tags: ["Utility", "Qt5", "C++"]
 description: "An open source cross platform image compression tool."
-relImage: ""
-sitemapImage: []
+images: []
 ---

@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Tutorials"
 tags: ["UnrealEngine"]
 description: "A tutorial on developing a simple game for Samsung Gear VR using Unreal Engine."
-relImage: ""
-sitemapImage: []
+images: []
 ---

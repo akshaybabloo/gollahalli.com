@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Open-Source Software"
 tags: ["XML"]
 description: "Spikes Markup Language for Spiking Neural Network framework - Spikes."
-relImage: ""
-sitemapImage: []
+images: []
 ---

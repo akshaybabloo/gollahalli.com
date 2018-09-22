@@ -6,5 +6,4 @@ projectCategory: ""
 tags: []
 description: ""
 images: []
-sitemapImage: []
 ---

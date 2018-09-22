@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Open-Source Software"
 tags: ["Python 3", "CLI"]
 description: "Create a CHANGELOG.md or rst or json files based on the release description of GitHub or GitLab."
-relImage: ""
-sitemapImage: []
+images: []
 ---

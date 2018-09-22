@@ -5,6 +5,5 @@ draft: false
 projectCategory: "Tutorials"
 tags: ["Java 8"]
 description: "A tutorial on using Java 8 and JDBC."
-relImage: ""
-sitemapImage: []
+images: []
 ---
