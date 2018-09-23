@@ -4,14 +4,15 @@ $background-color: #1d1f21;
 $background-color-light: #272a2c;
 $text-color: #c9cacc;
 $sub-text-color: gray;
+$global-font-family: 'Space Mono', monospace !important;
 
 
 html {
-    font-family: 'Space Mono', monospace !important;
+    font-family: $global-font-family;
 }
 
 code{
-    font-family: 'Space Mono', monospace !important;
+    font-family: $global-font-family;
 }
 
 body {
