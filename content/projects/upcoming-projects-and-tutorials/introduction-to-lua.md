@@ -6,4 +6,5 @@ projectCategory: "Upcoming Projects and Tutorials"
 tags: [ "Lua", "Tutorial"]
 description: "A complete introduction to Lua programming language"
 images: []
+url: "/projects/#"
 ---

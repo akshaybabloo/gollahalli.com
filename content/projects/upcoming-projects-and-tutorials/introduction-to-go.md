@@ -6,4 +6,5 @@ projectCategory: "Upcoming Projects and Tutorials"
 tags: ["Go", "Tutorial"]
 description: "Fundamental introduction to Go programming language"
 images: []
+url: "/projects/#"
 ---

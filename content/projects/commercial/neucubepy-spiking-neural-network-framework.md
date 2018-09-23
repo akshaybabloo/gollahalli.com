@@ -6,4 +6,5 @@ projectCategory: "Commercial"
 tags: ["Python 3"]
 description: "A Python implementation of NeuCube framework"
 images: ["img/projects/commercial/neucube_logo.png"]
+url: "/projects/#"
 ---

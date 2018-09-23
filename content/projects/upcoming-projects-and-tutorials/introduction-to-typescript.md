@@ -6,4 +6,5 @@ projectCategory: "Upcoming Projects and Tutorials"
 tags: ["TypeScript", "Tutorial"]
 description: "Coming from Java or C++ background and want to learn JavaScript but are confused? Then TypeScript is for you."
 images: []
+url: "/projects/#"
 ---
