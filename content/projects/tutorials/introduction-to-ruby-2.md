@@ -6,4 +6,5 @@ projectCategory: "Tutorials"
 tags: ["Ruby 4"]
 description: "An introduction to Ruby 2 programming language."
 images: []
+url: "https://github.com/akshaybabloo/Ruby-notes"
 ---
