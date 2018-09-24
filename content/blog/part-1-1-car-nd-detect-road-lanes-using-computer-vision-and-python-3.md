@@ -5,8 +5,11 @@ draft: false
 categories: ["Tutorial"]
 tags: ["Python-3", "Machine-Learning", "Computer-Vision"]
 description: "Road lane detection using computer vision in Python 3."
-relImage: ""
+images: ["/img/blog/edge_detection.png"]
 ads: true
+siteMapImages:
+  - imageLoc: "/img/blog/edge_detection.png"
+    imageCaption: "Stages of line detection"
 ---
 
 This blog is few part series in the field of Computer Vision and Deep Learning. In this blog, we will try to understand the following questions:
@@ -125,4 +128,4 @@ Lane detection using OpenCV:
 
 Filtering the image to obtain a masked Hough transformed image:
 
-{{< figure src="/img/blog/edge_detection.png" title="Stages of line detection." >}}
+{{< figure src="/img/blog/edge_detection.png" title="Stages of line detection." alt="Stages of line detection." >}}

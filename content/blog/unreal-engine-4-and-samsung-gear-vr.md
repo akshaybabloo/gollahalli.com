@@ -5,8 +5,31 @@ draft: false
 categories: ["Tutorial"]
 tags: ["UnrealEngine4", "VR", "Android"]
 description: "Deploying games from Unreal Engine 4 to Samsung Gear VR."
-images: ["/img/blog/UnrealEngine4.gif", "/img/blog/DevOpti.png", "/img/blog/USBDebug.png", "/img/blog/Plugins.png", "/img/blog/Plugins1.png", "/img/blog/TargetHardware.png", "/img/blog/ProjectSettingsMenu.png", "/img/blog/AndroidPlatform.png", "/img/blog/AndroidPlatform.png", "/img/blog/AndroidPlatform1.png", "/img/blog/AndroidPlatformSDK.png", "/img/blog/Packing.png"]
+images: ["/img/blog/UnrealEngine4.gif", "/img/blog/DevOpti.png", "/img/blog/USBDebug.png", "/img/blog/Plugins.png", "/img/blog/Plugins1.png", "/img/blog/TargetHardware.png", "/img/blog/ProjectSettingsMenu.png", "/img/blog/AndroidPlatform.png", "/img/blog/AndroidPlatform1.png", "/img/blog/AndroidPlatformSDK.png", "/img/blog/Packing.png"]
 ads: true
+siteMapImages:
+  - imageLoc: "/img/blog/UnrealEngine4.gif"
+    imageCaption: "UnrealEngine 4 and Samsung GearVR"
+  - imageLoc: "/img/blog/DevOpti.png"
+    imageCaption: "Settings menu"
+  - imageLoc: "/img/blog/USBDebug.png"
+    imageCaption: "Debug enable"
+  - imageLoc: "/img/blog/Plugins.png"
+    imageCaption: "Package configuration"
+  - imageLoc: "/img/blog/Plugins1.png"
+    imageCaption: "Package configuration"
+  - imageLoc: "/img/blog/TargetHardware.png"
+    imageCaption: "Target hardware"
+  - imageLoc: "/img/blog/ProjectSettingsMenu.png"
+    imageCaption: "Project Settings Menu"
+  - imageLoc: "/img/blog/AndroidPlatform.png"
+    imageCaption: "Android Platform"
+  - imageLoc: "/img/blog/AndroidPlatform1.png"
+    imageCaption: "Android Platform"
+  - imageLoc: "/img/blog/AndroidPlatformSDK.png"
+    imageCaption: "Android Platform SDK"
+  - imageLoc: "/img/blog/Packing.png"
+    imageCaption: "Packing"
 ---
 
 {{< figure src="/img/blog/UnrealEngine4.gif" alt="UnrealEngine 4 and Samsung GearVR" >}}

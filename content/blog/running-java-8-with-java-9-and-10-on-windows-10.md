@@ -7,6 +7,13 @@ tags: ["Java"]
 description: "Java 9+ and problems with it's path."
 images: ["/img/blog/java_path.jpg", "/img/blog/edit_string.JPG", "/img/blog/regedit.JPG"]
 ads: true
+siteMapImages:
+  - imageLoc: "/img/blog/java_path.jpg"
+    imageCaption: "Running different version of java"
+  - imageLoc: "/img/blog/edit_string.JPG"
+    imageCaption: "Registry Editor"
+  - imageLoc: "/img/blog/regedit.JPG"
+    imageCaption: "Registry Editor"
 ---
 
 {{< figure src="/img/blog/java_path.jpg" alt="Running different version of java" >}}
@@ -19,7 +26,7 @@ Not all libraries have upgraded them self to the latest Java releases, for examp
 
 When you installed Java 9 or 10 via the **exe** file, a default path variable was registered in the windows registry:
 
-{{< figure src="/img/blog/regedit.JPG" title="Registry Editor" >}}
+{{< figure src="/img/blog/regedit.JPG" title="Registry Editor" alt="Registry Editor" >}}
 
 * From the start menu, open Run (or press Win+R).
 * Type **regedit**
@@ -59,7 +66,7 @@ There are two way to do this:
 
 You can delete the path - **C:\ProgramData\Oracle\Java\javapath** from the default **Path** mentioned in **Registry Editor**. You will need to double-click on the Path, which will open:
 
-{{< figure src="/img/blog/edit_string.JPG" title="Registry Editor" >}}
+{{< figure src="/img/blog/edit_string.JPG" title="Registry Editor" alt="Registry Editor" >}}
 
 Once you have removed the path, close and reopen your command prompt, if you have **JAVA_HOME** for Java 8 you should be able to run (for me) Scala.
 

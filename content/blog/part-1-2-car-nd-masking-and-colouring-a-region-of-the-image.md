@@ -5,8 +5,11 @@ draft: false
 categories: ["Tutorial"]
 tags: ["Python-3", "Machine-Learning", "Computer-Vision"]
 description: "Masking and coloring a region on an given image using Python 3."
-images: []
+images: ["/img/blog/masking_colouring_region-1.png"]
 ads: true
+sitemapImages:
+  - imageLoc: "/img/blog/masking_colouring_region-1.png"
+    imageCaption: "Masking regions"
 ---
 
 In this part of Car-ND, we will look at how to mask and colour the region.
@@ -236,7 +239,7 @@ And finally, plot them
 
 Masking and region colouring:
 
-{{< figure src="/img/blog/masking_colouring_region-1.png" title="Masking regions" >}}
+{{< figure src="/img/blog/masking_colouring_region-1.png" title="Masking regions" alt="Masking regions" >}}
 
 ## 3. What's Next?
 
