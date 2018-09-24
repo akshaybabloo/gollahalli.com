@@ -9,7 +9,14 @@
 
 <link rel="shortcut icon" href="{{`favicon.ico` | relURL}}">
 
-<link rel="canonical" href="{{ .Permalink }}">
+<link rel="canonical" href="{{ .Permalink }}"/>
+<meta itemprop="description" content="{{ .Params.description }}"/>
+
+{{ if (isset .Params "images") }}
+  <meta itemprop="thumbnailUrl" content="{{ (index .Params.images 0) | absURL }}"/>
+{{ else }}
+  <meta itemprop="thumbnailUrl" content="{{ .Site.Params.thumbnailUrl | absURL }}"/>
+{{ end }}
 
 {{ if or .Params.noindex (isset .Params "externalurl") }}
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
