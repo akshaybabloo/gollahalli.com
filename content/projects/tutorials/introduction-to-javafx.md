@@ -6,6 +6,6 @@ projectCategory: "Tutorials"
 tags: ["Java 8"]
 description: "An introduction to JavaFx 8."
 images: []
-url: "https://github.com/akshaybabloo/JavaFX"
+externalUrl: "https://github.com/akshaybabloo/JavaFX"
 noindex: true
 ---

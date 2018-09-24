@@ -6,6 +6,6 @@ projectCategory: "Tutorials"
 tags: ["Python 3"]
 description: "A complete guide to programming in Python 3."
 images: []
-url: "https://github.com/akshaybabloo/Python3-notes"
+externalUrl: "https://github.com/akshaybabloo/Python3-notes"
 noindex: true
 ---

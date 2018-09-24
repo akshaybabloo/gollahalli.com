@@ -6,6 +6,6 @@ projectCategory: "Tutorials"
 tags: ["Swift"]
 description: "Complete how-to tutorial on using Apple's new programming language - Swift."
 images: []
-url: "https://github.com/akshaybabloo/Swift-notes"
+externalUrl: "https://github.com/akshaybabloo/Swift-notes"
 noindex: true
 ---

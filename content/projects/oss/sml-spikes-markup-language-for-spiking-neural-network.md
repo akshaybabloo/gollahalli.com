@@ -6,6 +6,6 @@ projectCategory: "Open-Source Software"
 tags: ["XML"]
 description: "Spikes Markup Language for Spiking Neural Network framework - Spikes."
 images: []
-url: "https://github.com/akshaybabloo/Spikes"
+externalUrl: "https://github.com/akshaybabloo/Spikes"
 noindex: true
 ---

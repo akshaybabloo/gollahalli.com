@@ -6,6 +6,6 @@ projectCategory: "Open-Source Software"
 tags: ["Python 3", "Qt5"]
 description: "A GUI to export data to Spikes Markup Language based on Qt5."
 images: []
-url: "https://github.com/akshaybabloo/SML-GUI"
+externalUrl: "https://github.com/akshaybabloo/SML-GUI"
 noindex: true
 ---
