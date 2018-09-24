@@ -11,6 +11,10 @@
 
 <link rel="canonical" href="{{ .Permalink }}">
 
+{{ if .Site.Params.noindex }}
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+{{end}}
+
 {{ template "_internal/google_analytics_async.html" . }}
 {{ template "_internal/google_news.html" . }}
 {{ template "_internal/opengraph.html" . }}
