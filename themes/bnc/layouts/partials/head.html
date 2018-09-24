@@ -11,7 +11,7 @@
 
 <link rel="canonical" href="{{ .Permalink }}">
 
-{{ if .Site.Params.noindex }}
+{{ if or .Params.noindex (isset .Params "externalurl") }}
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 {{end}}
 

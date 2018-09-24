@@ -8,7 +8,11 @@
         <ul class="uk-list gol-links">
             {{ range .Pages }}
             <li>
-            <a href="{{ .Permalink }}">{{ .Title }}</a>
+                {{ if (isset .Params "externalurl") }}
+                    <a href="{{ .Params.externalurl }}">{{ .Title }}</a>
+                {{ else }}
+                    <a href="{{ .Permalink }}">{{ .Title }}</a>
+                {{ end }}
             </li>
             {{ end }}
         </ul>
