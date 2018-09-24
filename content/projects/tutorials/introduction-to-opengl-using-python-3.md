@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Opengl Using Python 3"
+title: "Introduction to OpenGL Using Python 3"
 date: 2018-09-06T12:46:41+12:00
 draft: false
 projectCategory: "Tutorials"

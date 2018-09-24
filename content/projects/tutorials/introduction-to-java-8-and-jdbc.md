@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Java 8 and Jdbc"
+title: "Introduction to Java 8 and JDBC"
 date: 2018-09-06T12:45:39+12:00
 draft: false
 projectCategory: "Tutorials"

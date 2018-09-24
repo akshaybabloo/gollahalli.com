@@ -1,5 +1,5 @@
 ---
-title: "Samsung Gear Vr With Unreal Engine 4"
+title: "Samsung Gear Vr With UnrealEngine 4"
 date: 2018-09-06T12:47:23+12:00
 draft: false
 projectCategory: "Tutorials"
