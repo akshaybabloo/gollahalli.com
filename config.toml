@@ -35,4 +35,5 @@ enableRobotsTXT = true
     algoliaAppId = "UT1XVMZE1Q"
     algoliaApiKey = "fadcde84f1cdaf165d51c20a50336188"
     algoliaIndexName = "gollahalli-website"
+    thumbnailUrl = "/img/akshay.jpg"
 
