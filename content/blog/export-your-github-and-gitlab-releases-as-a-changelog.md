@@ -10,7 +10,9 @@ ads: true
 siteMapImages:
   - imageLoc: "/img/blog/release-exporter.png"
     imageCaption: "Release Exporter"
-
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 {{< figure src="/img/blog/release-exporter.png" alt="Release Exporter" >}}

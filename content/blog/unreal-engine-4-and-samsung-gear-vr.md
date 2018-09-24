@@ -30,6 +30,9 @@ siteMapImages:
     imageCaption: "Android Platform SDK"
   - imageLoc: "/img/blog/Packing.png"
     imageCaption: "Packing"
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 {{< figure src="/img/blog/UnrealEngine4.gif" alt="UnrealEngine 4 and Samsung GearVR" >}}

@@ -5,6 +5,9 @@ draft: false
 menu: "main"
 description: "About me"
 type: about
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 ## About Me

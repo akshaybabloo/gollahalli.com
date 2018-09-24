@@ -7,6 +7,9 @@ tags: ["Python-3"]
 description: "Retrieving DNS records with Python 3."
 relImage: ""
 ads: true
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 You can retrieve DNS records using `dnspython` package. You can install the package using `pip install dnspython`.

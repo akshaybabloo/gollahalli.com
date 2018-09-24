@@ -6,6 +6,9 @@ categories: ["Tutorial"]
 tags: ["Python-3"]
 description: "How to retrieve GitHub users repository? If thats the question you have, then this blog post is for you."
 ads: true
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 There are different ways to retrieve user repositories; one such is using Python libraries, but they usually need your API keys even though your repository is public. We could do this by using GitHub's API v3 HTTP request.

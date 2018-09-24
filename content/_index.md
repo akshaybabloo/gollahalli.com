@@ -7,4 +7,10 @@ tags: []
 description: "Akshay Raj Gollahalli is a Computer Science researcher currently doing his Ph.D. This website showcases his work."
 sitemapImage: []
 images: ["/img/akshay.jpg"]
+siteMapImages:
+  - imageLoc: "/img/akshay.jpg"
+    imageCaption: "Akshay Raj Gollahalli"
+sitemap:
+  priority: 1
+  changeFreq: monthly
 ---

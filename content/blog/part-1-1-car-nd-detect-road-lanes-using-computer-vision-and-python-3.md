@@ -10,6 +10,9 @@ ads: true
 siteMapImages:
   - imageLoc: "/img/blog/edge_detection.png"
     imageCaption: "Stages of line detection"
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 This blog is few part series in the field of Computer Vision and Deep Learning. In this blog, we will try to understand the following questions:

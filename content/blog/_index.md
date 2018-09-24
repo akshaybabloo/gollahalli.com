@@ -5,4 +5,7 @@ draft: false
 menu: "main"
 ads: true
 description: "Akshay Raj Gollahlli's blog"
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---

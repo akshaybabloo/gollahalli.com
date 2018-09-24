@@ -2,6 +2,10 @@
 title: Cookie Policy
 date: 2018-07-02T13:38:34+12:00
 draft: false
+description: "Cookie Policy"
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 ## What Are Cookies?

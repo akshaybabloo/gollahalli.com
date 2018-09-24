@@ -10,6 +10,9 @@ ads: true
 sitemapImages:
   - imageLoc: "/img/blog/masking_colouring_region-1.png"
     imageCaption: "Masking regions"
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 In this part of Car-ND, we will look at how to mask and colour the region.

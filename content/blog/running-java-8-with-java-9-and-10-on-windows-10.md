@@ -14,6 +14,9 @@ siteMapImages:
     imageCaption: "Registry Editor"
   - imageLoc: "/img/blog/regedit.JPG"
     imageCaption: "Registry Editor"
+sitemap:
+  priority: 0.8
+  changeFreq: monthly
 ---
 
 {{< figure src="/img/blog/java_path.jpg" alt="Running different version of java" >}}
