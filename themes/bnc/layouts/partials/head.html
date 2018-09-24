@@ -10,6 +10,7 @@
 <link rel="shortcut icon" href="{{`favicon.ico` | relURL}}">
 
 <link rel="canonical" href="{{ .Permalink }}"/>
+<meta name="description" content="{{ .Params.description }}"/>
 <meta itemprop="description" content="{{ .Params.description }}"/>
 
 {{ if (isset .Params "images") }}
