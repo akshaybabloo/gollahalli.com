@@ -7,5 +7,4 @@ tags: ["UnrealEngine"]
 description: "A tutorial on developing a simple game for Samsung Gear VR using Unreal Engine."
 images: []
 externalUrl: "https://github.com/akshaybabloo/GearVR-UnrealEngine4"
-noindex: true
 ---

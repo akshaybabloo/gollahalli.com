@@ -7,5 +7,4 @@ tags: ["XML"]
 description: "Spikes Markup Language for Spiking Neural Network framework - Spikes."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Spikes"
-noindex: true
 ---

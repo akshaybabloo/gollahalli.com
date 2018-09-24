@@ -7,5 +7,4 @@ tags: ["Python 3"]
 description: "An Spiking Neural Network framework written in Python 3."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Spikes"
-noindex: true
 ---

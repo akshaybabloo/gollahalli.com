@@ -7,5 +7,4 @@ tags: ["Ruby 4"]
 description: "An introduction to Ruby 2 programming language."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Ruby-notes"
-noindex: true
 ---

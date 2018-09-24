@@ -7,5 +7,4 @@ tags: ["Java 8"]
 description: "A tutorial on using Java 8 and JDBC."
 images: []
 externalUrl: "https://www.gollahalli.com/all-projects/introduction-to-java-8-and-jdbc"
-noindex: true
 ---

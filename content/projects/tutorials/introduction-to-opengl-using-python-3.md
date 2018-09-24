@@ -7,5 +7,4 @@ tags: ["Python 3"]
 description: "A brief introduction on using OpenGL with Python 3."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Python-opengl-notes"
-noindex: true
 ---
