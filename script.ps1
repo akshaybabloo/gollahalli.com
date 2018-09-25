@@ -4,6 +4,8 @@ param(
     [bool]$clean
 )
 
+Import-Module .\secrets.ps1
+
 function log {
     param (
         [string]$text
@@ -38,4 +40,8 @@ if ($deploy) {
 
     log("Deploying website...")
     firebase deploy
+
+    log("Uploading search index to Algolia...")
+    python .\algolia.py
+    log("Done!")
 }
