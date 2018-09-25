@@ -86,8 +86,9 @@
     </style>
 {{end}}
 
-{{ with resources.Get "scss/custom.scss" | toCSS }}
-    <style>
-        {{ .Content | safeCSS }}
-    </style>
-{{end}}
+{{ $sassTemplate := resources.Get "scss/custom.scss" }}
+{{ $style := $sassTemplate | resources.ExecuteAsTemplate "main.scss" . | resources.ToCSS }}
+<style>
+  {{ $style.Content | safeCSS }}
+</style>
+

@@ -34,4 +34,11 @@ enableRobotsTXT = true
     algoliaApiKey = "fadcde84f1cdaf165d51c20a50336188"
     algoliaIndexName = "gollahalli-website"
     thumbnailUrl = "/img/akshay.jpg"
-
+    [params.scss]
+        primary = "#A36441"
+        secondary = "#997953"
+        backgroundColor = "#1d1f21"
+        backgroundColorLight = "#272a2c"
+        textColor = "#c9cacc"
+        subTextColor = "gray"
+        globalFontFamily = "'Space Mono', monospace"

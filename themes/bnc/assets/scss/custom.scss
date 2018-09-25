@@ -1,10 +1,18 @@
-$primary: #A36441;
-$secondary: #997953;
-$background-color: #1d1f21;
-$background-color-light: #272a2c;
-$text-color: #c9cacc;
-$sub-text-color: gray;
+$primary: {{ .Site.Params.scss.primary }};
+$secondary: {{ .Site.Params.scss.secondary }};
+$background-color: {{ .Site.Params.scss.backgroundColor }};
+$background-color-light: {{ .Site.Params.scss.backgroundColorLight }};
+$text-color: {{ .Site.Params.scss.textColor }};
+$sub-text-color: {{ .Site.Params.scss.subTextColor }};
 $global-font-family: 'Space Mono', monospace !important;
+
+// $primary: #A36441;
+// $secondary: #997953;
+// $background-color: #1d1f21;
+// $background-color-light: #272a2c;
+// $text-color: #c9cacc;
+// $sub-text-color: gray;
+// $global-font-family: 'Space Mono', monospace !important;
 
 
 html {
