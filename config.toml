@@ -30,9 +30,6 @@ enableRobotsTXT = true
     # logoSVG = "img/logo.svg" # # Use logoSVG or logo. Optional
     # logo = "" # Use logoSVG or logo. Optional
     logoPhoto = "/img/akshay.jpg" # Use logoSVG or logo or logoPhoto. Optional
-    intro = """
-    Hi, my name is Akshay. I am doing PhD on computational neuroscience mainly using Spiking Neural Network.
-    """
     algoliaAppId = "UT1XVMZE1Q"
     algoliaApiKey = "fadcde84f1cdaf165d51c20a50336188"
     algoliaIndexName = "gollahalli-website"

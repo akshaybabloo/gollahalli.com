@@ -22,9 +22,9 @@
                 <li><a href="{{ .URL }}">{{ .Name }}</a></li>
             {{ end }}
         </ul>
-        {{ if .Site.Params.intro }}
+        {{ with .Content }}
             <p class="uk-text-justify uk-margin-left uk-margin-right">
-                {{.Site.Params.intro}}
+                {{ . }}
             </p>
         {{end}}
         {{ if .Site.Params.pgp }}
