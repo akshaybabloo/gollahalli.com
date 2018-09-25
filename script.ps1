@@ -4,22 +4,29 @@ param(
     [bool]$clean
 )
 
+function log {
+    param (
+        [string]$text
+    )
+
+    Write-Host $text -ForegroundColor Magenta
+}
 function BuildHugo {
-    Write-Host "Building Hugo for Producation..." -ForegroundColor Magenta
+    log("Building Hugo for Producation...")
     $Env:HUGO_ENV = "production"
-    
+
     $public_folder = Join-Path -Path $PSScriptRoot -ChildPath "public"
-    
+
     if (Test-Path -Path "$public_folder" -ErrorAction SilentlyContinue) {
-        Write-Host "'public' folder found, deleting it..." -ForegroundColor Magenta
-        Remove-Item -Path "$public_folder" -Recurse 
-        Write-Host "'public' folder deleted..." -ForegroundColor Magenta
+        log("'public' folder found, deleting it...")
+        Remove-Item -Path "$public_folder" -Recurse
+        log("'public' folder deleted...")
         Start-Sleep -Seconds 1
     }
-    
-    Write-Host "Building website..." -ForegroundColor Magenta
+
+    log("Building website...")
     hugo -v --minify --gc
-    Write-Host "Website built @ $public_folder" -ForegroundColor Magenta
+    log("Website built @ $public_folder")
 }
 
 if ($build -eq "production") {
@@ -29,6 +36,6 @@ if ($build -eq "production") {
 if ($deploy) {
     BuildHugo
 
-    Write-Host "Deploying website..." -ForegroundColor Magenta
+    log("Deploying website...")
     firebase deploy
 }
