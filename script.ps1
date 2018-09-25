@@ -1,7 +1,6 @@
 param(
     [string]$build,
     [bool]$deploy,
-    [bool]$clean
 )
 
 Import-Module .\secrets.ps1
