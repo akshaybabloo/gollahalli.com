@@ -50,6 +50,9 @@ body {
 .gol-subnav > ::before {
     border-left: 2px solid $primary !important;
 }
+.gol-tr-bgcolor{
+    background: $background-color-light
+}
 
 .uk-light {
     color: $text-color !important;
