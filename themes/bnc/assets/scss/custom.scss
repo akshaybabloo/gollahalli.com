@@ -4,7 +4,7 @@ $background-color: {{ .Site.Params.scss.backgroundColor }};
 $background-color-light: {{ .Site.Params.scss.backgroundColorLight }};
 $text-color: {{ .Site.Params.scss.textColor }};
 $sub-text-color: {{ .Site.Params.scss.subTextColor }};
-$global-font-family: 'Space Mono', monospace !important;
+$global-font-family: {{ .Site.Params.scss.globalFontFamily }} !important;
 
 // $primary: #A36441;
 // $secondary: #997953;
