@@ -9,12 +9,12 @@
 
         {{ range $k, $i := .Site.Data.Experience }}
             <h2>{{$k}}</h2>
-            {{ partial "data.html" . }}
+            {{ partial "experience.html" . }}
         {{ end }}
 
         {{ range $k, $i := .Site.Data.Education }}
             <h2>{{$k}}</h2>
-            {{ partial "data.html" . }}
+            {{ partial "education.html" . }}
         {{ end }}
 
     </div>
