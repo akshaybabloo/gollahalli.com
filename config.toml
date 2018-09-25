@@ -41,4 +41,5 @@ enableRobotsTXT = true
         backgroundColorLight = "#272a2c"
         textColor = "#c9cacc"
         subTextColor = "gray"
+        globalFontFamilyURL = "https://fonts.googleapis.com/css?family=Space+Mono:400,700"
         globalFontFamily = "'Space Mono', monospace"
