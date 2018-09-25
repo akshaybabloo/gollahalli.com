@@ -6,7 +6,8 @@
       "where": "Hyderabad, India",
       "from": "May, 2012",
       "to": "February, 2013",
-      "current": false
+      "current": false,
+      "description": ""
     },
     {
       "title": "Research Assistant",
@@ -14,15 +15,17 @@
       "where": "Auckland, New Zealand",
       "from": "July, 2015",
       "to": "December, 2015",
-      "current": false
+      "current": false,
+      "description": ""
     },
     {
       "title": "Technical Support",
       "company": "Knowledge Engineering and Discovery Research Institute (KEDRI), AUT University.",
       "where": "Auckland, New Zealand",
-      "from": "2015",
+      "from": "February, 2015",
       "to": "Present",
-      "current": true
+      "current": true,
+      "description": ""
     },
     {
       "title": "Research Assistant",
@@ -30,7 +33,8 @@
       "where": "Auckland, New Zealand",
       "from": "April, 2016",
       "to": "October, 2016",
-      "current": false
+      "current": false,
+      "description": ""
     },
     {
       "title": "Teaching Assistant",
@@ -38,7 +42,62 @@
       "where": "Auckland, New Zealand",
       "from": "July, 2016",
       "to": "November, 2016",
-      "current": false
+      "current": false,
+      "description": ""
+    },
+    {
+      "title": "Teaching Assistant",
+      "company": "Computer and Mathematical Sciences , AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "February, 2017",
+      "to": "June, 2017",
+      "current": false,
+      "description": ""
+    },
+    {
+      "title": "Research Assistant",
+      "company": "Knowledge Engineering and Discovery Research Institute (KEDRI), AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "March, 2017",
+      "to": "August, 2017",
+      "current": false,
+      "description": ""
+    },
+    {
+      "title": "Teaching Assistant",
+      "company": "Computer and Mathematical Sciences , AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "July, 2017",
+      "to": "October, 2017",
+      "current": false,
+      "description": ""
+    },
+    {
+      "title": "Teaching Assistant",
+      "company": "Computer and Mathematical Sciences , AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "February, 2018",
+      "to": "June, 2018",
+      "current": false,
+      "description": ""
+    },
+    {
+      "title": "Teaching Assistant",
+      "company": "Computer and Mathematical Sciences , AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "August, 2018",
+      "to": "Present",
+      "current": true,
+      "description": ""
+    },
+    {
+      "title": "Research Assistant",
+      "company": "Knowledge Engineering and Discovery Research Institute (KEDRI), AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "June, 2018",
+      "to": "Present",
+      "current": true,
+      "description": ""
     }
   ]
 }
