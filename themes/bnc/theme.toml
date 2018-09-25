@@ -8,7 +8,7 @@ description = ""
 homepage = "https://github.com/akshaybabloo/akshaybabloo/tree/master/themes/bnc"
 tags = []
 features = []
-min_version = "0.41"
+min_version = "0.49"
 
 [author]
   name = "Akshay Raj Gollahalli"
