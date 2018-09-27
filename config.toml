@@ -34,6 +34,7 @@ enableRobotsTXT = true
     algoliaApiKey = "fadcde84f1cdaf165d51c20a50336188"
     algoliaIndexName = "gollahalli-website"
     thumbnailUrl = "/img/akshay.jpg"
+    acknowledge = false
     [params.scss]
         primary = "#A36441"
         secondary = "#997953"
@@ -41,5 +42,5 @@ enableRobotsTXT = true
         backgroundColorLight = "#272a2c"
         textColor = "#c9cacc"
         subTextColor = "gray"
-        globalFontFamilyURL = "https://fonts.googleapis.com/css?family=Space+Mono:400,700"
+        # globalFontFamilyURL = "https://fonts.googleapis.com/css?family=Space+Mono:400,700" # Not used yet. See https://github.com/gohugoio/hugo/issues
         globalFontFamily = "'Space Mono', monospace"
