@@ -15,4 +15,4 @@ sitemap:
   changeFreq: monthly
 ---
 
-Hi, my name is Akshay. I am doing PhD on computational neuroscience mainly using Spiking Neural Network.
+Hi, my name is Akshay. I am doing PhD in computational neuroscience mainly using Spiking Neural Network. In my free time I write blogs, develop open-source software or day dream.
