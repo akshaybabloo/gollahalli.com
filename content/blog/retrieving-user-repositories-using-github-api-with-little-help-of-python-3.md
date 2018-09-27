@@ -3,7 +3,7 @@ title: Retrieving User Repositories Using Github Api With Little Help of Python 
 date: 2016-02-02T11:20:32+12:00
 draft: false
 categories: ["Tutorial"]
-tags: ["Python-3"]
+tags: ["Python"]
 description: "How to retrieve GitHub users repository? If thats the question you have, then this blog post is for you."
 ads: true
 sitemap:

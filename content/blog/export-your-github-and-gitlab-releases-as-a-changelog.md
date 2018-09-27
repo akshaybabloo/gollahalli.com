@@ -3,7 +3,7 @@ title: "Export Your Github and Gitlab Releases as a Changelog"
 date: 2018-01-22T13:02:05+12:00
 draft: false
 categories: ["Software"]
-tags: ["Utility", "Python 3"]
+tags: ["Utility", "Python"]
 description: "If you have forgotten to write CHANGELOG.md for your project, but you have written release notes, then this blog post is for you."
 images: ["/img/blog/release-exporter.png"]
 ads: true

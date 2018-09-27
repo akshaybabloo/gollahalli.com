@@ -3,7 +3,7 @@ title: "Part 1.2 Car Nd Masking and Colouring a Region of the Image"
 date: 2017-05-09T12:55:25+12:00
 draft: false
 categories: ["Tutorial"]
-tags: ["Python-3", "Machine-Learning", "Computer-Vision"]
+tags: ["Python", "Machine-Learning", "Computer-Vision"]
 description: "Masking and coloring a region on an given image using Python 3."
 images: ["/img/blog/masking_colouring_region-1.png"]
 ads: true

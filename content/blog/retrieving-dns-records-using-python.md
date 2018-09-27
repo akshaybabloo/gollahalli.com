@@ -3,7 +3,7 @@ title: "Retrieving Dns Records Using Python"
 date: 2016-09-16T11:34:26+12:00
 draft: false
 categories: ["Tutorial"]
-tags: ["Python-3"]
+tags: ["Python"]
 description: "Retrieving DNS records with Python 3."
 relImage: ""
 ads: true
