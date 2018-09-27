@@ -45,8 +45,16 @@
                     <div class="uk-card uk-card-default uk-card-small uk-card-body">
                         <h3 class="uk-card-title">Tags</h3>
                         <p>
-                            {{ range $key, $value := .Site.Taxonomies.tags }}
-                            <span class="uk-label"><a href="{{ "/tags/" | relLangURL }}{{ $key | urlize}}">{{$key | upper}}</a></span>
+                            {{ $blog := .Site.GetPage "/blog"}}
+                            {{ $slice := slice }}
+                            {{ range $page := $blog.Data.Pages }}
+                                {{ range $tag := $page.Params.tags }}
+                                    {{ $slice = $slice | append $tag }}
+                                {{ end }}
+                            {{ end }}
+
+                            {{ range $uniqueTags := $slice | uniq }}
+                            <span class="uk-label"><a href="{{ "/tags/" | relLangURL }}{{ $uniqueTags | urlize}}">{{ $uniqueTags | upper }}</a></span>
                             {{ end }}
                         </p>
                     </div>
