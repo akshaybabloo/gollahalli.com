@@ -1,7 +1,7 @@
 baseURL = "https://www.gollahalli.com/"
 languageCode = "en-us"
 title = "Akshay Raj Gollahalli"
-theme = "bnc"
+theme = "Spark"
 
 googleAnalytics = "UA-74123356-1" # Optional
 disqusShortname = "gollahalli-com" # Optional
