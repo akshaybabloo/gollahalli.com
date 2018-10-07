@@ -4,8 +4,11 @@ Contents for [gollahalli.com](https://www.gollahalli.com).
 
 ## 1. Building the Website
 
+Make sure you have PowerShell installed.
+
 ```md
-hugo
+npm g i yarn
+yarn serve
 ```
 
 ## 2. Theme
