@@ -7,6 +7,15 @@ tags: ["UnrealEngine4", "VR", "Android"]
 description: "Deploying games from Unreal Engine 4 to Samsung Gear VR."
 images: ["/img/blog/UnrealEngine4.gif", "/img/blog/DevOpti.png", "/img/blog/USBDebug.png", "/img/blog/Plugins.png", "/img/blog/Plugins1.png", "/img/blog/TargetHardware.png", "/img/blog/ProjectSettingsMenu.png", "/img/blog/AndroidPlatform.png", "/img/blog/AndroidPlatform1.png", "/img/blog/AndroidPlatformSDK.png", "/img/blog/Packing.png"]
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 siteMapImages:
   - imageLoc: "/img/blog/UnrealEngine4.gif"
     imageCaption: "UnrealEngine 4 and Samsung GearVR"

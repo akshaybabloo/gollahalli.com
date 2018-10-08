@@ -7,6 +7,15 @@ tags: ["Utility", "Python"]
 description: "If you have forgotten to write CHANGELOG.md for your project, but you have written release notes, then this blog post is for you."
 images: ["/img/blog/release-exporter.png"]
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 siteMapImages:
   - imageLoc: "/img/blog/release-exporter.png"
     imageCaption: "Release Exporter"

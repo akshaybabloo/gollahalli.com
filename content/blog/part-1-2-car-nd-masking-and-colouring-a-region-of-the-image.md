@@ -7,6 +7,15 @@ tags: ["Python", "Machine-Learning", "Computer-Vision"]
 description: "Masking and coloring a region on an given image using Python 3."
 images: ["/img/blog/masking_colouring_region-1.png"]
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 sitemapImages:
   - imageLoc: "/img/blog/masking_colouring_region-1.png"
     imageCaption: "Masking regions"

@@ -6,6 +6,15 @@ categories: ["Tutorial"]
 tags: ["Python"]
 description: "How to retrieve GitHub users repository? If thats the question you have, then this blog post is for you."
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 sitemap:
   priority: 0.8
   changeFreq: monthly

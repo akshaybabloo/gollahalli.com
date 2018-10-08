@@ -5,9 +5,19 @@ draft: false
 menu: "main"
 description: "About me"
 type: about
+images: ["/akshay.jpg"]
 sitemap:
   priority: 0.8
   changeFreq: monthly
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 ---
 
 ## About Me

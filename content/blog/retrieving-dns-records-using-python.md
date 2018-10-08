@@ -7,6 +7,15 @@ tags: ["Python"]
 description: "Retrieving DNS records with Python 3."
 relImage: ""
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 sitemap:
   priority: 0.8
   changeFreq: monthly

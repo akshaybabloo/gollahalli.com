@@ -9,6 +9,15 @@ ads: true
 sitemap:
   priority: 0.8
   changeFreq: monthly
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 ---
 
 Before we look into what a Collatz conjecture is, I highly recommend watching the (below video by Numberphile.

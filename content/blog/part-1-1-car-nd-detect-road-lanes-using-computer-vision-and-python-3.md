@@ -7,6 +7,15 @@ tags: ["Python", "Machine-Learning", "Computer-Vision"]
 description: "Road lane detection using computer vision in Python 3."
 images: ["/img/blog/edge_detection.png"]
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 siteMapImages:
   - imageLoc: "/img/blog/edge_detection.png"
     imageCaption: "Stages of line detection"

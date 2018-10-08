@@ -6,6 +6,15 @@ categories: ["Software"]
 tags: ["Matlab"]
 description: "Collecting data from Emotiv via Matlab."
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 sitemap:
   priority: 0.8
   changeFreq: monthly
@@ -26,8 +35,8 @@ There are two ways to get the data from your Emotiv EPOC device
 - [1 Structure](#1structure)
 - [2 Requirements](#2requirements)
 - [3 Installing `mex` compiler](#3installingmexcompiler)
-- [4 Using `.m` files](#4usingmfiles) 
-    - [4.1 Using `one` (EEG Logger)](#41usingoneeeglogger) 
+- [4 Using `.m` files](#4usingmfiles)
+    - [4.1 Using `one` (EEG Logger)](#41usingoneeeglogger)
     - [4.2 Using `two` (Emotiv EEG)](#42usingtwoemotiveeg)
 - [5 Troubleshooting](#5troubleshooting)
 
@@ -79,8 +88,8 @@ Go to [Emotiv](http://www.emotiv.com) website for more information.
 - `mex -setup` (Please make sure the required compilers are installed eg: Visual Studio 2010 pro for Matlab R2013a or Microsoft Windows SDK 7.1)
 
 ```md
-Welcome to mex -setup.  This utility will help you set up  
-a default compiler.  For a list of supported compilers, see  
+Welcome to mex -setup.  This utility will help you set up
+a default compiler.  For a list of supported compilers, see
 http://www.mathworks.com/support/compilers/R2013a/win32.html
 
 Please choose your compiler for building MEX-files:
@@ -106,7 +115,7 @@ Compiler:
 ```md
 Please verify your choices:
 
-Compiler: Microsoft Visual C++ 2010  
+Compiler: Microsoft Visual C++ 2010
 Location: c:\Program Files (x86)\Microsoft Visual Studio 10.0
 
 Are these correct [y]/n?
@@ -117,7 +126,7 @@ Are these correct [y]/n?
 ```md
 ***************************************************************************
   Warning: MEX-files generated using Microsoft Visual C++ 2010 require
-           that Microsoft Visual Studio 2010 run-time libraries be  
+           that Microsoft Visual Studio 2010 run-time libraries be
            available on the computer they are run on.
            If you plan to redistribute your MEX-files to other MATLAB
            users, be sure that they have the run-time libraries.
@@ -134,7 +143,7 @@ Done . . .
            variables with more than 2^32-1 elements.  In the near future
            you will be required to update your code to utilize the new
            API. You can find more information about this at:
-           http://www.mathworks.com/help/matlab/matlab_external/upgrading-mex-files-to-use-64-bit-api.html  
+           http://www.mathworks.com/help/matlab/matlab_external/upgrading-mex-files-to-use-64-bit-api.html
            Building with the -largeArrayDims option enables the new API.
 **************************************************************************
 ```
@@ -165,7 +174,7 @@ Done . . .
            variables with more than 2^32-1 elements.  In the near future
            you will be required to update your code to utilize the new
            API. You can find more information about this at:
-           http://www.mathworks.com/help/matlab/matlab_external/upgrading-mex-files-to-use-64-bit-api.html  
+           http://www.mathworks.com/help/matlab/matlab_external/upgrading-mex-files-to-use-64-bit-api.html
            Building with the -largeArrayDims option enables the new API.
 **************************************************************************
 ```

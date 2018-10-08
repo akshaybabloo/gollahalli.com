@@ -7,6 +7,15 @@ tags: ["Linux"]
 categories: ["Tutorial"]
 description: "Do you have problem accessing enterprise WiFi on Linux? Then this article is for you."
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 sitemap:
   priority: 0.8
   changeFreq: monthly

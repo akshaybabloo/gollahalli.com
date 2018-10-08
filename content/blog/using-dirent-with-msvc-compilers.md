@@ -6,12 +6,21 @@ categories: ["Tutorial"]
 tags: ["C++"]
 description: "Using Dirent With Msvc Compilers"
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 sitemap:
   priority: 0.8
   changeFreq: monthly
 ---
 
-At the time of writing this blog, I am developing a C++ version of my [Spiks](https://github.com/akshaybabloo/Spikes) library - [libSpikes](https://github.com/akshaybabloo/libSpikes). I was compiling the `libSpikes` using [Cygwin](https://www.cygwin.com/) and [MinGW](http://www.mingw.org/). 
+At the time of writing this blog, I am developing a C++ version of my [Spiks](https://github.com/akshaybabloo/Spikes) library - [libSpikes](https://github.com/akshaybabloo/libSpikes). I was compiling the `libSpikes` using [Cygwin](https://www.cygwin.com/) and [MinGW](http://www.mingw.org/).
 
 If you have used Linux before you can recognise the way Cygwin folder is structured. Cygwin tends to create a complete POSIX environment on the Windows, that means it brings loads of DLL files to compile C++ files. MinGW, on the other hand, brings the functionality of Win 32 API's and also provides specific POSIX API's.
 

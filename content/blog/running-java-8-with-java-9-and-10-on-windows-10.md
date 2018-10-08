@@ -7,6 +7,15 @@ tags: ["Java"]
 description: "Java 9+ and problems with it's path."
 images: ["/img/blog/java_path.jpg", "/img/blog/edit_string.JPG", "/img/blog/regedit.JPG"]
 ads: true
+author:
+  prefix: "Mr."
+  fistName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 siteMapImages:
   - imageLoc: "/img/blog/java_path.jpg"
     imageCaption: "Running different version of java"
