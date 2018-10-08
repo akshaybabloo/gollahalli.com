@@ -9,7 +9,7 @@ description: "Do you have problem accessing enterprise WiFi on Linux? Then this 
 ads: true
 author:
   prefix: "Mr."
-  fistName: "Akshay Raj"
+  firstName: "Akshay Raj"
   lastName: "Gollahalli"
   honorarySuffix: "MCIS (FCH)"
   jobTitle: "Research Assistant"

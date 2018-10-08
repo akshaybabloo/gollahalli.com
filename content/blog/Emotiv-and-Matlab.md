@@ -8,7 +8,7 @@ description: "Collecting data from Emotiv via Matlab."
 ads: true
 author:
   prefix: "Mr."
-  fistName: "Akshay Raj"
+  firstName: "Akshay Raj"
   lastName: "Gollahalli"
   honorarySuffix: "MCIS (FCH)"
   jobTitle: "Research Assistant"

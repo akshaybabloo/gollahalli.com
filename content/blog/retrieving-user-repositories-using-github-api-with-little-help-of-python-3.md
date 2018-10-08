@@ -8,7 +8,7 @@ description: "How to retrieve GitHub users repository? If thats the question you
 ads: true
 author:
   prefix: "Mr."
-  fistName: "Akshay Raj"
+  firstName: "Akshay Raj"
   lastName: "Gollahalli"
   honorarySuffix: "MCIS (FCH)"
   jobTitle: "Research Assistant"

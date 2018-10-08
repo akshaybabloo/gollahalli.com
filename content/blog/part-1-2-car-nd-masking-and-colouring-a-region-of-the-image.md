@@ -9,7 +9,7 @@ images: ["/img/blog/masking_colouring_region-1.png"]
 ads: true
 author:
   prefix: "Mr."
-  fistName: "Akshay Raj"
+  firstName: "Akshay Raj"
   lastName: "Gollahalli"
   honorarySuffix: "MCIS (FCH)"
   jobTitle: "Research Assistant"

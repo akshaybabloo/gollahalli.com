@@ -9,7 +9,7 @@ images: ["/img/blog/UnrealEngine4.gif", "/img/blog/DevOpti.png", "/img/blog/USBD
 ads: true
 author:
   prefix: "Mr."
-  fistName: "Akshay Raj"
+  firstName: "Akshay Raj"
   lastName: "Gollahalli"
   honorarySuffix: "MCIS (FCH)"
   jobTitle: "Research Assistant"
