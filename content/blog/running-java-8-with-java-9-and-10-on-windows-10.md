@@ -1,6 +1,7 @@
 ---
 title: "Running Java 8 With Java 9 and 10 on Windows 10"
 date: 2018-04-04T14:33:10+12:00
+lastmod: 2018-10-16T14:33:10+12:00
 draft: false
 categories: ["Tutorial"]
 tags: ["Java"]
@@ -63,7 +64,7 @@ Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10+46, mixed mode)
 Even though you have JAVA_HOME environment variable, you will see the newer ones, as I said earlier, defaults paths are loaded first.
 ```
 
-You can test this by doing where java your output will be something like this:
+You can test this by typing `where java` and your output will be something like this:
 
 ```md
 C:\ProgramData\Oracle\Java\javapath\java.exe
@@ -79,6 +80,8 @@ There are two way to do this:
 You can delete the path - **C:\ProgramData\Oracle\Java\javapath** from the default **Path** mentioned in **Registry Editor**. You will need to double-click on the Path, which will open:
 
 {{< figure src="/img/blog/edit_string.JPG" title="Registry Editor" alt="Registry Editor" >}}
+
+Also, sometimes you may also find `C:\Program Files (x86)\Common Files\Oracle\Java\javapath`, remove this too.
 
 Once you have removed the path, close and reopen your command prompt, if you have **JAVA_HOME** for Java 8 you should be able to run (for me) Scala.
 
