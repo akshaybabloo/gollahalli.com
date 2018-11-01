@@ -38,9 +38,9 @@ enableRobotsTXT = true
     [params.scss]
         primary = "#A36441"
         secondary = "#997953"
-        backgroundColor = "#1d1f21"
+        backgroundColor = "#000"
         backgroundColorLight = "#272a2c"
         textColor = "#c9cacc"
         subTextColor = "gray"
         # globalFontFamilyURL = "https://fonts.googleapis.com/css?family=Space+Mono:400,700" # Not used yet. See https://github.com/gohugoio/hugo/issues
-        globalFontFamily = "'Space Mono', monospace"
+        globalFontFamily = "'Roboto Mono', monospace"
