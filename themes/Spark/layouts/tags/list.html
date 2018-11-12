@@ -5,7 +5,7 @@
         <div class="uk-section uk-section-default">
             <div class="uk-container uk-container-xsmall uk-text-justify" uk-height-viewport="offset-bottom: 32">
 
-                <h2>Tags</h2>
+                <h2>{{ if ne "Tags" .Title }}{{.Title}} &mdash; {{ end }}{{"Tags"}}</h2>
                 <dl class="uk-description-list gol-links">
                     {{ range .Pages }}
                     <dt>
