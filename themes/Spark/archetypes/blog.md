@@ -17,6 +17,6 @@ author:
   addressCity: ""
   addressCountry: ""
 sitemap:
-  priority:
-  changeFreq: ""
+  priority: 0.8
+  changeFreq: monthly
 ---
