@@ -1,5 +1,5 @@
 ---
-title: "Pycluster an Clustering and Visualising Framework"
+title: "PyCluster an Clustering and Visualising Framework"
 date: 2018-09-06T16:05:48+12:00
 draft: false
 projectCategory: "Upcoming Projects and Tutorials"
