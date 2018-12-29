@@ -41,5 +41,5 @@ if ($Deploy) {
     firebase deploy
 
     Log -Text "Uploading search index to Algolia..."
-    python .\utils.py
+    python ./utils.py
 }
