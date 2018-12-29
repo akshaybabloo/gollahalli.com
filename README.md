@@ -2,6 +2,8 @@
 
 Contents for [gollahalli.com](https://www.gollahalli.com).
 
+Based on Hugo 0.51+
+
 ## 1. Building the Website
 
 Make sure you have PowerShell installed.
