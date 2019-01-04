@@ -8,11 +8,9 @@
             <div class="uk-container uk-container-xsmall uk-text-justify uk-text-break">
                 {{ range (.Paginate (.Pages.GroupByPublishDate "2006")).PageGroups }}
                     {{ range .Pages }}
-                        <article class="uk-article gol-links">
+                        <article class="uk-article gol-links uk-margin-large">
                             {{ if .Params.images }}
-                                <figure>
-                                    <img src="{{ index .Params.images 0 }}" alt="{{.Title}}" uk-img>
-                                </figure>
+                            <a href="{{.Permalink}}"><img class="uk-border-rounded uk-align-center" src="{{ index .Params.images 0 }}" alt="{{.Title}}" width="500" uk-img></a>
                             {{ end }}
                             <a href="{{.Permalink}}">{{.Title}}</a>
                             <p class="uk-article-meta">
