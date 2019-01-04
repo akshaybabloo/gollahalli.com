@@ -13,15 +13,17 @@ function Log {
     Write-Host $Text -ForegroundColor Magenta
 }
 function BuildHugo {
-    Log -Text"Building Hugo for Producation..."
+    Log -Text "Building Hugo for Producation..."
     $Env:HUGO_ENV = "production"
 
     $public_folder = Join-Path -Path $PSScriptRoot -ChildPath "public"
+    $resources_folder = Join-Path -Path $PSScriptRoot -ChildPath "resources"
 
     if (Test-Path -Path "$public_folder" -ErrorAction SilentlyContinue) {
-        Log -Text "'public' folder found, deleting it..."
+        Log -Text "'public and resources' folders found, deleting it..."
         Remove-Item -Path "$public_folder" -Recurse -Force
-        Log -Text "'public' folder deleted..."
+        Remove-Item -Path "$resources_folder" -Recurse -Force
+        Log -Text "'public and recources' folders deleted..."
         Start-Sleep -Seconds 1
     }
 
