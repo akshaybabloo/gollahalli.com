@@ -29,16 +29,15 @@ print("Successfully uploaded index to Algolia.")
 # ------- Algolia End ---------
 
 # ------- Sitemap Ping Start ---------
-print("\nPinging Google")
 GOOGLE_PING_URL = "https://www.google.com/webmasters/tools/ping"
 BING_PING_URL = "https://www.bing.com/ping?sitemap"
 
 config = toml.load("./config.toml")
 
 params = urlencode({'sitemap': config["baseURL"] + "sitemap.xml"})
-print("\nPinging Google")
+print("Pinging Google")
 urlopen('%s?%s' % (GOOGLE_PING_URL, params))
-print("\nPinging Bing")
+print("Pinging Bing")
 urlopen('%s?%s' % (BING_PING_URL, params))
 
 print("Done!")
