@@ -20,7 +20,7 @@ function BuildHugo {
 
     if (Test-Path -Path "$public_folder" -ErrorAction SilentlyContinue) {
         Log -Text "'public' folder found, deleting it..."
-        Remove-Item -Path "$public_folder" -Recurse
+        Remove-Item -Path "$public_folder" -Recurse -Force
         Log -Text "'public' folder deleted..."
         Start-Sleep -Seconds 1
     }
