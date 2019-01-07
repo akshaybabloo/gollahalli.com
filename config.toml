@@ -21,7 +21,7 @@ enableRobotsTXT = true
 [params]
     googleAds = "ca-pub-7450383714878520" # Optional
     amp = true
-    year = 2018
+    year = 2019
     github = "https://github.com/akshaybabloo" # Optional
     linkedin = "https://linkedin.com/in/gollahalli" # Optional
     twitter = "http://twitter.com/akshaybabloo" # Optional
