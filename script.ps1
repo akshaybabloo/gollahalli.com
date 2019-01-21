@@ -45,3 +45,5 @@ if ($Deploy) {
     Log -Text "Uploading search index to Algolia..."
     python ./utils.py
 }
+
+$Env:HUGO_ENV = "dev"
