@@ -1,0 +1,2 @@
+algoliasearch==1.19.1
+toml==0.10.0
