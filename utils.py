@@ -15,12 +15,12 @@ except ImportError:
 
 # ------- Algolia Start ---------
 
-app_id = "UT1XVMZE1Q"
-index_name = "gollahalli-website"
+APP_ID = "UT1XVMZE1Q"
+INDEX_NAME = "gollahalli-website"
 file_path = os.path.join('public', 'searchindex.json')
 
-client = algoliasearch.Client(app_id, os.environ.get('ALGOLIA_KEY'))
-index = client.init_index(index_name)
+client = algoliasearch.Client(APP_ID, os.environ.get('ALGOLIA_KEY'))
+index = client.init_index(INDEX_NAME)
 
 index.clear_index()  # Clear previous entries.
 
