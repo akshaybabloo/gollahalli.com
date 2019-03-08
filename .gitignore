@@ -13,3 +13,5 @@ temp\.py
 resources/
 
 secrets\.ps1
+
+\.vscode/
