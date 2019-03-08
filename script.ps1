@@ -1,13 +1,18 @@
 param(
-    [string]$Build,
-    [bool]$Deploy
+    [string]
+    $Build,
+
+    [bool]
+    $Deploy
 )
 
 Import-Module .\secrets.ps1
 
 function Log {
+
     param (
-        [string]$Text
+        [string]
+        $Text
     )
 
     Write-Host $Text -ForegroundColor Magenta
