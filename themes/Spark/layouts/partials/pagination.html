@@ -31,7 +31,7 @@
     {{ end }}
     {{ if $showNumber }}
     {{ if eq . $pag }}
-    <li  class="uk-active"><span>{{ .PageNumber }}</span></a></li>
+    <li class="uk-active"><span class="uk-badge">{{ .PageNumber }}</span></li>
     {{ else }}
     <li><a href="{{ .URL }}"><span>{{ .PageNumber }}</span></a></li>
     {{ end }}
