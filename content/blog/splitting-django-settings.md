@@ -5,7 +5,7 @@ draft: true
 tags: ["Python", "Azure", "Django"]
 categories: ["Tips"]
 description: ""
-images: []
+images: ["/img/blog/splitting_django_settings.png"]
 ads: true
 author:
   prefix: "Mr."
