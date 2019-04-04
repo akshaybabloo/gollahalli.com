@@ -8,14 +8,14 @@ description: ""
 images: []
 ads: false
 author:
-  prefix: ""
-  fistName: ""
-  lastName: ""
-  honorarySuffix: ""
-  jobTitle: ""
-  email: ""
-  addressCity: ""
-  addressCountry: ""
+  prefix: "Mr."
+  firstName: "Akshay Raj"
+  lastName: "Gollahalli"
+  honorarySuffix: "MCIS (FCH)"
+  jobTitle: "Research Assistant"
+  email: "akshay@gollahalli.com"
+  addressCity: "Auckland"
+  addressCountry: "New Zealand"
 sitemap:
   priority: 0.8
   changeFreq: monthly
