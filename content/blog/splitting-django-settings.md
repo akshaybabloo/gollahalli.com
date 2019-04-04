@@ -19,6 +19,9 @@ author:
 sitemap:
   priority: 0.8
   changeFreq: monthly
+siteMapImages:
+  - imageLoc: "/img/blog/splitting_django_settings.png"
+    imageCaption: "Splitting Django Settings"
 ---
 
 {{< figure src="/img/blog/splitting_django_settings.png" alt="Splitting Django Settings" title="Splitting Django Settings" >}}
