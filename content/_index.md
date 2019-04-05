@@ -10,6 +10,8 @@ images: ["/img/akshay.jpg"]
 siteMapImages:
   - imageLoc: "/img/akshay.jpg"
     imageCaption: "Akshay Raj Gollahalli"
+  - imageLoc: "/img/logo.png"
+    imageCaption: "Akshay Raj Gollahalli's logo"
 sitemap:
   priority: 1
   changeFreq: monthly
