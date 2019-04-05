@@ -5,7 +5,7 @@ draft: true
 tags: ["Nginx"]
 categories: ["Tutorial"]
 description: "An introduction to Nginx server"
-images: []
+images: ["/img/blog/introduction_to_nginx.png"]
 ads: true
 author:
   prefix: "Mr."
@@ -19,4 +19,9 @@ author:
 sitemap:
   priority: 0.8
   changeFreq: monthly
+siteMapImages:
+  - imageLoc: "/img/blog/introduction_to_nginx.png"
+    imageCaption: "Introduction to NGINX"
 ---
+
+{{< figure src="/img/blog/introduction_to_nginx.png" alt="Introduction to NGINX" title="Introduction to NGINX" >}}
