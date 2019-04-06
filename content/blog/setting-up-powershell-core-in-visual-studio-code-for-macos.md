@@ -24,7 +24,7 @@ siteMapImages:
     imageCaption: "PowerShell + macOS + VS Code = Heart"
 ---
 
-{{< figure src="/img/blog/powershell-vscode-macos.jpg" alt="PowerShell + macOS + VS Code = Heart" title="PowerShell + macOS + VS Code = Heart" >}}
+{{< figure src="/img/blog/powershell-vscode-macos.jpg" alt="PowerShell + macOS + VS Code = Heart" >}}
 
 Things we need:
 

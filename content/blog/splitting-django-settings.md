@@ -24,7 +24,7 @@ siteMapImages:
     imageCaption: "Splitting Django Settings"
 ---
 
-{{< figure src="/img/blog/splitting_django_settings.png" alt="Splitting Django Settings" title="Splitting Django Settings" >}}
+{{< figure src="/img/blog/splitting_django_settings.png" alt="Splitting Django Settings" >}}
 
 I have been working of few projects that uses django 2+ and deploying them to Azure Docker container. I do have one problem though, my development settings are very much different from my production. So, I split `settings.py` into a package with three extra files:
 

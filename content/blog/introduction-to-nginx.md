@@ -24,4 +24,4 @@ siteMapImages:
     imageCaption: "Introduction to NGINX"
 ---
 
-{{< figure src="/img/blog/introduction_to_nginx.png" alt="Introduction to NGINX" title="Introduction to NGINX" >}}
+{{< figure src="/img/blog/introduction_to_nginx.png" alt="Introduction to NGINX" >}}

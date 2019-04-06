@@ -24,7 +24,7 @@ siteMapImages:
     imageCaption: "Gollahalli.com Screenshot"
 ---
 
-{{< figure src="/img/blog/gollahalli_com.png" alt="Gollahalli.com Screenshot" title="Gollahalli.com Screenshot" >}}
+{{< figure src="/img/blog/gollahalli_com.png" alt="Gollahalli.com Screenshot" >}}
 
 [Hugo](https://gohugo.io) is a super fast static site generator with more than 500 contributors. Companies such as 1Password, Kubernetes and Cloudflare rely on Hugo to generate their documentation. Even this website is generated using Hugo.
 
