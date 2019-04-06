@@ -21,7 +21,7 @@ sitemap:
   changeFreq: monthly
 siteMapImages:
   - imageLoc: "/img/blog/splitting_django_settings.png"
-    imageCaption: "Splitting Django Settings"
+    imageCaption: "Splitting Django Settings for Local and Production Development"
 ---
 
 {{< figure src="/img/blog/splitting_django_settings.png" alt="Splitting Django Settings" >}}
