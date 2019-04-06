@@ -29,6 +29,7 @@ enableRobotsTXT = true
     pgp = "3570 2F7C E0CF 2579 BF7D 05DD A603 9E24 179E E13D" # Optional
     # logoSVG = "img/logo.svg" # # Use logoSVG or logo. Optional
     # logo = "" # Use logoSVG or logo. Optional
+    namedLogo = "/img/logo.svg"
     logoPhoto = "/img/akshay.jpg" # Use logoSVG or logo or logoPhoto. Optional
     algoliaAppId = "UT1XVMZE1Q"
     algoliaApiKey = "fadcde84f1cdaf165d51c20a50336188"
