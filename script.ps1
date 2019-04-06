@@ -45,6 +45,7 @@ if ($Deploy) {
     BuildHugo
 
     Log -Text "Deploying website..."
+    firebase --version
     firebase deploy
 
     Log -Text "Uploading search index to Algolia..."
