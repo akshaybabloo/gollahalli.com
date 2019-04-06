@@ -15,26 +15,26 @@ function Log {
         $Text
     )
 
-    Write-Host $Text -ForegroundColor Magenta
+    Write-Host $Text -ForegroundColor DarkGreen
 }
 function BuildHugo {
-    Log -Text "Building Hugo for Producation..."
+    Log -Text "PS> Building Hugo for Producation..."
     $Env:HUGO_ENV = "production"
 
     $public_folder = Join-Path -Path $PSScriptRoot -ChildPath "public"
     $resources_folder = Join-Path -Path $PSScriptRoot -ChildPath "resources"
 
     if (Test-Path -Path "$public_folder" -ErrorAction SilentlyContinue) {
-        Log -Text "'public and resources' folders found, deleting it..."
+        Log -Text "PS> 'public and resources' folders found, deleting it..."
         Remove-Item -Path "$public_folder" -Recurse -Force
         Remove-Item -Path "$resources_folder" -Recurse -Force
-        Log -Text "'public and recources' folders deleted..."
+        Log -Text "PS> 'public and recources' folders deleted..."
         Start-Sleep -Seconds 1
     }
 
-    Log -Text "Building website..."
+    Log -Text "PS> Building website..."
     hugo -v --minify --gc
-    Log -Text "Website built @ $public_folder"
+    Log -Text "PS> Website built @ $public_folder"
 }
 
 if ($Build -eq "production") {
@@ -44,11 +44,11 @@ if ($Build -eq "production") {
 if ($Deploy) {
     BuildHugo
 
-    Log -Text "Deploying website..."
+    Log -Text "PS> Deploying website..."
     firebase --version
     firebase deploy
 
-    Log -Text "Uploading search index to Algolia..."
+    Log -Text "PS> Uploading search index to Algolia..."
     python ./utils.py
 }
 
