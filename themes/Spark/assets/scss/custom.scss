@@ -134,6 +134,10 @@ h2 {
     color: $secondary !important;
 }
 
+h2 > code {
+    font-size: 1.7rem;
+}
+
 h3 {
     color: $secondary !important;
 }
