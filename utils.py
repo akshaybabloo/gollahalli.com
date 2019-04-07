@@ -17,11 +17,13 @@ CDGREEN = '\33[92m'
 CBOLD = '\033[1m'
 CEND = '\033[0m'
 
+
 def colour_me(text: str) -> str:
     """
     Returns a dark green text
     """
     return CBOLD + CDGREEN + text + CEND
+
 
 # ------- Algolia Start ---------
 
@@ -57,6 +59,6 @@ print(colour_me("PY> Pinging Bing..."), end='')
 urlopen('%s?%s' % (BING_PING_URL, params))
 print(colour_me("Done"))
 
-print(colour_me("PY> Content deployed at "), colour_me(config["baseURL"]))
+print(colour_me("PY> Content deployed at"), colour_me(config["baseURL"]))
 
 # ------- Sitemap Ping End ---------
