@@ -7,8 +7,8 @@
   "author": "Akshay Raj Gollahalli <akshay@gollahalli.com>",
   "license": "MIT",
   "scripts": {
-    "build": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./script.ps1 -Build production",
-    "deploy": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./script.ps1 -Deploy 1",
+    "build": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./Build-Hugo.ps1 -Build production",
+    "deploy": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./Build-Hugo.ps1 -Deploy 1",
     "clean": "",
     "serve": "hugo serve -D -v "
   },
