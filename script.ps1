@@ -1,3 +1,24 @@
+<#
+.SYNOPSIS
+    This script builds and deploys Hugo website to firebase.
+.DESCRIPTION
+    This script fist checks if the "public" folder exists or not, if so it deletes it.
+    Then it builds the website with the correct environment variable (just build or deply it).
+    If "Deploy" is set to "1", then this scrips calls the "firebase" CLI to deploy the public folder.
+    Once that is done, it calls a Python script that publishes new index to Algolia, pings Google and Bing.
+.NOTES
+    Author
+    File Name  : Build-Hugo.ps1
+    Author     : Akshay Raj Gollahalli - akshay@gollahalli.com
+.LINK
+    https://github.com/akshaybabloo/gollahalli.com
+.EXAMPLE
+    Build-Hugo -Build production
+    Builds Hugo website for production and does NOT deploy it.
+.EXAMPLE
+    Build-Hugo -Deploy 1
+    Builds and deploys Hugo to firebase.
+#>
 param(
     [string]
     $Build,
