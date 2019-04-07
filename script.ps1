@@ -61,8 +61,9 @@ function BuildHugo {
         Start-Sleep -Seconds 1
     }
 
-    Log -Text "PS> Building website..."
-    hugo -v --minify --gc
+    Log -Text "PS> Building website..." -Newline 1
+    hugo -v --minify --gc --quiet
+    Log -Text "Done"
     Log -Text "PS> Website built @ $public_folder"
 }
 
