@@ -33,10 +33,18 @@ function Log {
 
     param (
         [string]
-        $Text
+        $Text,
+
+        [bool]
+        $NewLine
     )
 
-    Write-Host $Text -ForegroundColor DarkGreen
+    if ($NewLine) {
+        Write-Host ("`e[1m" + $Text + "`e[0m") -ForegroundColor DarkGreen -NoNewline
+    }
+    else {
+        Write-Host ("`e[1m" + $Text + "`e[0m") -ForegroundColor DarkGreen
+    }
 }
 function BuildHugo {
     Log -Text "PS> Building Hugo for Producation..."
@@ -46,10 +54,10 @@ function BuildHugo {
     $resources_folder = Join-Path -Path $PSScriptRoot -ChildPath "resources"
 
     if (Test-Path -Path "$public_folder" -ErrorAction SilentlyContinue) {
-        Log -Text "PS> 'public and resources' folders found, deleting it..."
+        Log -Text "PS> 'public and resources' folders found, deleting it..." -Newline 1
         Remove-Item -Path "$public_folder" -Recurse -Force
         Remove-Item -Path "$resources_folder" -Recurse -Force
-        Log -Text "PS> 'public and recources' folders deleted..."
+        Log -Text "Done"
         Start-Sleep -Seconds 1
     }
 
@@ -69,7 +77,7 @@ if ($Deploy) {
     firebase --version
     firebase deploy
 
-    Log -Text "PS> Uploading search index to Algolia..."
+    Log -Text "PS> Running Pyton Script..."
     python ./utils.py
 }
 
