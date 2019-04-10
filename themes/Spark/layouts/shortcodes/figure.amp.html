@@ -1,12 +1,14 @@
-<amp-img
-        {{ with .src }}src="{{ . }}"{{ end }}
-    {{ with .alt }}alt="{{ range (split . " ") }}{{ . }} {{ end }}"{{ end }}
-    {{ with .attribution }}attribution="{{ range (split . " ") }}{{ . }} {{ end }}"{{ end }}
-    {{ with .srcset }}srcset="{{ range (split . " ") }}{{ . }} {{ end }}"{{ end }}
-    {{ with .tabindex }}tabindex="{{ . }}"{{ end }}
-    {{ with .onTap }}on="tap:{{- . -}}"{{ end }}
-    {{ with .role }}role="{{ . }}"{{ end }}
-    {{ with .width }}width="{{ . }}"{{ end }}
-    {{ with .height }}height="{{ . }}"{{ end }}
-    {{ with .layout }}layout="{{ . }}"{{ end }}>
-</amp-img>
+<figure class="kg-card kg-image-card kg-card-hascaption">
+    <amp-img
+            src="https://blog.ghost.org/content/images/2019/03/advanced-sitemaps-2.png"
+            class="kg-image"
+            width="2068"
+            height="737"
+            layout="responsive">
+
+    </amp-img>
+    <figcaption>
+        <strong><strong>Demo:</strong></strong>
+        <a href="https://docs.ghost.org/sitemap.xml"><strong>https://docs.ghost.org/sitemap.xml</strong></a>
+    </figcaption>
+</figure>
