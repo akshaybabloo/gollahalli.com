@@ -7,7 +7,7 @@
             "name": "{{ .Site.Title }}",
             "logo": {
                 "@type": "ImageObject",
-                "url": "{{`img/favicon-72-precomposed.png` | absURL }}",
+                "url": "{{ .Site.Params.logoPhoto | absURL }}",
                 "width": 60,
                 "height": 60
             }
