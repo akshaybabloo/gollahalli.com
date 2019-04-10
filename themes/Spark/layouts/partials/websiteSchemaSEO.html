@@ -4,19 +4,19 @@
         "@type": "WebSite",
         "publisher": {
             "@type": "Organization",
-            "name": "{{ .Site.Params. }}",
+            "name": "{{ .Site.Title }}",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://blog.ghost.org/favicon.png",
+                "url": "{{ .Site.Params.logoPhoto | absURL }}",
                 "width": 60,
                 "height": 60
             }
         },
-        "url": "https://blog.ghost.org/",
+        "url": "{{ .Site.BaseURL }}",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https://blog.ghost.org/"
+            "@id": "{{ .Site.BaseURL }}"
         },
-        "description": "Product updates, highlights, and behind the scenes content from the Ghost team!"
+        "description": "{{ .Description }}"
     }
 </script>
