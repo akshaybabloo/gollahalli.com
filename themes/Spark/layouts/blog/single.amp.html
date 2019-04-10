@@ -9,7 +9,9 @@
 <body class="amp-template">
 <header class="main-header">
     <nav class="blog-title">
-        <a href="https://blog.ghost.org">Ghost</a>
+        <a href="{{ .Site.BaseURL }}">
+            {{ .Site.Title }}
+        </a>
     </nav>
 </header>
 
@@ -17,25 +19,30 @@
     <article class="post">
 
         <header class="post-header">
-            <h1 class="post-title">Advanced Sitemap Plugin for Gatsby</h1>
+            <h1 class="post-title">{{.Title}}</h1>
             <section class="post-meta">
-                <p class="author">by <a href="/author/kym/">Kym Ellis</a></p>
-                <time class="post-date" datetime="2019-03-12">2019-03-12</time>
+                {{/*                <p class="author">by <a href=""></a></p>*/}}
+                <time class="post-date" datetime="{{ .PublishDate }}">{{.PublishDate.Format "January 2, 2006"}}</time>
             </section>
         </header>
-        <figure class="post-image">
-            <amp-img src="https://blog.ghost.org/content/images/2019/03/Advanced-SiteMap-GHG.png" width="600"
-                     height="400" layout="responsive"></amp-img>
-        </figure>
+        {{ if (isset .Params "images") }}
+            <figure class="post-image">
+                <amp-img src="{{ (index .Params.images 0) | absURL }}" width="600"
+                         height="400" layout="responsive"></amp-img>
+            </figure>
+        {{ end }}
         <section class="post-content">
             {{ .Content }}
         </section>
-
     </article>
 </main>
 <footer class="site-footer clearfix">
-    <section class="copyright"><a href="https://blog.ghost.org">Ghost</a> &copy; 2019</section>
-    <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+    <section class="copyright"><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a> &copy; {{.Site.Params.year}}
+    </section>
+    {{if .Site.Params.acknowledge }}
+        <section class="poweredby">Theme by <a href="https://github.com/akshaybabloo/spark-hugo-theme">Akshay Raj
+                Gollahalli</a>, generated using <a href="http://hugo.io">Hugo</a></section>
+    {{ end }}
 </footer>
 </body>
 </html>
