@@ -4,44 +4,51 @@
         "@type": "Article",
         "publisher": {
             "@type": "Organization",
-            "name": "Ghost",
+            "name": "{{ .Site.Title }}",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://blog.ghost.org/favicon.png",
+                "url": "{{`img/favicon-72-precomposed.png` | absURL }}",
                 "width": 60,
                 "height": 60
             }
         },
         "author": {
             "@type": "Person",
-            "name": "Kym Ellis",
+            "name": "{{ .Params.author.firstName }} {{ .Params.author.lastName }}",
             "image": {
                 "@type": "ImageObject",
-                "url": "https://blog.ghost.org/content/images/2018/09/21371036_10159190635245507_5301064417152251971_n.jpg",
+                "url": "{{ .Site.Params.logoPhoto | absURL }}",
                 "width": 481,
                 "height": 533
             },
-            "url": "https://blog.ghost.org/author/kym/",
+            "url": "{{ .Site.BaseURL }}",
             "sameAs": [
-                "https://kymellis.co",
-                "https://twitter.com/kymellis"
+                "{{ .Site.Params.twitter }}",
+                "{{ .Site.Params.github }}",
+                "{{ .Site.Params.linkedin }}"
             ]
         },
-        "headline": "Advanced Sitemap Plugin for Gatsby – Ghost – Headless CMS",
-        "url": "https://blog.ghost.org/advanced-sitemaps-gatsby/",
-        "datePublished": "2019-03-12T14:00:00.000Z",
-        "dateModified": "2019-03-12T14:50:49.000Z",
+        "headline": "{{ .Title }}",
+        "url": "{{ .Permalink }}",
+        "datePublished": "{{ .PublishDate.Format "2006-01-02T15:04:05-0700" | safeHTML}}",
+        {{- if not .Lastmod.IsZero }}
+        "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05-0700" | safeHTML}}",
+        {{ end -}}
         "image": {
             "@type": "ImageObject",
-            "url": "https://blog.ghost.org/content/images/2019/03/Advanced-SiteMap-GHG.png",
+            {{- if (isset .Params "images") }}
+            "url":"{{ (index .Params.images 0) | absURL }}",
+            {{ else }}
+            "url":"{{ .Site.Params.thumbnailUrl | absURL }}",
+            {{ end -}}
             "width": 2600,
             "height": 1430
         },
         "keywords": "New",
-        "description": "We just shipped a new plugin that automatically generates advanced sitemaps for static sites built with Gatsby",
+        "description": "{{ .Description | safeHTML }}",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https://blog.ghost.org/"
+            "@id": "{{ .Site.BaseURL }}"
         }
     }
 </script>
