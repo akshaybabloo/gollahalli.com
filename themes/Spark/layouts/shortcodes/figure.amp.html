@@ -1,14 +1,16 @@
 <figure class="kg-card kg-image-card kg-card-hascaption">
     <amp-img
-            src="https://blog.ghost.org/content/images/2019/03/advanced-sitemaps-2.png"
+           {{with .Get "src" }} src="{{ . }}" {{ end }}
             class="kg-image"
-            width="2068"
-            height="737"
+            width="600"
+            height="400"
             layout="responsive">
 
     </amp-img>
+    {{ with .Get "title" }}
     <figcaption>
-        <strong><strong>Demo:</strong></strong>
-        <a href="https://docs.ghost.org/sitemap.xml"><strong>https://docs.ghost.org/sitemap.xml</strong></a>
+        <strong><strong>{{ . }}</strong></strong>
+{{/*        <a href="https://docs.ghost.org/sitemap.xml"><strong>https://docs.ghost.org/sitemap.xml</strong></a>*/}}
     </figcaption>
+    {{ end }}
 </figure>
