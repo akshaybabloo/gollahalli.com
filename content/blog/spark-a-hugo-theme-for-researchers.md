@@ -24,8 +24,6 @@ siteMapImages:
     imageCaption: "Gollahalli.com Screenshot"
 ---
 
-{{< figure src="/img/blog/gollahalli_com.png" alt="Gollahalli.com Screenshot" >}}
-
 [Hugo](https://gohugo.io) is a super fast static site generator with more than 500 contributors. Companies such as 1Password, Kubernetes and Cloudflare rely on Hugo to generate their documentation. Even this website is generated using Hugo.
 
 There are a number of [themes](https://themes.gohugo.io/) out there for companies, bloggers, and personal websites but I have yet to see one for researchers and PhD candidates. Introducing [Spark](https://github.com/akshaybabloo/spark-hugo-theme).

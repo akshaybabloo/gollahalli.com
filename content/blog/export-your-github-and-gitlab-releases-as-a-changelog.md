@@ -24,8 +24,6 @@ sitemap:
   changeFreq: monthly
 ---
 
-{{< figure src="/img/blog/release-exporter.png" alt="Release Exporter" >}}
-
 The repository can be found at [https://github.com/akshaybabloo/release-exporter](https://github.com/akshaybabloo/release-exporter).
 
 At the time of writing this blog post, I have 55 repositories on my GitHub account, and more than half of them are active. None of the repositories has a changelog in it, but I have made sure that I have written the release notes at the time of releasing the package/software.

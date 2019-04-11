@@ -29,8 +29,6 @@ sitemap:
   changeFreq: monthly
 ---
 
-{{< figure src="/img/blog/java_path.jpg" alt="Running different version of java" >}}
-
 Oracle has decided that from Java 9 there will be a new java version every six months and the third release would be an LTS release (?). More on it [here](https://medium.com/codefx-weekly/radical-new-plans-for-java-5f237ab05b0).
 
 Not all libraries have upgraded them self to the latest Java releases, for example at the time of writing this Scala 2.12.5 doesn't fully support Java 9, so I still had to use Java 8. For some reason, if you want to experiment with the newer releases of Java and for the same reason, if you install Java 9 or 10, you just cannot run Scala (or other libraries that run Java 8) that's because Java 9/10 changes your path. Even though you add a **JAVA_HOME** variable, you still find Java 9/10 being used in command line.

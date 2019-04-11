@@ -24,8 +24,6 @@ siteMapImages:
     imageCaption: "PowerShell + macOS + VS Code = Heart"
 ---
 
-{{< figure src="/img/blog/powershell-vscode-macos.jpg" alt="PowerShell + macOS + VS Code = Heart" >}}
-
 Things we need:
 
 1. Apple computer/laptop running macOS 10.14 (yes, the expensive one)

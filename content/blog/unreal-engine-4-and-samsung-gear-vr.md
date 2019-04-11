@@ -44,8 +44,6 @@ sitemap:
   changeFreq: monthly
 ---
 
-{{< figure src="/img/blog/UnrealEngine4.gif" alt="UnrealEngine 4 and Samsung GearVR" >}}
-
 A simple game using Unreal Engine 4.10.\* and 4.11.2 for GearVR
 
 **The code can be found at - [https://github.com/akshaybabloo/GearVR-UnrealEngine4](https://github.com/akshaybabloo/GearVR-UnrealEngine4)**

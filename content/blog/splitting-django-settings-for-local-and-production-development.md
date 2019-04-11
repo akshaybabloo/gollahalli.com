@@ -24,8 +24,6 @@ siteMapImages:
     imageCaption: "Splitting Django Settings for Local and Production Development"
 ---
 
-{{< figure src="/img/blog/splitting_django_settings.png" alt="Splitting Django Settings" >}}
-
 I have been working on a few projects that use Django 2+ and deploying them to Azure Docker container. I do have one problem though; my development settings are very much different from my production. So, I  have divided `settings.py` into a package with - `base.py`, `local.py` and `production.py`:
 
 ```tree
