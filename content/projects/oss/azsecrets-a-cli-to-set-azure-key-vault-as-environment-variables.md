@@ -1,5 +1,5 @@
 ---
-title: "azsecrets: Azure Secrets as Environment Variables"
+title: "azsecrets: A CLI to Set Azure Key Vault as Environment Variables"
 date: 2019-04-13T17:31:33+12:00
 draft: false
 projectCategory: "Open-Source Software"
