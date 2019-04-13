@@ -18,7 +18,7 @@ enableRobotsTXT = true
 [outputs]
   home = ["HTML", "RSS", "AMP", "searchindex"]
   page = ["HTML", "RSS", "AMP"]
-  section = ["HTML", "RSS", "AMP"]
+  section = ["HTML", "RSS"]
 
 [params]
     googleAds = "ca-pub-7450383714878520" # Optional
