@@ -6,7 +6,7 @@ categories: []
 tags: []
 description: ""
 images: []
-ads: false
+ads: true
 author:
   prefix: "Mr."
   firstName: "Akshay Raj"
