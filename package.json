@@ -1,0 +1,14 @@
+{
+  "name": "gollahalli.com",
+  "version": "1.0.0",
+  "description": "Gollahalli.com website",
+  "main": "index.js",
+  "repository": "https://github.com/akshaybabloo/gollahalli.com.git",
+  "author": "Akshay Raj Gollahalli <akshaybabloo@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "algoliasearch": "^3.32.1",
+    "instantsearch.js": "^3.3.0",
+    "uikit": "^3.0.3"
+  }
+}
