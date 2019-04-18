@@ -13,12 +13,14 @@ enableRobotsTXT = true
     mediaType= "application/json"
     baseName= "searchindex"
     isPlainText= true
+  [outputFormats.AMP]
+    permalinkable = false
 
 
 [outputs]
   home = ["HTML", "RSS", "AMP", "searchindex"]
   page = ["HTML", "RSS", "AMP"]
-  # section = ["HTML", "RSS"]
+  section = ["HTML", "RSS", "AMP"]
 
 [params]
     googleAds = "ca-pub-7450383714878520" # Optional
