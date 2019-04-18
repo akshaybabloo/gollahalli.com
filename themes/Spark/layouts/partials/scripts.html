@@ -18,7 +18,14 @@
     </script>
 {{end}}
 
-<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.2"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.2"></script> -->
+
+{{ with resources.Get "js/instantsearch.development.js" }}
+    <script>
+        {{ .Content | safeJS }}
+    </script>
+{{end}}
+
 <script>
     const search = instantsearch({
     appId: '{{.Site.Params.algoliaAppId}}',
