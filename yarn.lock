@@ -227,9 +227,9 @@ object.assign@^4.0.4:
     object-keys "^1.0.11"
 
 preact-compat@^3.17.0, preact-compat@^3.18.0:
-  version "3.18.4"
-  resolved "https://registry.yarnpkg.com/preact-compat/-/preact-compat-3.18.4.tgz#fbe76ddd30356c68e3ccde608107104946f2cf8d"
-  integrity sha512-aR5CvCIDerE2Y201ERVkWQdTAQKhKGNYujEk4tbyfQDInFTrnCCa3KCeGtULZrwy0PNRBjdQa2/Za7qv7ALNFg==
+  version "3.18.5"
+  resolved "https://registry.yarnpkg.com/preact-compat/-/preact-compat-3.18.5.tgz#45b801de75e3016bebe8cd446f51f60d2b948bb9"
+  integrity sha512-F174NW6PI5GU+T28B0ZHblhxMsFaPVaSBiaE++xrxdDVunsO0mARYfOSZizTdb/PFLqXDzcQ1IWdnEt/vIiUvw==
   dependencies:
     immutability-helper "^2.7.1"
     preact-render-to-string "^3.8.2"
@@ -333,6 +333,6 @@ tunnel-agent@^0.6.0:
     safe-buffer "^5.0.1"
 
 uikit@^3.0.3:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.1.0.tgz#379b14b24bf15f6987cf15bcd950ca426f4c0e42"
-  integrity sha512-duaREvRsXiczHJuBN10shVjhN0eerZUQpo9aykFS0SBOlVk4F15KHC9TwJ4KSv8UOunZ8BHUuqtePB+GFlNG/g==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.1.2.tgz#53a5225a355c3beb3f4bc3c138a32e76344f3d2a"
+  integrity sha512-rZ+i0cld3i33RQXqNEp5iR7EdyICGKUFKQvwR8cfn8bHznQMbeuQjIsFhsGAz2jg1xLZvnEIbKoPc/cKKTlEQw==
