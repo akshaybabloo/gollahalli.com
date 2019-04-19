@@ -162,3 +162,7 @@ time {
     background: $primary !important;
     color: $label-text-color !important;
 }
+
+input {
+  border: 1px solid $primary !important
+}
