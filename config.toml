@@ -17,7 +17,7 @@ enableRobotsTXT = true
     permalinkable = false
 
 [blackfriday]
-  extensions = [“hardLineBreak”]
+  extensions = ["hardLineBreak"]
 
 
 [outputs]
