@@ -52,9 +52,9 @@ for root_folder, sub_folder in dependencies.items():
                 data = byte_file.read()
                 sha256.update(data)
                 hashed_files.update({'{}'.format(file_path): '{}'.format(sha256.hexdigest())})
-import pprint
 
-pprint.pprint(hashed_files)
+with open('hashed_files.json', 'w') as hashed:
+    json.dump(hashed_files, hashed, indent=4)
 
 
 # ------------------ End Hashing Files ------------------
