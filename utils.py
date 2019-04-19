@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 from urllib.parse import urlencode
@@ -16,6 +17,47 @@ except ImportError:
 CDGREEN = '\33[92m'
 CBOLD = '\033[1m'
 CEND = '\033[0m'
+
+# ------------------ Start Hashing Files ------------------
+
+here = os.path.abspath(os.path.dirname(__file__)) + os.sep
+
+BUF_SIZE = 65563
+
+dependencies = {
+    "node_modules": {
+        "instantsearch.js": [
+            os.path.join('dist', 'instantsearch.development.js')
+        ],
+        "algoliasearch": [
+            os.path.join('dist', 'algoliasearchLite.js')
+        ],
+        "uikit": [
+            os.path.join('dist', 'css', 'uikit.css'),
+            os.path.join('dist', 'js', 'uikit.js'),
+            os.path.join('dist', 'js', 'uikit-core.js')
+        ]
+    }
+}
+
+hashed_files = {}
+
+sha256 = hashlib.sha256()
+
+for root_folder, sub_folder in dependencies.items():
+    for sub_sub_folder, files_list in sub_folder.items():
+        for file in files_list:
+            file_path = os.path.join(root_folder, sub_sub_folder, file)
+            with open(file_path, 'rb') as byte_file:
+                data = byte_file.read()
+                sha256.update(data)
+                hashed_files.update({'{}'.format(file_path): '{}'.format(sha256.hexdigest())})
+import pprint
+
+pprint.pprint(hashed_files)
+
+
+# ------------------ End Hashing Files ------------------
 
 
 def colour_me(text: str) -> str:

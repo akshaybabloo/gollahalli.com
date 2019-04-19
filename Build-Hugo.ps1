@@ -67,6 +67,10 @@ function BuildHugo {
     Log -Text "PS> Website built @ $public_folder"
 }
 
+function UpdateDependencies{
+
+}
+
 if ($Build -eq "production") {
     BuildHugo
 }
