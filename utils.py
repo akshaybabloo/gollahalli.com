@@ -6,12 +6,12 @@ from urllib.request import urlopen
 try:
     from algoliasearch import algoliasearch
 except ImportError:
-    print("PY> Algolia Search package does not exist - pip install algoliasearch")
+    raise ImportError("PY> Algolia Search package does not exist - pip install algoliasearch")
 
 try:
     import toml
 except ImportError:
-    print("PY> TOML package does not exist - pip install toml")
+    raise ImportError("PY> TOML package does not exist - pip install toml")
 
 CDGREEN = '\33[92m'
 CBOLD = '\033[1m'
