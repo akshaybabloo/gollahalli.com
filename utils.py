@@ -4,6 +4,12 @@ import os
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
+
+try:
+    from pathlib import Path
+except ImportError:
+    raise ImportError("PY> Works on Python 3.5 and above only")
+
 try:
     from algoliasearch import algoliasearch
 except ImportError:
@@ -35,26 +41,66 @@ dependencies = {
         "uikit": [
             os.path.join('dist', 'css', 'uikit.css'),
             os.path.join('dist', 'js', 'uikit.js'),
-            os.path.join('dist', 'js', 'uikit-core.js')
+            os.path.join('dist', 'js', 'uikit-icons.js')
         ]
     }
 }
 
-hashed_files = {}
+copy_file_to = {
+    'instantsearch.development.js': os.path.join(here, 'themes', 'Spark', 'assets', 'js'),
+    'algoliasearchLite.js': os.path.join(here, 'themes', 'Spark', 'assets', 'js'),
+    'uikit.css': os.path.join(here, 'themes', 'Spark', 'assets', 'css'),
+    'uikit.js': os.path.join(here, 'themes', 'Spark', 'assets', 'js'),
+    'uikit-icons.js': os.path.join(here, 'themes', 'Spark', 'assets', 'js'),
+}
 
-sha512 = hashlib.sha512()
 
-for root_folder, sub_folder in dependencies.items():
-    for sub_sub_folder, files_list in sub_folder.items():
-        for file in files_list:
-            file_path = os.path.join(root_folder, sub_sub_folder, file)
-            with open(file_path, 'rb') as byte_file:
-                data = byte_file.read()
-                sha512.update(data)
-                hashed_files.update({'{}'.format(file_path): 'sha512-{}'.format(sha512.hexdigest())})
+def get_lock_dict(dependency: dict) -> dict:
+    """
+    Creates a hash for every file path.
 
-with open('gollahalli.lock', 'w') as hashed:
-    json.dump(hashed_files, hashed, indent=4)
+    :param dependency: Dictionary of file location
+    :rtype: dict
+    :return: A dictionary of file path and it's SHA512 hash
+
+    >>> dependencies = {
+            "node_modules": {
+                "instantsearch.js": [
+                    os.path.join('dist', 'instantsearch.development.js')
+                ]
+            }
+    >>> get_lock_dict(dependencies)
+    {
+        "node_modules/instantsearch.js/dist/instantsearch.development.js": "sha512-d71f0cf0b5138d86dd32096bd1f4b449f3e70ace6c207757859f1165559b82e47c95a527b075153b4cf89450eb5369b8c73afd4013e6336e195f79fde2d0bca2"
+    }
+    """
+    lock_dict = {}
+    sha256 = hashlib.sha512()
+
+    for root_folder, sub_folder in dependency.items():
+        for sub_sub_folder, files_list in sub_folder.items():
+            for file in files_list:
+                file_path = os.path.join(root_folder, sub_sub_folder, file)
+                with open(file_path, 'rb') as byte_file:
+                    data = byte_file.read()
+                    sha256.update(data)
+                    lock_dict.update({'{}'.format(file_path): 'sha512-{}'.format(sha256.hexdigest())})
+
+    return lock_dict
+
+
+def compare_hash(lock_dict: dict, dependency: dict):
+    pass
+
+
+if Path(os.path.join(here, 'gollahalli.lock')).is_file():
+    lock_file = json.load(open('gollahalli.lock'))
+
+    compare_hash(lock_file, get_lock_dict(dependencies))
+else:
+    hash_dict = get_lock_dict(dependencies)
+    with open('gollahalli.lock', 'w') as hashed:
+        json.dump(hash_dict, hashed, indent=4)
 
 
 # ------------------ End Hashing Files ------------------
