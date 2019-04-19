@@ -53,7 +53,7 @@ for root_folder, sub_folder in dependencies.items():
                 sha512.update(data)
                 hashed_files.update({'{}'.format(file_path): 'sha512-{}'.format(sha512.hexdigest())})
 
-with open('hashed_files.json', 'w') as hashed:
+with open('gollahalli.lock', 'w') as hashed:
     json.dump(hashed_files, hashed, indent=4)
 
 
