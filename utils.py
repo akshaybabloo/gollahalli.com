@@ -42,7 +42,7 @@ dependencies = {
 
 hashed_files = {}
 
-sha256 = hashlib.sha256()
+sha512 = hashlib.sha512()
 
 for root_folder, sub_folder in dependencies.items():
     for sub_sub_folder, files_list in sub_folder.items():
@@ -50,8 +50,8 @@ for root_folder, sub_folder in dependencies.items():
             file_path = os.path.join(root_folder, sub_sub_folder, file)
             with open(file_path, 'rb') as byte_file:
                 data = byte_file.read()
-                sha256.update(data)
-                hashed_files.update({'{}'.format(file_path): '{}'.format(sha256.hexdigest())})
+                sha512.update(data)
+                hashed_files.update({'{}'.format(file_path): 'sha512-{}'.format(sha512.hexdigest())})
 
 with open('hashed_files.json', 'w') as hashed:
     json.dump(hashed_files, hashed, indent=4)
