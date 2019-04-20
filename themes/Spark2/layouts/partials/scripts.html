@@ -1,0 +1,10 @@
+{{ with resources.Get "js/material-components-web.js" }}
+    <script>
+        {{ .Content | safeJS }}
+    </script>
+{{end}}
+
+
+{{ if .Params.ads }}
+    {{- partial "ads.html" . -}}
+{{ end }}
