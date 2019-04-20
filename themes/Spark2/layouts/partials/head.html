@@ -78,16 +78,24 @@
 {{ template "_internal/twitter_cards.html" . }}
 
 <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-{{/*{{ with resources.Get "css/material-components-web.css" }}*/}}
-{{/*    <style>*/}}
-{{/*        {{ .Content | safeCSS }}*/}}
-{{/*    </style>*/}}
-{{/*{{end}}*/}}
 
-{{ $sassTemplate := resources.Get "scss/custom.scss" }}
-{{ $style := $sassTemplate | resources.ExecuteAsTemplate "main.scss" . | resources.ToCSS }}
-<style>
-  {{ $style.Content | safeCSS }}
-</style>
+{{ with resources.Get "css/normalize.css" }}
+    <style>
+        {{ .Content | safeCSS }}
+    </style>
+{{end}}
+
+{{ with resources.Get "css/material-components-web.css" }}
+    <style>
+        {{ .Content | safeCSS }}
+    </style>
+{{end}}
+
+{{/*{{ $sassTemplate := resources.Get "scss/custom.scss" }}*/}}
+{{/*{{ $style := $sassTemplate | resources.ExecuteAsTemplate "spark2.scss" . | resources.ToCSS }}*/}}
+{{/*<style>*/}}
+{{/*  {{ $style.Content | safeCSS }}*/}}
+{{/*</style>*/}}
 
