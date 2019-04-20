@@ -89,8 +89,22 @@ def get_lock_dict(dependency: dict) -> dict:
     return lock_dict
 
 
-def compare_hash(lock_dict: dict, dependency: dict):
-    pass
+def compare_hash(lock_dict: dict, dependency_lock: dict):
+    """
+    Compares two dictionaries and gives out a list of files that's not true.
+
+    :param lock_dict: Dictionary of ``gollahalli.lock``.
+    :type lock_dict: dict
+    :param dependency_lock: Dictionary of dependencies with hashes.
+    :type dependency_lock: dict
+    :return: A list of files that does not match the hashes.
+    :rtype: list
+    """
+    for _path, _hash in lock_dict.items():
+        for _dpath, _dhash in dependency_lock.items():
+            if _path == _dpath or _path not in _dpath:
+                if not _hash == _dhash:
+                    print(_path)
 
 
 if Path(os.path.join(here, 'gollahalli.lock')).is_file():
