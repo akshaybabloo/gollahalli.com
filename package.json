@@ -10,5 +10,8 @@
     "algoliasearch": "^3.32.1",
     "instantsearch.js": "^3.3.0",
     "uikit": "^3.0.3"
+  },
+  "dependencies": {
+    "material-components-web": "^1.1.1"
   }
 }
