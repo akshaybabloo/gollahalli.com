@@ -107,14 +107,14 @@ def compare_hash(lock_dict: dict, dependency_lock: dict):
                     print(_path)
 
 
-if Path(os.path.join(here, 'gollahalli.lock')).is_file():
-    lock_file = json.load(open('gollahalli.lock'))
-
-    compare_hash(lock_file, get_lock_dict(dependencies))
-else:
-    hash_dict = get_lock_dict(dependencies)
-    with open('gollahalli.lock', 'w') as hashed:
-        json.dump(hash_dict, hashed, indent=4)
+# if Path(os.path.join(here, 'gollahalli.lock')).is_file():
+#     lock_file = json.load(open('gollahalli.lock'))
+#
+#     compare_hash(lock_file, get_lock_dict(dependencies))
+# else:
+#     hash_dict = get_lock_dict(dependencies)
+#     with open('gollahalli.lock', 'w') as hashed:
+#         json.dump(hash_dict, hashed, indent=4)
 
 
 # ------------------ End Hashing Files ------------------
