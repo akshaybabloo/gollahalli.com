@@ -8,3 +8,8 @@
 {{ if .Params.ads }}
     {{- partial "ads.html" . -}}
 {{ end }}
+
+<script>
+
+    mdc.tabBar.MDCTabBar.attachTo(document.querySelector('.mdc-tab-bar'));
+</script>

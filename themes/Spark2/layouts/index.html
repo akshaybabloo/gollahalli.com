@@ -12,6 +12,39 @@
 </head>
 <body>
 
+<header class="mdc-top-app-bar gl-dark-theme">
+    <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+            <a href="#" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
+            <span class="mdc-top-app-bar__title">Title</span>
+        </section>
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+            <div class="mdc-tab-bar gl-light-theme" role="tablist">
+                <div class="mdc-tab-scroller">
+                    <div class="mdc-tab-scroller__scroll-area">
+                        <div class="mdc-tab-scroller__scroll-content">
+                            {{ range .Site.Menus.main }}
+                            <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+                    <span class="mdc-tab__content">
+                        <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
+                        <span class="mdc-tab__text-label">{{.Name}}</span>
+                    </span>
+                                <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                        <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                    </span>
+                                <span class="mdc-tab__ripple"></span>
+                            </button>
+                            {{ end }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</header>
+<br><br><br><br><br>
+
+
 </body>
 
 {{ partial "scripts.html" . }}

@@ -93,9 +93,9 @@
     </style>
 {{end}}
 
-{{/*{{ $sassTemplate := resources.Get "scss/custom.scss" }}*/}}
-{{/*{{ $style := $sassTemplate | resources.ExecuteAsTemplate "spark2.scss" . | resources.ToCSS }}*/}}
-{{/*<style>*/}}
-{{/*  {{ $style.Content | safeCSS }}*/}}
-{{/*</style>*/}}
+{{ $sassTemplate := resources.Get "scss/custom.scss" }}
+{{ $style := $sassTemplate | resources.ExecuteAsTemplate "spark2.scss" . | resources.ToCSS }}
+<style>
+  {{ $style.Content | safeCSS }}
+</style>
 
