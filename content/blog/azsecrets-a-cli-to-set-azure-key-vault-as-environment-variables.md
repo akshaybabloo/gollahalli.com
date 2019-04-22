@@ -1,6 +1,7 @@
 ---
 title: "azsecrets: A CLI to Set Azure Key Vault as Environment Variables"
 date: 2019-04-13T18:05:05+12:00
+lastmod: 2019-04-22T14:33:10+12:00
 draft: false
 categories: ["CLI"]
 tags: ["Python", "Azure", "CLI"]
@@ -24,8 +25,8 @@ siteMapImages:
     imageCaption: "azsecrets: A Cli to Set Azure Key Vault as Environment Variables"
 ---
 
-**Repository: [https://github.com/akshaybabloo/azure-keyvault-secret-env](https://github.com/akshaybabloo/azure-keyvault-secret-env)**
-**Documentation: [https://akshaybabloo.github.io/azure-keyvault-secret-env/](https://akshaybabloo.github.io/azure-keyvault-secret-env/)**
+**Repository: [https://github.com/akshaybabloo/azsecrets](https://github.com/akshaybabloo/azsecrets)**
+**Documentation: [https://akshaybabloo.github.io/azsecrets/](https://akshaybabloo.github.io/azsecrets/)**
 
 Using environment variables to store your secrets is one of the more natural way to do; these variables then can be used in your code throughout the life cycle of your Docker environment. You shouldn't hard code your secret keys inside your application; it is just not secured. Docker lets you add the environment variable before creating an image or at the entry point when starting up your image, `azsecrets` lets you set these environment variables that are stored in Azure Key Vault.
 
@@ -103,6 +104,6 @@ az_secrets = AzureSecrets()
 SECRET_KEY = az_secrets.get_secret("DJANGO-SECRET-KEY")
 ```
 
-See [https://akshaybabloo.github.io/azure-keyvault-secret-env/](https://akshaybabloo.github.io/azure-keyvault-secret-env/) for more information.
+See [https://akshaybabloo.github.io/azsecrets/](https://akshaybabloo.github.io/azsecrets/) for more information.
 
 Happy coding.
