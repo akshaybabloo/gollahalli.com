@@ -48,7 +48,7 @@
         "description": "{{ .Description | safeHTML }}",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "{{ .Site.BaseURL }}"
+            "@id": "{{ .Site.BaseURL | jsonify | safeJS }}"
         }
     }
 </script>
