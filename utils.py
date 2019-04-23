@@ -11,7 +11,7 @@ except ImportError:
     raise ImportError("PY> Works on Python 3.5 and above only")
 
 try:
-    from algoliasearch import algoliasearch
+    from algoliasearch.search_client import SearchClient
 except ImportError:
     raise ImportError("PY> Algolia Search package does not exist - pip install algoliasearch")
 
@@ -133,16 +133,16 @@ APP_ID = "UT1XVMZE1Q"
 INDEX_NAME = "gollahalli-website"
 file_path = os.path.join('public', 'searchindex.json')
 
-client = algoliasearch.Client(APP_ID, os.environ.get('ALGOLIA_KEY'))
+client = SearchClient.create(APP_ID, os.environ.get('ALGOLIA_KEY'))
 index = client.init_index(INDEX_NAME)
 
 print(colour_me("PY> Clearing Previous Search Entries..."), end='')
-index.clear_index()  # Clear previous entries.
+index.clear_objects()  # Clear previous entries.
 print(colour_me("Done"))
 
 print(colour_me("PY> Uploading New Search Index..."), end='')
 batch = json.load(open(file_path))
-index.add_objects(batch)
+index.save_objects(batch)
 print(colour_me("Done"))
 
 # ------- Algolia End ---------
