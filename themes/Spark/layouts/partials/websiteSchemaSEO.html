@@ -7,15 +7,15 @@
             "name": "{{ .Site.Title }}",
             "logo": {
                 "@type": "ImageObject",
-                "url": "{{ .Site.Params.logoPhoto | absURL }}",
+                "url": {{ .Site.Params.logoPhoto | absURL | jsonify | safeJS }},
                 "width": 60,
                 "height": 60
             }
         },
-        "url": "{{ .Site.BaseURL }}",
+        "url": {{ .Site.BaseURL | jsonify | safeJS }},
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "{{ .Site.BaseURL }}"
+            "@id": {{ .Site.BaseURL | jsonify | safeJS }}
         },
         "description": "{{ .Description }}"
     }
