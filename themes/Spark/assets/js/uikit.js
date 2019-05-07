@@ -1,4 +1,4 @@
-/*! UIkit 3.1.2 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
+/*! UIkit 3.1.4 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -488,7 +488,7 @@
         return isString(selector) && selector.match(contextSelectorRe);
     }
 
-    var selectorRe = /.*?[^\\](?:,|$)/;
+    var selectorRe = /.*?[^\\](?:,|$)/g;
 
     function splitSelector(selector) {
         return selector.match(selectorRe).map(function (selector) { return selector.replace(/,$/, '').trim(); });
@@ -4377,10 +4377,6 @@
 
                 handler: function(e) {
 
-                    if (e.defaultPrevented) {
-                        return;
-                    }
-
                     var id = e.target.hash;
 
                     if (!id) {
@@ -7485,7 +7481,7 @@
             },
 
             targets: function() {
-                return $$(this.links.map(function (el) { return escape(el.hash); }).join(','));
+                return $$(this.links.map(function (el) { return escape(el.hash).substr(1); }).join(','));
             }
 
         },
@@ -8165,7 +8161,7 @@
 
                     // TODO better isToggled handling
                     var link;
-                    if (closest(e.target, 'a[href="#"], a[href=""], button')
+                    if (closest(e.target, 'a[href="#"], a[href=""]')
                         || (link = closest(e.target, 'a[href]')) && (
                             this.cls
                             || !isVisible(this.target)
@@ -8268,7 +8264,7 @@
 
     }
 
-    UIkit.version = '3.1.2';
+    UIkit.version = '3.1.4';
 
     core(UIkit);
 
@@ -9799,7 +9795,7 @@
 
             {
 
-                name: pointerUp,
+                name: 'click',
 
                 self: true,
 
@@ -9813,7 +9809,6 @@
                         return;
                     }
 
-                    e.preventDefault();
                     this.hide();
                 }
 
