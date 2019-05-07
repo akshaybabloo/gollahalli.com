@@ -13,8 +13,8 @@ enableRobotsTXT = true
     mediaType= "application/json"
     baseName= "searchindex"
     isPlainText= true
-  [outputFormats.AMP]
-    permalinkable = false
+#  [outputFormats.AMP]
+#    permalinkable = false
 
 [blackfriday]
   extensions = ["hardLineBreak"]
