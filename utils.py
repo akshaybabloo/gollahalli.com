@@ -1,3 +1,6 @@
+"""
+Utility for deploying https://www.gollahalli.com
+"""
 import hashlib
 import json
 import os
@@ -26,11 +29,11 @@ CEND = '\033[0m'
 
 # ------------------ Start Hashing Files ------------------
 
-here = os.path.abspath(os.path.dirname(__file__)) + os.sep
+HERE = os.path.abspath(os.path.dirname(__file__)) + os.sep
 
 BUF_SIZE = 65563
 
-dependencies = {
+DEPENDENCIES = {
     "node_modules": {
         "instantsearch.js": [
             os.path.join('dist', 'instantsearch.development.js')
@@ -46,12 +49,12 @@ dependencies = {
     }
 }
 
-copy_file_to = {
-    'instantsearch.development.js': os.path.join(here, 'themes', 'Spark', 'assets', 'js'),
-    'algoliasearchLite.js': os.path.join(here, 'themes', 'Spark', 'assets', 'js'),
-    'uikit.css': os.path.join(here, 'themes', 'Spark', 'assets', 'css'),
-    'uikit.js': os.path.join(here, 'themes', 'Spark', 'assets', 'js'),
-    'uikit-icons.js': os.path.join(here, 'themes', 'Spark', 'assets', 'js'),
+COPY_FILE_TO = {
+    'instantsearch.development.js': os.path.join(HERE, 'themes', 'Spark', 'assets', 'js'),
+    'algoliasearchLite.js': os.path.join(HERE, 'themes', 'Spark', 'assets', 'js'),
+    'uikit.css': os.path.join(HERE, 'themes', 'Spark', 'assets', 'css'),
+    'uikit.js': os.path.join(HERE, 'themes', 'Spark', 'assets', 'js'),
+    'uikit-icons.js': os.path.join(HERE, 'themes', 'Spark', 'assets', 'js'),
 }
 
 
@@ -69,7 +72,7 @@ def get_lock_dict(dependency: dict) -> dict:
                     os.path.join('dist', 'instantsearch.development.js')
                 ]
             }
-    >>> get_lock_dict(dependencies)
+    >>> get_lock_dict(DEPENDENCIES)
     {
         "node_modules/instantsearch.js/dist/instantsearch.development.js": "sha512-d71f0cf0b5138d86dd32096bd1f4b449f3e70ace6c207757859f1165559b82e47c95a527b075153b4cf89450eb5369b8c73afd4013e6336e195f79fde2d0bca2"
     }
@@ -80,11 +83,11 @@ def get_lock_dict(dependency: dict) -> dict:
     for root_folder, sub_folder in dependency.items():
         for sub_sub_folder, files_list in sub_folder.items():
             for file in files_list:
-                file_path = os.path.join(root_folder, sub_sub_folder, file)
-                with open(file_path, 'rb') as byte_file:
+                _file_path = os.path.join(root_folder, sub_sub_folder, file)
+                with open(_file_path, 'rb') as byte_file:
                     data = byte_file.read()
                     sha256.update(data)
-                    lock_dict.update({'{}'.format(file_path): 'sha512-{}'.format(sha256.hexdigest())})
+                    lock_dict.update({'{}'.format(_file_path): 'sha512-{}'.format(sha256.hexdigest())})
 
     return lock_dict
 
@@ -131,18 +134,18 @@ def colour_me(text: str) -> str:
 
 APP_ID = "UT1XVMZE1Q"
 INDEX_NAME = "gollahalli-website"
-file_path = os.path.join('public', 'searchindex.json')
+FILE_PATH = os.path.join('public', 'searchindex.json')
 
-client = SearchClient.create(APP_ID, os.environ.get('ALGOLIA_KEY'))
-index = client.init_index(INDEX_NAME)
+CLIENT = SearchClient.create(APP_ID, os.environ.get('ALGOLIA_KEY'))
+INDEX = CLIENT.init_index(INDEX_NAME)
 
 print(colour_me("PY> Clearing Previous Search Entries..."), end='')
-index.clear_objects()  # Clear previous entries.
+INDEX.clear_objects()  # Clear previous entries.
 print(colour_me("Done"))
 
 print(colour_me("PY> Uploading New Search Index..."), end='')
-batch = json.load(open(file_path))
-index.save_objects(batch)
+BATCH = json.load(open(FILE_PATH))
+INDEX.save_objects(BATCH)
 print(colour_me("Done"))
 
 # ------- Algolia End ---------
@@ -151,16 +154,16 @@ print(colour_me("Done"))
 GOOGLE_PING_URL = "https://www.google.com/webmasters/tools/ping"
 BING_PING_URL = "https://www.bing.com/ping?sitemap"
 
-config = toml.load("./config.toml")
+CONFIG = toml.load("./config.toml")
 
-params = urlencode({'sitemap': config["baseURL"] + "sitemap.xml"})
+PARAMS = urlencode({'sitemap': CONFIG["baseURL"] + "sitemap.xml"})
 print(colour_me("PY> Pinging Google..."), end='')
-urlopen('%s?%s' % (GOOGLE_PING_URL, params))
+urlopen('%s?%s' % (GOOGLE_PING_URL, PARAMS))
 print(colour_me("Done"))
 print(colour_me("PY> Pinging Bing..."), end='')
-urlopen('%s?%s' % (BING_PING_URL, params))
+urlopen('%s?%s' % (BING_PING_URL, PARAMS))
 print(colour_me("Done"))
 
-print(colour_me("PY> Content deployed at"), colour_me(config["baseURL"]))
+print(colour_me("PY> Content deployed at"), colour_me(CONFIG["baseURL"]))
 
 # ------- Sitemap Ping End ---------
