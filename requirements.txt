@@ -1,2 +1,2 @@
-algoliasearch==2.0.0
+algoliasearch==2.0.1
 toml==0.10.0
