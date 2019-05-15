@@ -1,5 +1,5 @@
 ---
-title: "Azure Blob Explorer"
+title: "Azure Blob Explorer for Java (Archived)"
 date: 2018-12-05T09:34:31+05:30
 draft: false
 projectCategory: "Open-Source Software"
