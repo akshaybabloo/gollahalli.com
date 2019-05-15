@@ -6,6 +6,7 @@ import json
 import os
 from urllib.parse import urlencode
 from urllib.request import urlopen
+from colorama import init, Fore, Style
 
 
 try:
@@ -22,10 +23,6 @@ try:
     import toml
 except ImportError:
     raise ImportError("PY> TOML package does not exist - pip install toml")
-
-CDGREEN = '\33[92m'
-CBOLD = '\033[1m'
-CEND = '\033[0m'
 
 # ------------------ Start Hashing Files ------------------
 
@@ -127,7 +124,9 @@ def colour_me(text: str) -> str:
     """
     Returns a dark green text
     """
-    return CBOLD + CDGREEN + text + CEND
+    init(autoreset=True)
+
+    return Style.BRIGHT + Fore.GREEN + text
 
 
 # ------- Algolia Start ---------
