@@ -1,5 +1,5 @@
 ---
-title: "Gollahalli CMS: CMS for Researchers (Not Maintained)"
+title: "Gollahalli CMS: CMS for Researchers (Archived)"
 date: 2018-12-05T09:09:19+05:30
 draft: false
 projectCategory: "Open-Source Software"

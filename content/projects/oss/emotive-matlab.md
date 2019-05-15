@@ -1,5 +1,5 @@
 ---
-title: "Emotive Matlab SDK (Not Maintained)"
+title: "Emotive Matlab SDK (Archived)"
 date: 2018-12-05T09:43:14+05:30
 draft: false
 projectCategory: "Open-Source Software"

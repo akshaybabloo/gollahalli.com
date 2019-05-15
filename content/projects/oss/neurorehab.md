@@ -1,5 +1,5 @@
 ---
-title: "NeuroRehab: A VR game for Neurorehabilitation (Not Maintained)"
+title: "NeuroRehab: A VR game for Neurorehabilitation (Archived)"
 date: 2018-12-05T09:47:38+05:30
 draft: false
 projectCategory: "Open-Source Software"
