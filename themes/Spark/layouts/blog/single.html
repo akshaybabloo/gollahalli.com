@@ -1,5 +1,7 @@
 {{ define "head"}}
-    <link rel="amphtml" href="{{ .Site.BaseURL }}amp{{ .RelPermalink }}">
+{{ with .OutputFormats.Get "amp" }}
+    <link rel="amphtml" href="{{ .Permalink }}">
+{{ end }}
 {{ end }}
 
 {{ define "main"}}

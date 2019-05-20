@@ -8,7 +8,9 @@
 <meta name="description"
       content="{{ .Description }}"/>
 <link rel="shortcut icon" href="/favicon.png" type="image/png"/>
-<link rel="canonical" href="{{ .Permalink }}"/>
+{{ with .OutputFormats.Get "html" }}
+    <link rel="canonical" href="{{ .Permalink }}"/>
+{{ end }}
 <meta name="referrer" content="no-referrer-when-downgrade"/>
 
 {{ if eq (getenv "HUGO_ENV") "production" }}
