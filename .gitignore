@@ -15,3 +15,5 @@ resources/
 secrets\.ps1
 
 \.vscode/
+
+dist/
