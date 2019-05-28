@@ -4,8 +4,17 @@ trigger:
 pool:
   vmImage: 'Ubuntu-16.04'
 
-variables:
+pr: none
 
+variables:
+  HUGO_VERSION: '0.55.6'
 
 steps:
-  - task: powershell
+  - script: |
+      wget -o https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
+      tar -zxvf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
+    displayName: Downloading Hugo
+  - script: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: Installing python dependencies
