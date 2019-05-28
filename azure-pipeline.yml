@@ -8,6 +8,7 @@ pr: none
 
 variables:
   HUGO_VERSION: '0.55.6'
+  
 
 steps:
   - script: |
@@ -26,7 +27,9 @@ steps:
       pip --version
       pip install -r requirements.txt
     displayName: Installing python dependencies
-  - task: PowerShell@2
-    inputs:
-      targetType: Inline
-      script: ./Build-Hugo.ps1 -Deploy 1
+#  - task: PowerShell@2
+#    inputs:
+#      targetType: Inline
+#      script: ./Build-Hugo.ps1 -Deploy 1
+  - script: hugo -v --minify --gc
+    displayName: Build Hugo
