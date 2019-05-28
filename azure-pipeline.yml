@@ -14,8 +14,11 @@ steps:
       wget -c https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
       tar -zxvf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
     displayName: Downloading Hugo
-  - script: |
-      sudo -H pip3 install --upgrade pip
-      sudo pip3 install -r requirements.txt
-      pip3 freeze
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.7'
+      addToPath: true
+    script: |
+      python --version
+      pip --version
     displayName: Installing python dependencies
