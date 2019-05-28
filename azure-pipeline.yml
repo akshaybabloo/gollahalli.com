@@ -33,3 +33,5 @@ steps:
 #      script: ./Build-Hugo.ps1 -Deploy 1
   - script: hugo -v --minify --gc
     displayName: Build Hugo
+    env:
+      HUGO_ENV: $(HUGO_ENV)
