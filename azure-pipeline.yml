@@ -16,5 +16,6 @@ steps:
     displayName: Downloading Hugo
   - script: |
       sudo python3 -m pip uninstall pip && sudo apt install python3-pip --reinstall
+      pip install --upgrade pip
       pip install -r requirements.txt
     displayName: Installing python dependencies
