@@ -15,6 +15,6 @@ steps:
       tar -zxvf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
     displayName: Downloading Hugo
   - script: |
-      python -m pip install --upgrade pip
+      sudo python3 -m pip uninstall pip && sudo apt install python3-pip --reinstall
       pip install -r requirements.txt
     displayName: Installing python dependencies
