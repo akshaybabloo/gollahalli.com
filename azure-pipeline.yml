@@ -13,6 +13,8 @@ steps:
   - script: |
       wget -c https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
       tar -zxvf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
+      mv ./hugo /usr/local/bin
+      hugo version
     displayName: Downloading Hugo
   - task: UsePythonVersion@0
     inputs:
@@ -21,4 +23,5 @@ steps:
   - script: |
       python --version
       pip --version
+      pip install -r requirements.txt
     displayName: Installing python dependencies
