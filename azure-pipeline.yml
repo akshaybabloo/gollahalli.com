@@ -28,4 +28,5 @@ steps:
     displayName: Installing python dependencies
   - task: PowerShell@2
     inputs:
+      targetType: Inline
       script: ./Build-Hugo.ps1 -Deploy 1
