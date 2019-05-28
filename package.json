@@ -12,7 +12,7 @@
   "devDependencies": {
     "algoliasearch": "^3.33.0",
     "css-loader": "^2.1.1",
-    "instantsearch.js": "^3.5.1",
+    "instantsearch.js": "^3.5.2",
     "mini-css-extract-plugin": "^0.7.0",
     "uikit": "^3.1.5",
     "webpack": "^4.32.2",

@@ -1924,10 +1924,10 @@ ini@^1.3.4, ini@~1.3.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
 
-instantsearch.js@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-3.5.1.tgz#6252dba4b71cc121ce3f76ba693437614d2d4da7"
-  integrity sha512-BPJMfwcxsXYZkk9pow/kmL2PGAC/1DZpuk1kn+amvaY9cvgPXpCTexhF2uQ/ixdVL8UGcINpIXYKekKz72EbbQ==
+instantsearch.js@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-3.5.2.tgz#22b2804f9dfe845b50621ed90217ee68cb10a822"
+  integrity sha512-O7Qe6upbTuX8fOCyzqF9rJTE8xDvHA+F49vPpVgXiAvKtbmUgr9kVmA5123g4y+pjn4Y1ZOs5koVMGn0/VsbhA==
   dependencies:
     algoliasearch-helper "^2.26.0"
     classnames "^2.2.5"
