@@ -15,7 +15,6 @@ steps:
       tar -zxvf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
     displayName: Downloading Hugo
   - script: |
-      sudo python3 -m pip uninstall pip && sudo apt-get install python3-pip --reinstall
       sudo -H pip3 install --upgrade pip
       sudo pip3 install -r requirements.txt
       pip3 freeze
