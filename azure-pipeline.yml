@@ -17,5 +17,6 @@ steps:
   - script: |
       sudo python3 -m pip uninstall pip && sudo apt-get install python3-pip --reinstall
       sudo -H pip3 install --upgrade pip
-      pip3 install -r requirements.txt
+      sudo pip3 install -r requirements.txt
+      pip3 freeze
     displayName: Installing python dependencies
