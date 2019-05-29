@@ -13,8 +13,8 @@ variables:
 
 steps:
   - script: |
-      wget -c https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
-      tar -zxvf hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
+      wget -c https://github.com/gohugoio/hugo/releases/download/v$(HUGO_VERSION)/hugo_extended_$(HUGO_VERSION)_Linux-64bit.tar.gz
+      tar -zxvf hugo_extended_$(HUGO_VERSION)_Linux-64bit.tar.gz
       sudo mv ./hugo /usr/local/bin
       hugo version
     displayName: Downloading Hugo
