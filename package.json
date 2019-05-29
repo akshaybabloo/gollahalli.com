@@ -19,7 +19,7 @@
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
-    "material-components-web": "^2.2.0",
+    "material-components-web": "^2.3.0",
     "normalize.css": "^8.0.1"
   }
 }
