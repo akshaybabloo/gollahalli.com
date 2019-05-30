@@ -43,7 +43,7 @@ steps:
     displayName: Build Hugo
     env:
       HUGO_ENV: $(HUGO_ENV)
-  - script:
+  - script: |
       firebase --version
       firebase diploy --token "$(firebase)"
     displayName: Deploy Website to Firebase
