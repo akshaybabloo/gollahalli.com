@@ -45,5 +45,5 @@ steps:
       HUGO_ENV: $(HUGO_ENV)
   - script: |
       firebase --version
-      firebase diploy --token "$(firebase)"
+      firebase deploy --token "$(firebase)"
     displayName: Deploy Website to Firebase
