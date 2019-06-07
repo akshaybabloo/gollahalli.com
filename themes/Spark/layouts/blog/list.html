@@ -10,7 +10,7 @@
                     {{ range .Pages }}
                         <article class="uk-article gol-links uk-margin-large">
                             <p class="uk-article-meta">
-                                <time datetime="{{.PublishDate}}" itemprop="datePublished" class="uk-text-left">{{.PublishDate.Format "01 Jan 2006"}}</time> <br>
+                                <time datetime="{{.PublishDate}}" itemprop="datePublished" class="uk-text-left">{{.PublishDate.Format "02 Jan 2006"}}</time> <br>
                                 <a class="uk-margin-bottom uk-text-large" style="font-size: 1.2rem;" href="{{.Permalink}}">{{.Title}}</a>
                             </p>
                             {{ if .Params.images }}
