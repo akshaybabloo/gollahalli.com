@@ -47,3 +47,8 @@ steps:
       firebase --version
       firebase deploy --token "$(firebase)"
     displayName: Deploy Website to Firebase
+  - script: |
+      python utils.py
+    displayName: Running Python Script
+    env:
+      ALGOLIA_KEY: $(ALGOLIA_KEY)
