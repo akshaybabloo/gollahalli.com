@@ -12,7 +12,7 @@
   "devDependencies": {
     "algoliasearch": "^3.33.0",
     "instantsearch.js": "^3.5.3",
-    "uikit": "^3.1.5"
+    "uikit": "^3.1.6"
   },
   "dependencies": {
     "material-components-web": "^2.3.1",
