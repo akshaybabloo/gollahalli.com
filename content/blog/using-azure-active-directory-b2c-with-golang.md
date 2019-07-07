@@ -1,9 +1,9 @@
 ---
 title: "Using Azure Active Directory B2c With Golang"
 date: 2019-07-03T22:13:05+12:00
-draft: true
-categories: []
-tags: []
+draft: false
+categories: ["Tutorial"]
+tags: ["Oauth", "Go"]
 description: ""
 images: []
 ads: true
