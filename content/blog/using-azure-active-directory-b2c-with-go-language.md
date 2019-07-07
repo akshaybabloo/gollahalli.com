@@ -1,5 +1,5 @@
 ---
-title: "Using Azure Active Directory B2c With Golang"
+title: "Using Azure Active Directory B2C with Go Language"
 date: 2019-07-03T22:13:05+12:00
 draft: false
 categories: ["Tutorial"]
@@ -23,3 +23,4 @@ sitemap:
 #   - imageLoc: ""
 #     imageCaption: ""
 ---
+
