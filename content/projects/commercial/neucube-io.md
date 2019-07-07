@@ -6,6 +6,6 @@ projectCategory: "Commercial"
 tags: ["Artificial Intelligence"]
 description: "An Artificial Intelligence website."
 images: []
-url: "/projects/#"
+externalUrl: "https://www.neucube.io"
 noindex: true
 ---
