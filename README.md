@@ -6,13 +6,10 @@ Contents for [gollahalli.com](https://www.gollahalli.com).
 
 Based on Hugo 0.51+
 
-## 1. Building the Website
-
-Make sure you have PowerShell installed.
+## 1. Run the Website
 
 ```md
-npm g i yarn
-yarn serve
+hugo serve
 ```
 
 ## 2. Theme
