@@ -7,6 +7,7 @@ tags: ["Python", "Machine-Learning", "Computer-Vision"]
 description: "Masking and coloring a region on an given image using Python 3."
 images: ["/img/blog/masking_colouring_region-1.png"]
 ads: true
+htmlScripts: ["https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"]
 author:
   prefix: "Mr."
   firstName: "Akshay Raj"
@@ -267,5 +268,3 @@ Masking and region colouring:
 [5]: #3-whats-next
 [6]: https://docs.scipy.org/doc/numpy/reference/generated/numpy.polyfit.html
 [7]: https://docs.scipy.org/doc/numpy/reference/generated/numpy.meshgrid.html
-
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
