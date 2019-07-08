@@ -33,7 +33,7 @@ UnrealEngine 4 using Blueprint visual scripting system.
 
 > **Note 3:** This is only a gif file compressed to load easily. The quality of the environment is 1000000% better than this.
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/demo.gif" alt="New Project" width="500"></p>
+<p align="center">{{< figure src="/img/blog/demo.gif" title="Demo" alt="Demo" >}}</p>
 
 **Table of Constant**
 
@@ -133,11 +133,11 @@ According to [UnrealEngine documentation](https://docs.unrealengine.com/latest/I
 
 Open Epic launcher and launch UnrealEngine. Goto `New Project`, under Blueprint (It is a node based approach where you don't have to write an code) tab click on `First Person`. Make sure there are no Starter contents (i.e. rocks, land etc...). Change the location of your project and file name to suit your needs. Once all the primary configurations are done, click on `Create Project`.
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/NewProject.png" alt="New Project" width="800"></p>
+<p align="center">{{< figure src="/img/blog/NewProject.png" title="New Project" alt="New Project" >}}</p>
 
 ## 3 UnrealEngine overview
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/UnrealEngineNote.png" alt="New Project" width="800"></p>
+<p align="center">{{< figure src="/img/blog/UnrealEngineNote.png" title="Overview" alt="Overview" >}}</p>
 
 > **Tip 1:** press `cmd + alt` (Mac) and move the cursor on an icon to get quick help.
 
@@ -153,7 +153,7 @@ UnrealEngine (for me or maybe for everyone) is divided into seven parts:
 
 ## 4 Blueprint editor
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/UnrealEngineEditor.png" alt="New Project" width="800"></p>
+<p align="center">{{< figure src="/img/blog/UnrealEngineNote.png" title="Overview" alt="Overview" >}}</p>
 
 A `Blueprint` is a node based visual scripting system in which you would not need to code any action or effect an actor performs.
 
@@ -183,7 +183,7 @@ In `Event Graph` tab, look for `Pawn projectile` and delete it and also delete t
 
 ### 5.3 Deleting unwanted meshes
 
-Under `Content browser` Click on <img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/SourcePanel.png" alt="show or hide source panel" width="20"> to show source panel. In that click on `FirstPerson` and on the right window, double click on `Meshes`, this should open meshes associated with our project, in that delete `First Person Projectile` and `First Person Projectile`. You will get a window warning you that the meshes are still referenced. Click on `Force Delete`. Then delete the `arms` and `gun` in the same way.
+Under `Content browser` Click on {{< figure src="/img/blog/SourcePanel.png" alt="show or hide source panel" width="20" >}} to show source panel. In that click on `FirstPerson` and on the right window, double click on `Meshes`, this should open meshes associated with our project, in that delete `First Person Projectile` and `First Person Projectile`. You will get a window warning you that the meshes are still referenced. Click on `Force Delete`. Then delete the `arms` and `gun` in the same way.
 
 ### 5.4 Creating Maya models
 
@@ -195,7 +195,7 @@ There are two ways to import an `fbx` file into the project that fits the scale 
 
 - You can scale up the models while importing `fbx` files into UnrealEngine. When you import an `fbx` file you will get an option
 
-  <p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/ImportFBX.png" alt="New Project" width="500"></p>
+  <p align="center">{{< figure src="/img/blog/ImportFBX.png" title="Import FBX" alt="Import FBX" >}}</p>
 
   Whenever I import the models I usually scale it up to `100`.
 
@@ -218,7 +218,7 @@ What I have done is that I have separated these files into their corresponding f
 
 When you double click on the `house_no_doors` mesh, this will open the following editor
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/StaticMeshEditor.png" alt="New Project" width="800"></p>
+<p align="center">{{< figure src="/img/blog/StaticMeshEditor.png" title="Static Mesh Editor" alt="Static Mesh Editor" >}}</p>
 
 This editor is divided into five parts:
 
@@ -230,7 +230,7 @@ This editor is divided into five parts:
 
 There are different types of colliders. Namely
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/CollusionMenu.png" alt="New Project" width="900"></p>
+<p align="center">{{< figure src="/img/blog/CollusionMenu.png" title="Collusion Menu" alt="Collusion Menu" >}}</p>
 
 In this DOP means Discrete Oriented Polytope, which means that it will create box collision with bevels which is closest to the object or the actor. See [here](https://docs.unrealengine.com/latest/INT/Engine/Content/Types/StaticMeshes/HowTo/SettingCollision/index.html) to understand more about it.
 
@@ -242,7 +242,7 @@ We will be using Blueprint for the doors but for the rest of the building, we wi
 
 All my Blueprints are place in `FIrstPersonBP/Blueprints/`. To create a blueprint right click on the `Content Browser` and click on `Blueprint Classes`, this will pop-up a window which will ask you to select a parent class that should look something like this
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/PickParentClass.png" alt="New Project" width="700"></p>
+<p align="center">{{< figure src="/img/blog/PickParentClass.png" title="Pick Parent Class" alt="Pick Parent Class" >}}</p>
 
 We will create a simple `Actor` for this blueprint and name it as `DoubleDoor`. Double-click on it to open Blueprint editor. Now drag the `door_left` and `door right` into the blueprint editor. Then click on `compile` and `save` from the Toolbar.
 
@@ -260,7 +260,7 @@ When you move the meshes to the viewport in UnrealEngine editor, sometimes depen
 
 - On the left side of the editor under Details (make sure you have selected the model from the Viewport), search for Materials, in that tab you can see different elements associated to the static mesh. Double click on a material this will open Material Editor.
 
-  <p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/NaterialEditor.png" alt="New Project" width="800"></p>
+  <p align="center">{{< figure src="/img/blog/MaterialEditor.png" title="Material Editor" alt="Material Editor" >}}</p>
 
   It consists the following components:
 
@@ -275,7 +275,7 @@ When you move the meshes to the viewport in UnrealEngine editor, sometimes depen
 
   The `Texture Sample` node consists of RBG channels as shown in the image below
 
-  <p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/TextureNode.png" alt="New Project" width="170"></p>
+  <p align="center">{{< figure src="/img/blog/TextureNode.png" title="Texture Node" alt="Texture Node" >}}</p>
 
 - Once you have done the necessary changes, then you should click on `Apply` and then `Save`.
 
@@ -303,7 +303,7 @@ Let try to give a shine to one of the materials which are used in as texture to 
 
 The nodes should look something like this:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/GlassNode.png" alt="New Project" width="700"></p>
+<p align="center">{{< figure src="/img/blog/GlassNode.png" title="Glass Node" alt="Glass Node" >}}</p>
 
 ### 6.4 Adding reflections
 
@@ -335,7 +335,7 @@ Double click on `door_hinge`. Add a box collider to it. To add sockets to the hi
 
 from the menu bar click on `Window -> Socket Manager`. On the left side of the screen below you will see a tab called `Sock Manager` in that click on `Create Socket` and name the socket as `SocketDoorL` and place it as shown in the image below. Likewise, create another socket and place it as shown.
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/SocketsHingg.png" alt="New Project" width="700"></p>
+<p align="center">{{< figure src="/img/blog/SocketsHing.png" title="Sockets Hing" alt="Sockets Hing" >}}</p>
 
 Save and close the window.
 
@@ -349,11 +349,11 @@ Open `DoubleDoorHinge` if not already open. Add a `sphere collider` and increase
 
 Click on the `trigger` under components to bring its details. In that details pane search for `Collusion` change `collusion preset` to `Custom`. Ignore all except `Pawn`
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/CollusionDoor.png" alt="New Project" width="600"></p>
+<p align="center">{{< figure src="/img/blog/CollusionDoor.png" title="Collusion Door" alt="Collusion Door" >}}</p>
 
 Next right click on the grid and search for `Lerp` under Float tab. Right click on `A` and `B` and choose `Promote to Variable`. Rename it in the Details pane as `Closed` and `Opened`.
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/Door1.png" alt="New Project" width="800"></p>
+<p align="center">{{< figure src="/img/blog/Door1.png" title="Door 1" alt="Door 1" >}}</p>
 
 ### 8.3 Adding animations
 
@@ -361,7 +361,7 @@ Double click on `DoorOpen` node to open the timeline, this would be empty. Click
 
 Now lets add a translation to both the doors. Click on `door_left` and RMB and search for `SetRelativeLocation(door_right)` and `SetRelativeLocation(door_left)`. In `SetRelativeLocation` nodes right click on `New Location` and click on `Split Struct Pin`, this will split into `x, y & z` connect all the nodes as shown in the image below:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/DoorAnimation.png" alt="New Project" width="800"></p>
+<p align="center">{{< figure src="/img/blog/DoorAnimation.png" title="Door Animation" alt="Door Animation" >}}</p>
 
 Don't forget to compile and save once done.
 
@@ -373,7 +373,7 @@ Create a diffuse and normal from one of the software given in the requirements a
 
 In that press `T + LMB` to create a texture node, under Details pane, browse to `grass_COLOR` then select it. Do the same thing again but this time browse to `grass_normal`, attach the node to `grass` node as shown below:
 
-<p align="center"><img src="https://raw.githubusercontent.com/akshaybabloo/UnrealEngine_4_Notes/master/Screenshots/MakeTexture.png" alt="New Project" width="400"></p>
+<p align="center">{{< figure src="/img/blog/MakeTexture.png" title="Make Texture" alt="Make Texture" >}}</p>
 
 ### 9.2 Adding terrains
 
