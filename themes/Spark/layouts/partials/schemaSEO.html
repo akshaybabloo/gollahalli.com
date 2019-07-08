@@ -2,7 +2,7 @@
     {
         "url":{{ .Permalink }},
         "name":"{{ .Site.Title }}",
-        "description":"{{ .Params.description }}",
+        "description":{{ .Params.description | jsonify | safeJS  }},
         {{ if (isset .Params "images") }}
         "image":{{ (index .Params.images 0) | absURL | jsonify | safeJS }},
         {{ else }}
