@@ -5,7 +5,7 @@ draft: false
 categories: ['Tutorial']
 tags: ['UnrealEngine4']
 description: 'Introduction to Unreal Engine 4.'
-images: []
+images: ["/img/blog/demo.gif", "/img/blog/UnrealEngineEditor.png", "/img/blog/NewProject.png", "/img/blog/UnrealEngineNote.png", "/img/blog/ImportFBX.png", "/img/blog/SourcePanel.png", "/img/blog/StaticMeshEditor.png", "/img/blog/CollusionMenu.png", "/img/blog/PickParentClass.png", "/img/blog/MaterialEditor.png", "/img/blog/TextureNode.png", "/img/blog/GlassNode.png", "/img/blog/SocketsHing.png", "/img/blog/CollusionDoor.png", "/img/blog/Door1.png", "/img/blog/DoorAnimation.png", "/img/blog/MakeTexture.png"]
 ads: true
 author:
   prefix: "Mr."
@@ -19,6 +19,41 @@ author:
 sitemap:
   priority: 0.8
   changeFreq: monthly
+siteMapImages:
+  - imageLoc: "/img/blog/demo.gif"
+    imageCaption: "Demo"
+  - imageLoc: "/img/blog/UnrealEngineEditor.png"
+    imageCaption: "Unreal Engine Editor"
+  - imageLoc: "/img/blog/NewProject.png"
+    imageCaption: "New Project"
+  - imageLoc: "/img/blog/UnrealEngineNote.png"
+    imageCaption: "Unreal Engine Note"
+  - imageLoc: "/img/blog/ImportFBX.png"
+    imageCaption: "Import FBX"
+  - imageLoc: "/img/blog/SourcePanel.png"
+    imageCaption: "Source Panel"
+  - imageLoc: "/img/blog/StaticMeshEditor.png"
+    imageCaption: "Static Mesh Editor"
+  - imageLoc: "/img/blog/CollusionMenu.png"
+    imageCaption: "Collusion Menu"
+  - imageLoc: "/img/blog/PickParentClass.png"
+    imageCaption: "Pick Parent Class"
+  - imageLoc: "/img/blog/MaterialEditor.png"
+    imageCaption: "MaterialE ditor"
+  - imageLoc: "/img/blog/TextureNode.png"
+    imageCaption: "Texture Node"
+  - imageLoc: "/img/blog/GlassNode.png"
+    imageCaption: "Glass Node"
+  - imageLoc: "/img/blog/SocketsHing.png"
+    imageCaption: "Sockets Hing"
+  - imageLoc: "/img/blog/CollusionDoor.png"
+    imageCaption: "Collusion Door"
+  - imageLoc: "/img/blog/Door1.png"
+    imageCaption: "Door 1"
+  - imageLoc: "/img/blog/DoorAnimation.png"
+    imageCaption: "Door Animation"
+  - imageLoc: "/img/blog/MakeTexture.png"
+    imageCaption: "Make Texture"    
 ---
 
 **The project files can be downloaded from [https://github.com/akshaybabloo/UnrealEngine_4_Notes](https://github.com/akshaybabloo/UnrealEngine_4_Notes)**
@@ -137,7 +172,7 @@ Open Epic launcher and launch UnrealEngine. Goto `New Project`, under Blueprint 
 
 ## 3 UnrealEngine overview
 
-<p align="center">{{< figure src="/img/blog/UnrealEngineNote.png" title="Overview" alt="Overview" >}}</p>
+<p align="center">{{< figure src="/img/blog/UnrealEngineNote.png" title="Unreal Engine Note" alt="Unreal Engine Note" >}}</p>
 
 > **Tip 1:** press `cmd + alt` (Mac) and move the cursor on an icon to get quick help.
 
@@ -153,7 +188,7 @@ UnrealEngine (for me or maybe for everyone) is divided into seven parts:
 
 ## 4 Blueprint editor
 
-<p align="center">{{< figure src="/img/blog/UnrealEngineNote.png" title="Overview" alt="Overview" >}}</p>
+<p align="center">{{< figure src="/img/blog/UnrealEngineEditor.png" title="Unreal Engine Editor" alt="Unreal Engine Editor" >}}</p>
 
 A `Blueprint` is a node based visual scripting system in which you would not need to code any action or effect an actor performs.
 
