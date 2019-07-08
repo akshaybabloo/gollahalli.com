@@ -1,7 +1,7 @@
 ---
 title: "Using Azure Active Directory B2C with Go Language"
 date: 2019-07-03T22:13:05+12:00
-draft: false
+draft: true
 categories: ["Tutorial"]
 tags: ["Oauth", "Go"]
 description: "Handling user authentication and authorization with Azure Active Directory B2C and Go language"
