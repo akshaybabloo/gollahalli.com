@@ -36,6 +36,7 @@ This blog is few part series in the field of Computer Vision and Deep Learning. 
 According to Wikipedia
 
 > Computer vision is an interdisciplinary field that deals with how computers can be made to gain high-level understanding from digital images or videos. From the perspective of engineering, it seeks to automate tasks that the human visual system can do.
+
 In general, Computer Vision (CV) is the eyes for machines to interpret the surroundings. There are various implementations for CV, some but not limited to are:
 
 Robotics
