@@ -1,4 +1,4 @@
-/*! InstantSearch.js 3.4.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 3.5.4 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -534,7 +534,7 @@
 
   var isBuffer_1 = createCommonjsModule(function (module, exports) {
   /** Detect free variable `exports`. */
-  var freeExports = exports && !exports.nodeType && exports;
+  var freeExports =  exports && !exports.nodeType && exports;
 
   /** Detect free variable `module`. */
   var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
@@ -706,7 +706,7 @@
 
   var _nodeUtil = createCommonjsModule(function (module, exports) {
   /** Detect free variable `exports`. */
-  var freeExports = exports && !exports.nodeType && exports;
+  var freeExports =  exports && !exports.nodeType && exports;
 
   /** Detect free variable `module`. */
   var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
@@ -3829,7 +3829,7 @@
    */
   function filter(collection, predicate) {
     var func = isArray_1(collection) ? _arrayFilter : _baseFilter;
-    return func(collection, _baseIteratee(predicate, 3));
+    return func(collection, _baseIteratee(predicate));
   }
 
   var filter_1 = filter;
@@ -3898,7 +3898,7 @@
    */
   function map(collection, iteratee) {
     var func = isArray_1(collection) ? _arrayMap : _baseMap;
-    return func(collection, _baseIteratee(iteratee, 3));
+    return func(collection, _baseIteratee(iteratee));
   }
 
   var map_1 = map;
@@ -3995,7 +3995,7 @@
     var func = isArray_1(collection) ? _arrayReduce : _baseReduce,
         initAccum = arguments.length < 3;
 
-    return func(collection, _baseIteratee(iteratee, 4), accumulator, initAccum, _baseEach);
+    return func(collection, _baseIteratee(iteratee), accumulator, initAccum, _baseEach);
   }
 
   var reduce_1 = reduce;
@@ -4200,7 +4200,7 @@
 
   var _cloneBuffer = createCommonjsModule(function (module, exports) {
   /** Detect free variable `exports`. */
-  var freeExports = exports && !exports.nodeType && exports;
+  var freeExports =  exports && !exports.nodeType && exports;
 
   /** Detect free variable `module`. */
   var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
@@ -5486,7 +5486,7 @@
     return function(collection, predicate, fromIndex) {
       var iterable = Object(collection);
       if (!isArrayLike_1(collection)) {
-        var iteratee = _baseIteratee(predicate, 3);
+        var iteratee = _baseIteratee(predicate);
         collection = keys_1(collection);
         predicate = function(key) { return iteratee(iterable[key], key, iterable); };
       }
@@ -5544,7 +5544,7 @@
     if (index < 0) {
       index = nativeMax$2(length + index, 0);
     }
-    return _baseFindIndex(array, _baseIteratee(predicate, 3), index);
+    return _baseFindIndex(array, _baseIteratee(predicate), index);
   }
 
   var findIndex_1 = findIndex;
@@ -8119,7 +8119,7 @@
    */
   function sumBy(array, iteratee) {
     return (array && array.length)
-      ? _baseSum(array, _baseIteratee(iteratee, 2))
+      ? _baseSum(array, _baseIteratee(iteratee))
       : 0;
   }
 
@@ -10637,648 +10637,6 @@
 
   var SearchResults_1 = SearchResults;
 
-  var isBufferBrowser = function isBuffer(arg) {
-    return arg && typeof arg === 'object'
-      && typeof arg.copy === 'function'
-      && typeof arg.fill === 'function'
-      && typeof arg.readUInt8 === 'function';
-  };
-
-  var inherits_browser = createCommonjsModule(function (module) {
-  if (typeof Object.create === 'function') {
-    // implementation from standard node.js 'util' module
-    module.exports = function inherits(ctor, superCtor) {
-      ctor.super_ = superCtor;
-      ctor.prototype = Object.create(superCtor.prototype, {
-        constructor: {
-          value: ctor,
-          enumerable: false,
-          writable: true,
-          configurable: true
-        }
-      });
-    };
-  } else {
-    // old school shim for old browsers
-    module.exports = function inherits(ctor, superCtor) {
-      ctor.super_ = superCtor;
-      var TempCtor = function () {};
-      TempCtor.prototype = superCtor.prototype;
-      ctor.prototype = new TempCtor();
-      ctor.prototype.constructor = ctor;
-    };
-  }
-  });
-
-  var util = createCommonjsModule(function (module, exports) {
-  // Copyright Joyent, Inc. and other Node contributors.
-  //
-  // Permission is hereby granted, free of charge, to any person obtaining a
-  // copy of this software and associated documentation files (the
-  // "Software"), to deal in the Software without restriction, including
-  // without limitation the rights to use, copy, modify, merge, publish,
-  // distribute, sublicense, and/or sell copies of the Software, and to permit
-  // persons to whom the Software is furnished to do so, subject to the
-  // following conditions:
-  //
-  // The above copyright notice and this permission notice shall be included
-  // in all copies or substantial portions of the Software.
-  //
-  // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-  // OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-  // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-  // NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-  // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-  // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-  // USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-  var formatRegExp = /%[sdj%]/g;
-  exports.format = function(f) {
-    if (!isString(f)) {
-      var objects = [];
-      for (var i = 0; i < arguments.length; i++) {
-        objects.push(inspect(arguments[i]));
-      }
-      return objects.join(' ');
-    }
-
-    var i = 1;
-    var args = arguments;
-    var len = args.length;
-    var str = String(f).replace(formatRegExp, function(x) {
-      if (x === '%%') return '%';
-      if (i >= len) return x;
-      switch (x) {
-        case '%s': return String(args[i++]);
-        case '%d': return Number(args[i++]);
-        case '%j':
-          try {
-            return JSON.stringify(args[i++]);
-          } catch (_) {
-            return '[Circular]';
-          }
-        default:
-          return x;
-      }
-    });
-    for (var x = args[i]; i < len; x = args[++i]) {
-      if (isNull(x) || !isObject(x)) {
-        str += ' ' + x;
-      } else {
-        str += ' ' + inspect(x);
-      }
-    }
-    return str;
-  };
-
-
-  // Mark that a method should not be used.
-  // Returns a modified function which warns once by default.
-  // If --no-deprecation is set, then it is a no-op.
-  exports.deprecate = function(fn, msg) {
-    // Allow for deprecating things in the process of starting up.
-    if (isUndefined(commonjsGlobal.process)) {
-      return function() {
-        return exports.deprecate(fn, msg).apply(this, arguments);
-      };
-    }
-
-    if (process.noDeprecation === true) {
-      return fn;
-    }
-
-    var warned = false;
-    function deprecated() {
-      if (!warned) {
-        if (process.throwDeprecation) {
-          throw new Error(msg);
-        } else if (process.traceDeprecation) {
-          console.trace(msg);
-        } else {
-          console.error(msg);
-        }
-        warned = true;
-      }
-      return fn.apply(this, arguments);
-    }
-
-    return deprecated;
-  };
-
-
-  var debugs = {};
-  var debugEnviron;
-  exports.debuglog = function(set) {
-    if (isUndefined(debugEnviron))
-      debugEnviron = process.env.NODE_DEBUG || '';
-    set = set.toUpperCase();
-    if (!debugs[set]) {
-      if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
-        var pid = process.pid;
-        debugs[set] = function() {
-          var msg = exports.format.apply(exports, arguments);
-          console.error('%s %d: %s', set, pid, msg);
-        };
-      } else {
-        debugs[set] = function() {};
-      }
-    }
-    return debugs[set];
-  };
-
-
-  /**
-   * Echos the value of a value. Trys to print the value out
-   * in the best way possible given the different types.
-   *
-   * @param {Object} obj The object to print out.
-   * @param {Object} opts Optional options object that alters the output.
-   */
-  /* legacy: obj, showHidden, depth, colors*/
-  function inspect(obj, opts) {
-    // default options
-    var ctx = {
-      seen: [],
-      stylize: stylizeNoColor
-    };
-    // legacy...
-    if (arguments.length >= 3) ctx.depth = arguments[2];
-    if (arguments.length >= 4) ctx.colors = arguments[3];
-    if (isBoolean(opts)) {
-      // legacy...
-      ctx.showHidden = opts;
-    } else if (opts) {
-      // got an "options" object
-      exports._extend(ctx, opts);
-    }
-    // set default options
-    if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
-    if (isUndefined(ctx.depth)) ctx.depth = 2;
-    if (isUndefined(ctx.colors)) ctx.colors = false;
-    if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
-    if (ctx.colors) ctx.stylize = stylizeWithColor;
-    return formatValue(ctx, obj, ctx.depth);
-  }
-  exports.inspect = inspect;
-
-
-  // http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
-  inspect.colors = {
-    'bold' : [1, 22],
-    'italic' : [3, 23],
-    'underline' : [4, 24],
-    'inverse' : [7, 27],
-    'white' : [37, 39],
-    'grey' : [90, 39],
-    'black' : [30, 39],
-    'blue' : [34, 39],
-    'cyan' : [36, 39],
-    'green' : [32, 39],
-    'magenta' : [35, 39],
-    'red' : [31, 39],
-    'yellow' : [33, 39]
-  };
-
-  // Don't use 'blue' not visible on cmd.exe
-  inspect.styles = {
-    'special': 'cyan',
-    'number': 'yellow',
-    'boolean': 'yellow',
-    'undefined': 'grey',
-    'null': 'bold',
-    'string': 'green',
-    'date': 'magenta',
-    // "name": intentionally not styling
-    'regexp': 'red'
-  };
-
-
-  function stylizeWithColor(str, styleType) {
-    var style = inspect.styles[styleType];
-
-    if (style) {
-      return '\u001b[' + inspect.colors[style][0] + 'm' + str +
-             '\u001b[' + inspect.colors[style][1] + 'm';
-    } else {
-      return str;
-    }
-  }
-
-
-  function stylizeNoColor(str, styleType) {
-    return str;
-  }
-
-
-  function arrayToHash(array) {
-    var hash = {};
-
-    array.forEach(function(val, idx) {
-      hash[val] = true;
-    });
-
-    return hash;
-  }
-
-
-  function formatValue(ctx, value, recurseTimes) {
-    // Provide a hook for user-specified inspect functions.
-    // Check that value is an object with an inspect function on it
-    if (ctx.customInspect &&
-        value &&
-        isFunction(value.inspect) &&
-        // Filter out the util module, it's inspect function is special
-        value.inspect !== exports.inspect &&
-        // Also filter out any prototype objects using the circular check.
-        !(value.constructor && value.constructor.prototype === value)) {
-      var ret = value.inspect(recurseTimes, ctx);
-      if (!isString(ret)) {
-        ret = formatValue(ctx, ret, recurseTimes);
-      }
-      return ret;
-    }
-
-    // Primitive types cannot have properties
-    var primitive = formatPrimitive(ctx, value);
-    if (primitive) {
-      return primitive;
-    }
-
-    // Look up the keys of the object.
-    var keys = Object.keys(value);
-    var visibleKeys = arrayToHash(keys);
-
-    if (ctx.showHidden) {
-      keys = Object.getOwnPropertyNames(value);
-    }
-
-    // IE doesn't make error fields non-enumerable
-    // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
-    if (isError(value)
-        && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
-      return formatError(value);
-    }
-
-    // Some type of object without properties can be shortcutted.
-    if (keys.length === 0) {
-      if (isFunction(value)) {
-        var name = value.name ? ': ' + value.name : '';
-        return ctx.stylize('[Function' + name + ']', 'special');
-      }
-      if (isRegExp(value)) {
-        return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-      }
-      if (isDate(value)) {
-        return ctx.stylize(Date.prototype.toString.call(value), 'date');
-      }
-      if (isError(value)) {
-        return formatError(value);
-      }
-    }
-
-    var base = '', array = false, braces = ['{', '}'];
-
-    // Make Array say that they are Array
-    if (isArray(value)) {
-      array = true;
-      braces = ['[', ']'];
-    }
-
-    // Make functions say that they are functions
-    if (isFunction(value)) {
-      var n = value.name ? ': ' + value.name : '';
-      base = ' [Function' + n + ']';
-    }
-
-    // Make RegExps say that they are RegExps
-    if (isRegExp(value)) {
-      base = ' ' + RegExp.prototype.toString.call(value);
-    }
-
-    // Make dates with properties first say the date
-    if (isDate(value)) {
-      base = ' ' + Date.prototype.toUTCString.call(value);
-    }
-
-    // Make error with message first say the error
-    if (isError(value)) {
-      base = ' ' + formatError(value);
-    }
-
-    if (keys.length === 0 && (!array || value.length == 0)) {
-      return braces[0] + base + braces[1];
-    }
-
-    if (recurseTimes < 0) {
-      if (isRegExp(value)) {
-        return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-      } else {
-        return ctx.stylize('[Object]', 'special');
-      }
-    }
-
-    ctx.seen.push(value);
-
-    var output;
-    if (array) {
-      output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
-    } else {
-      output = keys.map(function(key) {
-        return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
-      });
-    }
-
-    ctx.seen.pop();
-
-    return reduceToSingleString(output, base, braces);
-  }
-
-
-  function formatPrimitive(ctx, value) {
-    if (isUndefined(value))
-      return ctx.stylize('undefined', 'undefined');
-    if (isString(value)) {
-      var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
-                                               .replace(/'/g, "\\'")
-                                               .replace(/\\"/g, '"') + '\'';
-      return ctx.stylize(simple, 'string');
-    }
-    if (isNumber(value))
-      return ctx.stylize('' + value, 'number');
-    if (isBoolean(value))
-      return ctx.stylize('' + value, 'boolean');
-    // For some reason typeof null is "object", so special case here.
-    if (isNull(value))
-      return ctx.stylize('null', 'null');
-  }
-
-
-  function formatError(value) {
-    return '[' + Error.prototype.toString.call(value) + ']';
-  }
-
-
-  function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
-    var output = [];
-    for (var i = 0, l = value.length; i < l; ++i) {
-      if (hasOwnProperty(value, String(i))) {
-        output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-            String(i), true));
-      } else {
-        output.push('');
-      }
-    }
-    keys.forEach(function(key) {
-      if (!key.match(/^\d+$/)) {
-        output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-            key, true));
-      }
-    });
-    return output;
-  }
-
-
-  function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
-    var name, str, desc;
-    desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
-    if (desc.get) {
-      if (desc.set) {
-        str = ctx.stylize('[Getter/Setter]', 'special');
-      } else {
-        str = ctx.stylize('[Getter]', 'special');
-      }
-    } else {
-      if (desc.set) {
-        str = ctx.stylize('[Setter]', 'special');
-      }
-    }
-    if (!hasOwnProperty(visibleKeys, key)) {
-      name = '[' + key + ']';
-    }
-    if (!str) {
-      if (ctx.seen.indexOf(desc.value) < 0) {
-        if (isNull(recurseTimes)) {
-          str = formatValue(ctx, desc.value, null);
-        } else {
-          str = formatValue(ctx, desc.value, recurseTimes - 1);
-        }
-        if (str.indexOf('\n') > -1) {
-          if (array) {
-            str = str.split('\n').map(function(line) {
-              return '  ' + line;
-            }).join('\n').substr(2);
-          } else {
-            str = '\n' + str.split('\n').map(function(line) {
-              return '   ' + line;
-            }).join('\n');
-          }
-        }
-      } else {
-        str = ctx.stylize('[Circular]', 'special');
-      }
-    }
-    if (isUndefined(name)) {
-      if (array && key.match(/^\d+$/)) {
-        return str;
-      }
-      name = JSON.stringify('' + key);
-      if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
-        name = name.substr(1, name.length - 2);
-        name = ctx.stylize(name, 'name');
-      } else {
-        name = name.replace(/'/g, "\\'")
-                   .replace(/\\"/g, '"')
-                   .replace(/(^"|"$)/g, "'");
-        name = ctx.stylize(name, 'string');
-      }
-    }
-
-    return name + ': ' + str;
-  }
-
-
-  function reduceToSingleString(output, base, braces) {
-    var length = output.reduce(function(prev, cur) {
-      if (cur.indexOf('\n') >= 0) ;
-      return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
-    }, 0);
-
-    if (length > 60) {
-      return braces[0] +
-             (base === '' ? '' : base + '\n ') +
-             ' ' +
-             output.join(',\n  ') +
-             ' ' +
-             braces[1];
-    }
-
-    return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
-  }
-
-
-  // NOTE: These type checking functions intentionally don't use `instanceof`
-  // because it is fragile and can be easily faked with `Object.create()`.
-  function isArray(ar) {
-    return Array.isArray(ar);
-  }
-  exports.isArray = isArray;
-
-  function isBoolean(arg) {
-    return typeof arg === 'boolean';
-  }
-  exports.isBoolean = isBoolean;
-
-  function isNull(arg) {
-    return arg === null;
-  }
-  exports.isNull = isNull;
-
-  function isNullOrUndefined(arg) {
-    return arg == null;
-  }
-  exports.isNullOrUndefined = isNullOrUndefined;
-
-  function isNumber(arg) {
-    return typeof arg === 'number';
-  }
-  exports.isNumber = isNumber;
-
-  function isString(arg) {
-    return typeof arg === 'string';
-  }
-  exports.isString = isString;
-
-  function isSymbol(arg) {
-    return typeof arg === 'symbol';
-  }
-  exports.isSymbol = isSymbol;
-
-  function isUndefined(arg) {
-    return arg === void 0;
-  }
-  exports.isUndefined = isUndefined;
-
-  function isRegExp(re) {
-    return isObject(re) && objectToString(re) === '[object RegExp]';
-  }
-  exports.isRegExp = isRegExp;
-
-  function isObject(arg) {
-    return typeof arg === 'object' && arg !== null;
-  }
-  exports.isObject = isObject;
-
-  function isDate(d) {
-    return isObject(d) && objectToString(d) === '[object Date]';
-  }
-  exports.isDate = isDate;
-
-  function isError(e) {
-    return isObject(e) &&
-        (objectToString(e) === '[object Error]' || e instanceof Error);
-  }
-  exports.isError = isError;
-
-  function isFunction(arg) {
-    return typeof arg === 'function';
-  }
-  exports.isFunction = isFunction;
-
-  function isPrimitive(arg) {
-    return arg === null ||
-           typeof arg === 'boolean' ||
-           typeof arg === 'number' ||
-           typeof arg === 'string' ||
-           typeof arg === 'symbol' ||  // ES6 symbol
-           typeof arg === 'undefined';
-  }
-  exports.isPrimitive = isPrimitive;
-
-  exports.isBuffer = isBufferBrowser;
-
-  function objectToString(o) {
-    return Object.prototype.toString.call(o);
-  }
-
-
-  function pad(n) {
-    return n < 10 ? '0' + n.toString(10) : n.toString(10);
-  }
-
-
-  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-                'Oct', 'Nov', 'Dec'];
-
-  // 26 Feb 16:19:34
-  function timestamp() {
-    var d = new Date();
-    var time = [pad(d.getHours()),
-                pad(d.getMinutes()),
-                pad(d.getSeconds())].join(':');
-    return [d.getDate(), months[d.getMonth()], time].join(' ');
-  }
-
-
-  // log is just a thin wrapper to console.log that prepends a timestamp
-  exports.log = function() {
-    console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
-  };
-
-
-  /**
-   * Inherit the prototype methods from one constructor into another.
-   *
-   * The Function.prototype.inherits from lang.js rewritten as a standalone
-   * function (not on Function.prototype). NOTE: If this file is to be loaded
-   * during bootstrapping this function needs to be rewritten using some native
-   * functions as prototype setup using normal JavaScript does not work as
-   * expected during bootstrapping (see mirror.js in r114903).
-   *
-   * @param {function} ctor Constructor function which needs to inherit the
-   *     prototype.
-   * @param {function} superCtor Constructor function to inherit prototype from.
-   */
-  exports.inherits = inherits_browser;
-
-  exports._extend = function(origin, add) {
-    // Don't do anything if add isn't an object
-    if (!add || !isObject(add)) return origin;
-
-    var keys = Object.keys(add);
-    var i = keys.length;
-    while (i--) {
-      origin[keys[i]] = add[keys[i]];
-    }
-    return origin;
-  };
-
-  function hasOwnProperty(obj, prop) {
-    return Object.prototype.hasOwnProperty.call(obj, prop);
-  }
-  });
-  var util_1 = util.format;
-  var util_2 = util.deprecate;
-  var util_3 = util.debuglog;
-  var util_4 = util.inspect;
-  var util_5 = util.isArray;
-  var util_6 = util.isBoolean;
-  var util_7 = util.isNull;
-  var util_8 = util.isNullOrUndefined;
-  var util_9 = util.isNumber;
-  var util_10 = util.isString;
-  var util_11 = util.isSymbol;
-  var util_12 = util.isUndefined;
-  var util_13 = util.isRegExp;
-  var util_14 = util.isObject;
-  var util_15 = util.isDate;
-  var util_16 = util.isError;
-  var util_17 = util.isFunction;
-  var util_18 = util.isPrimitive;
-  var util_19 = util.isBuffer;
-  var util_20 = util.log;
-  var util_21 = util.inherits;
-  var util_22 = util._extend;
-
   // Copyright Joyent, Inc. and other Node contributors.
   //
   // Permission is hereby granted, free of charge, to any person obtaining a
@@ -11582,6 +10940,19 @@
     return arg === void 0;
   }
 
+  function inherits(ctor, superCtor) {
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  }
+
+  var inherits_1 = inherits;
+
   /**
    * A DerivedHelper is a way to create sub requests to
    * Algolia from a main helper.
@@ -11598,7 +10969,7 @@
     this.lastResults = null;
   }
 
-  util.inherits(DerivedHelper, events.EventEmitter);
+  inherits_1(DerivedHelper, events.EventEmitter);
 
   /**
    * Detach this helper from the main helper
@@ -12077,6 +11448,7 @@
   };
 
   var has = Object.prototype.hasOwnProperty;
+  var isArray$1 = Array.isArray;
 
   var hexTable = (function () {
       var array = [];
@@ -12092,7 +11464,7 @@
           var item = queue.pop();
           var obj = item.obj[item.prop];
 
-          if (Array.isArray(obj)) {
+          if (isArray$1(obj)) {
               var compacted = [];
 
               for (var j = 0; j < obj.length; ++j) {
@@ -12123,9 +11495,9 @@
       }
 
       if (typeof source !== 'object') {
-          if (Array.isArray(target)) {
+          if (isArray$1(target)) {
               target.push(source);
-          } else if (typeof target === 'object') {
+          } else if (target && typeof target === 'object') {
               if ((options && (options.plainObjects || options.allowPrototypes)) || !has.call(Object.prototype, source)) {
                   target[source] = true;
               }
@@ -12136,20 +11508,21 @@
           return target;
       }
 
-      if (typeof target !== 'object') {
+      if (!target || typeof target !== 'object') {
           return [target].concat(source);
       }
 
       var mergeTarget = target;
-      if (Array.isArray(target) && !Array.isArray(source)) {
+      if (isArray$1(target) && !isArray$1(source)) {
           mergeTarget = arrayToObject(target, options);
       }
 
-      if (Array.isArray(target) && Array.isArray(source)) {
+      if (isArray$1(target) && isArray$1(source)) {
           source.forEach(function (item, i) {
               if (has.call(target, i)) {
-                  if (target[i] && typeof target[i] === 'object') {
-                      target[i] = merge(target[i], item, options);
+                  var targetItem = target[i];
+                  if (targetItem && typeof targetItem === 'object' && item && typeof item === 'object') {
+                      target[i] = merge(targetItem, item, options);
                   } else {
                       target.push(item);
                   }
@@ -12280,7 +11653,7 @@
   };
 
   var isBuffer = function isBuffer(obj) {
-      if (obj === null || typeof obj === 'undefined') {
+      if (!obj || typeof obj !== 'object') {
           return false;
       }
 
@@ -12320,10 +11693,13 @@
       RFC3986: 'RFC3986'
   };
 
+  var has$1 = Object.prototype.hasOwnProperty;
+
   var arrayPrefixGenerators = {
       brackets: function brackets(prefix) { // eslint-disable-line func-name-matching
           return prefix + '[]';
       },
+      comma: 'comma',
       indices: function indices(prefix, key) { // eslint-disable-line func-name-matching
           return prefix + '[' + key + ']';
       },
@@ -12332,10 +11708,10 @@
       }
   };
 
-  var isArray$1 = Array.isArray;
+  var isArray$2 = Array.isArray;
   var push = Array.prototype.push;
   var pushToArray = function (arr, valueOrArray) {
-      push.apply(arr, isArray$1(valueOrArray) ? valueOrArray : [valueOrArray]);
+      push.apply(arr, isArray$2(valueOrArray) ? valueOrArray : [valueOrArray]);
   };
 
   var toISO = Date.prototype.toISOString;
@@ -12349,6 +11725,7 @@
       encode: true,
       encoder: utils.encode,
       encodeValuesOnly: false,
+      formatter: formats.formatters[formats['default']],
       // deprecated
       indices: false,
       serializeDate: function serializeDate(date) { // eslint-disable-line func-name-matching
@@ -12378,6 +11755,8 @@
           obj = filter(prefix, obj);
       } else if (obj instanceof Date) {
           obj = serializeDate(obj);
+      } else if (generateArrayPrefix === 'comma' && isArray$2(obj)) {
+          obj = obj.join(',');
       }
 
       if (obj === null) {
@@ -12403,7 +11782,7 @@
       }
 
       var objKeys;
-      if (Array.isArray(filter)) {
+      if (isArray$2(filter)) {
           objKeys = filter;
       } else {
           var keys = Object.keys(obj);
@@ -12417,10 +11796,10 @@
               continue;
           }
 
-          if (Array.isArray(obj)) {
+          if (isArray$2(obj)) {
               pushToArray(values, stringify(
                   obj[key],
-                  generateArrayPrefix(prefix, key),
+                  typeof generateArrayPrefix === 'function' ? generateArrayPrefix(prefix, key) : prefix,
                   generateArrayPrefix,
                   strictNullHandling,
                   skipNulls,
@@ -12455,41 +11834,63 @@
       return values;
   };
 
-  var stringify_1 = function (object, opts) {
-      var obj = object;
-      var options = opts ? utils.assign({}, opts) : {};
+  var normalizeStringifyOptions = function normalizeStringifyOptions(opts) {
+      if (!opts) {
+          return defaults$1;
+      }
 
-      if (options.encoder !== null && options.encoder !== undefined && typeof options.encoder !== 'function') {
+      if (opts.encoder !== null && opts.encoder !== undefined && typeof opts.encoder !== 'function') {
           throw new TypeError('Encoder has to be a function.');
       }
 
-      var delimiter = typeof options.delimiter === 'undefined' ? defaults$1.delimiter : options.delimiter;
-      var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults$1.strictNullHandling;
-      var skipNulls = typeof options.skipNulls === 'boolean' ? options.skipNulls : defaults$1.skipNulls;
-      var encode = typeof options.encode === 'boolean' ? options.encode : defaults$1.encode;
-      var encoder = typeof options.encoder === 'function' ? options.encoder : defaults$1.encoder;
-      var sort = typeof options.sort === 'function' ? options.sort : null;
-      var allowDots = typeof options.allowDots === 'undefined' ? defaults$1.allowDots : !!options.allowDots;
-      var serializeDate = typeof options.serializeDate === 'function' ? options.serializeDate : defaults$1.serializeDate;
-      var encodeValuesOnly = typeof options.encodeValuesOnly === 'boolean' ? options.encodeValuesOnly : defaults$1.encodeValuesOnly;
-      var charset = options.charset || defaults$1.charset;
-      if (typeof options.charset !== 'undefined' && options.charset !== 'utf-8' && options.charset !== 'iso-8859-1') {
-          throw new Error('The charset option must be either utf-8, iso-8859-1, or undefined');
+      var charset = opts.charset || defaults$1.charset;
+      if (typeof opts.charset !== 'undefined' && opts.charset !== 'utf-8' && opts.charset !== 'iso-8859-1') {
+          throw new TypeError('The charset option must be either utf-8, iso-8859-1, or undefined');
       }
 
-      if (typeof options.format === 'undefined') {
-          options.format = formats['default'];
-      } else if (!Object.prototype.hasOwnProperty.call(formats.formatters, options.format)) {
-          throw new TypeError('Unknown format option provided.');
+      var format = formats['default'];
+      if (typeof opts.format !== 'undefined') {
+          if (!has$1.call(formats.formatters, opts.format)) {
+              throw new TypeError('Unknown format option provided.');
+          }
+          format = opts.format;
       }
-      var formatter = formats.formatters[options.format];
+      var formatter = formats.formatters[format];
+
+      var filter = defaults$1.filter;
+      if (typeof opts.filter === 'function' || isArray$2(opts.filter)) {
+          filter = opts.filter;
+      }
+
+      return {
+          addQueryPrefix: typeof opts.addQueryPrefix === 'boolean' ? opts.addQueryPrefix : defaults$1.addQueryPrefix,
+          allowDots: typeof opts.allowDots === 'undefined' ? defaults$1.allowDots : !!opts.allowDots,
+          charset: charset,
+          charsetSentinel: typeof opts.charsetSentinel === 'boolean' ? opts.charsetSentinel : defaults$1.charsetSentinel,
+          delimiter: typeof opts.delimiter === 'undefined' ? defaults$1.delimiter : opts.delimiter,
+          encode: typeof opts.encode === 'boolean' ? opts.encode : defaults$1.encode,
+          encoder: typeof opts.encoder === 'function' ? opts.encoder : defaults$1.encoder,
+          encodeValuesOnly: typeof opts.encodeValuesOnly === 'boolean' ? opts.encodeValuesOnly : defaults$1.encodeValuesOnly,
+          filter: filter,
+          formatter: formatter,
+          serializeDate: typeof opts.serializeDate === 'function' ? opts.serializeDate : defaults$1.serializeDate,
+          skipNulls: typeof opts.skipNulls === 'boolean' ? opts.skipNulls : defaults$1.skipNulls,
+          sort: typeof opts.sort === 'function' ? opts.sort : null,
+          strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults$1.strictNullHandling
+      };
+  };
+
+  var stringify_1 = function (object, opts) {
+      var obj = object;
+      var options = normalizeStringifyOptions(opts);
+
       var objKeys;
       var filter;
 
       if (typeof options.filter === 'function') {
           filter = options.filter;
           obj = filter('', obj);
-      } else if (Array.isArray(options.filter)) {
+      } else if (isArray$2(options.filter)) {
           filter = options.filter;
           objKeys = filter;
       }
@@ -12501,10 +11902,10 @@
       }
 
       var arrayFormat;
-      if (options.arrayFormat in arrayPrefixGenerators) {
-          arrayFormat = options.arrayFormat;
-      } else if ('indices' in options) {
-          arrayFormat = options.indices ? 'indices' : 'repeat';
+      if (opts && opts.arrayFormat in arrayPrefixGenerators) {
+          arrayFormat = opts.arrayFormat;
+      } else if (opts && 'indices' in opts) {
+          arrayFormat = opts.indices ? 'indices' : 'repeat';
       } else {
           arrayFormat = 'indices';
       }
@@ -12515,38 +11916,38 @@
           objKeys = Object.keys(obj);
       }
 
-      if (sort) {
-          objKeys.sort(sort);
+      if (options.sort) {
+          objKeys.sort(options.sort);
       }
 
       for (var i = 0; i < objKeys.length; ++i) {
           var key = objKeys[i];
 
-          if (skipNulls && obj[key] === null) {
+          if (options.skipNulls && obj[key] === null) {
               continue;
           }
           pushToArray(keys, stringify(
               obj[key],
               key,
               generateArrayPrefix,
-              strictNullHandling,
-              skipNulls,
-              encode ? encoder : null,
-              filter,
-              sort,
-              allowDots,
-              serializeDate,
-              formatter,
-              encodeValuesOnly,
-              charset
+              options.strictNullHandling,
+              options.skipNulls,
+              options.encode ? options.encoder : null,
+              options.filter,
+              options.sort,
+              options.allowDots,
+              options.serializeDate,
+              options.formatter,
+              options.encodeValuesOnly,
+              options.charset
           ));
       }
 
-      var joined = keys.join(delimiter);
+      var joined = keys.join(options.delimiter);
       var prefix = options.addQueryPrefix === true ? '?' : '';
 
       if (options.charsetSentinel) {
-          if (charset === 'iso-8859-1') {
+          if (options.charset === 'iso-8859-1') {
               // encodeURIComponent('&#10003;'), the "numeric entity" representation of a checkmark
               prefix += 'utf8=%26%2310003%3B&';
           } else {
@@ -12558,7 +11959,7 @@
       return joined.length > 0 ? prefix + joined : '';
   };
 
-  var has$1 = Object.prototype.hasOwnProperty;
+  var has$2 = Object.prototype.hasOwnProperty;
 
   var defaults$2 = {
       allowDots: false,
@@ -12566,6 +11967,7 @@
       arrayLimit: 20,
       charset: 'utf-8',
       charsetSentinel: false,
+      comma: false,
       decoder: utils.decode,
       delimiter: '&',
       depth: 5,
@@ -12637,7 +12039,12 @@
           if (val && options.interpretNumericEntities && charset === 'iso-8859-1') {
               val = interpretNumericEntities(val);
           }
-          if (has$1.call(obj, key)) {
+
+          if (val && options.comma && val.indexOf(',') > -1) {
+              val = val.split(',');
+          }
+
+          if (has$2.call(obj, key)) {
               obj[key] = utils.combine(obj[key], val);
           } else {
               obj[key] = val;
@@ -12705,7 +12112,7 @@
       var keys = [];
       if (parent) {
           // If we aren't using plain objects, optionally prefix keys that would overwrite object prototype properties
-          if (!options.plainObjects && has$1.call(Object.prototype, parent)) {
+          if (!options.plainObjects && has$2.call(Object.prototype, parent)) {
               if (!options.allowPrototypes) {
                   return;
               }
@@ -12719,7 +12126,7 @@
       var i = 0;
       while ((segment = child.exec(key)) !== null && i < options.depth) {
           i += 1;
-          if (!options.plainObjects && has$1.call(Object.prototype, segment[1].slice(1, -1))) {
+          if (!options.plainObjects && has$2.call(Object.prototype, segment[1].slice(1, -1))) {
               if (!options.allowPrototypes) {
                   return;
               }
@@ -12736,31 +12143,41 @@
       return parseObject(keys, val, options);
   };
 
-  var parse = function (str, opts) {
-      var options = opts ? utils.assign({}, opts) : {};
+  var normalizeParseOptions = function normalizeParseOptions(opts) {
+      if (!opts) {
+          return defaults$2;
+      }
 
-      if (options.decoder !== null && options.decoder !== undefined && typeof options.decoder !== 'function') {
+      if (opts.decoder !== null && opts.decoder !== undefined && typeof opts.decoder !== 'function') {
           throw new TypeError('Decoder has to be a function.');
       }
 
-      options.ignoreQueryPrefix = options.ignoreQueryPrefix === true;
-      options.delimiter = typeof options.delimiter === 'string' || utils.isRegExp(options.delimiter) ? options.delimiter : defaults$2.delimiter;
-      options.depth = typeof options.depth === 'number' ? options.depth : defaults$2.depth;
-      options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : defaults$2.arrayLimit;
-      options.parseArrays = options.parseArrays !== false;
-      options.decoder = typeof options.decoder === 'function' ? options.decoder : defaults$2.decoder;
-      options.allowDots = typeof options.allowDots === 'undefined' ? defaults$2.allowDots : !!options.allowDots;
-      options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : defaults$2.plainObjects;
-      options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : defaults$2.allowPrototypes;
-      options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : defaults$2.parameterLimit;
-      options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults$2.strictNullHandling;
-
-      if (typeof options.charset !== 'undefined' && options.charset !== 'utf-8' && options.charset !== 'iso-8859-1') {
+      if (typeof opts.charset !== 'undefined' && opts.charset !== 'utf-8' && opts.charset !== 'iso-8859-1') {
           throw new Error('The charset option must be either utf-8, iso-8859-1, or undefined');
       }
-      if (typeof options.charset === 'undefined') {
-          options.charset = defaults$2.charset;
-      }
+      var charset = typeof opts.charset === 'undefined' ? defaults$2.charset : opts.charset;
+
+      return {
+          allowDots: typeof opts.allowDots === 'undefined' ? defaults$2.allowDots : !!opts.allowDots,
+          allowPrototypes: typeof opts.allowPrototypes === 'boolean' ? opts.allowPrototypes : defaults$2.allowPrototypes,
+          arrayLimit: typeof opts.arrayLimit === 'number' ? opts.arrayLimit : defaults$2.arrayLimit,
+          charset: charset,
+          charsetSentinel: typeof opts.charsetSentinel === 'boolean' ? opts.charsetSentinel : defaults$2.charsetSentinel,
+          comma: typeof opts.comma === 'boolean' ? opts.comma : defaults$2.comma,
+          decoder: typeof opts.decoder === 'function' ? opts.decoder : defaults$2.decoder,
+          delimiter: typeof opts.delimiter === 'string' || utils.isRegExp(opts.delimiter) ? opts.delimiter : defaults$2.delimiter,
+          depth: typeof opts.depth === 'number' ? opts.depth : defaults$2.depth,
+          ignoreQueryPrefix: opts.ignoreQueryPrefix === true,
+          interpretNumericEntities: typeof opts.interpretNumericEntities === 'boolean' ? opts.interpretNumericEntities : defaults$2.interpretNumericEntities,
+          parameterLimit: typeof opts.parameterLimit === 'number' ? opts.parameterLimit : defaults$2.parameterLimit,
+          parseArrays: opts.parseArrays !== false,
+          plainObjects: typeof opts.plainObjects === 'boolean' ? opts.plainObjects : defaults$2.plainObjects,
+          strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults$2.strictNullHandling
+      };
+  };
+
+  var parse = function (str, opts) {
+      var options = normalizeParseOptions(opts);
 
       if (str === '' || str === null || typeof str === 'undefined') {
           return options.plainObjects ? Object.create(null) : {};
@@ -12903,7 +12320,7 @@
    */
   function mapKeys(object, iteratee) {
     var result = {};
-    iteratee = _baseIteratee(iteratee, 3);
+    iteratee = _baseIteratee(iteratee);
 
     _baseForOwn(object, function(value, key, object) {
       _baseAssignValue(result, iteratee(value, key, object), value);
@@ -12943,7 +12360,7 @@
    */
   function mapValues(object, iteratee) {
     var result = {};
-    iteratee = _baseIteratee(iteratee, 3);
+    iteratee = _baseIteratee(iteratee);
 
     _baseForOwn(object, function(value, key, object) {
       _baseAssignValue(result, key, iteratee(value, key, object));
@@ -13128,7 +12545,7 @@
   	getQueryStringFromState: getQueryStringFromState
   };
 
-  var version = '2.26.1';
+  var version = '2.28.0';
 
   /**
    * Event triggered when a parameter is set or updated
@@ -13234,7 +12651,7 @@
    */
   function AlgoliaSearchHelper(client, index, options) {
     if (client.addAlgoliaAgent && !doesClientAgentContainsHelper(client)) {
-      client.addAlgoliaAgent('JS Helper ' + version);
+      client.addAlgoliaAgent('JS Helper (' + version + ')');
     }
 
     this.setClient(client);
@@ -13248,7 +12665,7 @@
     this._currentNbQueries = 0;
   }
 
-  util.inherits(AlgoliaSearchHelper, events.EventEmitter);
+  inherits_1(AlgoliaSearchHelper, events.EventEmitter);
 
   /**
    * Start the search with the parameters set in the state. When the
@@ -13394,6 +12811,15 @@
    * @return {promise.<FacetSearchResult>} the results of the search
    */
   AlgoliaSearchHelper.prototype.searchForFacetValues = function(facet, query, maxFacetHits, userState) {
+    var clientHasSFFV = typeof this.client.searchForFacetValues === 'function';
+    if (
+      !clientHasSFFV &&
+      typeof this.client.initIndex !== 'function'
+    ) {
+      throw new Error(
+        'search for facet values (searchable) was called, but this client does not have a function client.searchForFacetValues or client.initIndex(index).searchForFacetValues'
+      );
+    }
     var state = this.state.setQueryParameters(userState || {});
     var isDisjunctive = state.isDisjunctiveFacet(facet);
     var algoliaQuery = requestBuilder_1.getSearchForFacetQuery(facet, query, maxFacetHits, state);
@@ -13402,7 +12828,7 @@
     var self = this;
 
     this.emit('searchForFacetValues', state, facet, query);
-    var searchForFacetValuesPromise = typeof this.client.searchForFacetValues === 'function'
+    var searchForFacetValuesPromise = clientHasSFFV
       ? this.client.searchForFacetValues([{indexName: state.index, params: algoliaQuery}])
       : this.client.initIndex(state.index).searchForFacetValues(algoliaQuery);
 
@@ -14436,7 +13862,9 @@
   AlgoliaSearchHelper.prototype.setClient = function(newClient) {
     if (this.client === newClient) return this;
 
-    if (newClient.addAlgoliaAgent && !doesClientAgentContainsHelper(newClient)) newClient.addAlgoliaAgent('JS Helper ' + version);
+    if (newClient.addAlgoliaAgent && !doesClientAgentContainsHelper(newClient)) {
+      newClient.addAlgoliaAgent('JS Helper (' + version + ')');
+    }
     this.client = newClient;
 
     return this;
@@ -14541,9 +13969,10 @@
    * helper.on('result', function(result) {
    *   console.log(result);
    * });
-   * helper.toggleRefine('Movies & TV Shows')
-   *       .toggleRefine('Free shipping')
-   *       .search();
+   * helper
+   *   .toggleFacetRefinement('category', 'Movies & TV Shows')
+   *   .toggleFacetRefinement('shipping', 'Free shipping')
+   *   .search();
    * @example
    * // The helper is an event emitter using the node API
    * helper.on('result', updateTheResults);
@@ -14599,554 +14028,6 @@
 
   var algoliasearchHelper_1 = algoliasearchHelper;
 
-  /**
-   * This method is like `_.merge` except that it accepts `customizer` which
-   * is invoked to produce the merged values of the destination and source
-   * properties. If `customizer` returns `undefined`, merging is handled by the
-   * method instead. The `customizer` is invoked with six arguments:
-   * (objValue, srcValue, key, object, source, stack).
-   *
-   * **Note:** This method mutates `object`.
-   *
-   * @static
-   * @memberOf _
-   * @since 4.0.0
-   * @category Object
-   * @param {Object} object The destination object.
-   * @param {...Object} sources The source objects.
-   * @param {Function} customizer The function to customize assigned values.
-   * @returns {Object} Returns `object`.
-   * @example
-   *
-   * function customizer(objValue, srcValue) {
-   *   if (_.isArray(objValue)) {
-   *     return objValue.concat(srcValue);
-   *   }
-   * }
-   *
-   * var object = { 'a': [1], 'b': [2] };
-   * var other = { 'a': [3], 'b': [4] };
-   *
-   * _.mergeWith(object, other, customizer);
-   * // => { 'a': [1, 3], 'b': [2, 4] }
-   */
-  var mergeWith = _createAssigner(function(object, source, srcIndex, customizer) {
-    _baseMerge(object, source, srcIndex, customizer);
-  });
-
-  var mergeWith_1 = mergeWith;
-
-  /** Used as references for various `Number` constants. */
-  var INFINITY$3 = 1 / 0;
-
-  /**
-   * Creates a set object of `values`.
-   *
-   * @private
-   * @param {Array} values The values to add to the set.
-   * @returns {Object} Returns the new set.
-   */
-  var createSet = !(_Set && (1 / _setToArray(new _Set([,-0]))[1]) == INFINITY$3) ? noop_1 : function(values) {
-    return new _Set(values);
-  };
-
-  var _createSet = createSet;
-
-  /** Used as the size to enable large array optimizations. */
-  var LARGE_ARRAY_SIZE$1 = 200;
-
-  /**
-   * The base implementation of `_.uniqBy` without support for iteratee shorthands.
-   *
-   * @private
-   * @param {Array} array The array to inspect.
-   * @param {Function} [iteratee] The iteratee invoked per element.
-   * @param {Function} [comparator] The comparator invoked per element.
-   * @returns {Array} Returns the new duplicate free array.
-   */
-  function baseUniq(array, iteratee, comparator) {
-    var index = -1,
-        includes = _arrayIncludes,
-        length = array.length,
-        isCommon = true,
-        result = [],
-        seen = result;
-
-    if (comparator) {
-      isCommon = false;
-      includes = _arrayIncludesWith;
-    }
-    else if (length >= LARGE_ARRAY_SIZE$1) {
-      var set = iteratee ? null : _createSet(array);
-      if (set) {
-        return _setToArray(set);
-      }
-      isCommon = false;
-      includes = _cacheHas;
-      seen = new _SetCache;
-    }
-    else {
-      seen = iteratee ? [] : result;
-    }
-    outer:
-    while (++index < length) {
-      var value = array[index],
-          computed = iteratee ? iteratee(value) : value;
-
-      value = (comparator || value !== 0) ? value : 0;
-      if (isCommon && computed === computed) {
-        var seenIndex = seen.length;
-        while (seenIndex--) {
-          if (seen[seenIndex] === computed) {
-            continue outer;
-          }
-        }
-        if (iteratee) {
-          seen.push(computed);
-        }
-        result.push(value);
-      }
-      else if (!includes(seen, computed, comparator)) {
-        if (seen !== result) {
-          seen.push(computed);
-        }
-        result.push(value);
-      }
-    }
-    return result;
-  }
-
-  var _baseUniq = baseUniq;
-
-  /**
-   * Creates an array of unique values, in order, from all given arrays using
-   * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-   * for equality comparisons.
-   *
-   * @static
-   * @memberOf _
-   * @since 0.1.0
-   * @category Array
-   * @param {...Array} [arrays] The arrays to inspect.
-   * @returns {Array} Returns the new array of combined values.
-   * @example
-   *
-   * _.union([2], [1, 2]);
-   * // => [2, 1]
-   */
-  var union = _baseRest(function(arrays) {
-    return _baseUniq(_baseFlatten(arrays, 1, isArrayLikeObject_1, true));
-  });
-
-  var union_1 = union;
-
-  var RoutingManager =
-  /*#__PURE__*/
-  function () {
-    function RoutingManager() {
-      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          instantSearchInstance = _ref.instantSearchInstance,
-          router = _ref.router,
-          stateMapping = _ref.stateMapping;
-
-      _classCallCheck(this, RoutingManager);
-
-      this.firstRender = true;
-      this.router = router;
-      this.stateMapping = stateMapping;
-      this.instantSearchInstance = instantSearchInstance;
-      this.currentUIState = this.stateMapping.routeToState(this.router.read());
-    }
-
-    _createClass(RoutingManager, [{
-      key: "init",
-      value: function init(_ref2) {
-        var state = _ref2.state;
-        // store the initial state from the storage
-        // so that we can compare it with the state after the first render
-        // in case the searchFunction has modifyied it.
-        this.initState = this.getAllUIStates({
-          searchParameters: state
-        });
-      }
-    }, {
-      key: "getConfiguration",
-      value: function getConfiguration(currentConfiguration) {
-        // We have to create a `SearchParameters` because `getAllSearchParameters`
-        // expects an instance of `SearchParameters` and not a plain object.
-        var currentSearchParameters = algoliasearchHelper_1.SearchParameters.make(currentConfiguration);
-        return _objectSpread({}, this.getAllSearchParameters({
-          uiState: this.currentUIState,
-          currentSearchParameters: currentSearchParameters
-        }));
-      }
-    }, {
-      key: "render",
-      value: function render(_ref3) {
-        var state = _ref3.state;
-
-        if (this.firstRender) {
-          this.firstRender = false;
-          this.setupRouting(state);
-        }
-      }
-    }, {
-      key: "setupRouting",
-      value: function setupRouting(state) {
-        var _this = this;
-
-        var helper = this.instantSearchInstance.helper;
-        this.router.onUpdate(function (route) {
-          var nextUiState = _this.stateMapping.routeToState(route);
-
-          var widgetsUIState = _this.getAllUIStates({
-            searchParameters: helper.state
-          });
-
-          if (isEqual_1(nextUiState, widgetsUIState)) return;
-          _this.currentUIState = nextUiState;
-
-          var searchParameters = _this.getAllSearchParameters({
-            currentSearchParameters: state,
-            instantSearchInstance: _this.instantSearchInstance,
-            uiState: _this.currentUIState
-          });
-
-          helper.overrideStateWithoutTriggeringChangeEvent(searchParameters).search();
-        });
-
-        this.renderURLFromState = function (searchParameters) {
-          _this.currentUIState = _this.getAllUIStates({
-            searchParameters: searchParameters
-          });
-
-          var route = _this.stateMapping.stateToRoute(_this.currentUIState);
-
-          _this.router.write(route);
-        };
-
-        helper.on('change', this.renderURLFromState); // Compare initial state and first render state, in order to see if the
-        // query has been changed by a `searchFunction`. It's required because the
-        // helper of the `searchFunction` does not trigger change event (not the
-        // same instance).
-
-        var firstRenderState = this.getAllUIStates({
-          searchParameters: state
-        });
-
-        if (!isEqual_1(this.initState, firstRenderState)) {
-          // Force update the URL, if the state has changed since the initial read.
-          // We do this in order to make the URL update when there is `searchFunction`
-          // that prevent the search of the initial rendering.
-          // See: https://github.com/algolia/instantsearch.js/issues/2523#issuecomment-339356157
-          this.currentUIState = firstRenderState;
-          var route = this.stateMapping.stateToRoute(this.currentUIState);
-          this.router.write(route);
-        }
-      }
-    }, {
-      key: "dispose",
-      value: function dispose() {
-        if (this.renderURLFromState) {
-          this.instantSearchInstance.helper.removeListener('change', this.renderURLFromState);
-        }
-
-        this.router.dispose();
-      }
-    }, {
-      key: "getAllSearchParameters",
-      value: function getAllSearchParameters(_ref4) {
-        var currentSearchParameters = _ref4.currentSearchParameters,
-            uiState = _ref4.uiState;
-        var widgets = this.instantSearchInstance.widgets;
-        var searchParameters = widgets.reduce(function (sp, w) {
-          if (!w.getWidgetSearchParameters) return sp;
-          return w.getWidgetSearchParameters(sp, {
-            uiState: uiState
-          });
-        }, currentSearchParameters);
-        return searchParameters;
-      }
-    }, {
-      key: "getAllUIStates",
-      value: function getAllUIStates(_ref5) {
-        var searchParameters = _ref5.searchParameters;
-        var _this$instantSearchIn = this.instantSearchInstance,
-            widgets = _this$instantSearchIn.widgets,
-            helper = _this$instantSearchIn.helper;
-        var uiState = widgets.filter(function (w) {
-          return Boolean(w.getWidgetState);
-        }).reduce(function (u, w) {
-          return w.getWidgetState(u, {
-            helper: helper,
-            searchParameters: searchParameters
-          });
-        }, {});
-        return uiState;
-      } // External API's
-
-    }, {
-      key: "createURL",
-      value: function createURL(state) {
-        var uiState = this.getAllUIStates({
-          searchParameters: state
-        });
-        var route = this.stateMapping.stateToRoute(uiState);
-        return this.router.createURL(route);
-      }
-    }, {
-      key: "onHistoryChange",
-      value: function onHistoryChange(fn) {
-        var _this2 = this;
-
-        var helper = this.instantSearchInstance.helper;
-        this.router.onUpdate(function (route) {
-          var nextUiState = _this2.stateMapping.routeToState(route);
-
-          var widgetsUIState = _this2.getAllUIStates({
-            searchParameters: helper.state
-          });
-
-          if (isEqual_1(nextUiState, widgetsUIState)) return;
-          _this2.currentUIState = nextUiState;
-
-          var searchParameters = _this2.getAllSearchParameters({
-            currentSearchParameters: helper.state,
-            instantSearchInstance: _this2.instantSearchInstance,
-            uiState: _this2.currentUIState
-          });
-
-          fn(_objectSpread({}, searchParameters));
-        });
-      }
-    }]);
-
-    return RoutingManager;
-  }();
-
-  var SimpleUIStateMapping =
-  /*#__PURE__*/
-  function () {
-    function SimpleUIStateMapping() {
-      _classCallCheck(this, SimpleUIStateMapping);
-    }
-
-    _createClass(SimpleUIStateMapping, [{
-      key: "stateToRoute",
-      value: function stateToRoute(uiState) {
-        return uiState;
-      }
-    }, {
-      key: "routeToState",
-      value: function routeToState(routeState) {
-        return routeState;
-      }
-    }]);
-
-    return SimpleUIStateMapping;
-  }();
-
-  function simpleMapping () {
-    return new SimpleUIStateMapping();
-  }
-
-  function defaultCreateURL(_ref) {
-    var qsModule = _ref.qsModule,
-        routeState = _ref.routeState,
-        location = _ref.location;
-    var protocol = location.protocol,
-        hostname = location.hostname,
-        _location$port = location.port,
-        port = _location$port === void 0 ? '' : _location$port,
-        pathname = location.pathname,
-        hash = location.hash;
-    var queryString = qsModule.stringify(routeState);
-    var portWithPrefix = port === '' ? '' : ":".concat(port); // IE <= 11 has no location.origin or buggy. Therefore we don't rely on it
-
-    if (!routeState || Object.keys(routeState).length === 0) return "".concat(protocol, "//").concat(hostname).concat(portWithPrefix).concat(pathname).concat(hash);else return "".concat(protocol, "//").concat(hostname).concat(portWithPrefix).concat(pathname, "?").concat(queryString).concat(hash);
-  }
-
-  function defaultParseURL(_ref2) {
-    var qsModule = _ref2.qsModule,
-        location = _ref2.location;
-    // `qs` by default converts arrays with more than 20 items to an object.
-    // We want to avoid this because the data structure manipulated can therefore vary.
-    // Setting the limit to `100` seems a good number because the engine's default is 100
-    // (it can go up to 1000 but it is very unlikely to select more than 100 items in the UI).
-    //
-    // Using an `arrayLimit` of `n` allows `n + 1` items.
-    //
-    // See:
-    //   - https://github.com/ljharb/qs#parsing-arrays
-    //   - https://www.algolia.com/doc/api-reference/api-parameters/maxValuesPerFacet/
-    return qsModule.parse(location.search.slice(1), {
-      arrayLimit: 99
-    });
-  }
-
-  function setWindowTitle(title) {
-    if (title) {
-      window.document.title = title;
-    }
-  }
-
-  var BrowserHistory =
-  /*#__PURE__*/
-  function () {
-    /**
-     * Initializes a new storage provider that will sync the search state in the URL
-     * using web API (window.location.pushState and onpopstate event).
-     * @param {object} $0 the options.
-     * @param {function(object):string} [$0.windowTitle] function that transforms a UI state
-     * into a title for the page. It takes one parameter: a syncable object (generated by the mapping
-     * provided to the URL sync). It should return a string that will be the title.
-     * @param {number} [$0.writeDelay = 400] time before a write is actually done.
-     * Prevent having too much entries in the history and thus make the back button more friendly.
-     * @param {function(qs, object):string} [$0.createURL] generates the full URL. If not provided,
-     * the storage adaptor will mapped all syncable keys to the query string of the URL. The first
-     * parameter is a utility object that has two methods: `stringify` that creates a query string
-     * from an object and `parse` that transforms a query string into an object.
-     * @param {function(qs): object} [$0.parseURL] parses an URL into an object. It should symetrical
-     * to `createURL`. It gets as an argument an object that contains two methods: `stringify` that
-     * creates a query string from an object and `parse` that transforms a query string into an object.
-     */
-    function BrowserHistory() {
-      var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          windowTitle = _ref3.windowTitle,
-          _ref3$writeDelay = _ref3.writeDelay,
-          writeDelay = _ref3$writeDelay === void 0 ? 400 : _ref3$writeDelay,
-          _ref3$createURL = _ref3.createURL,
-          createURL = _ref3$createURL === void 0 ? defaultCreateURL : _ref3$createURL,
-          _ref3$parseURL = _ref3.parseURL,
-          parseURL = _ref3$parseURL === void 0 ? defaultParseURL : _ref3$parseURL;
-
-      _classCallCheck(this, BrowserHistory);
-
-      this.windowTitle = windowTitle;
-      this.writeTimer = undefined;
-      this.writeDelay = writeDelay;
-      this._createURL = createURL;
-      this.parseURL = parseURL;
-      var title = this.windowTitle && this.windowTitle(this.read());
-      setWindowTitle(title);
-    }
-    /**
-     * This method pushes a search state into the URL.
-     * @param {object} routeState a syncable UI state
-     * @return {undefined}
-     */
-
-
-    _createClass(BrowserHistory, [{
-      key: "write",
-      value: function write(routeState) {
-        var _this = this;
-
-        var url = this.createURL(routeState);
-        var title = this.windowTitle && this.windowTitle(routeState);
-
-        if (this.writeTimer) {
-          window.clearTimeout(this.writeTimer);
-        }
-
-        this.writeTimer = setTimeout(function () {
-          setWindowTitle(title);
-          window.history.pushState(routeState, title || '', url);
-          _this.writeTimer = undefined;
-        }, this.writeDelay);
-      }
-      /**
-       * This methods read the URL and returns a syncable UI search state.
-       * @return {object} the equivalent to what is store in the URL as an object
-       */
-
-    }, {
-      key: "read",
-      value: function read() {
-        return this.parseURL({
-          qsModule: lib$1,
-          location: window.location
-        });
-      }
-      /**
-       * This methods sets a callback on the `onpopstate` event of the history API
-       * of the current page. This way, the URL sync can keep track of the changes.
-       * @param {function(object)} cb the callback that will receive the latest routeState.
-       * It is called when the URL is updated.
-       * @returns {undefined}
-       */
-
-    }, {
-      key: "onUpdate",
-      value: function onUpdate(cb) {
-        var _this2 = this;
-
-        this._onPopState = function (event) {
-          if (_this2.writeTimer) {
-            window.clearTimeout(_this2.writeTimer);
-            _this2.writeTimer = undefined;
-          }
-
-          var routeState = event.state; // at initial load, the state is read from the URL without
-          // update. Therefore the state object is not there. In this
-          // case we fallback and read the URL.
-
-          if (!routeState) {
-            cb(_this2.read());
-          } else {
-            cb(routeState);
-          }
-        };
-
-        window.addEventListener('popstate', this._onPopState);
-      }
-      /**
-       * This method creates a complete URL from a given syncable UI state.
-       *
-       * It always generates the full url, not a relative one.
-       * This way we can handle cases like using a <base href>, see
-       * https://github.com/algolia/instantsearch.js/issues/790 for the original issue
-       *
-       * @param {object} routeState a syncable UI state
-       * @returns {string} the full URL for the provided syncable state
-       */
-
-    }, {
-      key: "createURL",
-      value: function createURL(routeState) {
-        return this._createURL({
-          qsModule: lib$1,
-          routeState: routeState,
-          location: window.location
-        });
-      }
-      /**
-       * This method removes the event listener and cleans up the URL.
-       * @returns {undefined}
-       */
-
-    }, {
-      key: "dispose",
-      value: function dispose() {
-        window.removeEventListener('popstate', this._onPopState);
-        if (this.writeTimer) window.clearTimeout(this.writeTimer);
-        this.write();
-      }
-    }]);
-
-    return BrowserHistory;
-  }();
-
-  function historyRouter () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _construct(BrowserHistory, args);
-  }
-
-  var version$1 = '3.4.0';
-
   function capitalize(text) {
     return text.toString().charAt(0).toUpperCase() + text.toString().slice(1);
   }
@@ -15160,6 +14041,8 @@
    * css selector and retrieves the first matching element. Otherwise
    * test if it validates that it's a correct DOMElement.
    *
+   * @param {string|HTMLElement} selectorOrHTMLElement CSS Selector or container node.
+   * @return {HTMLElement} Container node
    * @throws Error when the type is not correct
    */
 
@@ -15185,35 +14068,17 @@
     return isMiddleClick || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
   }
 
-  /**
-   * Creates a duplicate-free version of an array, using
-   * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-   * for equality comparisons, in which only the first occurrence of each element
-   * is kept. The order of result values is determined by the order they occur
-   * in the array.
-   *
-   * @static
-   * @memberOf _
-   * @since 0.1.0
-   * @category Array
-   * @param {Array} array The array to inspect.
-   * @returns {Array} Returns the new duplicate free array.
-   * @example
-   *
-   * _.uniq([2, 1, 2]);
-   * // => [2, 1]
-   */
   function uniq(array) {
-    return (array && array.length) ? _baseUniq(array) : [];
+    return array.filter(function (value, index, self) {
+      return self.indexOf(value) === index;
+    });
   }
-
-  var uniq_1 = uniq;
 
   function prepareTemplates() {
     var defaultTemplates = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var templates = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var allKeys = uniq_1([].concat(_toConsumableArray(keys_1(defaultTemplates)), _toConsumableArray(keys_1(templates))));
-    return reduce_1(allKeys, function (config, key) {
+    var allKeys = uniq([].concat(_toConsumableArray(Object.keys(defaultTemplates)), _toConsumableArray(Object.keys(templates))));
+    return allKeys.reduce(function (config, key) {
       var defaultTemplate = defaultTemplates[key];
       var customTemplate = templates[key];
       var isCustomTemplate = customTemplate !== undefined && customTemplate !== defaultTemplate;
@@ -15247,62 +14112,6 @@
       templatesConfig: templatesConfig
     }, preparedTemplates);
   }
-
-  /** Used to compose bitmasks for function metadata. */
-  var WRAP_CURRY_FLAG$5 = 8;
-
-  /**
-   * Creates a function that accepts arguments of `func` and either invokes
-   * `func` returning its result, if at least `arity` number of arguments have
-   * been provided, or returns a function that accepts the remaining `func`
-   * arguments, and so on. The arity of `func` may be specified if `func.length`
-   * is not sufficient.
-   *
-   * The `_.curry.placeholder` value, which defaults to `_` in monolithic builds,
-   * may be used as a placeholder for provided arguments.
-   *
-   * **Note:** This method doesn't set the "length" property of curried functions.
-   *
-   * @static
-   * @memberOf _
-   * @since 2.0.0
-   * @category Function
-   * @param {Function} func The function to curry.
-   * @param {number} [arity=func.length] The arity of `func`.
-   * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-   * @returns {Function} Returns the new curried function.
-   * @example
-   *
-   * var abc = function(a, b, c) {
-   *   return [a, b, c];
-   * };
-   *
-   * var curried = _.curry(abc);
-   *
-   * curried(1)(2)(3);
-   * // => [1, 2, 3]
-   *
-   * curried(1, 2)(3);
-   * // => [1, 2, 3]
-   *
-   * curried(1, 2, 3);
-   * // => [1, 2, 3]
-   *
-   * // Curried with placeholders.
-   * curried(1)(_, 3)(2);
-   * // => [1, 2, 3]
-   */
-  function curry(func, arity, guard) {
-    arity = guard ? undefined : arity;
-    var result = _createWrap(func, WRAP_CURRY_FLAG$5, undefined, undefined, undefined, undefined, undefined, arity);
-    result.placeholder = curry.placeholder;
-    return result;
-  }
-
-  // Assign default placeholders.
-  curry.placeholder = {};
-
-  var curry_1 = curry;
 
   var compiler = createCommonjsModule(function (module, exports) {
   /*
@@ -15727,7 +14536,7 @@
       template = this.generate(this.parse(this.scan(text, options.delimiters), text, options), text, options);
       return this.cache[key] = template;
     };
-  })(exports);
+  })( exports );
   });
 
   var template = createCommonjsModule(function (module, exports) {
@@ -16053,7 +14862,7 @@
       return Object.prototype.toString.call(a) === '[object Array]';
     };
 
-  })(exports);
+  })( exports );
   });
 
   /*
@@ -16082,18 +14891,23 @@
   // `render` to get the rendered value, not the literal `{{value}}`. But
   // this is currently broken (see https://github.com/twitter/hogan.js/issues/222).
 
-  function transformHelpersToHogan(helpers, compileOptions, data) {
-    return mapValues_1(helpers, function (method) {
-      return curry_1(function (text) {
+  function transformHelpersToHogan() {
+    var helpers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var compileOptions = arguments.length > 1 ? arguments[1] : undefined;
+    var data = arguments.length > 2 ? arguments[2] : undefined;
+    return Object.keys(helpers).reduce(function (acc, helperKey) {
+      return _objectSpread({}, acc, _defineProperty({}, helperKey, function () {
         var _this = this;
 
-        var render = function render(value) {
-          return hogan.compile(value, compileOptions).render(_this);
-        };
+        return function (text) {
+          var render = function render(value) {
+            return hogan.compile(value, compileOptions).render(_this);
+          };
 
-        return method.call(data, text, render);
-      });
-    });
+          return helpers[helperKey].call(data, text, render);
+        };
+      }));
+    }, {});
   }
 
   function renderTemplate(_ref) {
@@ -16125,37 +14939,64 @@
     }).trim();
   }
 
+  // We aren't using the native `Array.prototype.find` because the refactor away from Lodash is not
+  // published as a major version.
+  // Relying on the `find` polyfill on user-land, which before was only required for niche use-cases,
+  // was decided as too risky.
+  // @MAJOR Replace with the native `Array.prototype.find` method
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+  function find$1(items, predicate, thisArg) {
+    if (!Array.prototype.find) {
+      return items.filter(predicate, thisArg)[0];
+    }
+
+    return items.find(predicate, thisArg);
+  }
+
   function unescapeRefinement(value) {
     return String(value).replace(/^\\-/, '-');
   }
 
-  function getRefinement$1(state, type, attributeName, name, resultsFacets) {
+  function getRefinement$1(state, type, attributeName, name) {
+    var resultsFacets = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
     var res = {
       type: type,
       attributeName: attributeName,
       name: name
     };
-    var facet = find_1(resultsFacets, {
-      name: attributeName
+    var facet = find$1(resultsFacets, function (resultsFacet) {
+      return resultsFacet.name === attributeName;
     });
     var count;
 
     if (type === 'hierarchical') {
-      var facetDeclaration = state.getHierarchicalFacetByName(attributeName);
-      var split = name.split(facetDeclaration.separator);
+      (function () {
+        var facetDeclaration = state.getHierarchicalFacetByName(attributeName);
+        var nameParts = name.split(facetDeclaration.separator);
 
-      for (var i = 0; facet !== undefined && i < split.length; ++i) {
-        facet = find_1(facet.data, {
-          name: split[i]
-        });
-      }
+        var getFacetRefinement = function getFacetRefinement(facetData) {
+          return function (refinementKey) {
+            return facetData[refinementKey];
+          };
+        };
 
-      count = get_1(facet, 'count');
+        var _loop = function _loop(i) {
+          facet = facet && facet.data && find$1(Object.keys(facet.data).map(getFacetRefinement(facet.data)), function (refinement) {
+            return refinement.name === nameParts[i];
+          });
+        };
+
+        for (var i = 0; facet !== undefined && i < nameParts.length; ++i) {
+          _loop(i);
+        }
+
+        count = facet && facet.count;
+      })();
     } else {
-      count = get_1(facet, "data[\"".concat(res.name, "\"]"));
+      count = facet && facet.data && facet.data[res.name];
     }
 
-    var exhaustive = get_1(facet, 'exhaustive');
+    var exhaustive = facet && facet.exhaustive;
 
     if (count !== undefined) {
       res.count = count;
@@ -16171,50 +15012,70 @@
   function getRefinements(results, state) {
     var clearsQuery = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     var res = [];
-    forEach_1(state.facetsRefinements, function (refinements, attributeName) {
-      forEach_1(refinements, function (name) {
-        res.push(getRefinement$1(state, 'facet', attributeName, name, results.facets));
+    var _state$facetsRefineme = state.facetsRefinements,
+        facetsRefinements = _state$facetsRefineme === void 0 ? {} : _state$facetsRefineme,
+        _state$facetsExcludes = state.facetsExcludes,
+        facetsExcludes = _state$facetsExcludes === void 0 ? {} : _state$facetsExcludes,
+        _state$disjunctiveFac = state.disjunctiveFacetsRefinements,
+        disjunctiveFacetsRefinements = _state$disjunctiveFac === void 0 ? {} : _state$disjunctiveFac,
+        _state$hierarchicalFa = state.hierarchicalFacetsRefinements,
+        hierarchicalFacetsRefinements = _state$hierarchicalFa === void 0 ? {} : _state$hierarchicalFa,
+        _state$numericRefinem = state.numericRefinements,
+        numericRefinements = _state$numericRefinem === void 0 ? {} : _state$numericRefinem,
+        _state$tagRefinements = state.tagRefinements,
+        tagRefinements = _state$tagRefinements === void 0 ? [] : _state$tagRefinements;
+    Object.keys(facetsRefinements).forEach(function (attributeName) {
+      var refinements = facetsRefinements[attributeName];
+      refinements.forEach(function (refinement) {
+        res.push(getRefinement$1(state, 'facet', attributeName, refinement, results.facets));
       });
     });
-    forEach_1(state.facetsExcludes, function (refinements, attributeName) {
-      forEach_1(refinements, function (name) {
+    Object.keys(facetsExcludes).forEach(function (attributeName) {
+      var refinements = facetsExcludes[attributeName];
+      refinements.forEach(function (refinement) {
         res.push({
           type: 'exclude',
           attributeName: attributeName,
-          name: name,
+          name: refinement,
           exclude: true
         });
       });
     });
-    forEach_1(state.disjunctiveFacetsRefinements, function (refinements, attributeName) {
-      forEach_1(refinements, function (name) {
-        res.push(getRefinement$1(state, 'disjunctive', attributeName, // we unescapeRefinement any disjunctive refined value since they can be escaped
-        unescapeRefinement(name), results.disjunctiveFacets));
+    Object.keys(disjunctiveFacetsRefinements).forEach(function (attributeName) {
+      var refinements = disjunctiveFacetsRefinements[attributeName];
+      refinements.forEach(function (refinement) {
+        res.push(getRefinement$1(state, 'disjunctive', attributeName, // We unescape any disjunctive refined values with `unescapeRefinement` because
+        // they can be escaped on negative numeric values with `escapeRefinement`.
+        unescapeRefinement(refinement), results.disjunctiveFacets));
       });
     });
-    forEach_1(state.hierarchicalFacetsRefinements, function (refinements, attributeName) {
-      forEach_1(refinements, function (name) {
-        res.push(getRefinement$1(state, 'hierarchical', attributeName, name, results.hierarchicalFacets));
+    Object.keys(hierarchicalFacetsRefinements).forEach(function (attributeName) {
+      var refinements = hierarchicalFacetsRefinements[attributeName];
+      refinements.forEach(function (refinement) {
+        res.push(getRefinement$1(state, 'hierarchical', attributeName, refinement, results.hierarchicalFacets));
       });
     });
-    forEach_1(state.numericRefinements, function (operators, attributeName) {
-      forEach_1(operators, function (values, operator) {
-        forEach_1(values, function (value) {
+    Object.keys(numericRefinements).forEach(function (attributeName) {
+      var operators = numericRefinements[attributeName];
+      Object.keys(operators).forEach(function (operator) {
+        var valueOrValues = operators[operator];
+        var refinements = Array.isArray(valueOrValues) ? valueOrValues : [valueOrValues];
+        refinements.forEach(function (refinement) {
           res.push({
             type: 'numeric',
             attributeName: attributeName,
-            name: "".concat(value),
-            numericValue: value,
+            name: "".concat(refinement),
+            numericValue: refinement,
             operator: operator
           });
         });
       });
     });
-    forEach_1(state.tagRefinements, function (name) {
+    tagRefinements.forEach(function (refinement) {
       res.push({
         type: 'tag',
         attributeName: '_tags',
-        name: name
+        name: refinement
       });
     });
 
@@ -16280,7 +15141,164 @@
     }, object);
   }
 
-  var warn = function warn() {};
+  function noop$1() {}
+
+  // This is the `Number.isFinite()` polyfill recommended by MDN.
+  // We do not provide any tests for this function.
+  // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isFinite#Polyfill
+  function isFiniteNumber(value) {
+    return typeof value === 'number' && isFinite(value);
+  }
+
+  /**
+   * This implementation is taken from Lodash implementation.
+   * See: https://github.com/lodash/lodash/blob/master/isPlainObject.js
+   */
+  function getTag$1(value) {
+    if (value === null) {
+      return value === undefined ? '[object Undefined]' : '[object Null]';
+    }
+
+    return Object.prototype.toString.call(value);
+  }
+
+  function isObjectLike$1(value) {
+    return _typeof(value) === 'object' && value !== null;
+  }
+  /**
+   * Checks if `value` is a plain object.
+   *
+   * A plain object is an object created by the `Object`
+   * constructor or with a `[[Prototype]]` of `null`.
+   */
+
+
+  function isPlainObject$1(value) {
+    if (!isObjectLike$1(value) || getTag$1(value) !== '[object Object]') {
+      return false;
+    }
+
+    if (Object.getPrototypeOf(value) === null) {
+      return true;
+    }
+
+    var proto = value;
+
+    while (Object.getPrototypeOf(proto) !== null) {
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return Object.getPrototypeOf(value) === proto;
+  }
+
+  function range(_ref) {
+    var _ref$start = _ref.start,
+        start = _ref$start === void 0 ? 0 : _ref$start,
+        end = _ref.end,
+        _ref$step = _ref.step,
+        step = _ref$step === void 0 ? 1 : _ref$step;
+    // We can't divide by 0 so we re-assign the step to 1 if it happens.
+    var limitStep = step === 0 ? 1 : step; // In some cases the array to create has a decimal length.
+    // We therefore need to round the value.
+    // Example:
+    //   { start: 1, end: 5000, step: 500 }
+    //   => Array length = (5000 - 1) / 500 = 9.998
+
+    var arrayLength = Math.round((end - start) / limitStep);
+    return _toConsumableArray(Array(arrayLength)).map(function (_, current) {
+      return (start + current) * limitStep;
+    });
+  }
+
+  function isPrimitive(obj) {
+    return obj !== Object(obj);
+  }
+
+  function isEqual$1(first, second) {
+    if (first === second) {
+      return true;
+    }
+
+    if (isPrimitive(first) || isPrimitive(second) || typeof first === 'function' || typeof second === 'function') {
+      return first === second;
+    }
+
+    if (Object.keys(first).length !== Object.keys(second).length) {
+      return false;
+    }
+
+    for (var _i = 0, _Object$keys = Object.keys(first); _i < _Object$keys.length; _i++) {
+      var key = _Object$keys[_i];
+
+      if (!(key in second)) {
+        return false;
+      }
+
+      if (!isEqual$1(first[key], second[key])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * This implementation is taken from Lodash implementation.
+   * See: https://github.com/lodash/lodash/blob/4.17.11-npm/escape.js
+   */
+  // Used to map characters to HTML entities.
+  var htmlEscapes = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }; // Used to match HTML entities and HTML characters.
+
+  var regexUnescapedHtml = /[&<>"']/g;
+  var regexHasUnescapedHtml = RegExp(regexUnescapedHtml.source);
+  /**
+   * Converts the characters "&", "<", ">", '"', and "'" in `string` to their
+   * corresponding HTML entities.
+   */
+
+  function escape$1(value) {
+    return value && regexHasUnescapedHtml.test(value) ? value.replace(regexUnescapedHtml, function (character) {
+      return htmlEscapes[character];
+    }) : value;
+  }
+
+  /**
+   * Deeply merges all the object values in a new object.
+   *
+   * - Primitive values are replaced
+   * - Arrays a concatenated and their values are made unique
+   */
+
+  function mergeDeep() {
+    for (var _len = arguments.length, values = new Array(_len), _key = 0; _key < _len; _key++) {
+      values[_key] = arguments[_key];
+    }
+
+    return values.reduce(function (acc) {
+      var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      Object.keys(source).forEach(function (key) {
+        var previousValue = acc[key];
+        var nextValue = source[key];
+
+        if (Array.isArray(previousValue) && Array.isArray(nextValue)) {
+          acc[key] = uniq([].concat(_toConsumableArray(previousValue), _toConsumableArray(nextValue)));
+        } else if (isPlainObject$1(previousValue) && isPlainObject$1(nextValue)) {
+          acc[key] = mergeDeep(previousValue, nextValue);
+        } else {
+          acc[key] = nextValue;
+        }
+      });
+      return acc;
+    }, {});
+  }
+
+  var warn = noop$1;
   /**
    * Logs a warning if the condition is not met.
    * This is used to log issues in development environment only.
@@ -16288,8 +15306,7 @@
    * @returns {undefined}
    */
 
-
-  var _warning = function warning() {};
+  var _warning = noop$1;
 
   {
     warn = function warn(message) {
@@ -16428,81 +15445,432 @@
     });
   };
 
-  /**
-   * The base implementation of `_.propertyOf` without support for deep paths.
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @returns {Function} Returns the new accessor function.
-   */
-  function basePropertyOf(object) {
-    return function(key) {
-      return object == null ? undefined : object[key];
-    };
+  var RoutingManager =
+  /*#__PURE__*/
+  function () {
+    function RoutingManager(_ref) {
+      var router = _ref.router,
+          stateMapping = _ref.stateMapping,
+          instantSearchInstance = _ref.instantSearchInstance;
+
+      _classCallCheck(this, RoutingManager);
+
+      _defineProperty(this, "instantSearchInstance", void 0);
+
+      _defineProperty(this, "router", void 0);
+
+      _defineProperty(this, "stateMapping", void 0);
+
+      _defineProperty(this, "isFirstRender", true);
+
+      _defineProperty(this, "currentUiState", void 0);
+
+      _defineProperty(this, "initState", void 0);
+
+      _defineProperty(this, "renderURLFromState", void 0);
+
+      this.router = router;
+      this.stateMapping = stateMapping;
+      this.instantSearchInstance = instantSearchInstance;
+      this.currentUiState = this.stateMapping.routeToState(this.router.read());
+    }
+
+    _createClass(RoutingManager, [{
+      key: "getAllSearchParameters",
+      value: function getAllSearchParameters(_ref2) {
+        var currentSearchParameters = _ref2.currentSearchParameters,
+            uiState = _ref2.uiState;
+        var widgets = this.instantSearchInstance.widgets;
+        return widgets.reduce(function (parameters, widget) {
+          if (!widget.getWidgetSearchParameters) {
+            return parameters;
+          }
+
+          return widget.getWidgetSearchParameters(parameters, {
+            uiState: uiState
+          });
+        }, currentSearchParameters);
+      }
+    }, {
+      key: "getAllUiStates",
+      value: function getAllUiStates(_ref3) {
+        var searchParameters = _ref3.searchParameters;
+        var widgets = this.instantSearchInstance.widgets;
+        var helper = this.instantSearchInstance.helper;
+        return widgets.reduce(function (state, widget) {
+          if (!widget.getWidgetState) {
+            return state;
+          }
+
+          return widget.getWidgetState(state, {
+            helper: helper,
+            searchParameters: searchParameters
+          });
+        }, {});
+      }
+    }, {
+      key: "setupRouting",
+      value: function setupRouting(state) {
+        var _this = this;
+
+        var helper = this.instantSearchInstance.helper;
+        this.router.onUpdate(function (route) {
+          var nextUiState = _this.stateMapping.routeToState(route);
+
+          var widgetsUiState = _this.getAllUiStates({
+            searchParameters: helper.state
+          });
+
+          if (isEqual$1(nextUiState, widgetsUiState)) {
+            return;
+          }
+
+          _this.currentUiState = nextUiState;
+
+          var searchParameters = _this.getAllSearchParameters({
+            currentSearchParameters: state,
+            uiState: _this.currentUiState
+          });
+
+          helper.overrideStateWithoutTriggeringChangeEvent(searchParameters).search();
+        });
+
+        this.renderURLFromState = function (searchParameters) {
+          _this.currentUiState = _this.getAllUiStates({
+            searchParameters: searchParameters
+          });
+
+          var route = _this.stateMapping.stateToRoute(_this.currentUiState);
+
+          _this.router.write(route);
+        };
+
+        helper.on('change', this.renderURLFromState); // Compare initial state and first render state to see if the query has been
+        // changed by the `searchFunction`. It's required because the helper of the
+        // `searchFunction` does not trigger change event (not the same instance).
+
+        var firstRenderState = this.getAllUiStates({
+          searchParameters: state
+        });
+
+        if (!isEqual$1(this.initState, firstRenderState)) {
+          // Force update the URL, if the state has changed since the initial read.
+          // We do this in order to make the URL update when there is `searchFunction`
+          // that prevents the search of the initial rendering.
+          // See: https://github.com/algolia/instantsearch.js/issues/2523#issuecomment-339356157
+          this.currentUiState = firstRenderState;
+          var route = this.stateMapping.stateToRoute(this.currentUiState);
+          this.router.write(route);
+        }
+      }
+    }, {
+      key: "getConfiguration",
+      value: function getConfiguration(currentConfiguration) {
+        // We have to create a `SearchParameters` because `getAllSearchParameters`
+        // expects an instance of `SearchParameters` and not a plain object.
+        var currentSearchParameters = algoliasearchHelper_1.SearchParameters.make(currentConfiguration);
+        return _objectSpread({}, this.getAllSearchParameters({
+          uiState: this.currentUiState,
+          currentSearchParameters: currentSearchParameters
+        }));
+      }
+    }, {
+      key: "init",
+      value: function init(_ref4) {
+        var state = _ref4.state;
+        // Store the initial state from the storage to compare it with the state on next renders
+        // in case the `searchFunction` has modified it.
+        this.initState = this.getAllUiStates({
+          searchParameters: state
+        });
+      }
+    }, {
+      key: "render",
+      value: function render(_ref5) {
+        var state = _ref5.state;
+
+        if (this.isFirstRender) {
+          this.isFirstRender = false;
+          this.setupRouting(state);
+        }
+      }
+    }, {
+      key: "dispose",
+      value: function dispose(_ref6) {
+        var helper = _ref6.helper,
+            state = _ref6.state;
+
+        if (this.renderURLFromState) {
+          this.instantSearchInstance.helper.removeListener('change', this.renderURLFromState);
+        }
+
+        if (this.router.dispose) {
+          this.router.dispose({
+            helper: helper,
+            state: state
+          });
+        }
+      }
+    }, {
+      key: "createURL",
+      value: function createURL(state) {
+        var uiState = this.getAllUiStates({
+          searchParameters: state
+        });
+        var route = this.stateMapping.stateToRoute(uiState);
+        return this.router.createURL(route);
+      }
+    }, {
+      key: "onHistoryChange",
+      value: function onHistoryChange(callback) {
+        var _this2 = this;
+
+        var helper = this.instantSearchInstance.helper;
+        this.router.onUpdate(function (route) {
+          var nextUiState = _this2.stateMapping.routeToState(route);
+
+          var widgetsUiState = _this2.getAllUiStates({
+            searchParameters: helper.state
+          });
+
+          if (isEqual$1(nextUiState, widgetsUiState)) {
+            return;
+          }
+
+          _this2.currentUiState = nextUiState;
+
+          var searchParameters = _this2.getAllSearchParameters({
+            currentSearchParameters: helper.state,
+            uiState: _this2.currentUiState
+          });
+
+          callback(_objectSpread({}, searchParameters));
+        });
+      }
+    }]);
+
+    return RoutingManager;
+  }();
+
+  var SimpleUIStateMapping =
+  /*#__PURE__*/
+  function () {
+    function SimpleUIStateMapping() {
+      _classCallCheck(this, SimpleUIStateMapping);
+    }
+
+    _createClass(SimpleUIStateMapping, [{
+      key: "stateToRoute",
+      value: function stateToRoute(uiState) {
+        return uiState;
+      }
+    }, {
+      key: "routeToState",
+      value: function routeToState(routeState) {
+        return routeState;
+      }
+    }]);
+
+    return SimpleUIStateMapping;
+  }();
+
+  function simpleMapping () {
+    return new SimpleUIStateMapping();
   }
 
-  var _basePropertyOf = basePropertyOf;
+  var defaultCreateURL = function defaultCreateURL(_ref) {
+    var qsModule = _ref.qsModule,
+        routeState = _ref.routeState,
+        location = _ref.location;
+    var protocol = location.protocol,
+        hostname = location.hostname,
+        _location$port = location.port,
+        port = _location$port === void 0 ? '' : _location$port,
+        pathname = location.pathname,
+        hash = location.hash;
+    var queryString = qsModule.stringify(routeState);
+    var portWithPrefix = port === '' ? '' : ":".concat(port); // IE <= 11 has no proper `location.origin` so we cannot rely on it.
 
-  /** Used to map characters to HTML entities. */
-  var htmlEscapes = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
+    if (!routeState || Object.keys(routeState).length === 0) {
+      return "".concat(protocol, "//").concat(hostname).concat(portWithPrefix).concat(pathname).concat(hash);
+    }
+
+    return "".concat(protocol, "//").concat(hostname).concat(portWithPrefix).concat(pathname, "?").concat(queryString).concat(hash);
   };
 
-  /**
-   * Used by `_.escape` to convert characters to HTML entities.
-   *
-   * @private
-   * @param {string} chr The matched character to escape.
-   * @returns {string} Returns the escaped character.
-   */
-  var escapeHtmlChar = _basePropertyOf(htmlEscapes);
+  var defaultParseURL = function defaultParseURL(_ref2) {
+    var qsModule = _ref2.qsModule,
+        location = _ref2.location;
+    // `qs` by default converts arrays with more than 20 items to an object.
+    // We want to avoid this because the data structure manipulated can therefore vary.
+    // Setting the limit to `100` seems a good number because the engine's default is 100
+    // (it can go up to 1000 but it is very unlikely to select more than 100 items in the UI).
+    //
+    // Using an `arrayLimit` of `n` allows `n + 1` items.
+    //
+    // See:
+    //   - https://github.com/ljharb/qs#parsing-arrays
+    //   - https://www.algolia.com/doc/api-reference/api-parameters/maxValuesPerFacet/
+    return qsModule.parse(location.search.slice(1), {
+      arrayLimit: 99
+    });
+  };
 
-  var _escapeHtmlChar = escapeHtmlChar;
+  var setWindowTitle = function setWindowTitle(title) {
+    if (title) {
+      window.document.title = title;
+    }
+  };
 
-  /** Used to match HTML entities and HTML characters. */
-  var reUnescapedHtml = /[&<>"']/g,
-      reHasUnescapedHtml = RegExp(reUnescapedHtml.source);
+  var BrowserHistory =
+  /*#__PURE__*/
+  function () {
+    /**
+     * Initializes a new storage provider that syncs the search state to the URL
+     * using web APIs (`window.location.pushState` and `onpopstate` event).
+     */
+    function BrowserHistory() {
+      var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          windowTitle = _ref3.windowTitle,
+          _ref3$writeDelay = _ref3.writeDelay,
+          writeDelay = _ref3$writeDelay === void 0 ? 400 : _ref3$writeDelay,
+          _ref3$createURL = _ref3.createURL,
+          createURL = _ref3$createURL === void 0 ? defaultCreateURL : _ref3$createURL,
+          _ref3$parseURL = _ref3.parseURL,
+          parseURL = _ref3$parseURL === void 0 ? defaultParseURL : _ref3$parseURL;
 
-  /**
-   * Converts the characters "&", "<", ">", '"', and "'" in `string` to their
-   * corresponding HTML entities.
-   *
-   * **Note:** No other characters are escaped. To escape additional
-   * characters use a third-party library like [_he_](https://mths.be/he).
-   *
-   * Though the ">" character is escaped for symmetry, characters like
-   * ">" and "/" don't need escaping in HTML and have no special meaning
-   * unless they're part of a tag or unquoted attribute value. See
-   * [Mathias Bynens's article](https://mathiasbynens.be/notes/ambiguous-ampersands)
-   * (under "semi-related fun fact") for more details.
-   *
-   * When working with HTML you should always
-   * [quote attribute values](http://wonko.com/post/html-escaping) to reduce
-   * XSS vectors.
-   *
-   * @static
-   * @since 0.1.0
-   * @memberOf _
-   * @category String
-   * @param {string} [string=''] The string to escape.
-   * @returns {string} Returns the escaped string.
-   * @example
-   *
-   * _.escape('fred, barney, & pebbles');
-   * // => 'fred, barney, &amp; pebbles'
-   */
-  function escape$1(string) {
-    string = toString_1(string);
-    return (string && reHasUnescapedHtml.test(string))
-      ? string.replace(reUnescapedHtml, _escapeHtmlChar)
-      : string;
+      _classCallCheck(this, BrowserHistory);
+
+      _defineProperty(this, "windowTitle", void 0);
+
+      _defineProperty(this, "writeDelay", void 0);
+
+      _defineProperty(this, "_createURL", void 0);
+
+      _defineProperty(this, "parseURL", void 0);
+
+      _defineProperty(this, "writeTimer", void 0);
+
+      this.windowTitle = windowTitle;
+      this.writeTimer = undefined;
+      this.writeDelay = writeDelay;
+      this._createURL = createURL;
+      this.parseURL = parseURL;
+      var title = this.windowTitle && this.windowTitle(this.read());
+      setWindowTitle(title);
+    }
+    /**
+     * Reads the URL and returns a syncable UI search state.
+     */
+
+
+    _createClass(BrowserHistory, [{
+      key: "read",
+      value: function read() {
+        return this.parseURL({
+          qsModule: lib$1,
+          location: window.location
+        });
+      }
+      /**
+       * Pushes a search state into the URL.
+       */
+
+    }, {
+      key: "write",
+      value: function write(routeState) {
+        var _this = this;
+
+        var url = this.createURL(routeState);
+        var title = this.windowTitle && this.windowTitle(routeState);
+
+        if (this.writeTimer) {
+          window.clearTimeout(this.writeTimer);
+        }
+
+        this.writeTimer = window.setTimeout(function () {
+          setWindowTitle(title);
+          window.history.pushState(routeState, title || '', url);
+          _this.writeTimer = undefined;
+        }, this.writeDelay);
+      }
+      /**
+       * Sets a callback on the `onpopstate` event of the history API of the current page.
+       * It enables the URL sync to keep track of the changes.
+       */
+
+    }, {
+      key: "onUpdate",
+      value: function onUpdate(callback) {
+        var _this2 = this;
+
+        this._onPopState = function (event) {
+          if (_this2.writeTimer) {
+            window.clearTimeout(_this2.writeTimer);
+            _this2.writeTimer = undefined;
+          }
+
+          var routeState = event.state; // At initial load, the state is read from the URL without update.
+          // Therefore the state object is not available.
+          // In this case, we fallback and read the URL.
+
+          if (!routeState) {
+            callback(_this2.read());
+          } else {
+            callback(routeState);
+          }
+        };
+
+        window.addEventListener('popstate', this._onPopState);
+      }
+      /**
+       * Creates a complete URL from a given syncable UI state.
+       *
+       * It always generates the full URL, not a relative one.
+       * This allows to handle cases like using a <base href>.
+       * See: https://github.com/algolia/instantsearch.js/issues/790
+       */
+
+    }, {
+      key: "createURL",
+      value: function createURL(routeState) {
+        return this._createURL({
+          qsModule: lib$1,
+          routeState: routeState,
+          location: window.location
+        });
+      }
+      /**
+       * Removes the event listener and cleans up the URL.
+       */
+
+    }, {
+      key: "dispose",
+      value: function dispose() {
+        if (this._onPopState) {
+          window.removeEventListener('popstate', this._onPopState);
+        }
+
+        if (this.writeTimer) {
+          window.clearTimeout(this.writeTimer);
+        }
+
+        this.write({});
+      }
+    }]);
+
+    return BrowserHistory;
+  }();
+
+  function historyRouter () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _construct(BrowserHistory, args);
   }
 
-  var _escape = escape$1;
+  var version$1 = '3.5.4';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -16514,17 +15882,17 @@
   };
 
   function replaceTagsAndEscape(value) {
-    return _escape(value).replace(new RegExp(TAG_PLACEHOLDER.highlightPreTag, 'g'), TAG_REPLACEMENT.highlightPreTag).replace(new RegExp(TAG_PLACEHOLDER.highlightPostTag, 'g'), TAG_REPLACEMENT.highlightPostTag);
+    return escape$1(value).replace(new RegExp(TAG_PLACEHOLDER.highlightPreTag, 'g'), TAG_REPLACEMENT.highlightPreTag).replace(new RegExp(TAG_PLACEHOLDER.highlightPostTag, 'g'), TAG_REPLACEMENT.highlightPostTag);
   }
 
   function recursiveEscape(input) {
-    if (isPlainObject_1(input) && typeof input.value !== 'string') {
-      return reduce_1(input, function (acc, item, key) {
-        return _objectSpread({}, acc, _defineProperty({}, key, recursiveEscape(item)));
+    if (isPlainObject$1(input) && typeof input.value !== 'string') {
+      return Object.keys(input).reduce(function (acc, key) {
+        return _objectSpread({}, acc, _defineProperty({}, key, recursiveEscape(input[key])));
       }, {});
     }
 
-    if (isArray_1(input)) {
+    if (Array.isArray(input)) {
       return input.map(recursiveEscape);
     }
 
@@ -16771,7 +16139,7 @@
         _this._searchFunction = searchFunction;
       }
 
-      if (routing === true) _this.routing = ROUTING_DEFAULT_OPTIONS;else if (isPlainObject_1(routing)) _this.routing = _objectSpread({}, ROUTING_DEFAULT_OPTIONS, routing);
+      if (routing === true) _this.routing = ROUTING_DEFAULT_OPTIONS;else if (isPlainObject$1(routing)) _this.routing = _objectSpread({}, ROUTING_DEFAULT_OPTIONS, routing);
       return _this;
     }
     /**
@@ -16882,7 +16250,7 @@
           });
           var nextState = widget.dispose({
             helper: _this3.helper,
-            state: _this3.helper.getState()
+            state: _this3.helper.state
           }); // re-compute remaining widgets to the state
           // in a case two widgets were using the same configuration but we removed one
 
@@ -16945,8 +16313,7 @@
         } else {
           this._createURL = defaultCreateURL$1;
           this._createAbsoluteURL = defaultCreateURL$1;
-
-          this._onHistoryChange = function () {};
+          this._onHistoryChange = noop$1;
         }
 
         this.searchParameters = this.widgets.reduce(enhanceConfiguration, this.searchParameters);
@@ -16958,7 +16325,7 @@
           helper.search = function () {
             var helperSearchFunction = algoliasearchHelper_1({
               search: function search() {
-                return new Promise(function () {});
+                return new Promise(noop$1);
               }
             }, helper.state.index, helper.state);
             helperSearchFunction.once('search', function (state) {
@@ -17089,22 +16456,7 @@
 
 
     var partialConfiguration = widgetDefinition.getConfiguration(configuration);
-
-    var customizer = function customizer(a, b) {
-      // always create a unified array for facets refinements
-      if (Array.isArray(a)) {
-        return union_1(a, b);
-      } // avoid mutating objects
-
-
-      if (isPlainObject_1(a)) {
-        return mergeWith_1({}, a, b, customizer);
-      }
-
-      return undefined;
-    };
-
-    return mergeWith_1({}, configuration, partialConfiguration, customizer);
+    return mergeDeep(configuration, partialConfiguration);
   }
 
   var withUsage$1 = createDocumentationMessageGenerator({
@@ -17664,13 +17016,13 @@
         },
         getConfiguration: function getConfiguration(currentConfiguration) {
           if (currentConfiguration.hierarchicalFacets) {
-            var isFacetSet = find_1(currentConfiguration.hierarchicalFacets, function (_ref) {
+            var isFacetSet = find$1(currentConfiguration.hierarchicalFacets, function (_ref) {
               var name = _ref.name;
               return name === hierarchicalFacetName;
             });
 
-            if (isFacetSet && !(isEqual_1(isFacetSet.attributes, attributes) && isFacetSet.separator === separator)) {
-              _warning(isEqual_1(isFacetSet.attributes, attributes) && isFacetSet.separator === separator, 'Using Breadcrumb and HierarchicalMenu on the same facet with different options overrides the configuration of the HierarchicalMenu.');
+            if (isFacetSet && !(isEqual$1(isFacetSet.attributes, attributes) && isFacetSet.separator === separator)) {
+              _warning(isEqual$1(isFacetSet.attributes, attributes) && isFacetSet.separator === separator, 'Using Breadcrumb and HierarchicalMenu on the same facet with different options overrides the configuration of the HierarchicalMenu.');
               return {};
             }
           }
@@ -17791,7 +17143,7 @@
           var path = searchParameters.getHierarchicalFacetBreadcrumb(hierarchicalFacetName);
           if (!path || path.length === 0) return uiState;
 
-          if (uiState.hierarchicalMenu && isEqual_1(path, uiState.hierarchicalMenu[hierarchicalFacetName])) {
+          if (uiState.hierarchicalMenu && isEqual$1(path, uiState.hierarchicalMenu[hierarchicalFacetName])) {
             return uiState;
           }
 
@@ -17883,13 +17235,18 @@
           var results = _ref2.results,
               instantSearchInstance = _ref2.instantSearchInstance;
 
-          if (escapeHTML && results.hits && results.hits.length > 0) {
+          if (escapeHTML && results.hits.length > 0) {
             results.hits = escapeHits(results.hits);
           }
 
+          var initialEscaped = results.hits.__escaped;
           results.hits = addAbsolutePosition(results.hits, results.page, results.hitsPerPage);
           results.hits = addQueryID(results.hits, results.queryID);
-          results.hits = transformItems(results.hits);
+          results.hits = transformItems(results.hits); // Make sure the escaped tag stays, even after mapping over the hits.
+          // This prevents the hits from being double-escaped if there are multiple
+          // hits widgets mounted on the page.
+
+          results.hits.__escaped = initialEscaped;
           renderFn({
             hits: results.hits,
             results: results,
@@ -17906,7 +17263,7 @@
 
   var getSelectedHits = function getSelectedHits(hits, selectedObjectIDs) {
     return selectedObjectIDs.map(function (objectID) {
-      var hit = find_1(hits, function (h) {
+      var hit = find$1(hits, function (h) {
         return h.objectID === objectID;
       });
 
@@ -17919,7 +17276,7 @@
   };
 
   var getQueryID = function getQueryID(selectedHits) {
-    var queryIDs = uniq_1(selectedHits.map(function (hit) {
+    var queryIDs = uniq(selectedHits.map(function (hit) {
       return hit.__queryID;
     }));
 
@@ -18195,7 +17552,7 @@
 
   var ReactPropTypesSecret_1 = ReactPropTypesSecret;
 
-  var has$2 = Function.call.bind(Object.prototype.hasOwnProperty);
+  var has$3 = Function.call.bind(Object.prototype.hasOwnProperty);
 
   function emptyFunction() {}
   function emptyFunctionWithReset() {}
@@ -18344,7 +17701,7 @@
 
   function enqueueRender(component) {
   	if (!component._dirty && (component._dirty = true) && items.push(component) == 1) {
-  		(defer)(rerender);
+  		( defer)(rerender);
   	}
   }
 
@@ -18967,6 +18324,10 @@
     return diff(merge, vnode, {}, false, parent, false);
   }
 
+  function createRef() {
+  	return {};
+  }
+
   var version$2 = '15.1.0'; // trick libraries to think we are react
 
   var ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan'.split(' ');
@@ -19473,11 +18834,10 @@
   function multihook(hooks, skipDuplicates) {
   	return function() {
   		var arguments$1 = arguments;
-  		var this$1 = this;
 
   		var ret;
   		for (var i=0; i<hooks.length; i++) {
-  			var r = callMethod(this$1, hooks[i], arguments$1);
+  			var r = callMethod(this, hooks[i], arguments$1);
 
   			if (skipDuplicates && r!=null) {
   				if (!ret) { ret = {}; }
@@ -19554,12 +18914,10 @@
   	isReactComponent: {},
 
   	replaceState: function(state, callback) {
-  		var this$1 = this;
-
   		this.setState(state, callback);
-  		for (var i in this$1.state) {
+  		for (var i in this.state) {
   			if (!(i in state)) {
-  				delete this$1.state[i];
+  				delete this.state[i];
   			}
   		}
   	},
@@ -19595,11 +18953,13 @@
   	PropTypes: propTypes,
   	Children: Children,
   	render: render$1,
+  	hydrate: render$1,
   	createClass: createClass,
   	createPortal: createPortal,
   	createFactory: createFactory,
   	createElement: createElement,
   	cloneElement: cloneElement$1,
+  	createRef: createRef,
   	isValidElement: isValidElement,
   	findDOMNode: findDOMNode,
   	unmountComponentAtNode: unmountComponentAtNode,
@@ -19637,73 +18997,6 @@
   });
 
   var connectHitsWithInsights = withInsights(connectHits);
-
-  /**
-   * The base implementation of `_.some` without support for iteratee shorthands.
-   *
-   * @private
-   * @param {Array|Object} collection The collection to iterate over.
-   * @param {Function} predicate The function invoked per iteration.
-   * @returns {boolean} Returns `true` if any element passes the predicate check,
-   *  else `false`.
-   */
-  function baseSome(collection, predicate) {
-    var result;
-
-    _baseEach(collection, function(value, index, collection) {
-      result = predicate(value, index, collection);
-      return !result;
-    });
-    return !!result;
-  }
-
-  var _baseSome = baseSome;
-
-  /**
-   * Checks if `predicate` returns truthy for **any** element of `collection`.
-   * Iteration is stopped once `predicate` returns truthy. The predicate is
-   * invoked with three arguments: (value, index|key, collection).
-   *
-   * @static
-   * @memberOf _
-   * @since 0.1.0
-   * @category Collection
-   * @param {Array|Object} collection The collection to iterate over.
-   * @param {Function} [predicate=_.identity] The function invoked per iteration.
-   * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-   * @returns {boolean} Returns `true` if any element passes the predicate check,
-   *  else `false`.
-   * @example
-   *
-   * _.some([null, 0, 'yes', false], Boolean);
-   * // => true
-   *
-   * var users = [
-   *   { 'user': 'barney', 'active': true },
-   *   { 'user': 'fred',   'active': false }
-   * ];
-   *
-   * // The `_.matches` iteratee shorthand.
-   * _.some(users, { 'user': 'barney', 'active': false });
-   * // => false
-   *
-   * // The `_.matchesProperty` iteratee shorthand.
-   * _.some(users, ['active', false]);
-   * // => true
-   *
-   * // The `_.property` iteratee shorthand.
-   * _.some(users, 'active');
-   * // => true
-   */
-  function some(collection, predicate, guard) {
-    var func = isArray_1(collection) ? _arraySome : _baseSome;
-    if (guard && _isIterateeCall(collection, predicate, guard)) {
-      predicate = undefined;
-    }
-    return func(collection, _baseIteratee(predicate, 3));
-  }
-
-  var some_1 = some;
 
   var withUsage$5 = createDocumentationMessageGenerator({
     name: 'hits-per-page',
@@ -19817,7 +19110,7 @@
         throw new Error(withUsage$5('More than one default value is specified in `items`.'));
       }
 
-      var defaultValue = find_1(userItems, function (item) {
+      var defaultValue = find$1(userItems, function (item) {
         return item.default === true;
       });
       return {
@@ -19831,13 +19124,13 @@
               createURL = _ref.createURL,
               state = _ref.state,
               instantSearchInstance = _ref.instantSearchInstance;
-          var isCurrentInOptions = some_1(items, function (item) {
+          var isCurrentInOptions = items.some(function (item) {
             return Number(state.hitsPerPage) === Number(item.value);
           });
 
           if (!isCurrentInOptions) {
             _warning(state.hitsPerPage !== undefined, "\n`hitsPerPage` is not defined.\nThe option `hitsPerPage` needs to be set using the `configure` widget.\n\nLearn more: https://community.algolia.com/instantsearch.js/v2/widgets/configure.html\n            ");
-            _warning(false, "No items in HitsPerPage `items` with `value: hitsPerPage` (hitsPerPage: ".concat(state.hitsPerPage, ")"));
+            _warning(false, "\nThe `items` option of `hitsPerPage` does not contain the \"hits per page\" value coming from the state: ".concat(state.hitsPerPage, ".\n\nYou may want to add another entry to the `items` option with this value."));
             items = [{
               value: '',
               label: ''
@@ -19975,22 +19268,26 @@
    * );
    */
 
-  function connectInfiniteHits(renderFn, unmountFn) {
+  var connectInfiniteHits = function connectInfiniteHits(renderFn) {
+    var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop$1;
     checkRendering(renderFn, withUsage$6());
-    return function () {
-      var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var _widgetParams$escapeH = widgetParams.escapeHTML,
-          escapeHTML = _widgetParams$escapeH === void 0 ? true : _widgetParams$escapeH,
-          _widgetParams$transfo = widgetParams.transformItems,
-          transformItems = _widgetParams$transfo === void 0 ? function (items) {
+    return function (widgetParams) {
+      var _ref = widgetParams || {},
+          _ref$escapeHTML = _ref.escapeHTML,
+          escapeHTML = _ref$escapeHTML === void 0 ? true : _ref$escapeHTML,
+          _ref$transformItems = _ref.transformItems,
+          transformItems = _ref$transformItems === void 0 ? function (items) {
         return items;
-      } : _widgetParams$transfo,
-          _widgetParams$showPre = widgetParams.showPrevious,
-          showPrevious = _widgetParams$showPre === void 0 ? false : _widgetParams$showPre;
+      } : _ref$transformItems,
+          _ref$showPrevious = _ref.showPrevious,
+          hasShowPrevious = _ref$showPrevious === void 0 ? false : _ref$showPrevious;
+
       var hitsCache = [];
       var firstReceivedPage = Infinity;
       var lastReceivedPage = -1;
       var prevState;
+      var showPrevious;
+      var showMore;
 
       var getShowPrevious = function getShowPrevious(helper) {
         return function () {
@@ -20010,30 +19307,30 @@
 
       return {
         getConfiguration: function getConfiguration() {
-          return escapeHTML ? TAG_PLACEHOLDER : undefined;
+          return escapeHTML ? TAG_PLACEHOLDER : {};
         },
-        init: function init(_ref) {
-          var instantSearchInstance = _ref.instantSearchInstance,
-              helper = _ref.helper;
-          this.showPrevious = getShowPrevious(helper);
-          this.showMore = getShowMore(helper);
+        init: function init(_ref2) {
+          var instantSearchInstance = _ref2.instantSearchInstance,
+              helper = _ref2.helper;
+          showPrevious = getShowPrevious(helper);
+          showMore = getShowMore(helper);
           firstReceivedPage = helper.state.page;
           lastReceivedPage = helper.state.page;
           renderFn({
             hits: hitsCache,
             results: undefined,
-            showPrevious: this.showPrevious,
-            showMore: this.showMore,
+            showPrevious: showPrevious,
+            showMore: showMore,
             isFirstPage: firstReceivedPage === 0,
             isLastPage: true,
             instantSearchInstance: instantSearchInstance,
             widgetParams: widgetParams
           }, true);
         },
-        render: function render(_ref2) {
-          var results = _ref2.results,
-              state = _ref2.state,
-              instantSearchInstance = _ref2.instantSearchInstance;
+        render: function render(_ref3) {
+          var results = _ref3.results,
+              state = _ref3.state,
+              instantSearchInstance = _ref3.instantSearchInstance;
 
           // Reset cache and received pages if anything changes in the
           // search state, except for the page.
@@ -20044,20 +19341,25 @@
           var page = state.page,
               currentState = _objectWithoutProperties(state, ["page"]);
 
-          if (!isEqual_1(currentState, prevState)) {
+          if (!isEqual$1(currentState, prevState)) {
             hitsCache = [];
             firstReceivedPage = page;
             lastReceivedPage = page;
             prevState = currentState;
           }
 
-          if (escapeHTML && results.hits && results.hits.length > 0) {
+          if (escapeHTML && results.hits.length > 0) {
             results.hits = escapeHits(results.hits);
           }
 
+          var initialEscaped = results.hits.__escaped;
           results.hits = addAbsolutePosition(results.hits, results.page, results.hitsPerPage);
           results.hits = addQueryID(results.hits, results.queryID);
-          results.hits = transformItems(results.hits);
+          results.hits = transformItems(results.hits); // Make sure the escaped tag stays after mapping over the hits.
+          // This prevents the hits from being double-escaped if there are multiple
+          // hits widgets mounted on the page.
+
+          results.hits.__escaped = initialEscaped;
 
           if (lastReceivedPage < page || !hitsCache.length) {
             hitsCache = [].concat(_toConsumableArray(hitsCache), _toConsumableArray(results.hits));
@@ -20072,8 +19374,8 @@
           renderFn({
             hits: hitsCache,
             results: results,
-            showPrevious: this.showPrevious,
-            showMore: this.showMore,
+            showPrevious: showPrevious,
+            showMore: showMore,
             isFirstPage: isFirstPage,
             isLastPage: isLastPage,
             instantSearchInstance: instantSearchInstance,
@@ -20083,11 +19385,11 @@
         dispose: function dispose() {
           unmountFn();
         },
-        getWidgetState: function getWidgetState(uiState, _ref3) {
-          var searchParameters = _ref3.searchParameters;
+        getWidgetState: function getWidgetState(uiState, _ref4) {
+          var searchParameters = _ref4.searchParameters;
           var page = searchParameters.page;
 
-          if (!showPrevious || page === 0 || page + 1 === uiState.page) {
+          if (!hasShowPrevious || page === 0 || page + 1 === uiState.page) {
             return uiState;
           }
 
@@ -20095,10 +19397,10 @@
             page: page + 1
           });
         },
-        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref4) {
-          var uiState = _ref4.uiState;
+        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref5) {
+          var uiState = _ref5.uiState;
 
-          if (!showPrevious) {
+          if (!hasShowPrevious) {
             return searchParameters;
           }
 
@@ -20112,7 +19414,7 @@
         }
       };
     };
-  }
+  };
 
   var connectInfiniteHitsWithInsights = withInsights(connectInfiniteHits);
 
@@ -20385,41 +19687,6 @@
     };
   }
 
-  /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeIsFinite = _root.isFinite;
-
-  /**
-   * Checks if `value` is a finite primitive number.
-   *
-   * **Note:** This method is based on
-   * [`Number.isFinite`](https://mdn.io/Number/isFinite).
-   *
-   * @static
-   * @memberOf _
-   * @since 0.1.0
-   * @category Lang
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is a finite number, else `false`.
-   * @example
-   *
-   * _.isFinite(3);
-   * // => true
-   *
-   * _.isFinite(Number.MIN_VALUE);
-   * // => true
-   *
-   * _.isFinite(Infinity);
-   * // => false
-   *
-   * _.isFinite('3');
-   * // => false
-   */
-  function isFinite(value) {
-    return typeof value == 'number' && nativeIsFinite(value);
-  }
-
-  var _isFinite = isFinite;
-
   var withUsage$8 = createDocumentationMessageGenerator({
     name: 'numeric-menu',
     connector: true
@@ -20638,11 +19905,11 @@
               lowerBound = _value$split$map2[0],
               upperBound = _value$split$map2[1];
 
-          if (_isFinite(lowerBound)) {
+          if (isFiniteNumber(lowerBound)) {
             clearedParams = clearedParams.addNumericRefinement(attribute, '>=', lowerBound);
           }
 
-          if (_isFinite(upperBound)) {
+          if (isFiniteNumber(upperBound)) {
             clearedParams = clearedParams.addNumericRefinement(attribute, '<=', upperBound);
           }
 
@@ -20730,107 +19997,6 @@
     return hasOperatorRefinements && currentRefinements[operator].includes(value);
   }
 
-  /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeCeil = Math.ceil,
-      nativeMax$7 = Math.max;
-
-  /**
-   * The base implementation of `_.range` and `_.rangeRight` which doesn't
-   * coerce arguments.
-   *
-   * @private
-   * @param {number} start The start of the range.
-   * @param {number} end The end of the range.
-   * @param {number} step The value to increment or decrement by.
-   * @param {boolean} [fromRight] Specify iterating from right to left.
-   * @returns {Array} Returns the range of numbers.
-   */
-  function baseRange(start, end, step, fromRight) {
-    var index = -1,
-        length = nativeMax$7(nativeCeil((end - start) / (step || 1)), 0),
-        result = Array(length);
-
-    while (length--) {
-      result[fromRight ? length : ++index] = start;
-      start += step;
-    }
-    return result;
-  }
-
-  var _baseRange = baseRange;
-
-  /**
-   * Creates a `_.range` or `_.rangeRight` function.
-   *
-   * @private
-   * @param {boolean} [fromRight] Specify iterating from right to left.
-   * @returns {Function} Returns the new range function.
-   */
-  function createRange(fromRight) {
-    return function(start, end, step) {
-      if (step && typeof step != 'number' && _isIterateeCall(start, end, step)) {
-        end = step = undefined;
-      }
-      // Ensure the sign of `-0` is preserved.
-      start = toFinite_1(start);
-      if (end === undefined) {
-        end = start;
-        start = 0;
-      } else {
-        end = toFinite_1(end);
-      }
-      step = step === undefined ? (start < end ? 1 : -1) : toFinite_1(step);
-      return _baseRange(start, end, step, fromRight);
-    };
-  }
-
-  var _createRange = createRange;
-
-  /**
-   * Creates an array of numbers (positive and/or negative) progressing from
-   * `start` up to, but not including, `end`. A step of `-1` is used if a negative
-   * `start` is specified without an `end` or `step`. If `end` is not specified,
-   * it's set to `start` with `start` then set to `0`.
-   *
-   * **Note:** JavaScript follows the IEEE-754 standard for resolving
-   * floating-point values which can produce unexpected results.
-   *
-   * @static
-   * @since 0.1.0
-   * @memberOf _
-   * @category Util
-   * @param {number} [start=0] The start of the range.
-   * @param {number} end The end of the range.
-   * @param {number} [step=1] The value to increment or decrement by.
-   * @returns {Array} Returns the range of numbers.
-   * @see _.inRange, _.rangeRight
-   * @example
-   *
-   * _.range(4);
-   * // => [0, 1, 2, 3]
-   *
-   * _.range(-4);
-   * // => [0, -1, -2, -3]
-   *
-   * _.range(1, 5);
-   * // => [1, 2, 3, 4]
-   *
-   * _.range(0, 20, 5);
-   * // => [0, 5, 10, 15]
-   *
-   * _.range(0, -4, -1);
-   * // => [0, -1, -2, -3]
-   *
-   * _.range(1, 4, 0);
-   * // => [1, 1, 1]
-   *
-   * _.range(0);
-   * // => []
-   */
-  var range = _createRange();
-
-  var range_1 = range;
-
   var Paginator =
   /*#__PURE__*/
   function () {
@@ -20850,12 +20016,21 @@
             padding = this.padding;
         if (total === 0) return [0];
         var totalDisplayedPages = this.nbPagesDisplayed(padding, total);
-        if (totalDisplayedPages === total) return range_1(0, total);
+
+        if (totalDisplayedPages === total) {
+          return range({
+            end: total
+          });
+        }
+
         var paddingLeft = this.calculatePaddingLeft(currentPage, padding, total, totalDisplayedPages);
         var paddingRight = totalDisplayedPages - paddingLeft;
         var first = currentPage - paddingLeft;
         var last = currentPage + paddingRight;
-        return range_1(first, last);
+        return range({
+          start: first,
+          end: last
+        });
       }
     }, {
       key: "nbPagesDisplayed",
@@ -21110,9 +20285,8 @@
         throw new Error(withUsage$a('The `attribute` option is required.'));
       }
 
-      var hasMinBound = _isFinite(minBound);
-
-      var hasMaxBound = _isFinite(maxBound);
+      var hasMinBound = isFiniteNumber(minBound);
+      var hasMaxBound = isFiniteNumber(maxBound);
 
       var formatToNumber = function formatToNumber(v) {
         return Number(Number(v).toFixed(precision));
@@ -21133,7 +20307,7 @@
 
           if (hasMinBound) {
             min = minBound;
-          } else if (_isFinite(stats.min)) {
+          } else if (isFiniteNumber(stats.min)) {
             min = stats.min;
           } else {
             min = 0;
@@ -21143,7 +20317,7 @@
 
           if (hasMaxBound) {
             max = maxBound;
-          } else if (_isFinite(stats.max)) {
+          } else if (isFiniteNumber(stats.max)) {
             max = stats.max;
           } else {
             max = 0;
@@ -21163,8 +20337,8 @@
               _ref4 = _slicedToArray(_ref3, 1),
               maxValue = _ref4[0];
 
-          var min = _isFinite(minValue) ? minValue : -Infinity;
-          var max = _isFinite(maxValue) ? maxValue : Infinity;
+          var min = isFiniteNumber(minValue) ? minValue : -Infinity;
+          var max = isFiniteNumber(maxValue) ? maxValue : Infinity;
           return [min, max];
         },
         _refine: function _refine(helper, currentRange) {
@@ -21211,19 +20385,13 @@
             }
 
             var isResetNewNextMin = newNextMin === undefined;
-
-            var isValidNewNextMin = _isFinite(newNextMin);
-
-            var isValidMinCurrentRange = _isFinite(currentRangeMin);
-
+            var isValidNewNextMin = isFiniteNumber(newNextMin);
+            var isValidMinCurrentRange = isFiniteNumber(currentRangeMin);
             var isGreaterThanCurrentRange = isValidMinCurrentRange && currentRangeMin <= newNextMin;
             var isMinValid = isResetNewNextMin || isValidNewNextMin && (!isValidMinCurrentRange || isGreaterThanCurrentRange);
             var isResetNewNextMax = newNextMax === undefined;
-
-            var isValidNewNextMax = _isFinite(newNextMax);
-
-            var isValidMaxCurrentRange = _isFinite(currentRangeMax);
-
+            var isValidNewNextMax = isFiniteNumber(newNextMax);
+            var isValidMaxCurrentRange = isFiniteNumber(currentRangeMax);
             var isLowerThanRange = isValidMaxCurrentRange && currentRangeMax >= newNextMax;
             var isMaxValid = isResetNewNextMax || isValidNewNextMax && (!isValidMaxCurrentRange || isLowerThanRange);
             var hasMinChange = min !== newNextMin;
@@ -21250,11 +20418,8 @@
           };
           var isBoundsDefined = hasMinBound || hasMaxBound;
           var boundsAlreadyDefined = currentConfiguration && currentConfiguration.numericRefinements && currentConfiguration.numericRefinements[attribute] !== undefined;
-
-          var isMinBoundValid = _isFinite(minBound);
-
-          var isMaxBoundValid = _isFinite(maxBound);
-
+          var isMinBoundValid = isFiniteNumber(minBound);
+          var isMaxBoundValid = isFiniteNumber(maxBound);
           var isAbleToRefine = isMinBoundValid && isMaxBoundValid ? minBound < maxBound : isMinBoundValid || isMaxBoundValid;
 
           if (isBoundsDefined && !boundsAlreadyDefined && isAbleToRefine) {
@@ -21299,8 +20464,8 @@
               helper = _ref12.helper,
               instantSearchInstance = _ref12.instantSearchInstance;
           var facetsFromResults = results.disjunctiveFacets || [];
-          var facet = find_1(facetsFromResults, {
-            name: attribute
+          var facet = find$1(facetsFromResults, function (facetResult) {
+            return facetResult.name === attribute;
           });
           var stats = facet && facet.stats || {};
 
@@ -21367,11 +20532,11 @@
             return searchParameters;
           }
 
-          if (_isFinite(lowerBound)) {
+          if (isFiniteNumber(lowerBound)) {
             clearedParams = clearedParams.addNumericRefinement(attribute, '>=', lowerBound);
           }
 
-          if (_isFinite(upperBound)) {
+          if (isFiniteNumber(upperBound)) {
             clearedParams = clearedParams.addNumericRefinement(attribute, '<=', upperBound);
           }
 
@@ -21727,7 +20892,7 @@
           var searchParameters = _ref6.searchParameters;
           var values = operator === 'or' ? searchParameters.getDisjunctiveRefinements(attribute) : searchParameters.getConjunctiveRefinements(attribute);
 
-          if (values.length === 0 || uiState.refinementList && isEqual_1(values, uiState.refinementList[attribute])) {
+          if (values.length === 0 || uiState.refinementList && isEqual$1(values, uiState.refinementList[attribute])) {
             return uiState;
           }
 
@@ -21989,7 +21154,7 @@
         return x;
       } : _widgetParams$transfo;
 
-      if (!items) {
+      if (!Array.isArray(items)) {
         throw new Error(withUsage$d('The `items` option expects an array of objects.'));
       }
 
@@ -21997,23 +21162,19 @@
         init: function init(_ref) {
           var helper = _ref.helper,
               instantSearchInstance = _ref.instantSearchInstance;
-          var currentIndex = helper.getIndex();
-          var isIndexInList = find_1(items, function (item) {
-            return item.value === currentIndex;
+          var initialIndex = helper.state.index;
+          var isInitialIndexInItems = find$1(items, function (item) {
+            return item.value === initialIndex;
           });
-
-          if (!isIndexInList) {
-            throw new Error("[sortBy]: Index ".concat(currentIndex, " not present in `items`"));
-          }
-
-          this.initialIndex = instantSearchInstance.indexName;
+          this.initialIndex = initialIndex;
 
           this.setIndex = function (indexName) {
-            return helper.setIndex(indexName).search();
+            helper.setIndex(indexName).search();
           };
 
+          _warning(isInitialIndexInItems, "The index named \"".concat(initialIndex, "\" is not listed in the `items` of `sortBy`."));
           renderFn({
-            currentRefinement: currentIndex,
+            currentRefinement: initialIndex,
             options: transformItems(items),
             refine: this.setIndex,
             hasNoResults: true,
@@ -22026,7 +21187,7 @@
               results = _ref2.results,
               instantSearchInstance = _ref2.instantSearchInstance;
           renderFn({
-            currentRefinement: helper.getIndex(),
+            currentRefinement: helper.state.index,
             options: transformItems(items),
             refine: this.setIndex,
             hasNoResults: results.nbHits === 0,
@@ -22573,7 +21734,7 @@
           var isRefined = helper.state.isDisjunctiveFacetRefined(attribute, on);
           var offValue = off === undefined ? false : off;
           var allFacetValues = results.getFacetValues(attribute);
-          var onData = find_1(allFacetValues, function (_ref4) {
+          var onData = find$1(allFacetValues, function (_ref4) {
             var name = _ref4.name;
             return name === unescapeRefinement(on);
           });
@@ -22581,7 +21742,7 @@
             isRefined: onData !== undefined ? onData.isRefined : false,
             count: onData === undefined ? null : onData.count
           };
-          var offData = hasAnOffValue ? find_1(allFacetValues, function (_ref5) {
+          var offData = hasAnOffValue ? find$1(allFacetValues, function (_ref5) {
             var name = _ref5.name;
             return name === unescapeRefinement(offValue);
           }) : undefined;
@@ -22709,13 +21870,13 @@
       return {
         getConfiguration: function getConfiguration(currentConfiguration) {
           if (currentConfiguration.hierarchicalFacets) {
-            var isFacetSet = find_1(currentConfiguration.hierarchicalFacets, function (_ref) {
+            var isFacetSet = find$1(currentConfiguration.hierarchicalFacets, function (_ref) {
               var name = _ref.name;
               return name === hierarchicalFacetName;
             });
 
             if (isFacetSet) {
-              _warning(isEqual_1(isFacetSet.attributes, attributes) && isFacetSet.separator === separator, 'Using Breadcrumb and HierarchicalMenu on the same facet with different options overrides the configuration of the HierarchicalMenu.');
+              _warning(isEqual$1(isFacetSet.attributes, attributes) && isFacetSet.separator === separator, 'Using Breadcrumb and HierarchicalMenu on the same facet with different options overrides the configuration of the HierarchicalMenu.');
               return {};
             }
           }
@@ -22937,8 +22098,8 @@
         hasMapMoveSinceLastRefine: false,
         lastRefinePosition: '',
         lastRefineBoundingBox: '',
-        internalToggleRefineOnMapMove: noop_1,
-        internalSetMapMoveSinceLastRefine: noop_1
+        internalToggleRefineOnMapMove: noop$1,
+        internalSetMapMoveSinceLastRefine: noop$1
       };
 
       var getPositionFromState = function getPositionFromState(state) {
@@ -23011,8 +22172,8 @@
             helper = initArgs.helper,
             instantSearchInstance = initArgs.instantSearchInstance;
         var isFirstRendering = true;
-        widgetState.internalToggleRefineOnMapMove = createInternalToggleRefinementOnMapMove(noop_1, initArgs);
-        widgetState.internalSetMapMoveSinceLastRefine = createInternalSetMapMoveSinceLastRefine(noop_1, initArgs);
+        widgetState.internalToggleRefineOnMapMove = createInternalToggleRefinementOnMapMove(noop$1, initArgs);
+        widgetState.internalSetMapMoveSinceLastRefine = createInternalSetMapMoveSinceLastRefine(noop$1, initArgs);
         renderFn({
           items: [],
           position: getPositionFromState(state),
@@ -23036,7 +22197,7 @@
         var isFirstRendering = false; // We don't use the state provided by the render function because we need
         // to be sure that the state is the latest one for the following condition
 
-        var state = helper.getState();
+        var state = helper.state;
         var positionChangedSinceLastRefine = Boolean(state.aroundLatLng) && Boolean(widgetState.lastRefinePosition) && state.aroundLatLng !== widgetState.lastRefinePosition;
         var boundingBoxChangedSinceLastRefine = !state.insideBoundingBox && Boolean(widgetState.lastRefineBoundingBox) && state.insideBoundingBox !== widgetState.lastRefineBoundingBox;
 
@@ -23180,12 +22341,12 @@
    */
 
   function connectConfigure() {
-    var renderFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop_1;
-    var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop_1;
+    var renderFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop$1;
+    var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop$1;
     return function () {
       var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      if (!isPlainObject_1(widgetParams.searchParameters)) {
+      if (!isPlainObject$1(widgetParams.searchParameters)) {
         throw new Error(withUsage$k('The `searchParameters` option expects an object.'));
       }
 
@@ -23206,7 +22367,7 @@
 
           return function (searchParameters) {
             // merge new `searchParameters` with the ones set from other widgets
-            var actualState = _this.removeSearchParameters(helper.getState());
+            var actualState = _this.removeSearchParameters(helper.state);
 
             var nextSearchParameters = enhanceConfiguration(_objectSpread({}, actualState), {
               getConfiguration: function getConfiguration() {
@@ -23341,7 +22502,7 @@
         saveResults: function saveResults(_ref3) {
           var results = _ref3.results,
               label = _ref3.label;
-          var derivedIndex = this.indices.find(function (i) {
+          var derivedIndex = find$1(this.indices, function (i) {
             return i.label === label;
           });
 
@@ -23456,7 +22617,7 @@
     _warning(nextRuleContexts.length <= 10, "\nThe maximum number of `ruleContexts` is 10. They have been sliced to that limit.\nConsider using `transformRuleContexts` to minimize the number of rules sent to Algolia.\n");
     var ruleContexts = transformRuleContexts(nextRuleContexts).slice(0, 10);
 
-    if (!isEqual_1(previousRuleContexts, ruleContexts)) {
+    if (!isEqual$1(previousRuleContexts, ruleContexts)) {
       helper.overrideStateWithoutTriggeringChangeEvent(_objectSpread({}, sharedHelperState, {
         ruleContexts: ruleContexts
       }));
@@ -23464,7 +22625,7 @@
   }
 
   var connectQueryRules = function connectQueryRules(render) {
-    var unmount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop_1;
+    var unmount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop$1;
     checkRendering(render, withUsage$m());
     return function (widgetParams) {
       var _ref2 = widgetParams || {},
@@ -23560,6 +22721,252 @@
     };
   };
 
+  function createVoiceSearchHelper(_ref) {
+    var searchAsYouSpeak = _ref.searchAsYouSpeak,
+        onQueryChange = _ref.onQueryChange,
+        onStateChange = _ref.onStateChange;
+    var SpeechRecognitionAPI = window.webkitSpeechRecognition || window.SpeechRecognition;
+
+    var getDefaultState = function getDefaultState(status) {
+      return {
+        status: status,
+        transcript: '',
+        isSpeechFinal: false,
+        errorCode: undefined
+      };
+    };
+
+    var state = getDefaultState('initial');
+    var recognition;
+
+    var isBrowserSupported = function isBrowserSupported() {
+      return Boolean(SpeechRecognitionAPI);
+    };
+
+    var isListening = function isListening() {
+      return state.status === 'askingPermission' || state.status === 'waiting' || state.status === 'recognizing';
+    };
+
+    var setState = function setState() {
+      var newState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      state = _objectSpread({}, state, newState);
+      onStateChange();
+    };
+
+    var getState = function getState() {
+      return state;
+    };
+
+    var resetState = function resetState() {
+      var status = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'initial';
+      setState(getDefaultState(status));
+    };
+
+    var onStart = function onStart() {
+      setState({
+        status: 'waiting'
+      });
+    };
+
+    var onError = function onError(event) {
+      setState({
+        status: 'error',
+        errorCode: event.error
+      });
+    };
+
+    var onResult = function onResult(event) {
+      setState({
+        status: 'recognizing',
+        transcript: event.results[0] && event.results[0][0] && event.results[0][0].transcript || '',
+        isSpeechFinal: event.results[0] && event.results[0].isFinal
+      });
+
+      if (searchAsYouSpeak && state.transcript) {
+        onQueryChange(state.transcript);
+      }
+    };
+
+    var onEnd = function onEnd() {
+      if (!state.errorCode && state.transcript && !searchAsYouSpeak) {
+        onQueryChange(state.transcript);
+      }
+
+      if (state.status !== 'error') {
+        setState({
+          status: 'finished'
+        });
+      }
+    };
+
+    var start = function start() {
+      recognition = new SpeechRecognitionAPI();
+
+      if (!recognition) {
+        return;
+      }
+
+      resetState('askingPermission');
+      recognition.interimResults = true;
+      recognition.addEventListener('start', onStart);
+      recognition.addEventListener('error', onError);
+      recognition.addEventListener('result', onResult);
+      recognition.addEventListener('end', onEnd);
+      recognition.start();
+    };
+
+    var dispose = function dispose() {
+      if (!recognition) {
+        return;
+      }
+
+      recognition.stop();
+      recognition.removeEventListener('start', onStart);
+      recognition.removeEventListener('error', onError);
+      recognition.removeEventListener('result', onResult);
+      recognition.removeEventListener('end', onEnd);
+      recognition = undefined;
+    };
+
+    var stop = function stop() {
+      dispose(); // Because `dispose` removes event listeners, `end` listener is not called.
+      // So we're setting the `status` as `finished` here.
+      // If we don't do it, it will be still `waiting` or `recognizing`.
+
+      resetState('finished');
+    };
+
+    var toggleListening = function toggleListening() {
+      if (!isBrowserSupported()) {
+        return;
+      }
+
+      if (isListening()) {
+        stop();
+      } else {
+        start();
+      }
+    };
+
+    return {
+      getState: getState,
+      isBrowserSupported: isBrowserSupported,
+      isListening: isListening,
+      toggleListening: toggleListening,
+      dispose: dispose
+    };
+  }
+
+  var withUsage$n = createDocumentationMessageGenerator({
+    name: 'voice-search',
+    connector: true
+  });
+
+  var connectVoiceSearch = function connectVoiceSearch(renderFn) {
+    var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop$1;
+    checkRendering(renderFn, withUsage$n());
+    return function (widgetParams) {
+      var _render = function render(_ref) {
+        var isFirstRendering = _ref.isFirstRendering,
+            instantSearchInstance = _ref.instantSearchInstance,
+            _ref$voiceSearchHelpe = _ref.voiceSearchHelper,
+            isBrowserSupported = _ref$voiceSearchHelpe.isBrowserSupported,
+            isListening = _ref$voiceSearchHelpe.isListening,
+            toggleListening = _ref$voiceSearchHelpe.toggleListening,
+            getState = _ref$voiceSearchHelpe.getState;
+        renderFn({
+          isBrowserSupported: isBrowserSupported(),
+          isListening: isListening(),
+          toggleListening: toggleListening,
+          voiceListeningState: getState(),
+          widgetParams: widgetParams,
+          instantSearchInstance: instantSearchInstance
+        }, isFirstRendering);
+      };
+
+      var _widgetParams$searchA = widgetParams.searchAsYouSpeak,
+          searchAsYouSpeak = _widgetParams$searchA === void 0 ? false : _widgetParams$searchA;
+      return {
+        init: function init(_ref2) {
+          var _this = this;
+
+          var helper = _ref2.helper,
+              instantSearchInstance = _ref2.instantSearchInstance;
+
+          this._refine = function () {
+            var previousQuery;
+
+            var setQueryAndSearch = function setQueryAndSearch(query) {
+              if (query !== helper.state.query) {
+                previousQuery = helper.state.query;
+                helper.setQuery(query);
+              }
+
+              if (typeof previousQuery !== 'undefined' && previousQuery !== query) {
+                helper.search();
+              }
+            };
+
+            return setQueryAndSearch;
+          }();
+
+          this._voiceSearchHelper = createVoiceSearchHelper({
+            searchAsYouSpeak: searchAsYouSpeak,
+            onQueryChange: function onQueryChange(query) {
+              return _this._refine(query);
+            },
+            onStateChange: function onStateChange() {
+              _render({
+                isFirstRendering: false,
+                instantSearchInstance: instantSearchInstance,
+                voiceSearchHelper: _this._voiceSearchHelper
+              });
+            }
+          });
+
+          _render({
+            isFirstRendering: true,
+            instantSearchInstance: instantSearchInstance,
+            voiceSearchHelper: this._voiceSearchHelper
+          });
+        },
+        render: function render(_ref3) {
+          var instantSearchInstance = _ref3.instantSearchInstance;
+
+          _render({
+            isFirstRendering: false,
+            instantSearchInstance: instantSearchInstance,
+            voiceSearchHelper: this._voiceSearchHelper
+          });
+        },
+        dispose: function dispose(_ref4) {
+          var state = _ref4.state;
+
+          this._voiceSearchHelper.dispose();
+
+          unmountFn();
+          return state.setQuery('');
+        },
+        getWidgetState: function getWidgetState(uiState, _ref5) {
+          var searchParameters = _ref5.searchParameters;
+          var query = searchParameters.query;
+
+          if (query === '' || uiState && uiState.query === query) {
+            return uiState;
+          }
+
+          return _objectSpread({}, uiState, {
+            query: query
+          });
+        },
+        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref6) {
+          var uiState = _ref6.uiState;
+          return searchParameters.setQuery(uiState.query || '');
+        }
+      };
+    };
+  };
+
 
 
   var connectors = /*#__PURE__*/Object.freeze({
@@ -23586,7 +22993,8 @@
     connectPoweredBy: connectPoweredBy,
     connectConfigure: connectConfigure,
     connectAutocomplete: connectAutocomplete,
-    connectQueryRules: connectQueryRules
+    connectQueryRules: connectQueryRules,
+    connectVoiceSearch: connectVoiceSearch
   });
 
   var classnames = createCommonjsModule(function (module) {
@@ -23629,7 +23037,7 @@
   		return classes.join(' ');
   	}
 
-  	if (module.exports) {
+  	if ( module.exports) {
   		classNames.default = classNames;
   		module.exports = classNames;
   	} else {
@@ -23652,7 +23060,7 @@
     _createClass(Template, [{
       key: "shouldComponentUpdate",
       value: function shouldComponentUpdate(nextProps) {
-        return !isEqual_1(this.props.data, nextProps.data) || this.props.templateKey !== nextProps.templateKey || !isEqual_1(this.props.rootProps, nextProps.rootProps);
+        return !isEqual$1(this.props.data, nextProps.data) || this.props.templateKey !== nextProps.templateKey || !isEqual$1(this.props.rootProps, nextProps.rootProps);
       }
     }, {
       key: "render",
@@ -23718,7 +23126,7 @@
     resetLabel: 'Clear refinements'
   };
 
-  var withUsage$n = createDocumentationMessageGenerator({
+  var withUsage$o = createDocumentationMessageGenerator({
     name: 'clear-refinements'
   });
   var suit$2 = component('ClearRefinements');
@@ -23805,7 +23213,7 @@
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
 
     if (!container) {
-      throw new Error(withUsage$n('The `container` option is required.'));
+      throw new Error(withUsage$o('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -23914,7 +23322,7 @@
     })));
   };
 
-  var withUsage$o = createDocumentationMessageGenerator({
+  var withUsage$p = createDocumentationMessageGenerator({
     name: 'current-refinements'
   });
   var suit$3 = component('CurrentRefinements');
@@ -23989,7 +23397,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$o('The `container` option is required.'));
+      throw new Error(withUsage$p('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -24409,7 +23817,7 @@
     return HTMLMarker;
   };
 
-  var withUsage$p = createDocumentationMessageGenerator({
+  var withUsage$q = createDocumentationMessageGenerator({
     name: 'geo-search'
   });
   var suit$4 = component('GeoSearch');
@@ -24531,20 +23939,20 @@
         widgetParams = _objectWithoutProperties(_ref, ["initialZoom", "initialPosition", "templates", "cssClasses", "builtInMarker", "customHTMLMarker", "enableRefine", "enableClearMapRefinement", "enableRefineControl", "container", "googleReference"]);
 
     var defaultBuiltInMarker = {
-      createOptions: noop_1,
+      createOptions: noop$1,
       events: {}
     };
     var defaultCustomHTMLMarker = {
-      createOptions: noop_1,
+      createOptions: noop$1,
       events: {}
     };
 
     if (!container) {
-      throw new Error(withUsage$p('The `container` option is required.'));
+      throw new Error(withUsage$q('The `container` option is required.'));
     }
 
     if (!googleReference) {
-      throw new Error(withUsage$p('The `googleReference` option is required.'));
+      throw new Error(withUsage$q('The `googleReference` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -24665,7 +24073,7 @@
     }, {
       key: "shouldComponentUpdate",
       value: function shouldComponentUpdate(nextProps) {
-        return !isEqual_1(this.props, nextProps);
+        return !isEqual$1(this.props, nextProps);
       }
     }, {
       key: "handleClick",
@@ -24882,10 +24290,10 @@
     searchAsYouType: true,
     isSearchStalled: false,
     disabled: false,
-    onChange: noop_1,
-    onSubmit: noop_1,
-    onReset: noop_1,
-    refine: noop_1
+    onChange: noop$1,
+    onSubmit: noop$1,
+    onReset: noop$1,
+    refine: noop$1
   });
 
   var RefinementList$1 =
@@ -24907,7 +24315,7 @@
       key: "shouldComponentUpdate",
       value: function shouldComponentUpdate(nextProps, nextState) {
         var isStateDifferent = nextState !== this.state;
-        var isFacetValuesDifferent = !isEqual_1(this.props.facetValues, nextProps.facetValues);
+        var isFacetValuesDifferent = !isEqual$1(this.props.facetValues, nextProps.facetValues);
         var shouldUpdate = isStateDifferent || isFacetValuesDifferent;
         return shouldUpdate;
       }
@@ -24988,6 +24396,11 @@
         if (isSpecialClick(originalEvent)) {
           // do not alter the default browser behavior
           // if one special key is down
+          return;
+        }
+
+        if (isRefined && originalEvent.target.parentNode.querySelector('input[type="radio"]:checked')) {
+          // Prevent refinement for being reset if the user clicks on an already checked radio button
           return;
         }
 
@@ -25101,7 +24514,7 @@
     showMoreText: "\n    {{#isShowingMore}}\n      Show less\n    {{/isShowingMore}}\n    {{^isShowingMore}}\n      Show more\n    {{/isShowingMore}}\n  "
   };
 
-  var withUsage$q = createDocumentationMessageGenerator({
+  var withUsage$r = createDocumentationMessageGenerator({
     name: 'hierarchical-menu'
   });
   var suit$5 = component('HierarchicalMenu');
@@ -25276,7 +24689,7 @@
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
 
     if (!container) {
-      throw new Error(withUsage$q('The `container` option is required.'));
+      throw new Error(withUsage$r('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -25392,7 +24805,7 @@
     }
   };
 
-  var withUsage$r = createDocumentationMessageGenerator({
+  var withUsage$s = createDocumentationMessageGenerator({
     name: 'hits'
   });
   var suit$6 = component('Hits');
@@ -25485,7 +24898,7 @@
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
 
     if (!container) {
-      throw new Error(withUsage$r('The `container` option is required.'));
+      throw new Error(withUsage$s('The `container` option is required.'));
     }
 
     _warning(typeof templates.allItems === 'undefined', "The template `allItems` does not exist since InstantSearch.js 3.\n\nYou may want to migrate using `connectHits`: ".concat(createDocumentationLink({
@@ -25566,7 +24979,7 @@
     return Selector;
   }(Component$1);
 
-  var withUsage$s = createDocumentationMessageGenerator({
+  var withUsage$t = createDocumentationMessageGenerator({
     name: 'hits-per-page'
   });
   var suit$7 = component('HitsPerPage');
@@ -25579,7 +24992,7 @@
           refine = _ref2.refine;
       if (isFirstRendering) return;
 
-      var _ref3 = find_1(items, function (_ref4) {
+      var _ref3 = find$1(items, function (_ref4) {
         var isRefined = _ref4.isRefined;
         return isRefined;
       }) || {},
@@ -25650,7 +25063,7 @@
         transformItems = _ref5.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$s('The `container` option is required.'));
+      throw new Error(withUsage$t('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -25741,7 +25154,7 @@
     }
   };
 
-  var withUsage$t = createDocumentationMessageGenerator({
+  var withUsage$u = createDocumentationMessageGenerator({
     name: 'infinite-hits'
   });
   var suit$8 = component('InfiniteHits');
@@ -25838,7 +25251,7 @@
    */
 
 
-  function infiniteHits() {
+  var infiniteHits = function infiniteHits() {
     var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         container = _ref3.container,
         escapeHTML = _ref3.escapeHTML,
@@ -25850,12 +25263,12 @@
         showPrevious = _ref3.showPrevious;
 
     if (!container) {
-      throw new Error(withUsage$t('The `container` option is required.'));
-    } // We have this specific check because unlike `hits`, `infiniteHits` does not support
+      throw new Error(withUsage$u('The `container` option is required.'));
+    }
+
+    _warning( // @ts-ignore: We have this specific check because unlike `hits`, `infiniteHits` does not support
     // the `allItems` template. This can be misleading as they are very similar.
-
-
-    _warning(typeof templates.allItems === 'undefined', "The template `allItems` does not exist since InstantSearch.js 3.\n\n You may want to migrate using `connectInfiniteHits`: ".concat(createDocumentationLink({
+    typeof templates.allItems === 'undefined', "The template `allItems` does not exist since InstantSearch.js 3.\n\n You may want to migrate using `connectInfiniteHits`: ".concat(createDocumentationLink({
       name: 'infinite-hits',
       connector: true
     }), "."));
@@ -25901,7 +25314,7 @@
       transformItems: transformItems,
       showPrevious: showPrevious
     });
-  }
+  };
 
   /* eslint-disable max-len */
   var defaultTemplates$5 = {
@@ -25909,7 +25322,7 @@
     showMoreText: "\n    {{#isShowingMore}}\n      Show less\n    {{/isShowingMore}}\n    {{^isShowingMore}}\n      Show more\n    {{/isShowingMore}}\n  "
   };
 
-  var withUsage$u = createDocumentationMessageGenerator({
+  var withUsage$v = createDocumentationMessageGenerator({
     name: 'menu'
   });
   var suit$9 = component('Menu');
@@ -26029,7 +25442,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$u('The `container` option is required.'));
+      throw new Error(withUsage$v('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -26094,7 +25507,7 @@
     searchableLoadingIndicator: "\n  <svg class=\"{{cssClasses.loadingIcon}}\" width=\"16\" height=\"16\" viewBox=\"0 0 38 38\" xmlns=\"http://www.w3.org/2000/svg\" stroke=\"#444\">\n    <g fill=\"none\" fillRule=\"evenodd\">\n      <g transform=\"translate(1 1)\" strokeWidth=\"2\">\n        <circle strokeOpacity=\".5\" cx=\"18\" cy=\"18\" r=\"18\" />\n        <path d=\"M36 18c0-9.94-8.06-18-18-18\">\n          <animateTransform\n            attributeName=\"transform\"\n            type=\"rotate\"\n            from=\"0 18 18\"\n            to=\"360 18 18\"\n            dur=\"1s\"\n            repeatCount=\"indefinite\"\n          />\n        </path>\n      </g>\n    </g>\n  </svg>\n    "
   };
 
-  var withUsage$v = createDocumentationMessageGenerator({
+  var withUsage$w = createDocumentationMessageGenerator({
     name: 'refinement-list'
   });
   var suit$a = component('RefinementList');
@@ -26286,7 +25699,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$v('The `container` option is required.'));
+      throw new Error(withUsage$w('The `container` option is required.'));
     }
 
     var escapeFacetValues = searchable ? Boolean(searchableEscapeFacetValues) : false;
@@ -26390,7 +25803,7 @@
     item: "<label class=\"{{cssClasses.label}}\">\n  <input type=\"radio\" class=\"{{cssClasses.radio}}\" name=\"{{attribute}}\"{{#isRefined}} checked{{/isRefined}} />\n  <span class=\"{{cssClasses.labelText}}\">{{label}}</span>\n</label>"
   };
 
-  var withUsage$w = createDocumentationMessageGenerator({
+  var withUsage$x = createDocumentationMessageGenerator({
     name: 'numeric-menu'
   });
   var suit$b = component('NumericMenu');
@@ -26503,7 +25916,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$w('The `container` option is required.'));
+      throw new Error(withUsage$x('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -26549,58 +25962,6 @@
     });
   }
 
-  /**
-   * Used by `_.defaultsDeep` to customize its `_.merge` use to merge source
-   * objects into destination objects that are passed thru.
-   *
-   * @private
-   * @param {*} objValue The destination value.
-   * @param {*} srcValue The source value.
-   * @param {string} key The key of the property to merge.
-   * @param {Object} object The parent object of `objValue`.
-   * @param {Object} source The parent object of `srcValue`.
-   * @param {Object} [stack] Tracks traversed source values and their merged
-   *  counterparts.
-   * @returns {*} Returns the value to assign.
-   */
-  function customDefaultsMerge(objValue, srcValue, key, object, source, stack) {
-    if (isObject_1(objValue) && isObject_1(srcValue)) {
-      // Recursively merge objects and arrays (susceptible to call stack limits).
-      stack.set(srcValue, objValue);
-      _baseMerge(objValue, srcValue, undefined, customDefaultsMerge, stack);
-      stack['delete'](srcValue);
-    }
-    return objValue;
-  }
-
-  var _customDefaultsMerge = customDefaultsMerge;
-
-  /**
-   * This method is like `_.defaults` except that it recursively assigns
-   * default properties.
-   *
-   * **Note:** This method mutates `object`.
-   *
-   * @static
-   * @memberOf _
-   * @since 3.10.0
-   * @category Object
-   * @param {Object} object The destination object.
-   * @param {...Object} [sources] The source objects.
-   * @returns {Object} Returns `object`.
-   * @see _.defaults
-   * @example
-   *
-   * _.defaultsDeep({ 'a': { 'b': 2 } }, { 'a': { 'b': 1, 'c': 3 } });
-   * // => { 'a': { 'b': 2, 'c': 3 } }
-   */
-  var defaultsDeep = _baseRest(function(args) {
-    args.push(undefined, _customDefaultsMerge);
-    return _apply(mergeWith_1, undefined, args);
-  });
-
-  var defaultsDeep_1 = defaultsDeep;
-
   var PaginationLink =
   /*#__PURE__*/
   function (_Component) {
@@ -26620,7 +25981,7 @@
     }, {
       key: "shouldComponentUpdate",
       value: function shouldComponentUpdate(nextProps) {
-        return !isEqual_1(this.props, nextProps);
+        return !isEqual$1(this.props, nextProps);
       }
     }, {
       key: "handleClick",
@@ -26668,13 +26029,31 @@
   function (_Component) {
     _inherits(Pagination, _Component);
 
-    function Pagination(props) {
+    function Pagination() {
+      var _getPrototypeOf2;
+
       var _this;
 
       _classCallCheck(this, Pagination);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(Pagination).call(this, defaultsDeep_1(props, Pagination.defaultProps)));
-      _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Pagination)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+      _defineProperty(_assertThisInitialized(_this), "handleClick", function (pageNumber, event) {
+        if (isSpecialClick(event)) {
+          // do not alter the default browser behavior
+          // if one special key is down
+          return;
+        }
+
+        event.preventDefault();
+
+        _this.props.setCurrentPage(pageNumber);
+      });
+
       return _this;
     }
 
@@ -26793,18 +26172,6 @@
         });
       }
     }, {
-      key: "handleClick",
-      value: function handleClick(pageNumber, event) {
-        if (isSpecialClick(event)) {
-          // do not alter the default browser behavior
-          // if one special key is down
-          return;
-        }
-
-        event.preventDefault();
-        this.props.setCurrentPage(pageNumber);
-      }
-    }, {
       key: "render",
       value: function render() {
         return index.createElement("div", {
@@ -26824,7 +26191,7 @@
     nbPages: 0
   };
 
-  var withUsage$x = createDocumentationMessageGenerator({
+  var withUsage$y = createDocumentationMessageGenerator({
     name: 'pagination'
   });
   var suit$c = component('Pagination');
@@ -26972,7 +26339,7 @@
         userScrollTo = _ref3$scrollTo === void 0 ? 'body' : _ref3$scrollTo;
 
     if (!container) {
-      throw new Error(withUsage$x('The `container` option is required.'));
+      throw new Error(withUsage$y('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -27148,7 +26515,7 @@
     return RangeInput;
   }(Component$1);
 
-  var withUsage$y = createDocumentationMessageGenerator({
+  var withUsage$z = createDocumentationMessageGenerator({
     name: 'range-input'
   });
   var suit$d = component('RangeInput');
@@ -27268,7 +26635,7 @@
         userTemplates = _ref3$templates === void 0 ? {} : _ref3$templates;
 
     if (!container) {
-      throw new Error(withUsage$y('The `container` option is required.'));
+      throw new Error(withUsage$z('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -27329,7 +26696,7 @@
     loadingIndicator: "\n<svg class=\"{{cssClasses.loadingIcon}}\" width=\"16\" height=\"16\" viewBox=\"0 0 38 38\" xmlns=\"http://www.w3.org/2000/svg\" stroke=\"#444\">\n  <g fill=\"none\" fillRule=\"evenodd\">\n    <g transform=\"translate(1 1)\" strokeWidth=\"2\">\n      <circle strokeOpacity=\".5\" cx=\"18\" cy=\"18\" r=\"18\" />\n      <path d=\"M36 18c0-9.94-8.06-18-18-18\">\n        <animateTransform\n          attributeName=\"transform\"\n          type=\"rotate\"\n          from=\"0 18 18\"\n          to=\"360 18 18\"\n          dur=\"1s\"\n          repeatCount=\"indefinite\"\n        />\n      </path>\n    </g>\n  </g>\n</svg>\n  "
   };
 
-  var withUsage$z = createDocumentationMessageGenerator({
+  var withUsage$A = createDocumentationMessageGenerator({
     name: 'search-box'
   });
   var suit$e = component('SearchBox');
@@ -27364,7 +26731,7 @@
     };
   };
   /**
-   * @typedef {Ojbect} SearchBoxTemplates
+   * @typedef {Object} SearchBoxTemplates
    * @property {function|string} submit Template used for displaying the submit. Can accept a function or a Hogan string.
    * @property {function|string} reset Template used for displaying the button. Can accept a function or a Hogan string.
    * @property {function|string} loadingIndicator Template used for displaying the button. Can accept a function or a Hogan string.
@@ -27444,7 +26811,7 @@
         templates = _ref3.templates;
 
     if (!container) {
-      throw new Error(withUsage$z('The `container` option is required.'));
+      throw new Error(withUsage$A('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -28525,107 +27892,6 @@
 
   var Rheostat = unwrapExports(Slider);
 
-  /** Used as references for various `Number` constants. */
-  var MAX_SAFE_INTEGER$2 = 9007199254740991;
-
-  /** Used as references for the maximum length and index of an array. */
-  var MAX_ARRAY_LENGTH$1 = 4294967295;
-
-  /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeMin$3 = Math.min;
-
-  /**
-   * Invokes the iteratee `n` times, returning an array of the results of
-   * each invocation. The iteratee is invoked with one argument; (index).
-   *
-   * @static
-   * @since 0.1.0
-   * @memberOf _
-   * @category Util
-   * @param {number} n The number of times to invoke `iteratee`.
-   * @param {Function} [iteratee=_.identity] The function invoked per iteration.
-   * @returns {Array} Returns the array of results.
-   * @example
-   *
-   * _.times(3, String);
-   * // => ['0', '1', '2']
-   *
-   *  _.times(4, _.constant(0));
-   * // => [0, 0, 0, 0]
-   */
-  function times(n, iteratee) {
-    n = toInteger_1(n);
-    if (n < 1 || n > MAX_SAFE_INTEGER$2) {
-      return [];
-    }
-    var index = MAX_ARRAY_LENGTH$1,
-        length = nativeMin$3(n, MAX_ARRAY_LENGTH$1);
-
-    iteratee = _castFunction(iteratee);
-    n -= MAX_ARRAY_LENGTH$1;
-
-    var result = _baseTimes(length, iteratee);
-    while (++index < n) {
-      iteratee(index);
-    }
-    return result;
-  }
-
-  var times_1 = times;
-
-  /** Used for built-in method references. */
-  var objectProto$l = Object.prototype;
-
-  /** Used to check objects for own properties. */
-  var hasOwnProperty$i = objectProto$l.hasOwnProperty;
-
-  /**
-   * The base implementation of `_.has` without support for deep paths.
-   *
-   * @private
-   * @param {Object} [object] The object to query.
-   * @param {Array|string} key The key to check.
-   * @returns {boolean} Returns `true` if `key` exists, else `false`.
-   */
-  function baseHas(object, key) {
-    return object != null && hasOwnProperty$i.call(object, key);
-  }
-
-  var _baseHas = baseHas;
-
-  /**
-   * Checks if `path` is a direct property of `object`.
-   *
-   * @static
-   * @since 0.1.0
-   * @memberOf _
-   * @category Object
-   * @param {Object} object The object to query.
-   * @param {Array|string} path The path to check.
-   * @returns {boolean} Returns `true` if `path` exists, else `false`.
-   * @example
-   *
-   * var object = { 'a': { 'b': 2 } };
-   * var other = _.create({ 'a': _.create({ 'b': 2 }) });
-   *
-   * _.has(object, 'a');
-   * // => true
-   *
-   * _.has(object, 'a.b');
-   * // => true
-   *
-   * _.has(object, ['a', 'b']);
-   * // => true
-   *
-   * _.has(other, 'a');
-   * // => false
-   */
-  function has$3(object, path) {
-    return object != null && _hasPath(object, path, _baseHas);
-  }
-
-  var has_1 = has$3;
-
   var Pit = function Pit(_ref) {
     var style = _ref.style,
         children = _ref.children;
@@ -28635,7 +27901,7 @@
     // see: https://github.com/developit/preact-compat/issues/436
 
     var value = Array.isArray(children) ? children[0] : children;
-    var pitValue = Math.round(parseFloat(value) * 100) / 100;
+    var pitValue = Math.round(parseInt(value, 10) * 100) / 100;
     return index.createElement("div", {
       style: _objectSpread({}, style, {
         marginLeft: positionValue === 100 ? '-2px' : 0
@@ -28677,9 +27943,9 @@
       _defineProperty(_assertThisInitialized(_this), "createHandleComponent", function (tooltips) {
         return function (props) {
           // display only two decimals after comma,
-          // and apply `tooltips.format()` if any`
+          // and apply `tooltips.format()` if any
           var roundedValue = Math.round(parseFloat(props['aria-valuenow']) * 100) / 100;
-          var value = has_1(tooltips, 'format') ? tooltips.format(roundedValue) : roundedValue;
+          var value = tooltips && tooltips.format ? tooltips.format(roundedValue) : roundedValue;
           var className = classnames(props.className, {
             'rheostat-handle-lower': props['data-handle-key'] === 0,
             'rheostat-handle-upper': props['data-handle-key'] === 1
@@ -28704,7 +27970,9 @@
         var totalLength = max - min;
         var steps = 34;
         var stepsLength = totalLength / steps;
-        var pitPoints = [min].concat(_toConsumableArray(times_1(steps - 1, function (step) {
+        var pitPoints = [min].concat(_toConsumableArray(range({
+          end: steps - 1
+        }).map(function (step) {
           return min + stepsLength * (step + 1);
         })), [max]);
         return pitPoints;
@@ -28717,7 +27985,11 @@
             max = _ref3.max,
             step = _ref3.step;
         if (!step) return undefined;
-        return [].concat(_toConsumableArray(range_1(min, max, step)), [max]);
+        return [].concat(_toConsumableArray(range({
+          start: min,
+          end: max,
+          step: step
+        })), [max]);
       }
     }, {
       key: "render",
@@ -28770,7 +28042,7 @@
     return Slider;
   }(Component$1);
 
-  var withUsage$A = createDocumentationMessageGenerator({
+  var withUsage$B = createDocumentationMessageGenerator({
     name: 'range-slider'
   });
   var suit$f = component('RangeSlider');
@@ -28893,7 +28165,7 @@
         tooltips = _ref3$tooltips === void 0 ? true : _ref3$tooltips;
 
     if (!container) {
-      throw new Error(withUsage$A('The `container` option is required.'));
+      throw new Error(withUsage$B('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -28922,7 +28194,7 @@
     });
   }
 
-  var withUsage$B = createDocumentationMessageGenerator({
+  var withUsage$C = createDocumentationMessageGenerator({
     name: 'sort-by'
   });
   var suit$g = component('SortBy');
@@ -29003,7 +28275,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$B('The `container` option is required.'));
+      throw new Error(withUsage$C('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -29033,7 +28305,7 @@
     item: "{{#count}}<a class=\"{{cssClasses.link}}\" aria-label=\"{{value}} & up\" href=\"{{href}}\">{{/count}}{{^count}}<div class=\"{{cssClasses.link}}\" aria-label=\"{{value}} & up\" disabled>{{/count}}\n  {{#stars}}<svg class=\"{{cssClasses.starIcon}} {{#.}}{{cssClasses.fullStarIcon}}{{/.}}{{^.}}{{cssClasses.emptyStarIcon}}{{/.}}\" aria-hidden=\"true\" width=\"24\" height=\"24\">\n    {{#.}}<use xlink:href=\"#ais-RatingMenu-starSymbol\"></use>{{/.}}{{^.}}<use xlink:href=\"#ais-RatingMenu-starEmptySymbol\"></use>{{/.}}\n  </svg>{{/stars}}\n  <span class=\"{{cssClasses.label}}\">& Up</span>\n  {{#count}}<span class=\"{{cssClasses.count}}\">{{#helpers.formatNumber}}{{count}}{{/helpers.formatNumber}}</span>{{/count}}\n{{#count}}</a>{{/count}}{{^count}}</div>{{/count}}"
   };
 
-  var withUsage$C = createDocumentationMessageGenerator({
+  var withUsage$D = createDocumentationMessageGenerator({
     name: 'rating-menu'
   });
   var suit$h = component('RatingMenu');
@@ -29162,7 +28434,7 @@
         templates = _ref5$templates === void 0 ? defaultTemplates$a : _ref5$templates;
 
     if (!container) {
-      throw new Error(withUsage$C('The `container` option is required.'));
+      throw new Error(withUsage$D('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -29257,7 +28529,7 @@
     text: "{{#hasNoResults}}No results{{/hasNoResults}}\n    {{#hasOneResult}}1 result{{/hasOneResult}}\n    {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}} found in {{processingTimeMS}}ms"
   };
 
-  var withUsage$D = createDocumentationMessageGenerator({
+  var withUsage$E = createDocumentationMessageGenerator({
     name: 'stats'
   });
   var suit$i = component('Stats');
@@ -29357,7 +28629,7 @@
         templates = _ref3$templates === void 0 ? defaultTemplates$b : _ref3$templates;
 
     if (!container) {
-      throw new Error(withUsage$D('The `container` option is required.'));
+      throw new Error(withUsage$E('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -29409,7 +28681,7 @@
     labelText: '{{name}}'
   };
 
-  var withUsage$E = createDocumentationMessageGenerator({
+  var withUsage$F = createDocumentationMessageGenerator({
     name: 'toggle-refinement'
   });
   var suit$j = component('ToggleRefinement');
@@ -29521,7 +28793,7 @@
         off = _ref3.off;
 
     if (!container) {
-      throw new Error(withUsage$E('The `container` option is required.'));
+      throw new Error(withUsage$F('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -29553,63 +28825,9 @@
     });
   }
 
-  var withUsage$F = createDocumentationMessageGenerator({
+  var withUsage$G = createDocumentationMessageGenerator({
     name: 'analytics'
   });
-  /**
-   * @typedef {Object} AnalyticsWidgetOptions
-   * @property {function(qs: string, state: SearchParameters, results: SearchResults)} pushFunction
-   * Function called when data are ready to be pushed. It should push the data to your analytics platform.
-   * The `qs` parameter contains the parameters serialized as a query string. The `state` contains the
-   * whole search state, and the `results` the last results received.
-   * @property {number} [delay=3000] Number of milliseconds between last search key stroke and calling pushFunction.
-   * @property {boolean} [triggerOnUIInteraction=false] Trigger pushFunction after click on page or redirecting the page
-   * @property {boolean} [pushInitialSearch=true] Trigger pushFunction after the initial search
-   * @property {boolean} [pushPagination=false] Trigger pushFunction on pagination
-   */
-
-  /**
-   * The analytics widget pushes the current state of the search to the analytics platform of your
-   * choice. It requires the implementation of a function that will push the data.
-   *
-   * This is a headless widget, which means that it does not have a rendered output in the
-   * UI.
-   * @type {WidgetFactory}
-   * @devNovel Analytics
-   * @category analytics
-   * @param {AnalyticsWidgetOptions} $0 The Analytics widget options.
-   * @return {Widget} A new instance of the Analytics widget.
-   * @example
-   * search.addWidget(
-   *   instantsearch.widgets.analytics({
-   *     pushFunction: function(formattedParameters, state, results) {
-   *       // Google Analytics
-   *       // window.ga('set', 'page', window.location.pathname + window.location.search);
-   *       // window.ga('send', 'pageView');
-   *
-   *       // GTM
-   *       // dataLayer.push({'event': 'search', 'Search Query': state.query, 'Facet Parameters': formattedParameters, 'Number of Hits': results.nbHits});
-   *
-   *       // Segment.io
-   *       // analytics.page( '[SEGMENT] instantsearch', { path: '/instantsearch/?query=' + state.query + '&' + formattedParameters });
-   *
-   *       // Kissmetrics
-   *       // var objParams = JSON.parse('{"' + decodeURI(formattedParameters.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}');
-   *       // var arrParams = $.map(objParams, function(value, index) {
-   *       //   return [value];
-   *       // });
-   *       //
-   *       // _kmq.push(['record', '[KM] Viewed Result page', {
-   *       //   'Query': state.query ,
-   *       //   'Number of Hits': results.nbHits,
-   *       //   'Search Params': arrParams
-   *       // }]);
-   *
-   *       // any other analytics service
-   *     }
-   *   })
-   * );
-   */
 
   function analytics() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -29624,41 +28842,41 @@
         pushPagination = _ref$pushPagination === void 0 ? false : _ref$pushPagination;
 
     if (!pushFunction) {
-      throw new Error(withUsage$F('The `pushFunction` option is required.'));
+      throw new Error(withUsage$G('The `pushFunction` option is required.'));
     }
 
     var cachedState = null;
 
-    var serializeRefinements = function serializeRefinements(obj) {
-      var str = [];
+    var serializeRefinements = function serializeRefinements(parameters) {
+      var refinements = [];
 
-      for (var p in obj) {
-        if (obj.hasOwnProperty(p)) {
-          var values = obj[p].join('+');
-          str.push("".concat(encodeURIComponent(p), "=").concat(encodeURIComponent(p), "_").concat(encodeURIComponent(values)));
+      for (var parameter in parameters) {
+        if (parameters.hasOwnProperty(parameter)) {
+          var values = parameters[parameter].join('+');
+          refinements.push("".concat(encodeURIComponent(parameter), "=").concat(encodeURIComponent(parameter), "_").concat(encodeURIComponent(values)));
         }
       }
 
-      return str.join('&');
+      return refinements.join('&');
     };
 
     var serializeNumericRefinements = function serializeNumericRefinements(numericRefinements) {
-      var numericStr = [];
+      var refinements = [];
 
-      for (var attr in numericRefinements) {
-        if (numericRefinements.hasOwnProperty(attr)) {
-          var filter = numericRefinements[attr];
+      for (var attribute in numericRefinements) {
+        if (numericRefinements.hasOwnProperty(attribute)) {
+          var filter = numericRefinements[attribute];
 
           if (filter.hasOwnProperty('>=') && filter.hasOwnProperty('<=')) {
-            if (filter['>='][0] === filter['<='][0]) {
-              numericStr.push("".concat(attr, "=").concat(attr, "_").concat(filter['>=']));
+            if (filter['>='] && filter['>='][0] === filter['<='] && filter['<='][0]) {
+              refinements.push("".concat(attribute, "=").concat(attribute, "_").concat(filter['>=']));
             } else {
-              numericStr.push("".concat(attr, "=").concat(attr, "_").concat(filter['>='], "to").concat(filter['<=']));
+              refinements.push("".concat(attribute, "=").concat(attribute, "_").concat(filter['>='], "to").concat(filter['<=']));
             }
           } else if (filter.hasOwnProperty('>=')) {
-            numericStr.push("".concat(attr, "=").concat(attr, "_from").concat(filter['>=']));
+            refinements.push("".concat(attribute, "=").concat(attribute, "_from").concat(filter['>=']));
           } else if (filter.hasOwnProperty('<=')) {
-            numericStr.push("".concat(attr, "=").concat(attr, "_to").concat(filter['<=']));
+            refinements.push("".concat(attribute, "=").concat(attribute, "_to").concat(filter['<=']));
           } else if (filter.hasOwnProperty('=')) {
             var equals = [];
 
@@ -29669,42 +28887,42 @@
               }
             }
 
-            numericStr.push("".concat(attr, "=").concat(attr, "_").concat(equals.join('-')));
+            refinements.push("".concat(attribute, "=").concat(attribute, "_").concat(equals.join('-')));
           }
         }
       }
 
-      return numericStr.join('&');
+      return refinements.join('&');
     };
 
     var lastSentData = '';
 
-    var sendAnalytics = function sendAnalytics(state) {
-      if (state === null) {
+    var sendAnalytics = function sendAnalytics(analyticsState) {
+      if (analyticsState === null) {
         return;
       }
 
-      var formattedParams = [];
-      var serializedRefinements = serializeRefinements(_objectSpread({}, state.state.disjunctiveFacetsRefinements, state.state.facetsRefinements, state.state.hierarchicalFacetsRefinements));
-      var serializedNumericRefinements = serializeNumericRefinements(state.state.numericRefinements);
+      var serializedParams = [];
+      var serializedRefinements = serializeRefinements(_objectSpread({}, analyticsState.state.disjunctiveFacetsRefinements, analyticsState.state.facetsRefinements, analyticsState.state.hierarchicalFacetsRefinements));
+      var serializedNumericRefinements = serializeNumericRefinements(analyticsState.state.numericRefinements);
 
       if (serializedRefinements !== '') {
-        formattedParams.push(serializedRefinements);
+        serializedParams.push(serializedRefinements);
       }
 
       if (serializedNumericRefinements !== '') {
-        formattedParams.push(serializedNumericRefinements);
+        serializedParams.push(serializedNumericRefinements);
       }
 
-      formattedParams = formattedParams.join('&');
-      var dataToSend = "Query: ".concat(state.state.query, ", ").concat(formattedParams);
+      var stringifiedParams = serializedParams.join('&');
+      var dataToSend = "Query: ".concat(analyticsState.state.query, ", ").concat(stringifiedParams);
 
       if (pushPagination === true) {
-        dataToSend += ", Page: ".concat(state.state.page);
+        dataToSend += ", Page: ".concat(analyticsState.state.page);
       }
 
       if (lastSentData !== dataToSend) {
-        pushFunction(formattedParams, state.state, state.results);
+        pushFunction(stringifiedParams, analyticsState.state, analyticsState.results);
         lastSentData = dataToSend;
       }
     };
@@ -29716,15 +28934,19 @@
       isInitialSearch = false;
     }
 
+    var onClick = function onClick() {
+      sendAnalytics(cachedState);
+    };
+
+    var onUnload = function onUnload() {
+      sendAnalytics(cachedState);
+    };
+
     return {
       init: function init() {
         if (triggerOnUIInteraction === true) {
-          document.addEventListener('click', function () {
-            sendAnalytics(cachedState);
-          });
-          window.addEventListener('beforeunload', function () {
-            sendAnalytics(cachedState);
-          });
+          document.addEventListener('click', onClick);
+          window.addEventListener('beforeunload', onUnload);
         }
       },
       render: function render(_ref2) {
@@ -29745,9 +28967,15 @@
           clearTimeout(pushTimeout);
         }
 
-        pushTimeout = setTimeout(function () {
+        pushTimeout = window.setTimeout(function () {
           return sendAnalytics(cachedState);
         }, delay);
+      },
+      dispose: function dispose() {
+        if (triggerOnUIInteraction === true) {
+          document.removeEventListener('click', onClick);
+          window.removeEventListener('beforeunload', onUnload);
+        }
       }
     };
   }
@@ -29817,7 +29045,7 @@
     separator: '>'
   };
 
-  var withUsage$G = createDocumentationMessageGenerator({
+  var withUsage$H = createDocumentationMessageGenerator({
     name: 'breadcrumb'
   });
   var suit$k = component('Breadcrumb');
@@ -29950,7 +29178,7 @@
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
 
     if (!container) {
-      throw new Error(withUsage$G('The `container` option is required.'));
+      throw new Error(withUsage$H('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -30028,7 +29256,7 @@
             templateProps = _this$props.templateProps,
             items = _this$props.items;
 
-        var _ref2 = items.find(function (item) {
+        var _ref2 = find$1(items, function (item) {
           return item.isRefined;
         }) || {
           value: ''
@@ -30072,7 +29300,7 @@
     defaultOption: 'See all'
   };
 
-  var withUsage$H = createDocumentationMessageGenerator({
+  var withUsage$I = createDocumentationMessageGenerator({
     name: 'menu-select'
   });
   var suit$l = component('MenuSelect');
@@ -30165,7 +29393,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$H('The `container` option is required.'));
+      throw new Error(withUsage$I('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -30241,7 +29469,7 @@
   };
 
   var suit$m = component('PoweredBy');
-  var withUsage$I = createDocumentationMessageGenerator({
+  var withUsage$J = createDocumentationMessageGenerator({
     name: 'powered-by'
   });
 
@@ -30303,7 +29531,7 @@
         theme = _ref3$theme === void 0 ? 'light' : _ref3$theme;
 
     if (!container) {
-      throw new Error(withUsage$I('The `container` option is required.'));
+      throw new Error(withUsage$J('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -30430,7 +29658,7 @@
     return Panel;
   }(Component$1);
 
-  var withUsage$J = createDocumentationMessageGenerator({
+  var withUsage$K = createDocumentationMessageGenerator({
     name: 'panel'
   });
   var suit$n = component('Panel');
@@ -30558,7 +29786,7 @@
         var container = widgetOptions.container;
 
         if (!container) {
-          throw new Error(withUsage$J("The `container` option is required in the widget within the panel."));
+          throw new Error(withUsage$K("The `container` option is required in the widget within the panel."));
         }
 
         var defaultTemplates = {
@@ -30599,8 +29827,10 @@
                 args[_key] = arguments[_key];
               }
 
-              (_widget$dispose = widget.dispose).call.apply(_widget$dispose, [this].concat(args));
+              return (_widget$dispose = widget.dispose).call.apply(_widget$dispose, [this].concat(args));
             }
+
+            return undefined;
           },
           render: function render() {
             for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
@@ -30626,6 +29856,136 @@
     };
   }
 
+  var VoiceSearch = function VoiceSearch(_ref) {
+    var cssClasses = _ref.cssClasses,
+        isBrowserSupported = _ref.isBrowserSupported,
+        isListening = _ref.isListening,
+        toggleListening = _ref.toggleListening,
+        voiceListeningState = _ref.voiceListeningState,
+        templates = _ref.templates;
+
+    var handleClick = function handleClick(event) {
+      event.currentTarget.blur();
+      toggleListening();
+    };
+
+    var status = voiceListeningState.status,
+        transcript = voiceListeningState.transcript,
+        isSpeechFinal = voiceListeningState.isSpeechFinal,
+        errorCode = voiceListeningState.errorCode;
+    return index.createElement("div", {
+      className: cssClasses.root
+    }, index.createElement(Template, {
+      templateKey: "buttonText",
+      rootTagName: "button",
+      rootProps: {
+        className: cssClasses.button,
+        type: 'button',
+        title: "Search by voice".concat(isBrowserSupported ? '' : ' (not supported on this browser)'),
+        onClick: handleClick,
+        disabled: !isBrowserSupported
+      },
+      data: {
+        status: status,
+        errorCode: errorCode,
+        isListening: isListening,
+        transcript: transcript,
+        isSpeechFinal: isSpeechFinal,
+        isBrowserSupported: isBrowserSupported
+      },
+      templates: templates
+    }), index.createElement(Template, {
+      templateKey: "status",
+      rootProps: {
+        className: cssClasses.status
+      },
+      data: {
+        status: status,
+        errorCode: errorCode,
+        isListening: isListening,
+        transcript: transcript,
+        isSpeechFinal: isSpeechFinal,
+        isBrowserSupported: isBrowserSupported
+      },
+      templates: templates
+    }));
+  };
+
+  var getButtonInnerElement = function getButtonInnerElement(status, errorCode, isListening) {
+    if (status === 'error' && errorCode === 'not-allowed') {
+      return "<line x1=\"1\" y1=\"1\" x2=\"23\" y2=\"23\"></line>\n            <path d=\"M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6\"></path>\n            <path d=\"M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23\"></path>\n            <line x1=\"12\" y1=\"19\" x2=\"12\" y2=\"23\"></line>\n            <line x1=\"8\" y1=\"23\" x2=\"16\" y2=\"23\"></line>";
+    }
+
+    return "<path\n            d=\"M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z\"\n            fill=\"".concat(isListening ? 'currentColor' : 'none', "\">\n          </path>\n          <path d=\"M19 10v2a7 7 0 0 1-14 0v-2\"></path>\n          <line x1=\"12\" y1=\"19\" x2=\"12\" y2=\"23\"></line>\n          <line x1=\"8\" y1=\"23\" x2=\"16\" y2=\"23\"></line>");
+  };
+
+  var defaultTemplates$f = {
+    buttonText: function buttonText(_ref) {
+      var status = _ref.status,
+          errorCode = _ref.errorCode,
+          isListening = _ref.isListening;
+      return "<svg\n       xmlns=\"http://www.w3.org/2000/svg\"\n       width=\"16\"\n       height=\"16\"\n       viewBox=\"0 0 24 24\"\n       fill=\"none\"\n       stroke=\"currentColor\"\n       stroke-width=\"2\"\n       stroke-linecap=\"round\"\n       stroke-linejoin=\"round\"\n     >\n       ".concat(getButtonInnerElement(status, errorCode, isListening), "\n     </svg>");
+    },
+    status: "<p>{{transcript}}</p>"
+  };
+
+  var withUsage$L = createDocumentationMessageGenerator({
+    name: 'voice-search'
+  });
+  var suit$o = component('VoiceSearch');
+
+  var renderer$m = function renderer(_ref) {
+    var isBrowserSupported = _ref.isBrowserSupported,
+        isListening = _ref.isListening,
+        toggleListening = _ref.toggleListening,
+        voiceListeningState = _ref.voiceListeningState,
+        widgetParams = _ref.widgetParams;
+    var container = widgetParams.container,
+        cssClasses = widgetParams.cssClasses,
+        templates = widgetParams.templates;
+    render$1(index.createElement(VoiceSearch, {
+      cssClasses: cssClasses,
+      templates: templates,
+      isBrowserSupported: isBrowserSupported,
+      isListening: isListening,
+      toggleListening: toggleListening,
+      voiceListeningState: voiceListeningState
+    }), container);
+  };
+
+  var voiceSearch = function voiceSearch() {
+    var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        container = _ref2.container,
+        _ref2$cssClasses = _ref2.cssClasses,
+        userCssClasses = _ref2$cssClasses === void 0 ? {} : _ref2$cssClasses,
+        templates = _ref2.templates,
+        searchAsYouSpeak = _ref2.searchAsYouSpeak;
+
+    if (!container) {
+      throw new Error(withUsage$L('The `container` option is required.'));
+    }
+
+    var containerNode = getContainerNode(container);
+    var cssClasses = {
+      root: classnames(suit$o(), userCssClasses.root),
+      button: classnames(suit$o({
+        descendantName: 'button'
+      }), userCssClasses.button),
+      status: classnames(suit$o({
+        descendantName: 'status'
+      }), userCssClasses.status)
+    };
+    var makeWidget = connectVoiceSearch(renderer$m, function () {
+      return unmountComponentAtNode(containerNode);
+    });
+    return makeWidget({
+      container: containerNode,
+      cssClasses: cssClasses,
+      templates: _objectSpread({}, defaultTemplates$f, templates),
+      searchAsYouSpeak: searchAsYouSpeak
+    });
+  };
+
   var QueryRuleCustomData = function QueryRuleCustomData(_ref) {
     var cssClasses = _ref.cssClasses,
         templates = _ref.templates,
@@ -30642,12 +30002,12 @@
     });
   };
 
-  var withUsage$K = createDocumentationMessageGenerator({
+  var withUsage$M = createDocumentationMessageGenerator({
     name: 'query-rule-custom-data'
   });
-  var suit$o = component('QueryRuleCustomData');
+  var suit$p = component('QueryRuleCustomData');
 
-  var renderer$m = function renderer(_ref) {
+  var renderer$n = function renderer(_ref) {
     var items = _ref.items,
         widgetParams = _ref.widgetParams;
     var container = widgetParams.container,
@@ -30673,11 +30033,11 @@
     } : _ref2$transformItems;
 
     if (!container) {
-      throw new Error(withUsage$K('The `container` option is required.'));
+      throw new Error(withUsage$M('The `container` option is required.'));
     }
 
     var cssClasses = {
-      root: classnames(suit$o(), userCssClasses.root)
+      root: classnames(suit$p(), userCssClasses.root)
     };
     var defaultTemplates = {
       default: function _default(_ref3) {
@@ -30689,7 +30049,7 @@
     var templates = _objectSpread({}, defaultTemplates, userTemplates);
 
     var containerNode = getContainerNode(container);
-    var makeQueryRuleCustomData = connectQueryRules(renderer$m, function () {
+    var makeQueryRuleCustomData = connectQueryRules(renderer$n, function () {
       unmountComponentAtNode(containerNode);
     });
     return makeQueryRuleCustomData({
@@ -30700,7 +30060,7 @@
     });
   };
 
-  var withUsage$L = createDocumentationMessageGenerator({
+  var withUsage$N = createDocumentationMessageGenerator({
     name: 'query-rule-context'
   });
 
@@ -30710,10 +30070,10 @@
         transformRuleContexts = _ref.transformRuleContexts;
 
     if (!trackedFilters) {
-      throw new Error(withUsage$L('The `trackedFilters` option is required.'));
+      throw new Error(withUsage$N('The `trackedFilters` option is required.'));
     }
 
-    return connectQueryRules(noop_1)({
+    return connectQueryRules(noop$1)({
       trackedFilters: trackedFilters,
       transformRuleContexts: transformRuleContexts
     });
@@ -30746,6 +30106,7 @@
     menuSelect: menuSelect,
     poweredBy: poweredBy,
     panel: panel,
+    voiceSearch: voiceSearch,
     queryRuleCustomData: queryRuleCustomData,
     queryRuleContext: queryRuleContext
   });
