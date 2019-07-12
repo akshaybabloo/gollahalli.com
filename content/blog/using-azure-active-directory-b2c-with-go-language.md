@@ -26,11 +26,17 @@ sitemap:
 
 In this blog lets look at using Azure Active Directory Business-2-Client with Google's very own Go language. This does not keep security in mind but rather shows what we can do with these techniques. Let's start of with some basics, you can skip this part if you are familiar with it.
 
-## Difference between Authentication and Authorization
+## Authentication vs Authorization
+
+**Authentication:** 
+
+**Authorization:**
 
 ## Introduction to Oauth 2
 
 ### Why not use SAML
 
 ## Introduction to OpenID Connect
+
+## Let's Get Started
 
