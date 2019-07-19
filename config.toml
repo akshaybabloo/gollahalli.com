@@ -26,7 +26,7 @@ enableRobotsTXT = true
   section = ["HTML", "RSS", "AMP"]
 
 [params]
-    googleAds = "ca-pub-7450383714878520" # Optional
+    googleAds = "7450383714878520" # Optional, ignore "ca-pub-"
     amp = true
     year = 2019
     github = "https://github.com/akshaybabloo" # Optional
