@@ -13,6 +13,10 @@ enableRobotsTXT = true
     mediaType= "application/json"
     baseName= "searchindex"
     isPlainText= true
+  [outputFormats.ads]
+    mediaType= "text/plain"
+    baseName= "ads"
+    isPlainText= true
 #  [outputFormats.AMP]
 #    permalinkable = false
 
@@ -21,7 +25,7 @@ enableRobotsTXT = true
 
 
 [outputs]
-  home = ["HTML", "RSS", "AMP", "searchindex"]
+  home = ["HTML", "RSS", "AMP", "searchindex", "ads"]
   page = ["HTML", "RSS", "AMP"]
   section = ["HTML", "RSS", "AMP"]
 
