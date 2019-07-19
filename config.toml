@@ -13,6 +13,10 @@ enableRobotsTXT = true
     mediaType= "application/json"
     baseName= "searchindex"
     isPlainText= true
+  [outputFormats.ads]
+    mediaType= "text/plain"
+    baseName= "ads"
+    isPlainText= true
 #  [outputFormats.AMP]
 #    permalinkable = false
 
@@ -21,12 +25,12 @@ enableRobotsTXT = true
 
 
 [outputs]
-  home = ["HTML", "RSS", "AMP", "searchindex"]
+  home = ["HTML", "RSS", "AMP", "searchindex", "ads"]
   page = ["HTML", "RSS", "AMP"]
   section = ["HTML", "RSS", "AMP"]
 
 [params]
-    googleAds = "ca-pub-7450383714878520" # Optional
+    googleAds = "7450383714878520" # Optional, ignore "ca-pub-"
     amp = true
     year = 2019
     github = "https://github.com/akshaybabloo" # Optional
