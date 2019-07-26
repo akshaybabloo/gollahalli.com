@@ -10,10 +10,10 @@
                         {{ if (isset .Params "externalurl") }}
                             <div>
                                 <div class="uk-card uk-card-default uk-card-body">
-                                    <h3 class="uk-card-title uk-h5"><a href="{{ .Params.externalurl }}">{{ .Title }}
-                                            <img class="uk-icon" width="12"
-                                                 src="{{ `/img/external-link.svg` | relURL }}"
-                                                 uk-svg></a></h3>
+                                    <h3 class="uk-card-title uk-h5"><a href="{{ .Params.externalurl }}">{{ .Title }}</a>
+                                        <img class="uk-icon" width="12"
+                                             src="{{ `/img/external-link.svg` | relURL }}"
+                                             uk-svg></h3>
                                     <p class="uk-text-meta">{{ .Params.description }}</p>
                                 </div>
                             </div>
