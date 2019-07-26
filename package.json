@@ -15,7 +15,7 @@
     "uikit": "^3.1.6"
   },
   "dependencies": {
-    "material-components-web": "^3.0.0",
+    "material-components-web": "^3.1.0",
     "normalize.css": "^8.0.1"
   }
 }
