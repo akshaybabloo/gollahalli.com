@@ -4,7 +4,7 @@
 
 Contents for [gollahalli.com](https://www.gollahalli.com).
 
-Based on Hugo 0.51+
+Based on Hugo 0.56+
 
 ## 1. Run the Website
 
