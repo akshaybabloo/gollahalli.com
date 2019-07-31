@@ -5,8 +5,14 @@ import tempfile
 from pathlib import Path
 
 import requests
+import yaml
 
-hugo_version = "0.56.2"
+with open('azure-pipeline.yml') as f:
+    try:
+        hugo_version = yaml.safe_load(f)['variables']['HUGO_VERSION']
+    except yaml.YAMLError as exc:
+        print(exc)
+
 location = os.path.join(str(Path.home()), 'bin')
 os_type = platform.system()
 
