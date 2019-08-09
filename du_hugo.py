@@ -22,7 +22,7 @@ location = os.path.join(str(Path.home()), 'bin')
 os_type = platform.system()
 
 download_url_mac = f"https://github.com/gohugoio/hugo/releases/download/v{hugo_version}/hugo_extended_{hugo_version}_macOS-64bit.tar.gz"
-download_url_windows = f"https://github.com/gohugoio/hugo/releases/download/v{hugo_version}/hugo_{hugo_version}_Windows-64bit.zip"
+download_url_windows = f"https://github.com/gohugoio/hugo/releases/download/v{hugo_version}/hugo_extended_{hugo_version}_Windows-64bit.zip"
 
 temp_folder = tempfile.gettempdir()
 filepath = os.path.join(temp_folder, f"hugo_{hugo_version}")
