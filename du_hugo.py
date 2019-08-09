@@ -2,6 +2,7 @@ import os
 import platform
 import tarfile
 import tempfile
+import zipfile
 from pathlib import Path
 
 import requests
@@ -52,8 +53,12 @@ def extract_file_and_move():
     Extract the ``hugo`` file to the temp folder
     """
     print("Extracting and moving file to: ", location)
-    with tarfile.open(filepath, "r:gz") as f:
-        f.extract("hugo", location)
+    if os_type == 'Darwin':
+        with tarfile.open(filepath, "r:gz") as f:
+            f.extract("hugo", location)
+    elif os_type == 'Windows':
+        with zipfile.ZipFile(filepath, "r") as f:
+            f.extract("hugo.exe", location)
 
 
 if __name__ == '__main__':
