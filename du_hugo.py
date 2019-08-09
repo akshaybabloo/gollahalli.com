@@ -5,13 +5,18 @@ import tempfile
 from pathlib import Path
 
 import requests
+import sys
 import yaml
 
-with open('azure-pipeline.yml') as f:
-    try:
-        hugo_version = yaml.safe_load(f)['variables']['HUGO_VERSION']
-    except yaml.YAMLError as exc:
-        print(exc)
+try:
+    with open('azure-pipeline.yml') as f:
+        try:
+            hugo_version = yaml.safe_load(f)['variables']['HUGO_VERSION']
+        except yaml.YAMLError as exc:
+            print(exc)
+            sys.exit(1)
+except FileNotFoundError:
+    sys.exit(1)
 
 location = os.path.join(str(Path.home()), 'bin')
 os_type = platform.system()
