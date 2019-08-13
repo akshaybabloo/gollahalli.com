@@ -1,12 +1,13 @@
 ---
-title: "Types of Cross Validation"
-date: 2019-04-23T12:16:14+12:00
+title: "Introduction to Ios Essentials"
+date: 2019-07-30T20:04:58+12:00
 draft: true
-categories: ["Tutorial"]
-tags: ["Machine Learning"]
+categories: []
+tags: []
 description: ""
 images: []
 ads: true
+# htmlScripts: []
 author:
   prefix: "Mr."
   firstName: "Akshay Raj"

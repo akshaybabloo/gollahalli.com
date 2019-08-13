@@ -4,7 +4,7 @@ date: 2019-07-19T17:09:20+12:00
 draft: false
 categories: ["CLI"]
 tags: [".Net Core", "CLI", "Python"]
-description: "There is no official way to remove previous versions of .Net Core SDKs, this tool can help you with that."
+description: "There is no official way to remove previous versions of .Net Core SDKs in POSIX systems, this tool can help you with that."
 images: ["/img/blog/dotnetcore.jpg"]
 ads: true
 # htmlScripts: []

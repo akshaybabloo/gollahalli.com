@@ -12,8 +12,8 @@
   "devDependencies": {
     "algoliasearch": "^3.33.0",
     "gulp": "^4.0.2",
-    "instantsearch.js": "^3.5.4",
-    "uikit": "^3.1.6"
+    "instantsearch.js": "^3.6.0",
+    "uikit": "^3.1.7"
   },
   "dependencies": {
     "material-components-web": "^3.1.0",
