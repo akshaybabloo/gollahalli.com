@@ -2,8 +2,8 @@
 title: "Types of Cross Validation"
 date: 2019-04-23T12:16:14+12:00
 draft: true
-categories: ["Machine Learning"]
-tags: []
+categories: ["Tutorial"]
+tags: ["Machine Learning"]
 description: ""
 images: []
 ads: true
