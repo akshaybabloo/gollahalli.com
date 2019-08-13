@@ -25,7 +25,8 @@
             "sameAs": [
                 {{ .Site.Params.twitter | jsonify | safeJS }},
                 {{ .Site.Params.github | jsonify | safeJS }},
-                {{ .Site.Params.linkedin | jsonify | safeJS }}
+                {{ .Site.Params.linkedin | jsonify | safeJS }},
+                {{ .Site.BaseURL | jsonify | safeJS }}
             ]
         },
         "headline": "{{ .Title }}",
