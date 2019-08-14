@@ -3,9 +3,9 @@
         <div class="uk-grid-small uk-flex-middle" uk-grid>
             <div class="uk-width-expand">
                 <h3 class="uk-card-title uk-margin-remove-bottom">{{ if (isset .Params "externalurl") }}
-                        <a href="{{ .Params.externalurl }}" onclick="ga('send', 'event', 'Project', 'click', '{{ .Title }}'>{{ .Title }}</a> <img class="uk-icon" width="12"
+                        <a href="{{ .Params.externalurl }}" onclick="ga('send', 'event', 'Project', 'click', '{{ .Title }}')">{{ .Title }}</a> <img class="uk-icon" width="12"
                                                                                   src="{{ `/img/external-link.svg` | relURL }}"
-                                                                                  uk-svg>{{else}}{{ .Title }}{{end}}
+                                                                                  uk-svg alt="New window icon">{{else}}{{ .Title }}{{end}}
                 </h3>
             </div>
         </div>
