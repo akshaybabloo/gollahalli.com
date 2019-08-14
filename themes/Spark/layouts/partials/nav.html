@@ -11,7 +11,7 @@
                         </a>
                     </li>
                     {{ range .Site.Menus.main }}
-                    <li><a href="{{ .URL }}" class="uk-link-text">{{ .Name }}</a></li>
+                        <li><a href="{{ .URL }}" class="uk-link-text">{{ .Name }}</a></li>
                     {{ end }}
                 </ul>
 
@@ -23,13 +23,16 @@
                         <div class="uk-search uk-search-navbar uk-width-1-1">
                             <div class="uk-search-input" id="searchBox"></div>
                             <div uk-dropdown="mode: click">
-                                <div id="hits"></div> <br/>
-                                <img class="uk-margin-remove uk-align-right uk-preserve" height="15" src="{{`img/algolia-powered-by-8762ce8b.svg` | relURL}}" uk-svg alt="Algolia logo">
+                                <div id="hits"></div>
+                                <br/>
+                                <img class="uk-margin-remove uk-align-right uk-preserve" height="15"
+                                     src="{{`img/algolia-powered-by-8762ce8b.svg` | relURL}}" uk-svg alt="Algolia logo">
                             </div>
                         </div>
                     </div>
                 </div>
-                <a class="uk-navbar-toggle uk-link-text uk-hidden@m" href="#offcanvas" uk-navbar-toggle-icon uk-toggle></a>
+                <a class="uk-navbar-toggle uk-link-text uk-hidden@m" href="#offcanvas" uk-navbar-toggle-icon
+                   uk-toggle></a>
             </div>
 
         </div>
@@ -49,7 +52,7 @@
                 </a>
             </li>
             {{ range .Site.Menus.main }}
-            <li><a href="{{ .URL }}" class="uk-link-text">{{ .Name }}</a></li>
+                <li><a href="{{ .URL }}" class="uk-link-text">{{ .Name }}</a></li>
             {{ end }}
         </ul>
 
