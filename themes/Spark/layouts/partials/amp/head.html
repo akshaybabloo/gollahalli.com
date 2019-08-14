@@ -7,7 +7,7 @@
 
 <meta name="description"
       content="{{ .Description }}"/>
-<link rel="shortcut icon" href="/favicon.png" type="image/png"/>
+<link rel="shortcut icon" href="{{`img/favicon-144-precomposed.png` | relURL}}" type="image/png"/>
 {{ with .OutputFormats.Get "html" }}
     <link rel="canonical" href="{{ .Permalink }}"/>
 {{ end }}
