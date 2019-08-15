@@ -18,7 +18,7 @@ try:
             print(exc)
             sys.exit(1)
 except FileNotFoundError:
-    sys.exit(1)
+    raise
 
 location = os.path.join(str(Path.home()), 'bin')
 os_type = platform.system()
@@ -80,6 +80,7 @@ def confirm_update():
         sys.exit(1)
 
     print("Updated.")
+
 
 if __name__ == '__main__':
     download()
