@@ -72,7 +72,6 @@ def confirm_update():
     try:
         new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
         new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
-        print(".Net Version found: {}".format(new_hugo_version))
     except FileNotFoundError as e:
         raise
 
