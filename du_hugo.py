@@ -1,12 +1,13 @@
 import os
 import platform
+import subprocess
+import sys
 import tarfile
 import tempfile
 import zipfile
 from pathlib import Path
 
 import requests
-import sys
 import yaml
 
 try:
@@ -61,6 +62,27 @@ def extract_file_and_move():
             f.extract("hugo.exe", location)
 
 
+def confirm_update():
+    """
+    Checks if Hugo is updated or not.
+    """
+
+    print("Confirming upgrade")
+
+    try:
+        new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
+        new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
+        print(".Net Version found: {}".format(new_hugo_version))
+    except FileNotFoundError as e:
+        raise
+
+    if not 'v' + hugo_version == new_hugo_version:
+        print("Hugo was not updated correctly")
+        sys.exit(1)
+
+    print("Updated.")
+
 if __name__ == '__main__':
     download()
     extract_file_and_move()
+    confirm_update()
