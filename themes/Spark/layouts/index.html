@@ -39,18 +39,22 @@
         <p>
             {{ if .Site.Params.github }}
                 <a href="{{ .Site.Params.github }}" class="uk-margin-small-right"
+                   onclick="ga('send', 'event', 'Social', 'click', 'Github')"
                    uk-icon="icon: github; ratio: 1.5"></a>
             {{end}}
             {{ if .Site.Params.linkedin }}
                 <a href="{{ .Site.Params.linkedin }}" class="uk-margin-small-right"
+                   onclick="ga('send', 'event', 'Menu', 'click', 'LinkedIn')"
                    uk-icon="icon: linkedin; ratio: 1.5"></a>
             {{end}}
             {{ if .Site.Params.twitter }}
                 <a href="{{ .Site.Params.twitter }}" class="uk-margin-small-right"
+                   onclick="ga('send', 'event', 'Menu', 'click', 'Twitter')"
                    uk-icon="icon: twitter; ratio: 1.5"></a>
             {{end}}
             {{ if .Site.Params.email }}
                 <a href="mailto:{{ .Site.Params.email }}" class="uk-margin-small-right"
+                   onclick="ga('send', 'event', 'Menu', 'click', 'Email')"
                    uk-icon="icon: mail; ratio: 1.5"></a>
             {{end}}
         </p>
@@ -84,7 +88,8 @@
 
         <ul class="uk-nav uk-nav-default">
             {{ range .Site.Menus.main }}
-                <li><a onclick="ga('send', 'event', 'OffcanvasMenu', 'click', '{{ .Name }}')" href="{{ .URL }}">{{ .Name }}</a></li>
+                <li><a onclick="ga('send', 'event', 'OffcanvasMenu', 'click', '{{ .Name }}')"
+                       href="{{ .URL }}">{{ .Name }}</a></li>
             {{ end }}
             <li><a class="uk-navbar-toggle" href="#modal-full" uk-search-icon uk-toggle></a></li>
         </ul>
