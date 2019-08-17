@@ -69,17 +69,24 @@ def confirm_update():
 
     print("Confirming upgrade")
 
-    try:
-        new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
-        new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
-    except FileNotFoundError as e:
-        raise
+    if os_type == 'Darwin':
+        try:
+            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
+            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0].split("-")[0]
+        except FileNotFoundError as e:
+            raise
+    elif os_type == 'Windows':
+        try:
+            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
+            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
+        except FileNotFoundError as e:
+            raise
 
     if not 'v' + hugo_version == new_hugo_version:
         print("Hugo was not updated correctly")
         sys.exit(1)
 
-    print("Updated.")
+    print("Updated")
 
 
 if __name__ == '__main__':
