@@ -16,7 +16,7 @@ try:
             hugo_version = yaml.safe_load(f)['variables']['HUGO_VERSION']
         except yaml.YAMLError as exc:
             print(exc)
-            sys.exit(1)
+            raise
 except FileNotFoundError:
     raise
 
@@ -40,12 +40,12 @@ def download():
         elif os_type == 'Windows':
             response = requests.get(download_url_windows, stream=True)
         else:
-            raise OSError("Not supported.")
+            raise OSError(f"{os_type} not supported.")
 
         if response.headers.get('Status') == "404 Not Found":
             raise requests.exceptions.HTTPError("File not found")
 
-        print("Downloading to: ", temp_folder)
+        print(f"Downloading Hugo v{hugo_version} to: ", temp_folder)
         file.write(response.content)
 
 
@@ -67,20 +67,18 @@ def confirm_update():
     Checks if Hugo is updated or not.
     """
 
+    new_hugo_version = ''
     print("Confirming upgrade")
 
-    if os_type == 'Darwin':
-        try:
+    try:
+        if os_type == 'Darwin':
             new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
             new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0].split("-")[0]
-        except FileNotFoundError as e:
-            raise
-    elif os_type == 'Windows':
-        try:
+        elif os_type == 'Windows':
             new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
             new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
-        except FileNotFoundError as e:
-            raise
+    except FileNotFoundError as e:
+        raise
 
     if not 'v' + hugo_version == new_hugo_version:
         print("Hugo was not updated correctly")
