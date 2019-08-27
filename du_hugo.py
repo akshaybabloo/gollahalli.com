@@ -1,5 +1,7 @@
+import json
 import os
 import platform
+import re
 import subprocess
 import sys
 import tarfile
@@ -12,54 +14,88 @@ import yaml
 
 try:
     with open('azure-pipeline.yml') as f:
-        try:
-            hugo_version = yaml.safe_load(f)['variables']['HUGO_VERSION']
-        except yaml.YAMLError as exc:
-            print(exc)
-            sys.exit(1)
-except FileNotFoundError:
+        CURRENT_HUGO_VERSION = yaml.safe_load(f)['variables']['HUGO_VERSION']
+except Exception:
     raise
 
-location = os.path.join(str(Path.home()), 'bin')
-os_type = platform.system()
-
-download_url_mac = f"https://github.com/gohugoio/hugo/releases/download/v{hugo_version}/hugo_extended_{hugo_version}_macOS-64bit.tar.gz"
-download_url_windows = f"https://github.com/gohugoio/hugo/releases/download/v{hugo_version}/hugo_extended_{hugo_version}_Windows-64bit.zip"
-
-temp_folder = tempfile.gettempdir()
-filepath = os.path.join(temp_folder, f"hugo_{hugo_version}")
+HUGO_BINARY_LOCATION = os.path.join(str(Path.home()), 'bin')
+OS_TYPE = platform.system()
+TEMP_FOLDER_PATH = tempfile.gettempdir()
 
 
-def download():
+def check_for_updates() -> str:
+    """
+    Checks for new Hugo version.
+
+    :return: Version number or None
+    """
+    hugo_response = requests.get("https://api.github.com/repos/gohugoio/hugo/releases/latest")
+    hugo_response = json.loads(hugo_response.content.decode('utf-8'))['tag_name'][1:]
+    if not hugo_response == CURRENT_HUGO_VERSION:
+        return hugo_response
+
+
+def download(version: str, download_to: str):
     """
     Download the Hugo file to temp folder.
+
+    :param version: Version number to download
+    :param download_to: Path to download to
     """
-    with open(filepath, "wb") as file:
-        if os_type == 'Darwin':
-            response = requests.get(download_url_mac, stream=True)
-        elif os_type == 'Windows':
-            response = requests.get(download_url_windows, stream=True)
+
+    with open(download_to, "wb") as file:
+        if OS_TYPE == 'Darwin':
+            response = requests.get(
+                f"https://github.com/gohugoio/hugo/releases/download/v{version}/hugo_extended_{version}_macOS-64bit.tar.gz",
+                stream=True)
+        elif OS_TYPE == 'Windows':
+            response = requests.get(
+                f"https://github.com/gohugoio/hugo/releases/download/v{version}/hugo_extended_{version}_Windows-64bit.zip",
+                stream=True)
         else:
-            raise OSError("Not supported.")
+            raise OSError(f"{OS_TYPE} not supported.")
 
         if response.headers.get('Status') == "404 Not Found":
             raise requests.exceptions.HTTPError("File not found")
 
-        print("Downloading to: ", temp_folder)
+        print(f"Downloading Hugo v{version} to: ", download_to)
         file.write(response.content)
 
 
-def extract_file_and_move():
+def extract_file_and_move(extract_from: str, move_to: str):
     """
     Extract the ``hugo`` file to the temp folder
+
+    :param extract_from: ZIP or TAR absolute path
+    :param move_to: Path to move uncompressed file
     """
-    print("Extracting and moving file to: ", location)
-    if os_type == 'Darwin':
-        with tarfile.open(filepath, "r:gz") as f:
-            f.extract("hugo", location)
-    elif os_type == 'Windows':
-        with zipfile.ZipFile(filepath, "r") as f:
-            f.extract("hugo.exe", location)
+
+    print("Extracting and moving file to: ", move_to)
+    if OS_TYPE == 'Darwin':
+        with tarfile.open(extract_from, "r:gz") as f:
+            f.extract("hugo", move_to)
+    elif OS_TYPE == 'Windows':
+        with zipfile.ZipFile(extract_from, "r") as f:
+            f.extract("hugo.exe", move_to)
+
+
+def update_version_in_pipeline(version: str):
+    """
+    Updates the Hugo version in ``azure-pipeline.yml`` file.
+
+    :param version: Hugo version number
+    """
+
+    try:
+        with open('azure-pipeline.yml', 'r+') as pipeline:
+            lines = pipeline.readlines()
+            lines[9] = re.sub("'(.*?)'", f"'{version}'", lines[9])
+
+            pipeline.seek(0)
+            pipeline.writelines(lines)
+            pipeline.truncate()
+    except Exception:
+        raise
 
 
 def confirm_update():
@@ -67,29 +103,43 @@ def confirm_update():
     Checks if Hugo is updated or not.
     """
 
+    new_hugo_version = ''
     print("Confirming upgrade")
 
-    if os_type == 'Darwin':
-        try:
+    try:
+        if OS_TYPE == 'Darwin':
             new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
             new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0].split("-")[0]
-        except FileNotFoundError as e:
-            raise
-    elif os_type == 'Windows':
-        try:
+        elif OS_TYPE == 'Windows':
             new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
             new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
-        except FileNotFoundError as e:
-            raise
+    except FileNotFoundError as e:
+        raise
 
-    if not 'v' + hugo_version == new_hugo_version:
+    if not 'v' + CURRENT_HUGO_VERSION == new_hugo_version:
         print("Hugo was not updated correctly")
         sys.exit(1)
 
     print("Updated")
 
 
-if __name__ == '__main__':
-    download()
-    extract_file_and_move()
+# --------------------------------------------------------------
+
+
+def main():
+    new_version = check_for_updates()
+
+    if new_version is None:
+        print("No updates available")
+        sys.exit(0)
+
+    download_to_extract_from = os.path.join(TEMP_FOLDER_PATH, f"hugo_{new_version}")
+
+    download(new_version, download_to_extract_from)
+    extract_file_and_move(download_to_extract_from, HUGO_BINARY_LOCATION)
+    update_version_in_pipeline(new_version)
     confirm_update()
+
+
+if __name__ == '__main__':
+    main()
