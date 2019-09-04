@@ -103,8 +103,14 @@ def confirm_update():
     Checks if Hugo is updated or not.
     """
 
+    try:
+        with open('azure-pipeline.yml') as f:
+            update_hugo_version = yaml.safe_load(f)['variables']['HUGO_VERSION']
+    except Exception:
+        raise
+
     new_hugo_version = ''
-    print("Confirming upgrade")
+    print("Confirming update")
 
     try:
         if OS_TYPE == 'Darwin':
@@ -116,7 +122,7 @@ def confirm_update():
     except FileNotFoundError as e:
         raise
 
-    if not 'v' + CURRENT_HUGO_VERSION == new_hugo_version:
+    if not 'v' + update_hugo_version == new_hugo_version:
         print("Hugo was not updated correctly")
         sys.exit(1)
 
