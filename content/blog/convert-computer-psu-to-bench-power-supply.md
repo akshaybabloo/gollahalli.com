@@ -24,3 +24,9 @@ sitemap:
 #   - imageLoc: ""
 #     imageCaption: ""
 ---
+
+I always wanted a variable DC power supply unit, but it costed a lot. I have few computer PSU lying around at home and I thought "Hey! let's build one!".
+
+> Warning: We are dealing with some high voltage internals here, be careful. Do not touch those big capacitors.
+
+## Required Materials
