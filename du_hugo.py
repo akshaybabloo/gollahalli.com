@@ -31,8 +31,24 @@ def check_for_updates() -> str:
     """
     hugo_response = requests.get("https://api.github.com/repos/gohugoio/hugo/releases/latest")
     hugo_response = json.loads(hugo_response.content.decode('utf-8'))['tag_name'][1:]
+
     if not hugo_response == CURRENT_HUGO_VERSION:
-        return hugo_response
+        print(f"New update found. Current version {CURRENT_HUGO_VERSION}, new version {hugo_response}")
+
+        answer = input("> Do you want to update to the newer version? (Y/n) ")
+
+        if answer == '':
+            print("Please select the correct option.")
+            sys.exit(1)
+        elif answer.lower() != 'y' and answer.lower() != 'n':
+            print("Please select either 'y' or 'n'.")
+            sys.exit(1)
+
+        if answer.lower() == 'y':
+            return hugo_response
+
+        if answer.lower() == 'n':
+            sys.exit(0)
 
 
 def download(version: str, download_to: str):
