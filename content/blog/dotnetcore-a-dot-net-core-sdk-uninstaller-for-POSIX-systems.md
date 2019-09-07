@@ -1,6 +1,7 @@
 ---
 title: "dotnetcore: A .Net Core SDK Uninstaller for POSIX Systems"
 date: 2019-07-19T17:09:20+12:00
+lastmod: 2019-09-07T14:33:10+12:00
 draft: false
 categories: ["CLI"]
 tags: [".Net Core", "CLI", "Python"]
@@ -25,13 +26,13 @@ siteMapImages:
     imageCaption: "Uninstall previous versions of .Net Core SDK"
 ---
 
-There is no official way to uninstall pervious versions of .Net Core SDK on POSIX type operating systems, this tool may help you solve that problem.
+There is no official way to uninstall previous versions of .Net Core SDK on POSIX type operating systems, this tool may help you solve that problem.
 
 > Note: This application only works on Linux type systems.
 
 The repository can be found at [https://github.com/akshaybabloo/dot-net-core-uninstaller](https://github.com/akshaybabloo/dot-net-core-uninstaller).
 
-> Note: You might need super user account to use this library. 
+> Note: You might need super user account to use this library.
 
 ## Instillation
 
@@ -61,7 +62,8 @@ Commands:
 To remove a version of .Net Core SDK or Runtimes:
 
 ```bash
-> dotnetcore remove 1.0.0
+> dotnetcore remove --sdk 1.0.0
+> dotnetcore remove --runtime 1.0.0
 ```
 
 To list all installed .Net Core libraries
@@ -76,5 +78,6 @@ To list all installed .Net Core libraries
 from dot_net_core_uninstaller import Uninstaller
 
 remove_dotnet = Uninstaller()
-remove_dotnet.delete("1.0.0")
+remove_dotnet.delete_runtime("1.0.0")
+remove_dotnet.delete_sdk("1.0.0")
 ```
