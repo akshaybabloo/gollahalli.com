@@ -1252,6 +1252,11 @@ fined@^1.0.1:
     object.pick "^1.2.0"
     parse-filepath "^1.0.1"
 
+firacode@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/firacode/-/firacode-2.0.0.tgz#b1801c13e2d3235da2e4b0f07b62d3c94a71c5bb"
+  integrity sha512-Nb6qPlKbiqw6k3ES8I3TE4vv+LLYvJwvTO0K4oQseeF6rDCj2ufJX2MOZ/7lNNt7P7KebfULaxi3QYQ9aEBrTA==
+
 flagged-respawn@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/flagged-respawn/-/flagged-respawn-1.0.1.tgz#e7de6f1279ddd9ca9aac8a5971d618606b3aab41"
