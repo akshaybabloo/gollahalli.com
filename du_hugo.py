@@ -142,7 +142,7 @@ def confirm_update():
         print("Hugo was not updated correctly")
         sys.exit(1)
 
-    print("Updated")
+    print("All done!")
 
 
 # --------------------------------------------------------------

@@ -6,6 +6,7 @@
   "repository": "https://github.com/akshaybabloo/gollahalli.com.git",
   "author": "Akshay Raj Gollahalli <akshaybabloo@gmail.com>",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "build": "webpack"
   },
@@ -13,11 +14,11 @@
     "gulp": "^4.0.2"
   },
   "dependencies": {
-    "algoliasearch": "^3.34.0",
+    "algoliasearch": "^3.35.0",
     "firacode": "^2.0.0",
     "instantsearch.js": "^3.6.0",
     "material-components-web": "^3.2.0",
     "normalize.css": "^8.0.1",
-    "uikit": "^3.2.0"
+    "uikit": "^3.2.1"
   }
 }
