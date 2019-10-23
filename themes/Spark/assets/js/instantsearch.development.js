@@ -1,4 +1,4 @@
-/*! InstantSearch.js 3.6.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 3.7.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -15903,7 +15903,7 @@
     return _construct(BrowserHistory, args);
   }
 
-  var version$1 = '3.6.0';
+  var version$1 = '3.7.0';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -16116,8 +16116,7 @@
       var _options$indexName = options.indexName,
           indexName = _options$indexName === void 0 ? null : _options$indexName,
           numberLocale = options.numberLocale,
-          _options$searchParame = options.searchParameters,
-          searchParameters = _options$searchParame === void 0 ? {} : _options$searchParame,
+          searchParameters = options.searchParameters,
           _options$routing = options.routing,
           routing = _options$routing === void 0 ? null : _options$routing,
           searchFunction = options.searchFunction,
@@ -16152,6 +16151,9 @@
         throw new Error('The provided `insightsClient` must be a function.');
       }
 
+      _warning(!searchParameters, "The `searchParameters` option is deprecated and will not be supported in InstantSearch.js 4.x.\n\nYou can replace it with the `configure` widget:\n\n```\nsearch.addWidgets([\n  configure(".concat(JSON.stringify(searchParameters, null, 2), ")\n]);\n```\n\nSee ").concat(createDocumentationLink({
+        name: 'configure'
+      })));
       _this.client = searchClient;
       _this.insightsClient = insightsClient;
       _this.helper = null;
@@ -19289,61 +19291,6 @@
     name: 'infinite-hits',
     connector: true
   });
-  /**
-   * @typedef {Object} InfiniteHitsRenderingOptions
-   * @property {Array<Object>} hits The aggregated matched hits from Algolia API of all pages.
-   * @property {Object} results The complete results response from Algolia API.
-   * @property {function} showMore Loads the next page of hits.
-   * @property {boolean} isLastPage Indicates if the last page of hits has been reached.
-   * @property {Object} widgetParams All original widget options forwarded to the `renderFn`.
-   */
-
-  /**
-   * @typedef {Object} CustomInfiniteHitsWidgetOptions
-   * @property {boolean} [escapeHTML = true] Whether to escape HTML tags from `hits[i]._highlightResult`.
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
-   */
-
-  /**
-   * **InfiniteHits** connector provides the logic to create custom widgets that will render an continuous list of results retrieved from Algolia.
-   *
-   * This connector provides a `InfiniteHitsRenderingOptions.showMore()` function to load next page of matched results.
-   * @type {Connector}
-   * @param {function(InfiniteHitsRenderingOptions, boolean)} renderFn Rendering function for the custom **InfiniteHits** widget.
-   * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomInfiniteHitsWidgetOptions)} Re-usable widget factory for a custom **InfiniteHits** widget.
-   * @example
-   * // custom `renderFn` to render the custom InfiniteHits widget
-   * function renderFn(InfiniteHitsRenderingOptions, isFirstRendering) {
-   *   if (isFirstRendering) {
-   *     InfiniteHitsRenderingOptions.widgetParams.containerNode
-   *       .html('<div id="hits"></div><button id="show-more">Load more</button>');
-   *
-   *     InfiniteHitsRenderingOptions.widgetParams.containerNode
-   *       .find('#show-more')
-   *       .on('click', function(event) {
-   *         event.preventDefault();
-   *         InfiniteHitsRenderingOptions.showMore();
-   *       });
-   *   }
-   *
-   *   InfiniteHitsRenderingOptions.widgetParams.containerNode.find('#hits').html(
-   *     InfiniteHitsRenderingOptions.hits.map(function(hit) {
-   *       return '<div>' + hit._highlightResult.name.value + '</div>';
-   *     })
-   *   );
-   * };
-   *
-   * // connect `renderFn` to InfiniteHits logic
-   * var customInfiniteHits = instantsearch.connectors.connectInfiniteHits(renderFn);
-   *
-   * // mount widget on the page
-   * search.addWidget(
-   *   customInfiniteHits({
-   *     containerNode: $('#custom-infinite-hits-container'),
-   *   })
-   * );
-   */
 
   var connectInfiniteHits = function connectInfiniteHits(renderFn) {
     var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop$1;
@@ -21256,19 +21203,29 @@
         init: function init(_ref) {
           var helper = _ref.helper,
               instantSearchInstance = _ref.instantSearchInstance;
-          var initialIndex = helper.state.index;
-          var isInitialIndexInItems = find$1(items, function (item) {
-            return item.value === initialIndex;
-          });
-          this.initialIndex = initialIndex;
+          var currentIndex = helper.state.index;
+          var isCurrentIndexInItems = find$1(items, function (item) {
+            return item.value === currentIndex;
+          }); // The `initialIndex` is the one set at the top level not the one used
+          // at `init`. The value of `index` at `init` could come from the URL. We
+          // want the "real" initial value, this one should never change. If it changes
+          // between the lifecycles of the widget the current refinement won't be
+          // pushed into the `uiState`. Because we never push the "initial" value to
+          // avoid to pollute the URL.
+          // Note that it might be interesting to manage this at the state mapping
+          // level and always push the index value into  the `uiState`. It is a
+          // breaking change.
+          // @MAJOR
+
+          this.initialIndex = instantSearchInstance.indexName;
 
           this.setIndex = function (indexName) {
             helper.setIndex(indexName).search();
           };
 
-          _warning(isInitialIndexInItems, "The index named \"".concat(initialIndex, "\" is not listed in the `items` of `sortBy`."));
+          _warning(isCurrentIndexInItems, "The index named \"".concat(currentIndex, "\" is not listed in the `items` of `sortBy`."));
           renderFn({
-            currentRefinement: initialIndex,
+            currentRefinement: currentIndex,
             options: transformItems(items),
             refine: this.setIndex,
             hasNoResults: true,
@@ -25301,57 +25258,6 @@
       }), containerNode);
     };
   };
-  /**
-   * @typedef {Object} InfiniteHitsTemplates
-   * @property {string|function} [empty = "No results"] Template used when there are no results.
-   * @property {string|function} [showMoreText = "Show more results"] Template used for the "load more" button.
-   * @property {string|function} [item = ""] Template used for each result. This template will receive an object containing a single record.
-   */
-
-  /**
-   * @typedef {object} InfiniteHitsCSSClasses
-   * @property {string|string[]} [root] CSS class to add to the wrapping element.
-   * @property {string|string[]} [emptyRoot] CSS class to add to the wrapping element when no results.
-   * @property {string|string[]} [list] CSS class to add to the list of results.
-   * @property {string|string[]} [item] CSS class to add to each result.
-   * @property {string|string[]} [loadMore] CSS class to add to the load more button.
-   * @property {string|string[]} [disabledLoadMore] CSS class to add to the load more button when disabled.
-   */
-
-  /**
-   * @typedef {Object} InfiniteHitsWidgetOptions
-   * @property  {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
-   * @property  {InfiniteHitsTemplates} [templates] Templates to use for the widget.
-   * @property  {InfiniteHitsCSSClasses} [cssClasses] CSS classes to add.
-   * @property {boolean} [escapeHTML = true] Escape HTML entities from hits string values.
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
-   */
-
-  /**
-   * Display the list of results (hits) from the current search.
-   *
-   * This widget uses the infinite hits pattern. It contains a button that
-   * will let the user load more results to the list. This is particularly
-   * handy on mobile implementations.
-   * @type {WidgetFactory}
-   * @devNovel InfiniteHits
-   * @category basic
-   * @param {InfiniteHitsWidgetOptions} $0 The options for the InfiniteHits widget.
-   * @return {Widget} Creates a new instance of the InfiniteHits widget.
-   * @example
-   * search.addWidget(
-   *   instantsearch.widgets.infiniteHits({
-   *     container: '#infinite-hits-container',
-   *     templates: {
-   *       empty: 'No results',
-   *       showMoreText: 'Show more results',
-   *       item: '<strong>Hit {{objectID}}</strong>: {{{_highlightResult.name.value}}}'
-   *     },
-   *     transformItems: items => items.map(item => item),
-   *   })
-   * );
-   */
-
 
   var infiniteHits = function infiniteHits() {
     var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
