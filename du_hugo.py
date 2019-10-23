@@ -23,7 +23,7 @@ OS_TYPE = platform.system()
 TEMP_FOLDER_PATH = tempfile.gettempdir()
 
 
-def check_for_updates() -> str:
+def check_for_updates(override_version:str = None) -> str:
     """
     Checks for new Hugo version.
 
@@ -31,6 +31,9 @@ def check_for_updates() -> str:
     """
     hugo_response = requests.get("https://api.github.com/repos/gohugoio/hugo/releases/latest")
     hugo_response = json.loads(hugo_response.content.decode('utf-8'))['tag_name'][1:]
+
+    if override_version is not None:
+        return override_version
 
     if not hugo_response == CURRENT_HUGO_VERSION:
         print(f"New update found. Current version {CURRENT_HUGO_VERSION}, new version {hugo_response}")
