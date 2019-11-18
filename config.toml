@@ -50,7 +50,7 @@ enableRobotsTXT = true
     [params.scss]
         primary = "#A36441"
         secondary = "#997953"
-        backgroundColor = "#000"
+        backgroundColor = "#121212"
         backgroundColorLight = "#272a2c"
         textColor = "#c9cacc"
         subTextColor = "gray"
