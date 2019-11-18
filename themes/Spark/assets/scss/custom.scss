@@ -78,8 +78,21 @@ body {
     background-color: $background-color !important;
 }
 
-.uk-card-default {
-    background-color: $background-color-light !important;
+.uk-card-default{
+    height: 100%;
+    color: #000000;
+}
+
+.uk-card-default a{
+    color: #000000 !important;
+}
+
+.uk-card-default a:hover{
+    color: #000000 !important;
+}
+
+.uk-card-default h3{
+    color: #000000 !important;
 }
 
 .uk-link-text {
