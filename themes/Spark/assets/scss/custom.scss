@@ -8,13 +8,6 @@ $global-font-family: {{ .Site.Params.scss.globalFontFamily }} !important;
 $label-background-color: {{ .Site.Params.scss.labelBackgroundColor }};
 $label-text-color: {{ .Site.Params.scss.labelTextColor }};
 $headers: {{ .Site.Params.scss.headers }};
-// $primary: #A36441;
-// $secondary: #997953;
-// $background-color: #1d1f21;
-// $background-color-light: #272a2c;
-// $text-color: #c9cacc;
-// $sub-text-color: gray;
-// $global-font-family: 'Space Mono', monospace !important;
 
 
 html {
@@ -87,9 +80,24 @@ body {
     color: #000000 !important;
 }
 
+a.uk-card-default{
+    color: #000000 !important;
+}
+
+.uk-card-default h4{
+    color: #000000 !important;
+}
+
 .uk-card-default a:hover{
     color: #000000 !important;
 }
+
+a.uk-card-default:hover{
+    color: #000000 !important;
+    text-decoration: none;
+    background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
+}
+
 
 .uk-card-default h3{
     color: #000000 !important;
@@ -105,8 +113,9 @@ body {
 }
 
 .uk-label {
-    background-color: $label-background-color !important;
-    font-size: x-small;
+    background: $label-background-color !important;
+    color: $label-text-color !important;
+    font-size: small;
 }
 
 .uk-label a {
