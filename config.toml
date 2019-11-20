@@ -58,3 +58,4 @@ enableRobotsTXT = true
         globalFontFamily = "'Roboto Mono', monospace"
         labelBackgroundColor = "#997953"
         labelTextColor = "#000"
+        headers = "#fc8181"

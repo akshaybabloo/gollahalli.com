@@ -7,7 +7,7 @@ $sub-text-color: {{ .Site.Params.scss.subTextColor }};
 $global-font-family: {{ .Site.Params.scss.globalFontFamily }} !important;
 $label-background-color: {{ .Site.Params.scss.labelBackgroundColor }};
 $label-text-color: {{ .Site.Params.scss.labelTextColor }};
-
+$headers: {{ .Site.Params.scss.headers }};
 // $primary: #A36441;
 // $secondary: #997953;
 // $background-color: #1d1f21;
@@ -144,7 +144,7 @@ a:hover,
 }
 
 h2 {
-    color: $secondary !important;
+    color: $headers !important;
 }
 
 h2 > code {
@@ -152,15 +152,15 @@ h2 > code {
 }
 
 h3 {
-    color: $secondary !important;
+    color: $headers !important;
 }
 
 h4 {
-    color: $secondary !important;
+    color: $headers !important;
 }
 
 h1 {
-    color: $secondary !important;
+    color: $headers !important;
 }
 
 blockquote {
