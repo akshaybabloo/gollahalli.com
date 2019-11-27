@@ -20,9 +20,6 @@ enableRobotsTXT = true
 #  [outputFormats.AMP]
 #    permalinkable = false
 
-[blackfriday]
-  extensions = ["hardLineBreak"]
-
 
 [outputs]
   home = ["HTML", "RSS", "AMP", "searchindex", "ads"]
