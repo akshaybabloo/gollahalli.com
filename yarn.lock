@@ -541,10 +541,10 @@ agentkeepalive@^2.2.0:
   resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-2.2.0.tgz#c5d1bd4b129008f1163f236f86e5faea2026e2ef"
   integrity sha1-xdG9SxKQCPEWPyNvhuX66iAm4u8=
 
-algoliasearch-helper@0.0.0-5a0352a:
-  version "0.0.0-5a0352a"
-  resolved "https://registry.yarnpkg.com/algoliasearch-helper/-/algoliasearch-helper-0.0.0-5a0352a.tgz#91a739e7741bc96004851715cb4b4311c530d6bc"
-  integrity sha512-UElrfeoKxysLld8PY5P6ziNIFkbPVYNfWp9Bv4qCMM5/wozWwfJn0H+s3x9XZkKWI1zEs1Bf9ITg1V53oOkbZg==
+algoliasearch-helper@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/algoliasearch-helper/-/algoliasearch-helper-3.0.0.tgz#830f0017408df16d47618400bed9eed00930b27b"
+  integrity sha512-urO9Yq6gMj93qfuCK5wFK250LfRSVFanJrSyOevJWgN6o6H3Km3wl04er0NaiHGZorqOyEAEU1us1aqFLO3YSA==
   dependencies:
     events "^1.1.1"
 
@@ -1603,12 +1603,12 @@ ini@^1.3.4, ini@~1.3.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
 
-instantsearch.js@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.0.0.tgz#460579ba71579526fa6c2215fc27e7f929c08433"
-  integrity sha512-VCjly8Ec+VAgoaRJJHfGJ4YiY77o/UVAfDv9G/bfFu/cLIelA9whFyp0yqMik1yXIr4W4F81eOxf2lI3A6n1Hg==
+instantsearch.js@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.0.1.tgz#be6b8b915324eb87c269277a550d353351e12682"
+  integrity sha512-ZGzfVKH8ly1LbOBzzEWYJp0BFExGGNqaq+Fhxrnv3sYw3yEc4OY1v40OTMY1y+DDnwZXiIrG3H1UdnovzZrAPg==
   dependencies:
-    algoliasearch-helper "0.0.0-5a0352a"
+    algoliasearch-helper "^3.0.0"
     classnames "^2.2.5"
     events "^1.1.0"
     hogan.js "^3.0.2"
