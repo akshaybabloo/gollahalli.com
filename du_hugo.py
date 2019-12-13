@@ -11,6 +11,7 @@ from pathlib import Path
 
 import requests
 import yaml
+from tqdm import tqdm
 
 try:
     with open('azure-pipeline.yml') as f:
@@ -23,7 +24,7 @@ OS_TYPE = platform.system()
 TEMP_FOLDER_PATH = tempfile.gettempdir()
 
 
-def check_for_updates(override_version:str = None) -> str:
+def check_for_updates(override_version: str = None) -> str:
     """
     Checks for new Hugo version.
 
@@ -78,7 +79,15 @@ def download(version: str, download_to: str):
             raise requests.exceptions.HTTPError("File not found")
 
         print(f"Downloading Hugo v{version} to: ", download_to)
-        file.write(response.content)
+        total_length = int(response.headers.get('content-length'))
+
+        if total_length is None:
+            file.write(response.content)
+        else:
+            with tqdm(total=total_length / (32 * 1024.0), unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+                for data in response.iter_content(chunk_size=32 * 1024):
+                    file.write(data)
+                    pbar.update(len(data))
 
 
 def extract_file_and_move(extract_from: str, move_to: str):
