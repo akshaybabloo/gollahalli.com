@@ -49,7 +49,7 @@ To install Release Exporter, open your favourite command line - terminal/command
 Once installed, there are three ways to use it. The simplest way is to change your directory to your local repository on the terminal/command prompt (but make sure your repository is cloned from GitHub or GitLab) type in the magic word with your token as
 
 ```md
-> tex --token your-token markdown
+> rex --token your-token markdown
 ```
 
 The **markdown** creates a **CHANGELOG.md** file in the same folder.
