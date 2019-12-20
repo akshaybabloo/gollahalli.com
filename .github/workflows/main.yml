@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Set up Python and NPM
-        uses: actions/setup-python@v1
+        uses: |
+          actions/setup-python@v1
+          actions/setup-node@v1
         with:
           python-version: '3.x'
-      - uses: actions/setup-node@v1
-        with:
           node-version: '10.x'
       - name: Checking for Installed Versions
         run: |
