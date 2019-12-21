@@ -11,20 +11,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Use Python
         uses: actions/setup-python@v1
         with:
           python-version: '3.x'
+
       - name: Use NodeJs
         uses: actions/setup-node@v1
         with:
           node-version: '10.x'
+
       - name: Checking for Installed Versions
         run: |
           node --version
           npm --version
           python --version
           pip --version
+
       - name: Install Hugo
         run: |
           wget -c https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz
@@ -33,10 +37,12 @@ jobs:
           hugo version
         env:
           HUGO_VERSION: '0.61.0'
+
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -U -r requirements.txt
+
       - name: Install Firebase
         run: |
           npm install -g firebase-tools
