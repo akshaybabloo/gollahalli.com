@@ -2,7 +2,7 @@ trigger:
   - master
 
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: 'ubuntu-18.04'
 
 pr: none
 
@@ -33,11 +33,9 @@ steps:
       sudo mv ./hugo /usr/local/bin
       hugo version
     displayName: Installing Hugo
-  - script: |
-      pip install -r requirements.txt
+  - script: pip install -r requirements.txt
     displayName: Installing Python Dependencies
-  - script: |
-      npm install -g firebase-tools
+  - script: npm install -g firebase-tools
     displayName: Installing Firebase CLI Tools
   - script: hugo -v --minify --gc
     displayName: Build Hugo
@@ -47,8 +45,7 @@ steps:
       firebase --version
       firebase deploy --token "$(firebase)"
     displayName: Deploy Website to Firebase
-  - script: |
-      python utils.py
+  - script: python utils.py
     displayName: Running Python Script
     env:
       ALGOLIA_KEY: $(ALGOLIA_KEY)

@@ -17,3 +17,4 @@ secrets\.ps1
 \.vscode/
 
 dist/
+temp.py
