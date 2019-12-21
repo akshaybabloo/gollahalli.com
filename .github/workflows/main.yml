@@ -3,7 +3,7 @@ name: Deploy to Gollahalli.com
 on:
   push:
     branch:
-      - dev
+      - master
 
 jobs:
   deploy:
