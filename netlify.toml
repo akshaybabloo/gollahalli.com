@@ -1,0 +1,8 @@
+[build]
+publish = "public"
+command = "hugo --gc --minify && python utils.py"
+
+[context.production.environment]
+HUGO_VERSION = "0.61.0"
+HUGO_ENV = "production"
+HUGO_ENABLEGITINFO = "true"
