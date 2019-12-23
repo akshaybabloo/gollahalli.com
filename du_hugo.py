@@ -1,7 +1,6 @@
 import json
 import os
 import platform
-import re
 import subprocess
 import sys
 import tarfile
@@ -11,7 +10,6 @@ from pathlib import Path
 
 import requests
 import toml
-import yaml
 from tqdm import tqdm
 
 try:
@@ -107,25 +105,6 @@ def extract_file_and_move(extract_from: str, move_to: str):
     elif OS_TYPE == 'Windows':
         with zipfile.ZipFile(extract_from, "r") as f:
             f.extract("hugo.exe", move_to)
-
-
-def update_version_in_pipeline(version: str):
-    """
-    Updates the Hugo version in ``azure-pipeline.yml`` file.
-
-    :param version: Hugo version number
-    """
-
-    try:
-        with open('azure-pipeline.yml', 'r+') as pipeline:
-            lines = pipeline.readlines()
-            lines[9] = re.sub("'(.*?)'", f"'{version}'", lines[9])
-
-            pipeline.seek(0)
-            pipeline.writelines(lines)
-            pipeline.truncate()
-    except Exception:
-        raise
 
 
 def update_version_in_netlify(version: str):
