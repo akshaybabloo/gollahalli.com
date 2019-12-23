@@ -152,8 +152,8 @@ def confirm_update():
     """
 
     try:
-        with open('azure-pipeline.yml') as f:
-            update_hugo_version = yaml.safe_load(f)['variables']['HUGO_VERSION']
+        with open('netlify.toml') as f:
+            update_hugo_version = toml.load(f)['context']['production']['environment']['HUGO_VERSION']
     except Exception:
         raise
 
