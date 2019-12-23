@@ -1,14 +1,24 @@
+[[redirects]]
+from = "/blog/part-11-car-nd-detect-road-lanes-using-computer-vision-and-python-3"
+to = "/blog/part-1-1-car-nd-detect-road-lanes-using-computer-vision-and-python-3/"
+status = 301
+
+[[redirects]]
+from = "/blog/part-12-car-nd-masking-and-colouring-a-region-of-the-image"
+to = "/blog/part-1-2-car-nd-masking-and-colouring-a-region-of-the-image/"
+status = 301
+
 [build]
 publish = "public"
 command = "hugo --gc --minify && python utils.py"
+
+[context.deploy-preview]
+command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.production.environment]
 HUGO_VERSION = "0.61.0"
 HUGO_ENV = "production"
 HUGO_ENABLEGITINFO = "true"
-
-[context.deploy-preview]
-command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.deploy-preview.environment]
 HUGO_VERSION = "0.61.0"
