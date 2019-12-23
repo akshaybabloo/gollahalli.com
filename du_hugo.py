@@ -10,12 +10,14 @@ import zipfile
 from pathlib import Path
 
 import requests
+import toml
 import yaml
 from tqdm import tqdm
 
 try:
-    with open('azure-pipeline.yml') as f:
-        CURRENT_HUGO_VERSION = yaml.safe_load(f)['variables']['HUGO_VERSION']
+    with open('netlify.toml') as f:
+        NETLIFY_CONFIG = toml.load(f)
+        CURRENT_HUGO_VERSION = NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']
 except Exception:
     raise
 
@@ -126,6 +128,24 @@ def update_version_in_pipeline(version: str):
         raise
 
 
+def update_version_in_netlify(version: str):
+    """
+    Updates the Hugo version in ``netlify.toml`` file.
+
+    :param version: Hugo version number
+    """
+
+    try:
+        with open('netlify.toml', 'w') as pipeline:
+            NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']=version
+            NETLIFY_CONFIG['context']['deploy-preview']['environment']['HUGO_VERSION']=version
+
+            toml.dump(NETLIFY_CONFIG, pipeline)
+
+    except Exception:
+        raise
+
+
 def confirm_update():
     """
     Checks if Hugo is updated or not.
@@ -171,7 +191,7 @@ def main():
 
     download(new_version, download_to_extract_from)
     extract_file_and_move(download_to_extract_from, HUGO_BINARY_LOCATION)
-    update_version_in_pipeline(new_version)
+    update_version_in_netlify(new_version)
     confirm_update()
 
 
