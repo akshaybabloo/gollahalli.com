@@ -1,7 +1,6 @@
 import json
 import os
 import platform
-import re
 import subprocess
 import sys
 import tarfile
@@ -10,12 +9,13 @@ import zipfile
 from pathlib import Path
 
 import requests
-import yaml
+import toml
 from tqdm import tqdm
 
 try:
-    with open('azure-pipeline.yml') as f:
-        CURRENT_HUGO_VERSION = yaml.safe_load(f)['variables']['HUGO_VERSION']
+    with open('netlify.toml') as f:
+        NETLIFY_CONFIG = toml.load(f)
+        CURRENT_HUGO_VERSION = NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']
 except Exception:
     raise
 
@@ -107,21 +107,20 @@ def extract_file_and_move(extract_from: str, move_to: str):
             f.extract("hugo.exe", move_to)
 
 
-def update_version_in_pipeline(version: str):
+def update_version_in_netlify(version: str):
     """
-    Updates the Hugo version in ``azure-pipeline.yml`` file.
+    Updates the Hugo version in ``netlify.toml`` file.
 
     :param version: Hugo version number
     """
 
     try:
-        with open('azure-pipeline.yml', 'r+') as pipeline:
-            lines = pipeline.readlines()
-            lines[9] = re.sub("'(.*?)'", f"'{version}'", lines[9])
+        with open('netlify.toml', 'w') as pipeline:
+            NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']=version
+            NETLIFY_CONFIG['context']['deploy-preview']['environment']['HUGO_VERSION']=version
 
-            pipeline.seek(0)
-            pipeline.writelines(lines)
-            pipeline.truncate()
+            toml.dump(NETLIFY_CONFIG, pipeline)
+
     except Exception:
         raise
 
@@ -132,8 +131,8 @@ def confirm_update():
     """
 
     try:
-        with open('azure-pipeline.yml') as f:
-            update_hugo_version = yaml.safe_load(f)['variables']['HUGO_VERSION']
+        with open('netlify.toml') as f:
+            update_hugo_version = toml.load(f)['context']['production']['environment']['HUGO_VERSION']
     except Exception:
         raise
 
@@ -171,7 +170,7 @@ def main():
 
     download(new_version, download_to_extract_from)
     extract_file_and_move(download_to_extract_from, HUGO_BINARY_LOCATION)
-    update_version_in_pipeline(new_version)
+    update_version_in_netlify(new_version)
     confirm_update()
 
 
