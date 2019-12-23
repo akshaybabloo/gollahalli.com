@@ -6,3 +6,9 @@ command = "hugo --gc --minify && python utils.py"
 HUGO_VERSION = "0.61.0"
 HUGO_ENV = "production"
 HUGO_ENABLEGITINFO = "true"
+
+[context.deploy-preview]
+command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
+
+[context.deploy-preview.environment]
+HUGO_VERSION = "0.61.0"

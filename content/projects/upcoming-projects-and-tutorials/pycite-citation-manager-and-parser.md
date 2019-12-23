@@ -6,5 +6,5 @@ projectCategory: "Upcoming Projects and Tutorials"
 tags: ["Software", "Python 3"]
 description: "A citation parser and manager with Sqlite that supports EndNote, RIS and BibTex."
 images: []
-url: "/projects/#"
+url: ""
 ---
