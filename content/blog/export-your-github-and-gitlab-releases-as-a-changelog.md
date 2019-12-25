@@ -30,7 +30,7 @@ At the time of writing this blog post, I have 55 repositories on my GitHub accou
 
 So why do we need changelog you ask? I would recommend reading [this](https://softwareengineering.stackexchange.com/questions/83797/is-there-a-point-to-including-a-change-log-in-every-code-file-when-you-are-usi) and [this](http://http//keepachangelog.com/).
 
-Now the problem is that I do not want to waste time by copying individual release notes to a markdown file for all the repositories I have. Enter [Release Exporter](https://github.com/akshaybabloo/release-exporter). Release exporter makes it easy for you to generate a changelog in the form of markdown or a JSON file and it supports GitHub and GitLab releases. I tried my best to develop the application that follows the format of [keep a changelog v1](http://keepachangelog.com/en/1.0.0/) and (Markdown lint)[https://github.com/markdownlint/markdownlint].
+Now the problem is that I do not want to waste time by copying individual release notes to a markdown file for all the repositories I have. Enter [Release Exporter](https://github.com/akshaybabloo/release-exporter). Release exporter makes it easy for you to generate a changelog in the form of markdown or a JSON file and it supports GitHub and GitLab releases. I tried my best to develop the application that follows the format of [keep a changelog v1](http://keepachangelog.com/en/1.0.0/) and [Markdown lint](https://github.com/markdownlint/markdownlint).
 
 ## How to use it then?
 
