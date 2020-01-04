@@ -23,9 +23,9 @@
             },
             "url": {{ .Site.BaseURL | jsonify | safeJS }},
             "sameAs": [
-                {{ .Site.Params.twitter | jsonify | safeJS }}
-                {{ .Site.Params.github | jsonify | safeJS }}
-                {{ .Site.Params.linkedin | jsonify | safeJS }}
+                {{ .Site.Params.twitter | jsonify | safeJS }},
+                {{ .Site.Params.github | jsonify | safeJS }},
+                {{ .Site.Params.linkedin | jsonify | safeJS }},
                 {{ .Site.BaseURL | jsonify | safeJS }}
             ]
         },
@@ -52,5 +52,4 @@
             "@id": {{ .Site.BaseURL | jsonify | safeJS }}
         }
     }
-
 </script>

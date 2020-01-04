@@ -8,11 +8,11 @@
 <meta name="robots" content="index, follow">
 
 {{ if (isset .Params "externalurl") }}
-    <meta http-equiv="refresh" content="2;url={{ .Params.externalurl }}"/>
+<meta http-equiv="refresh" content="2;url={{ .Params.externalurl }}" />
 {{ end }}
 
 <!-- For old IEs -->
-<link rel="shortcut icon" href="{{`img/favicon.ico` | relURL}}"/>
+<link rel="shortcut icon" href="{{`img/favicon.ico` | relURL}}" />
 
 <!-- For new browsers - multisize ico  -->
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="{{`img/favicon.ico` | relURL}}">
@@ -52,8 +52,7 @@
 
 
 <link rel="canonical" href="{{ .Permalink }}"/>
-<link rel="alternate" type="application/rss+xml" title="RSS Feed for {{ .Site.Title }}"
-      href="{{ `index.xml` | absURL }}"/>
+<link rel="alternate" type="application/rss+xml" title="RSS Feed for {{ .Site.Title }}" href="{{ `index.xml` | absURL }}" />
 
 <meta name="description" content="{{ .Params.description }}"/>
 <meta itemprop="description" content="{{ .Params.description }}"/>
@@ -61,17 +60,17 @@
 {{- partial "schemaSEO.html" . -}}
 
 {{ if (isset .Params "images") }}
-    <meta itemprop="thumbnailUrl" content="{{ (index .Params.images 0) | absURL }}"/>
+  <meta itemprop="thumbnailUrl" content="{{ (index .Params.images 0) | absURL }}"/>
 {{ else }}
-    <meta itemprop="thumbnailUrl" content="{{ .Site.Params.thumbnailUrl | absURL }}"/>
+  <meta itemprop="thumbnailUrl" content="{{ .Site.Params.thumbnailUrl | absURL }}"/>
 {{ end }}
 
 {{ if or .Params.noindex (isset .Params "externalurl") }}
-    <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 {{end}}
 
 {{ if eq (getenv "HUGO_ENV") "production" }}
-    {{ template "_internal/google_analytics_async.html" . }}
+   {{ template "_internal/google_analytics_async.html" . }}
 {{ end }}
 {{ template "_internal/google_news.html" . }}
 {{ template "_internal/opengraph.html" . }}

@@ -52,8 +52,8 @@
     });
 
     {{ if .Site.Params.convertAssetsToInline }}
-        {{ $customJs := resources.Get "js/custom.js" }}
-        {{ $customJs.Content | safeJS }}
+    {{ $customJs := resources.Get "js/custom.js" }}
+    {{ $customJs.Content | safeJS }}
     {{ end }}
 </script>
 
