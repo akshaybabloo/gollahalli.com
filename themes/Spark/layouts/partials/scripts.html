@@ -16,7 +16,7 @@
 
     {{ $instantsearch := resources.Get "js/instantsearch.development.js" }}
     <script>
-        {{ $algoliasearchLite.Content | safeJS }}
+        {{ $instantsearch.Content | safeJS }}
     </script>
 {{ else }}
     {{ $uikitJs := resources.Get "js/uikit.js" | resources.Minify }}
