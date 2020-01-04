@@ -16,7 +16,7 @@
 
     {{ $instantsearch := resources.Get "js/instantsearch.development.js" }}
     <script>
-        {{ $algoliasearchLite.Content | safeJS }}
+        {{ $instantsearch.Content | safeJS }}
     </script>
 {{ else }}
     {{ $uikitJs := resources.Get "js/uikit.js" | resources.Minify }}
@@ -52,8 +52,8 @@
     });
 
     {{ if .Site.Params.convertAssetsToInline }}
-    {{ $customJs := resources.Get "js/custom.js" }}
-    {{ $customJs.Content | safeJS }}
+        {{ $customJs := resources.Get "js/custom.js" }}
+        {{ $customJs.Content | safeJS }}
     {{ end }}
 </script>
 

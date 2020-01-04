@@ -6,17 +6,17 @@
     {{- partial "articleSchemaSEO.html" . -}}
 
     <script async custom-element="amp-auto-ads"
-        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
     </script>
 
 </head>
 
 <body class="amp-template">
-    <amp-auto-ads type="adsense" data-ad-client="ca-pub-{{.Site.Params.googleAds}}">
-    </amp-auto-ads>
-    {{ if eq (getenv "HUGO_ENV") "production" }}
-        <amp-analytics type="gtag" data-credentials="include">
-            <script type="application/json">
+<amp-auto-ads type="adsense" data-ad-client="ca-pub-{{.Site.Params.googleAds}}">
+</amp-auto-ads>
+{{ if eq (getenv "HUGO_ENV") "production" }}
+    <amp-analytics type="gtag" data-credentials="include">
+        <script type="application/json">
                 {
                     "vars" : {
                         "gtag_id": "{{ .Site.GoogleAnalytics }}",
@@ -25,49 +25,50 @@
                         }
                     }
                 }
-            </script>
-        </amp-analytics>
-    {{ end }}
-    <header class="main-header">
-        <nav class="blog-title">
-            {{ if .Site.Params.namedLogo }}
-                <amp-img width="150" height="36" layout="fixed" src="{{ .Site.Params.namedLogo | relURL}}"></amp-img>
-            {{ else }}
-                <a href="{{ .Site.BaseURL }}">
-                    {{ .Site.Title }}
-                </a>
-            {{ end }}
-        </nav>
-    </header>
 
-    <main class="content" role="main">
-        <article class="post">
-
-            <header class="post-header">
-                <h1 class="post-title">{{.Title}}</h1>
-                <section class="post-meta">
-                    {{/*                <p class="author">by <a href=""></a></p>*/}}
-                    <time class="post-date" datetime="{{ .PublishDate }}">{{.PublishDate.Format "January 2, 2006"}}</time>
-                </section>
-            </header>
-            {{ if (isset .Params "images") }}
-                <figure class="post-image">
-                    <amp-img src="{{ (index .Params.images 0) | absURL }}" width="600"
-                             height="400" layout="responsive"></amp-img>
-                </figure>
-            {{ end }}
-            <section class="post-content">
-                {{ .Content }}
-            </section>
-        </article>
-    </main>
-    <footer class="site-footer clearfix">
-        <section class="copyright"><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a> &copy; {{.Site.Params.year}}
-        </section>
-        {{if .Site.Params.acknowledge }}
-            <section class="poweredby">Theme by <a href="https://github.com/akshaybabloo/spark-hugo-theme">Akshay Raj
-                    Gollahalli</a>, generated using <a href="http://hugo.io">Hugo</a></section>
+        </script>
+    </amp-analytics>
+{{ end }}
+<header class="main-header">
+    <nav class="blog-title">
+        {{ if .Site.Params.namedLogo }}
+            <amp-img width="150" height="36" layout="fixed" src="{{ .Site.Params.namedLogo | relURL}}"></amp-img>
+        {{ else }}
+            <a href="{{ .Site.BaseURL }}">
+                {{ .Site.Title }}
+            </a>
         {{ end }}
-    </footer>
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">{{.Title}}</h1>
+            <section class="post-meta">
+                {{/*                <p class="author">by <a href=""></a></p>*/}}
+                <time class="post-date" datetime="{{ .PublishDate }}">{{.PublishDate.Format "January 2, 2006"}}</time>
+            </section>
+        </header>
+        {{ if (isset .Params "images") }}
+            <figure class="post-image">
+                <amp-img src="{{ (index .Params.images 0) | absURL }}" width="600"
+                         height="400" layout="responsive"></amp-img>
+            </figure>
+        {{ end }}
+        <section class="post-content">
+            {{ .Content }}
+        </section>
+    </article>
+</main>
+<footer class="site-footer clearfix">
+    <section class="copyright"><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a> &copy; {{.Site.Params.year}}
+    </section>
+    {{if .Site.Params.acknowledge }}
+        <section class="poweredby">Theme by <a href="https://github.com/akshaybabloo/spark-hugo-theme">Akshay Raj
+                Gollahalli</a>, generated using <a href="http://hugo.io">Hugo</a></section>
+    {{ end }}
+</footer>
 </body>
 </html>
