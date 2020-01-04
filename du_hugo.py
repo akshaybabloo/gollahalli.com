@@ -116,8 +116,8 @@ def update_version_in_netlify(version: str):
 
     try:
         with open('netlify.toml', 'w') as pipeline:
-            NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']=version
-            NETLIFY_CONFIG['context']['deploy-preview']['environment']['HUGO_VERSION']=version
+            NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION'] = version
+            NETLIFY_CONFIG['context']['deploy-preview']['environment']['HUGO_VERSION'] = version
 
             toml.dump(NETLIFY_CONFIG, pipeline)
 
