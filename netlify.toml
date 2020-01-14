@@ -13,7 +13,7 @@ publish = "public"
 command = "hugo --gc --minify && python utils.py"
 
 [context.deploy-preview]
-command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
+command = "yarn install && npx gulp && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.deploy-preview.environment]
 HUGO_VERSION = "0.62.2"

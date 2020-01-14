@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.1.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.1.1 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -7283,20 +7283,62 @@
             };
 
             var stateToWidgetsMap = {
-              query: ['ais.searchBox', 'ais.autocomplete', 'ais.voiceSearch'],
-              refinementList: ['ais.refinementList'],
-              menu: ['ais.menu'],
-              hierarchicalMenu: ['ais.hierarchicalMenu'],
-              numericMenu: ['ais.numericMenu'],
-              ratingMenu: ['ais.ratingMenu'],
-              range: ['ais.range'],
-              toggle: ['ais.toggleRefinement'],
-              geoSearch: ['ais.geoSearch'],
-              sortBy: ['ais.sortBy'],
-              page: ['ais.pagination', 'ais.infiniteHits'],
-              hitsPerPage: ['ais.hitsPerPage'],
-              configure: ['ais.configure'],
-              places: ['ais.places']
+              query: {
+                connectors: ['connectSearchBox'],
+                widgets: ['ais.searchBox', 'ais.autocomplete', 'ais.voiceSearch']
+              },
+              refinementList: {
+                connectors: ['connectRefinementList'],
+                widgets: ['ais.refinementList']
+              },
+              menu: {
+                connectors: ['connectMenu'],
+                widgets: ['ais.menu']
+              },
+              hierarchicalMenu: {
+                connectors: ['connectHierarchicalMenu'],
+                widgets: ['ais.hierarchicalMenu']
+              },
+              numericMenu: {
+                connectors: ['connectNumericMenu'],
+                widgets: ['ais.numericMenu']
+              },
+              ratingMenu: {
+                connectors: ['connectRatingMenu'],
+                widgets: ['ais.ratingMenu']
+              },
+              range: {
+                connectors: ['connectRange'],
+                widgets: ['ais.rangeInput', 'ais.rangeSlider']
+              },
+              toggle: {
+                connectors: ['connectToggleRefinement'],
+                widgets: ['ais.toggleRefinement']
+              },
+              geoSearch: {
+                connectors: ['connectGeoSearch'],
+                widgets: ['ais.geoSearch']
+              },
+              sortBy: {
+                connectors: ['connectSortBy'],
+                widgets: ['ais.sortBy']
+              },
+              page: {
+                connectors: ['connectPagination'],
+                widgets: ['ais.pagination', 'ais.infiniteHits']
+              },
+              hitsPerPage: {
+                connectors: ['connectHitsPerPage'],
+                widgets: ['ais.hitsPerPage']
+              },
+              configure: {
+                connectors: ['connectConfigure'],
+                widgets: ['ais.configure']
+              },
+              places: {
+                connectors: [],
+                widgets: ['ais.places']
+              }
             };
 
             var mountedWidgets = _this2.getWidgets().map(function (widget) {
@@ -7304,14 +7346,17 @@
             }).filter(Boolean);
 
             var missingWidgets = Object.keys(localUiState).reduce(function (acc, parameter) {
-              var requiredWidgets = stateToWidgetsMap[parameter];
+              var requiredWidgets = stateToWidgetsMap[parameter] && stateToWidgetsMap[parameter].widgets;
 
               if (requiredWidgets && !requiredWidgets.some(function (requiredWidget) {
                 return mountedWidgets.includes(requiredWidget);
               })) {
-                acc.push([parameter, stateToWidgetsMap[parameter].map(function (widgetIdentifier) {
-                  return widgetIdentifier.split('ais.')[1];
-                })]);
+                acc.push([parameter, {
+                  connectors: stateToWidgetsMap[parameter].connectors,
+                  widgets: stateToWidgetsMap[parameter].widgets.map(function (widgetIdentifier) {
+                    return widgetIdentifier.split('ais.')[1];
+                  })
+                }]);
               }
 
               return acc;
@@ -7321,32 +7366,47 @@
 
               var _ref4 = _slicedToArray(_ref3, 2),
                   stateParameter = _ref4[0],
-                  widgets = _ref4[1];
+                  widgets = _ref4[1].widgets;
 
               return "- `".concat(stateParameter, "` needs one of these widgets: ").concat((_ref5 = []).concat.apply(_ref5, _toConsumableArray(widgets.map(function (name) {
                 return getWidgetNames(name);
               }))).map(function (name) {
                 return "\"".concat(name, "\"");
               }).join(', '));
-            }).join('\n'), "\n\nIf you do not wish to display widgets but still want to support their search parameters, you can mount \"virtual widgets\" that don't render anything:\n\n```\n").concat(missingWidgets.map(function (_ref6) {
+            }).join('\n'), "\n\nIf you do not wish to display widgets but still want to support their search parameters, you can mount \"virtual widgets\" that don't render anything:\n\n```\n").concat(missingWidgets.filter(function (_ref6) {
               var _ref7 = _slicedToArray(_ref6, 2),
                   _stateParameter = _ref7[0],
-                  widgets = _ref7[1];
+                  connectors = _ref7[1].connectors;
 
-              var capitalizedWidget = capitalize(widgets[0]);
-              return "const virtual".concat(capitalizedWidget, " = connect").concat(capitalizedWidget, "(() => null);");
-            }).join('\n'), "\n\nsearch.addWidgets([\n  ").concat(missingWidgets.map(function (_ref8) {
+              return connectors.length > 0;
+            }).map(function (_ref8) {
               var _ref9 = _slicedToArray(_ref8, 2),
                   _stateParameter = _ref9[0],
-                  widgets = _ref9[1];
+                  _ref9$ = _ref9[1],
+                  connectors = _ref9$.connectors,
+                  widgets = _ref9$.widgets;
+
+              var capitalizedWidget = capitalize(widgets[0]);
+              var connectorName = connectors[0];
+              return "const virtual".concat(capitalizedWidget, " = ").concat(connectorName, "(() => null);");
+            }).join('\n'), "\n\nsearch.addWidgets([\n  ").concat(missingWidgets.filter(function (_ref10) {
+              var _ref11 = _slicedToArray(_ref10, 2),
+                  _stateParameter = _ref11[0],
+                  connectors = _ref11[1].connectors;
+
+              return connectors.length > 0;
+            }).map(function (_ref12) {
+              var _ref13 = _slicedToArray(_ref12, 2),
+                  _stateParameter = _ref13[0],
+                  widgets = _ref13[1].widgets;
 
               var capitalizedWidget = capitalize(widgets[0]);
               return "virtual".concat(capitalizedWidget, "({ /* ... */ })");
             }).join(',\n  '), "\n]);\n```\n\nIf you're using custom widgets that do set these query parameters, we recommend using connectors instead.\n\nSee https://www.algolia.com/doc/guides/building-search-ui/widgets/customize-an-existing-widget/js/#customize-the-complete-ui-of-the-widgets")) ;
           }
         });
-        derivedHelper.on('result', function (_ref10) {
-          var results = _ref10.results;
+        derivedHelper.on('result', function (_ref14) {
+          var results = _ref14.results;
           // The index does not render the results it schedules a new render
           // to let all the other indices emit their own results. It allows us to
           // run the render process in one pass.
@@ -7376,8 +7436,8 @@
         // configuration of the widget is pushed in the URL. That's what we want to avoid.
         // https://github.com/algolia/instantsearch.js/pull/994/commits/4a672ae3fd78809e213de0368549ef12e9dc9454
 
-        helper.on('change', function (_ref11) {
-          var state = _ref11.state;
+        helper.on('change', function (_ref15) {
+          var state = _ref15.state;
           localUiState = getLocalWidgetsState(localWidgets, {
             searchParameters: state,
             helper: helper
@@ -7385,10 +7445,10 @@
           instantSearchInstance.onStateChange();
         });
       },
-      render: function render(_ref12) {
+      render: function render(_ref16) {
         var _this3 = this;
 
-        var instantSearchInstance = _ref12.instantSearchInstance;
+        var instantSearchInstance = _ref16.instantSearchInstance;
         localWidgets.forEach(function (widget) {
           // At this point, all the variables used below are set. Both `helper`
           // and `derivedHelper` have been created at the `init` step. The attribute
@@ -7442,7 +7502,7 @@
     };
   };
 
-  var version$1 = '4.1.0';
+  var version$1 = '4.1.1';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -7608,6 +7668,19 @@
           })));
         } catch (error) {
           throw new Error("\nThe snippet helper expects a JSON object of the format:\n{ \"attribute\": \"name\", \"highlightedTagName\": \"mark\" }");
+        }
+      },
+      insights: function insights$1(options, render) {
+        try {
+          var _JSON$parse = JSON.parse(options),
+              method = _JSON$parse.method,
+              payload = _JSON$parse.payload;
+
+          return render(insights(method, _objectSpread2({
+            objectIDs: [this.objectID]
+          }, payload)));
+        } catch (error) {
+          throw new Error("\nThe insights helper expects a JSON object of the format:\n{ \"method\": \"method-name\", \"payload\": { \"eventName\": \"name of the event\" } }");
         }
       }
     };
@@ -9918,6 +9991,13 @@
 
   var wrapInsightsClient = function wrapInsightsClient(aa, results, hits) {
     return function (method, payload) {
+      if (!aa) {
+        var withInstantSearchUsage = createDocumentationMessageGenerator({
+          name: 'instantsearch'
+        });
+        throw new Error(withInstantSearchUsage('The `insightsClient` option has not been provided to `instantsearch`.'));
+      }
+
       if (!Array.isArray(payload.objectIDs)) {
         throw new TypeError('Expected `objectIDs` to be an array.');
       }
@@ -9939,14 +10019,12 @@
             hits = renderOptions.hits,
             instantSearchInstance = renderOptions.instantSearchInstance;
 
-        if (results && hits && instantSearchInstance && instantSearchInstance.insightsClient
-        /* providing the insightsClient is optional */
-        ) {
-            var insights = wrapInsightsClient(instantSearchInstance.insightsClient, results, hits);
-            return renderFn(_objectSpread2({}, renderOptions, {
-              insights: insights
-            }), isFirstRender);
-          }
+        if (results && hits && instantSearchInstance) {
+          var insights = wrapInsightsClient(instantSearchInstance.insightsClient, results, hits);
+          return renderFn(_objectSpread2({}, renderOptions, {
+            insights: insights
+          }), isFirstRender);
+        }
 
         return renderFn(renderOptions, isFirstRender);
       };
@@ -9978,10 +10056,6 @@
   var insightsListener = function insightsListener(BaseComponent) {
     function WithInsightsListener(props) {
       var handleClick = function handleClick(event) {
-        if (!props.insights) {
-          throw new Error('The `insightsClient` option has not been provided to `instantsearch`.');
-        }
-
         var insightsTarget = findInsightsTarget(event.target, event.currentTarget);
         if (!insightsTarget) return;
 
@@ -12907,7 +12981,6 @@
    *
    * Currently, the feature is not compatible with multiple values in the _geoloc attribute.
    *
-   * @type {Connector}
    * @param {function(GeoSearchRenderingOptions, boolean)} renderFn Rendering function for the custom **GeoSearch** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
    * @return {function(CustomGeoSearchWidgetOptions)} Re-usable widget factory for a custom **GeoSearch** widget.
@@ -13327,7 +13400,7 @@
         // `sumOrFiltersScores`.
         // See https://github.com/algolia/algoliasearch-helper-js/pull/753
         sumOrFiltersScores: true,
-        filters: "NOT objectID:".concat(hit.objectID),
+        facetFilters: ["objectID:-".concat(hit.objectID)],
         // @ts-ignore @TODO algoliasearch-helper@3.0.1 will contain the type
         // `optionalFilters`.
         // See https://github.com/algolia/algoliasearch-helper-js/pull/754
@@ -20201,105 +20274,76 @@
     });
   }
 
-  var Panel =
-  /*#__PURE__*/
-  function (_Component) {
-    _inherits(Panel, _Component);
+  var t$1,r$1,u$1=[],i$1=n.__r;n.__r=function(n){i$1&&i$1(n),t$1=0,(r$1=n.__c).__H&&(r$1.__H.t=A$1(r$1.__H.t));};var f$1=n.diffed;n.diffed=function(n){f$1&&f$1(n);var t=n.__c;if(t){var r=t.__H;r&&(r.u=(r.u.some(function(n){n.ref&&(n.ref.current=n.createHandle());}),[]),r.i=A$1(r.i));}};var o$1=n.unmount;function e$1(t){n.__h&&n.__h(r$1);var u=r$1.__H||(r$1.__H={o:[],t:[],i:[],u:[]});return t>=u.o.length&&u.o.push({}),u.o[t]}function c$1(n){return a$1(q,n)}function a$1(n,u,i){var f=e$1(t$1++);return f.__c||(f.__c=r$1,f.v=[i?i(u):q(void 0,u),function(t){var r=n(f.v[0],t);f.v[0]!==r&&(f.v[0]=r,f.__c.setState({}));}]),f.v}function v$1(n,u){var i=e$1(t$1++);h$1(i.m,u)&&(i.v=n,i.m=u,r$1.__H.t.push(i),T$1(r$1));}function d$1(n){return l(function(){return {current:n}},[])}function l(n,r){var u=e$1(t$1++);return h$1(u.m,r)?(u.m=r,u.p=n,u.v=n()):u.v}n.unmount=function(n){o$1&&o$1(n);var t=n.__c;if(t){var r=t.__H;r&&r.o.forEach(function(n){return n.l&&n.l()});}};var T$1=function(){};function g$1(){u$1.some(function(n){n.s=!1,n.__P&&(n.__H.t=A$1(n.__H.t));}),u$1=[];}if("undefined"!=typeof window){var w$1=n.requestAnimationFrame;T$1=function(t){(!t.s&&(t.s=!0)&&1===u$1.push(t)||w$1!==n.requestAnimationFrame)&&(w$1=n.requestAnimationFrame,(n.requestAnimationFrame||function(n){var t=function(){clearTimeout(r),cancelAnimationFrame(u),setTimeout(n);},r=setTimeout(t,100),u=requestAnimationFrame(t);})(g$1));};}function A$1(n){return n.forEach(E),n.forEach(F),[]}function E(n){n.l&&n.l();}function F(n){var t=n.v();"function"==typeof t&&(n.l=t);}function h$1(n,t){return !n||t.some(function(t,r){return t!==n[r]})}function q(n,t){return "function"==typeof t?t(n):t}
 
-    function Panel() {
-      var _getPrototypeOf2;
+  function Panel(props) {
+    var _cx;
 
-      var _this;
+    var _useState = c$1(props.isCollapsed),
+        _useState2 = _slicedToArray(_useState, 2),
+        isCollapsed = _useState2[0],
+        setIsCollapsed = _useState2[1];
 
-      _classCallCheck(this, Panel);
+    var _useState3 = c$1(false),
+        _useState4 = _slicedToArray(_useState3, 2),
+        isControlled = _useState4[0],
+        setIsControlled = _useState4[1];
 
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
+    var bodyRef = d$1(null);
+    v$1(function () {
+      if (!bodyRef.current) {
+        return undefined;
       }
 
-      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Panel)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      bodyRef.current.appendChild(props.bodyElement);
+      return function () {
+        bodyRef.current.removeChild(props.bodyElement);
+      };
+    }, [bodyRef, props.bodyElement]);
 
-      _defineProperty(_assertThisInitialized(_this), "state", {
-        collapsed: _this.props.collapsed,
-        controlled: false
-      });
-
-      return _this;
+    if (!isControlled && props.isCollapsed !== isCollapsed) {
+      setIsCollapsed(props.isCollapsed);
     }
 
-    _createClass(Panel, [{
-      key: "componentDidMount",
-      value: function componentDidMount() {
-        this.bodyRef.appendChild(this.props.bodyElement);
+    return h("div", {
+      className: classnames(props.cssClasses.root, (_cx = {}, _defineProperty(_cx, props.cssClasses.noRefinementRoot, props.hidden), _defineProperty(_cx, props.cssClasses.collapsibleRoot, props.collapsible), _defineProperty(_cx, props.cssClasses.collapsedRoot, isCollapsed), _cx)),
+      hidden: props.hidden
+    }, props.templates.header && h("div", {
+      className: props.cssClasses.header
+    }, h(Template, {
+      templates: props.templates,
+      templateKey: "header",
+      rootTagName: "span",
+      data: props.data
+    }), props.collapsible && h("button", {
+      className: props.cssClasses.collapseButton,
+      "aria-expanded": !isCollapsed,
+      onClick: function onClick(event) {
+        event.preventDefault();
+        setIsControlled(true);
+        setIsCollapsed(function (prevIsCollapsed) {
+          return !prevIsCollapsed;
+        });
       }
-    }, {
-      key: "render",
-      value: function render() {
-        var _cx,
-            _this2 = this;
-
-        var _this$props = this.props,
-            cssClasses = _this$props.cssClasses,
-            hidden = _this$props.hidden,
-            collapsible = _this$props.collapsible,
-            templateProps = _this$props.templateProps,
-            data = _this$props.data;
-        return h("div", {
-          className: classnames(cssClasses.root, (_cx = {}, _defineProperty(_cx, cssClasses.noRefinementRoot, hidden), _defineProperty(_cx, cssClasses.collapsibleRoot, collapsible), _defineProperty(_cx, cssClasses.collapsedRoot, this.state.collapsed), _cx)),
-          hidden: hidden
-        }, templateProps.templates.header && h("div", {
-          className: cssClasses.header
-        }, h(Template, _extends({}, templateProps, {
-          templateKey: "header",
-          rootTagName: "span",
-          data: data
-        })), collapsible && h("button", {
-          className: cssClasses.collapseButton,
-          "aria-expanded": !this.state.collapsed,
-          onClick: function onClick(event) {
-            event.preventDefault();
-
-            _this2.setState(function (previousState) {
-              return {
-                controlled: true,
-                collapsed: !previousState.collapsed
-              };
-            });
-          }
-        }, h(Template, _extends({}, templateProps, {
-          templateKey: "collapseButtonText",
-          rootTagName: "span",
-          data: {
-            collapsed: this.state.collapsed
-          }
-        })))), h("div", {
-          className: cssClasses.body,
-          ref: function ref(node) {
-            return _this2.bodyRef = node;
-          }
-        }), templateProps.templates.footer && h(Template, _extends({}, templateProps, {
-          templateKey: "footer",
-          rootProps: {
-            className: cssClasses.footer
-          },
-          data: data
-        })));
+    }, h(Template, {
+      templates: props.templates,
+      templateKey: "collapseButtonText",
+      rootTagName: "span",
+      data: {
+        collapsed: isCollapsed
       }
-    }], [{
-      key: "getDerivedStateFromProps",
-      value: function getDerivedStateFromProps(nextProps, prevState) {
-        if (!prevState.controlled && nextProps.collapsed !== prevState.collapsed) {
-          return {
-            collapsed: nextProps.collapsed
-          };
-        }
-
-        return null;
-      }
-    }]);
-
-    return Panel;
-  }(m);
+    }))), h("div", {
+      className: props.cssClasses.body,
+      ref: bodyRef
+    }), props.templates.footer && h(Template, {
+      templates: props.templates,
+      templateKey: "footer",
+      rootProps: {
+        className: props.cssClasses.footer
+      },
+      data: props.data
+    }));
+  }
 
   var withUsage$M = createDocumentationMessageGenerator({
     name: 'panel'
@@ -20310,7 +20354,7 @@
     var containerNode = _ref.containerNode,
         bodyContainerNode = _ref.bodyContainerNode,
         cssClasses = _ref.cssClasses,
-        templateProps = _ref.templateProps;
+        templates = _ref.templates;
     return function (_ref2) {
       var options = _ref2.options,
           hidden = _ref2.hidden,
@@ -20320,75 +20364,29 @@
         cssClasses: cssClasses,
         hidden: hidden,
         collapsible: collapsible,
-        collapsed: collapsed,
-        templateProps: templateProps,
+        isCollapsed: collapsed,
+        templates: templates,
         data: options,
         bodyElement: bodyContainerNode
       }), containerNode);
     };
   };
-  /**
-   * @typedef {Object} PanelWidgetCSSClasses
-   * @property  {string|string[]} [root] CSS classes added to the root element of the widget.
-   * @property  {string|string[]} [noRefinementRoot] CSS classes added to the root element of the widget when there's no refinements.
-   * @property  {string|string[]} [collapsibleRoot] CSS classes added to the root element when collapsible.
-   * @property  {string|string[]} [collapsedRoot] CSS classes added to the root element when collapsed.
-   * @property  {string|string[]} [collapseButton] CSS classes added to the collapse button element.
-   * @property  {string|string[]} [collapseIcon] CSS classes added to the collapse icon of the button.
-   * @property  {string|string[]} [header] CSS class to add to the header.
-   * @property  {string|string[]} [footer] CSS class to add to the SVG footer.
-   */
 
   /**
-   * @typedef {Object} PanelTemplates
-   * @property {string|function} [header = ''] Template to use for the header.
-   * @property {string|function} [footer = ''] Template to use for the footer.
-   * @property {string|function} [collapseButtonText] Template to use for collapse button. It is given the collapsed state.
+   * The panel widget wraps other widgets in a consistent panel design.
+   * It also reacts, indicates and sets CSS classes when widgets are no longer relevant for refining.
    */
-
-  /**
-   * @typedef {Object} PanelWidgetOptions
-   * @property {function} [hidden] This function is called on each render to determine from the render options if the panel have to be hidden or not. If the value is `true` the CSS class `noRefinementRoot` is applied and the wrapper is hidden.
-   * @property {PanelTemplates} [templates] Templates to use for the widgets.
-   * @property {PanelWidgetCSSClasses} [cssClasses] CSS classes to add.
-   */
-
-  /**
-   * The panel widget wraps other widgets in a consistent panel design. It also reacts, indicates and sets CSS classes when widgets are no more relevant for refining.
-   *
-   * @type {WidgetFactory}
-   * @devNovel Panel
-   * @category metadata
-   * @param {PanelWidgetOptions} $0 Panel widget options.
-   * @return {function} A new panel widget instance
-   * @example
-   * const refinementListWithPanel = instantsearch.widgets.panel({
-   *   templates: {
-   *     header: 'Brand',
-   *   },
-   * })(instantsearch.widgets.refinementList);
-   *
-   * search.addWidgets([
-   *   refinementListWithPanel({
-   *     container: '#refinement-list',
-   *     attribute: 'brand',
-   *   })
-   * ]);
-   */
-
-
-  function panel() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref3$templates = _ref3.templates,
-        templates = _ref3$templates === void 0 ? {} : _ref3$templates,
-        _ref3$hidden = _ref3.hidden,
-        hidden = _ref3$hidden === void 0 ? function () {
+  var panel = function panel() {
+    var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var _widgetParams$templat = widgetParams.templates,
+        templates = _widgetParams$templat === void 0 ? {} : _widgetParams$templat,
+        _widgetParams$hidden = widgetParams.hidden,
+        hidden = _widgetParams$hidden === void 0 ? function () {
       return false;
-    } : _ref3$hidden,
-        collapsed = _ref3.collapsed,
-        _ref3$cssClasses = _ref3.cssClasses,
-        userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
-
+    } : _widgetParams$hidden,
+        collapsed = widgetParams.collapsed,
+        _widgetParams$cssClas = widgetParams.cssClasses,
+        userCssClasses = _widgetParams$cssClas === void 0 ? {} : _widgetParams$cssClas;
      _warning(typeof hidden === 'function', "The `hidden` option in the \"panel\" widget expects a function returning a boolean (received type ".concat(getObjectType(hidden), ").")) ;
      _warning(typeof collapsed === 'undefined' || typeof collapsed === 'function', "The `collapsed` option in the \"panel\" widget expects a function returning a boolean (received type ".concat(getObjectType(collapsed), ").")) ;
     var bodyContainerNode = document.createElement('div');
@@ -20435,20 +20433,16 @@
         var defaultTemplates = {
           header: '',
           footer: '',
-          collapseButtonText: function collapseButtonText(_ref4) {
-            var isCollapsed = _ref4.collapsed;
+          collapseButtonText: function collapseButtonText(_ref3) {
+            var isCollapsed = _ref3.collapsed;
             return "<svg\n          class=\"".concat(cssClasses.collapseIcon, "\"\n          width=\"1em\"\n          height=\"1em\"\n          viewBox=\"0 0 500 500\"\n        >\n        <path d=\"").concat(isCollapsed ? 'M100 250l300-150v300z' : 'M250 400l150-300H100z', "\" fill=\"currentColor\" />\n        </svg>");
           }
         };
-        var templateProps = prepareTemplateProps({
-          defaultTemplates: defaultTemplates,
-          templates: templates
-        });
         var renderPanel = renderer$l({
           containerNode: getContainerNode(container),
           bodyContainerNode: bodyContainerNode,
           cssClasses: cssClasses,
-          templateProps: templateProps
+          templates: _objectSpread2({}, defaultTemplates, {}, templates)
         });
         renderPanel({
           options: {},
@@ -20497,7 +20491,7 @@
         });
       };
     };
-  }
+  };
 
   /** @jsx h */
 
