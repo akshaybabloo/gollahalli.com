@@ -46,7 +46,7 @@ This file ignores `local.py`.
 
 You can learn more about it at their website -> [https://docs.docker.com/engine/reference/builder/#dockerignore-file](https://docs.docker.com/engine/reference/builder/#dockerignore-file).
 
-## `\_\_init\_\_.py` file
+## `__init__.py` file
 
 Here, we check for `local.py`, if it exists this is imported and if not, `production.py` is used.
 
