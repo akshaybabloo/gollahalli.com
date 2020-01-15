@@ -4,7 +4,7 @@ date: 2019-04-04T23:37:42+13:00
 draft: false
 tags: ["Python", "Azure", "Django"]
 categories: ["Tips"]
-description: "Sometimes you don't want to use the settings for your production in local environment and vice versa, this blog will help you with it."
+description: "Sometimes you don't want to use the settings for your production in a local environment and vice versa, this blog will help you with it."
 images: ["/img/blog/splitting_django_settings.png"]
 ads: true
 author:
