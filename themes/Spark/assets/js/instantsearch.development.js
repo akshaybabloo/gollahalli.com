@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.1.1 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js UNRELEASED (Thu, 23 Jan 2020 15:32:51 GMT) | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -3941,7 +3941,7 @@
 
   var requestBuilder_1 = requestBuilder;
 
-  var version = '3.0.0';
+  var version = '3.1.0';
 
   /**
    * Event triggered when a parameter is set or updated
@@ -7502,7 +7502,7 @@
     };
   };
 
-  var version$1 = '4.1.1';
+  var version$1 = '4.2.0';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -9604,8 +9604,6 @@
    * websites. From a UX point of view, we suggest not displaying more than two
    * levels deep.
    *
-   * There's a complete example available on how to write a custom **HierarchicalMenu**:
-   *  [hierarchicalMenu.js](https://github.com/algolia/instantsearch.js/blob/develop/storybook/app/jquery/widgets/hierarchicalMenu.js)
    * @type {Connector}
    * @param {function(HierarchicalMenuRenderingOptions)} renderFn Rendering function for the custom **HierarchicalMenu** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
@@ -13041,6 +13039,7 @@
       } : _widgetParams$transfo;
       var widgetState = {
         isRefineOnMapMove: enableRefineOnMapMove,
+        // @MAJOR hasMapMoveSinceLastRefine -> hasMapMovedSinceLastRefine
         hasMapMoveSinceLastRefine: false,
         lastRefinePosition: '',
         lastRefineBoundingBox: '',
