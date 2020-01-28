@@ -1,5 +1,9 @@
-const {src, dest, parallel} = require('gulp');
-const path = require('path');
+const {src, dest, parallel, series} = require('gulp');
+const toml = require('toml');
+const fs = require('fs');
+const del = require('del');
+
+var isInlineAsset = true;
 
 // Following are the default paths that the files will be moved to
 const cssFolderPath = './themes/Spark/assets/css/';
