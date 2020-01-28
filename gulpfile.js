@@ -26,14 +26,29 @@ const fontFilesToMove = [
     './node_modules/firacode/distr/woff2/FiraCode-Regular.woff2'
 ];
 
+
+async function checkIsInlineAssets() {
+    isInlineAsset = toml.parse(fs.readFileSync('./config.toml').toString('utf8'))['params']['convertAssetsToInline'];
+}
+
 // Moves CSS files to their appropriate location
 function moveCss() {
-    return src(cssFilesToMove).pipe(dest(cssFolderPath));
+    if (isInlineAsset) {
+        return src(cssFilesToMove).pipe(dest(cssFolderPath));
+    } else {
+        // TODO: Finish the del
+        // del();
+        return src(cssMinFilesToMove).pipe(dest(cssFolderPath))
+    }
 }
 
 // Moves JS files to their appropriate location
 function moveJs() {
-    return src(jsFilesToMove).pipe(dest(jsFolderPath));
+    if (isInlineAsset) {
+        return src(jsFilesToMove).pipe(dest(jsFolderPath));
+    } else {
+        return src(jsMinFilesToMove).pipe(dest(jsFolderPath))
+    }
 }
 
 // Moves JS files to their appropriate location
@@ -42,4 +57,4 @@ function moveFont() {
 }
 
 // Run both functions in parallel
-exports.default = parallel(moveCss, moveJs, moveFont);
+exports.default = series(checkIsInlineAssets, parallel(moveCss, moveJs, moveFont));
