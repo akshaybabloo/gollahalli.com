@@ -7,7 +7,7 @@
 
 {{ define "main"}}
     <div class="uk-section uk-section-default">
-        <div class="uk-container uk-container-xsmall uk-text-justify">
+        <div class="uk-container uk-text-justify">
             <article class="uk-article gol-links">
                 <link itemprop="mainEntityOfPage" href="{{ .Permalink }}"/>
                 <link itemprop="author" content="{{ .Params.author.firstName }} {{ .Params.author.lastName }}"/>
@@ -41,7 +41,7 @@
                         {{end}}
                     {{end}}
                 {{ end }}
-                
+
                 {{.Content}}
 
             </article>

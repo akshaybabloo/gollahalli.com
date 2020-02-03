@@ -5,7 +5,7 @@
 <div class="uk-grid uk-grid-match" uk-height-viewport="offset-bottom: 32">
     <div class="uk-width-expand@m">
         <div class="uk-section uk-section-default">
-            <div class="uk-container uk-container-xsmall uk-text-justify uk-text-break">
+            <div class="uk-container uk-text-justify uk-text-break">
                 {{ range (.Paginate (.Pages.GroupByPublishDate "2006")).PageGroups }}
                     {{ range .Pages }}
                         <article class="uk-article gol-links uk-margin-large">
