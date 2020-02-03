@@ -229,8 +229,22 @@ pre code{
 
 // Highlight
 
-#highlight, pre {
-    border: 0 !important;
-    border-radius: 0 !important;
-    margin-bottom: 0 !important;
+.highlight {
+    table {
+        pre {
+            border: 0 !important;
+            border-radius: 0 !important;
+            margin-bottom: 0 !important;
+        }
+    }
+    pre {
+        border: 0 !important;
+        border-radius: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    code {
+        span{
+            padding-right: 0 !important;
+        }
+    }
 }
