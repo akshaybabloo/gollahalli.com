@@ -74,7 +74,7 @@ In the above example we created a channel called `message`, an anonymous gorutin
 
 Using the channels let's see how we can shut down the serve from a different handle:
 
-```go
+```go {linenos=table,hl_lines=[13,30,34,58]}
 package main
 
 import (
@@ -140,7 +140,7 @@ func StartServer() {
 }
 ```
 
-In the above example, we have a global channel `stopHTTPServerChan` of type `bool`. In the `main()` function, let's a make a channel that has a type of `bool` and assign it to our global variable `stopHTTPServerChan`.
+In the above example, we have a global channel `stopHTTPServerChan` (line 13) of type `bool`. In the `main()` function, let's a make a channel that has a type of `bool` and assign it to our global variable `stopHTTPServerChan` (line 34). When the server starts it won't end abruptly, because of `<-stopHTTPServerChan` (line 58), the program waits here till a boolean signal is received. Under `ExitHandler()` send a signal a boolean signal as `stopHTTPServerChan <- true` (line 30, this could also be `false`), so whenever you go to `http://127.0.0.1:8000/exit` a signal is sent to `stopHTTPServerChan`, once the boolean value is received, the wait is over then it proceeds to the next line.
 
 ## Using with Context
 
