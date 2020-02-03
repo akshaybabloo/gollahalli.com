@@ -31,6 +31,12 @@ I am developing a CLI application that requires it to authenticate and obtain a 
 
 In this post we will look at using three ways to tell the server to shut down gracefully. Also, I am using Gorilla's mux router.
 
+Before we go into the details, there are few common functions between these three implementations:
+
+1. There are two handles (routes); `HomeHandler` - that routes to `127.0.0.1:8000/`, which is our index page and `ExitHandler` - that routes to `127.0.0.1:8000/exit`, which is used to shut down the server.
+2. The server always starts in a gorutine.
+3. The program doesn't exit till some kind of wait request is completed.
+
 - [Using with Channels](#using-with-channels)
 - [Using with Context](#using-with-context)
 - [Using with WaitGroup](#using-with-waitgroup)
@@ -85,25 +91,25 @@ var stopHTTPServerChan chan bool
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	_, err := fmt.Fprintln(w, "<h1>Home of Channels</h1>")
-	if err != nil{
+	_, err := fmt.Fprintln(w, "<h1>Home of Channels</h1><br><a href='/exit'>Exit</a>")
+	if err != nil {
 		panic(err)
 	}
 }
 
-func ExitHandler(w http.ResponseWriter, r *http.Request)  {
+func ExitHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, err := fmt.Fprintln(w, "<h1>Bye from Channels</h1>")
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 	// sends a signal to the channel, this could even be false it doesn't matter
 	stopHTTPServerChan <- true
 }
 
-func main() {
+func StartServer() {
 	stopHTTPServerChan = make(chan bool)
-	r:= mux.NewRouter()
+	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler)
 	r.HandleFunc("/exit", ExitHandler)
 
@@ -118,7 +124,6 @@ func main() {
 	}
 
 	go func() {
-
 		// always returns error. ErrServerClosed on graceful close
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 			// unexpected error. port in use?
@@ -127,7 +132,7 @@ func main() {
 	}()
 
 	// wait here till a signal is received
-	<- stopHTTPServerChan
+	<-stopHTTPServerChan
 	if err := srv.Shutdown(context.TODO()); err != nil {
 		panic(err) // failure/timeout shutting down the server gracefully
 	}
@@ -135,7 +140,7 @@ func main() {
 }
 ```
 
-In the above example, we have a global channel `stopHTTPServerChan` of type `bool`
+In the above example, we have a global channel `stopHTTPServerChan` of type `bool`. In the `main()` function, let's a make a channel that has a type of `bool` and assign it to our global variable `stopHTTPServerChan`.
 
 ## Using with Context
 
