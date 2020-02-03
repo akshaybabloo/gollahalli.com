@@ -1,5 +1,5 @@
 ---
-title: "Stopping Http Server Gracefully: Context vs Channels"
+title: "Stopping HTTP Server Gracefully: Context vs Channels vs SyncGroup"
 date: 2020-02-02T13:01:03+13:00
 draft: true
 categories: []
@@ -24,8 +24,6 @@ sitemap:
 #   - imageLoc: ""
 #     imageCaption: ""
 ---
-
-Channels
 
 ```go
 package login
