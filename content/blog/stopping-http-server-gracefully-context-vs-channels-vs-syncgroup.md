@@ -39,20 +39,27 @@ In this post we will look at using three ways to tell the server to shut down gr
 
 Channels are like pathways, it joins gorutines to send and receive messages. For example:
 
+See [play.golang.org/p/BC3IBnNjzb5](https://play.golang.org/p/BC3IBnNjzb5)
+
 ```go
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
-func main()  {
-	message := make(chan, string)
+func main() {
+	message := make(chan string)
 
-	go func {
+	go func() {
+		fmt.Println("Hello from gorutine")
+		time.Sleep(2 * time.Second) // wait for two seconds
 		message <- "Hello World!"
 	}()
 
-	receivedMessage := <- message
-	fmt.Println(receivedText)
+	receivedMessage := <-message
+	fmt.Println(receivedMessage)
 	// Hello World!
 }
 ```
