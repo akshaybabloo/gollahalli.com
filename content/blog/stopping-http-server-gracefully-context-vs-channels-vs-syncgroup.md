@@ -94,7 +94,7 @@ func ExitHandler(w http.ResponseWriter, r *http.Request)  {
 	stopHTTPServerChan <- true
 }
 
-func StartServer() {
+func main() {
 	stopHTTPServerChan = make(chan bool)
 	r:= mux.NewRouter()
 	r.HandleFunc("/", HomeHandler)
@@ -127,6 +127,8 @@ func StartServer() {
 	fmt.Println("Server closed - Channels")
 }
 ```
+
+In the above example, we have a global channel `stopHTTPServerChan` of type `bool`
 
 ## Using with Context
 
