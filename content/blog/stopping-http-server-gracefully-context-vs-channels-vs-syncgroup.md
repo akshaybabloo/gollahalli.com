@@ -144,9 +144,108 @@ In the above example, we have a global channel `stopHTTPServerChan` (line 13) of
 
 ## Using with Context
 
-```go
+> Note: According to the documentations, contexts should never be stored in `struct` type but rather it should be passed through with few exceptions; `context.CancelFunc` is one such exception.
 
+Contexts in the backend uses channels to send and receive messages but in a server scenario, every request received runs on a gorutine. Some requests might take more time than required, for fewer request the server should usually be able to handel them without using too much resources, but when there are 1000's of request per-second the system might crash, the context library comes with function, such as - WithCancel, WithDeadline, WithTimeout, and WithValue - that helps in destroying a request if it takes time that is allocated to it.
+
+See [play.golang.org/p/3scpKiCypIS](https://play.golang.org/p/3scpKiCypIS)
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+)
+
+func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go func() {
+		fmt.Println("Hello from gorutine")
+		time.Sleep(2 * time.Second) // wait for two seconds
+		cancel()
+	}()
+
+	<-ctx.Done()
+	fmt.Println("Hello World!")
+	// Hello World!
+}
 ```
+
+Above example works exactly like channels example, only that you don't have to make a channel and looks pretty.
+
+```go {linenos=table,hl_lines=["13-15",32,"36-37","61-62"]}
+package withcontext
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"net/http"
+	"time"
+
+	"github.com/gorilla/mux"
+)
+
+type httpServerHelper struct {
+	cancelFunc context.CancelFunc
+}
+
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	_, err := fmt.Fprintln(w, "<h1>Home of Context</h1><br><a href='/exit'>Exit</a>")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (helper *httpServerHelper) ExitHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	_, err := fmt.Fprintln(w, "<h1>Bye from Context</h1>")
+	if err != nil {
+		panic(err)
+	}
+	// Execute a cancel function
+	helper.cancelFunc()
+}
+
+func main() {
+	stopHTTPServerCtx, cancel := context.WithCancel(context.Background())
+	serverHelper := &httpServerHelper{cancelFunc: cancel}
+	r := mux.NewRouter()
+	r.HandleFunc("/", HomeHandler)
+	r.HandleFunc("/exit", serverHelper.ExitHandler)
+
+	fmt.Println("Server started at http://127.0.0.1:8000")
+
+	srv := &http.Server{
+		Handler: r,
+		Addr:    "127.0.0.1:8000",
+		// Good practice: enforce timeouts for servers you create!
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	go func() {
+		// always returns error. ErrServerClosed on graceful close
+		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+			// unexpected error. port in use?
+			log.Fatalf("ListenAndServe(): %v", err)
+		}
+	}()
+
+	// Wait till a cancel is executed
+	<-stopHTTPServerCtx.Done()
+	if err := srv.Shutdown(stopHTTPServerCtx); err != nil && err != context.Canceled {
+		panic(err) // failure/timeout shutting down the server gracefully
+	}
+	fmt.Println("Server closed - Context")
+}
+```
+
+From the above example, let's create a `httpServerHelper` struct with `cancelFunc` of type `context.CancelFunc` (line 13-15). The `context.WithCancel()`, returns a context and a cancel function, lets assign it to `stopHTTPServerCtx` and `cancel` (line 36), assign the `cancel()` function to `httpServerHelper` struct's `cancelFunc` and call it `serverHelper` (line 37). When you go to `http://127.0.0.1:8000/exit`, `cancel()` function is invoked which sends a `Done()` signal at line `61`. where there is no error and all the channels are executed, `context.Canceled` returns a string else an Error.
 
 ## Using with WaitGroup
 
