@@ -4,8 +4,8 @@ date: 2020-02-02T13:01:03+13:00
 draft: false
 categories: ["Tutorial"]
 tags: ["Go"]
-description: ""
-images: []
+description: "Shutting down HTTP server from different handles made easy."
+images: ["/img/blog/stop-http-server.jpg"]
 ads: true
 # htmlScripts: []
 author:
@@ -20,9 +20,9 @@ author:
 sitemap:
   priority: 0.8
   changeFreq: monthly
-# siteMapImages:
-#   - imageLoc: ""
-#     imageCaption: ""
+siteMapImages:
+  - imageLoc: "/img/blog/stop-http-server.jpg"
+    imageCaption: "Stopping Go's HTTP server from a different route"
 ---
 
 > Full code can be found at [github.com/akshaybabloo/gracefully-exit-go-http-server](https://github.com/akshaybabloo/gracefully-exit-go-http-server)
