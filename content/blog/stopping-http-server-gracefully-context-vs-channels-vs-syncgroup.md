@@ -25,21 +25,21 @@ siteMapImages:
     imageCaption: "Stopping Go's HTTP server from a different route"
 ---
 
-> Full code can be found at [github.com/akshaybabloo/gracefully-exit-go-http-server](https://github.com/akshaybabloo/gracefully-exit-go-http-server)
+> Complete code can be found at [github.com/akshaybabloo/gracefully-exit-go-http-server](https://github.com/akshaybabloo/gracefully-exit-go-http-server)
 
-I am developing a CLI application that requires it to authenticate and obtain a token from an API. I had a problem of gracefully shutting down the the HTTP server from another function, in this case, after a token is received. Go 1.8 introduced `Shutdown` that gracefully shuts down the server without interrupting any active connections.
+I am developing a CLI application that requires it to authenticate and obtain a token from an API. I had a problem of gracefully shutting down the HTTP server from another function (handle), in this case, after a token is received. Go 1.8 introduced `Shutdown` that gracefully shuts down the server without interrupting any active connections.
 
-In this post we will look at using three ways to tell the server to shut down gracefully. Also, I am using Gorilla's mux router.
+In this post, we will look at using three ways to tell the server to shut down gracefully. Also, I am using Gorilla's mux router.
 
 Before we go into the details, there are few common functions between these three implementations:
 
-1. There are two handles (routes); `HomeHandler` - that routes to `127.0.0.1:8000/`, which is our index page and `ExitHandler` - that routes to `127.0.0.1:8000/exit`, which is used to shut down the server.
+1. There are two handles (routes); `HomeHandler` - that routes to `http://127.0.0.1:8000/`, which is our index page and `ExitHandler` - that routes to `http://127.0.0.1:8000/exit`, which is used to shut down the server.
 2. The server always starts in a goroutine.
-3. The program doesn't exit till some kind of wait request is completed.
+3. The program doesn't exit until some kind of wait request is completed.
 
 ## Using with Channels
 
-Channels are like pathways, it joins gorutines to send and receive messages. For example:
+Channels are like pathways; it joins goroutines to send and receive messages. For example:
 
 See [play.golang.org/p/BC3IBnNjzb5](https://play.golang.org/p/BC3IBnNjzb5)
 
@@ -66,9 +66,9 @@ func main() {
 }
 ```
 
-In the above example we created a channel called `message`, an anonymous gorutine is run and a text is sent to the `message` channel. The channel doesn't let the program end unless a message is received at `receivedMessage`. Once the message is received, the text is assigned to `receivedMessage`, then prints it out and eventually exits the program.
+In the above example, we created a channel called `message`, then an anonymous goroutine that prints a text to console runs, and finally, a string is sent to the `message` channel. The channel doesn't let the program end unless a message is received to `receivedMessage`. Once a message is received, the text is assigned to `receivedMessage`, then prints it out and eventually exits the program.
 
-Using the channels let's see how we can shut down the serve from a different handle:
+Using the channels, let's see how we can shut down the server from a different handle:
 
 ```go {linenos=table,hl_lines=[13,30,34,58]}
 package main
@@ -136,13 +136,13 @@ func StartServer() {
 }
 ```
 
-In the above example, we have a global channel `stopHTTPServerChan` (line 13) of type `bool`. In the `main()` function, let's a make a channel that has a type of `bool` and assign it to our global variable `stopHTTPServerChan` (line 34). When the server starts it won't end abruptly, because of `<-stopHTTPServerChan` (line 58), the program waits here till a boolean signal is received. Under `ExitHandler()` send a signal a boolean signal as `stopHTTPServerChan <- true` (line 30, this could also be `false`), so whenever you go to `http://127.0.0.1:8000/exit` a signal is sent to `stopHTTPServerChan`, once the boolean value is received, the wait is over then it proceeds to the next line.
+In the above example, we have a global channel - `stopHTTPServerChan` (line 13) of type `bool`. In the `main()` function, let's a make a channel that has a data type of `bool` and assign it to our global variable `stopHTTPServerChan` (line 34). When the server starts it won't end abruptly, because of `<-stopHTTPServerChan` (line 58), the program waits here till a boolean signal is received. Under `ExitHandler()` send a message, a boolean signal as `stopHTTPServerChan <- true` (line 30, this could also be `false`), so whenever you go to `http://127.0.0.1:8000/exit`, a signal is sent to `stopHTTPServerChan`, once the boolean value is received, the wait is over then it proceeds to the next line.
 
 ## Using with Context
 
-> Note: According to the documentations, contexts should never be stored in `struct` type but rather it should be passed through with few exceptions; `context.CancelFunc` is one such exception.
+> Note: According to the documentation, contexts should never be stored in `struct` type, but rather it should be passed through as an argument to a function. There are a few exceptions; `context.CancelFunc` is one such exception that can be put in a structure.
 
-Contexts in the backend uses channels to send and receive messages but in a server scenario, every request received runs on a gorutine. Some requests might take more time than required, for fewer request the server should usually be able to handel them without using too much resources, but when there are 1000's of request per-second the system might crash, the context library comes with function, such as - WithCancel, WithDeadline, WithTimeout, and WithValue - that helps in destroying a request if it takes time that is allocated to it.
+Contexts in the backend use channels to send and receive messages, but in a server scenario, every request received runs on a goroutine. Some HTTP requests might take more time than required, for fewer request the server should usually be able to handle them without using too many resources. Still, when there are 1000's of request per-second the system might crash or take more resources. For this reason, the context library comes with few helpful functions, such as - WithCancel, WithDeadline, WithTimeout, and WithValue - that helps in destroying a request if it takes more time that is allocated to it.
 
 See [play.golang.org/p/3scpKiCypIS](https://play.golang.org/p/3scpKiCypIS)
 
@@ -173,7 +173,7 @@ func main() {
 Above example works exactly like channels example, only that you don't have to make a channel and looks pretty.
 
 ```go {linenos=table,hl_lines=["13-15",32,"36-37","61-62"]}
-package withcontext
+package main
 
 import (
 	"context"
@@ -241,11 +241,11 @@ func main() {
 }
 ```
 
-From the above example, let's create a `httpServerHelper` structure with `cancelFunc` of type `context.CancelFunc` (line 13-15). The `context.WithCancel()`, returns a context and a cancel function, lets assign it to `stopHTTPServerCtx` and `cancel` (line 36), assign the `cancel()` function to `httpServerHelper` structure's `cancelFunc` and call it `serverHelper` (line 37). When you go to `http://127.0.0.1:8000/exit`, `cancel()` function is invoked which sends a `Done()` signal at line `61`. where there is no error and all the channels are executed, `context.Canceled` returns a string else an Error.
+From the above example, let's create a `httpServerHelper` structure with `cancelFunc` of type `context.CancelFunc` (line 13-15). The `context.WithCancel()`, returns a context and a cancel function, lets assign it to `stopHTTPServerCtx` and `cancel` (line 36), assign the `cancel()` function to `httpServerHelper` structure's `cancelFunc` and call it `serverHelper` (line 37). When you go to `http://127.0.0.1:8000/exit`, `cancel()` function is invoked which sends a `Done()` signal at line `61`. When there is no error and all the channels are executed, `context.Canceled` returns a string else an Error.
 
 ## Using with WaitGroup
 
-Unlike channels and context, SyncGroup doesn't use channels but uses a low level "mutual exclusion locks". `sync.WaitGroup` structure has three functions `Add()`, `Done()`, and `Wait()`. `Add()` takes in an integer value greater than `1`, `Done()` decrements the integer value by `1`, and `Wait()` stops the program going further till the integer becomes `0`.
+Unlike channels and context, SyncGroup doesn't use channels but uses a low level "mutual exclusion locks". `sync.WaitGroup` structure has three functions `Add()`, `Done()`, and `Wait()`. `Add()` takes in an integer value greater than `0`, `Done()` decrements the integer value by `1`, and `Wait()` stops the program going further till the integer becomes `0`.
 
 See [play.golang.org/p/OkdAXI8DdOz](https://play.golang.org/p/OkdAXI8DdOz)
 
@@ -275,7 +275,7 @@ func main() {
 }
 ```
 
-In the above example assign `sync.WaitGroup{}` to `wg`, because there is only one gorutine so adding `1` should be enough, if there are say four gorutine then you should have `wg.Add(4)` also, `wg.Done()` should be called four times. Once, gorutine reaches `wg.Done()` the `1` is decremented to `0`, `eg.Wait()` check for it and continues the program.
+In the above example, assign `sync.WaitGroup{}` to `wg`, because there is only one goroutine so adding `1` should be enough, if there are say four goroutine then you should have `wg.Add(4)` also, `wg.Done()` should be called four times. Once, goroutine reaches `wg.Done()` the `1` is decremented to `0`, `eg.Wait()` check for it and continues the program.
 
 ```go {linenos=table,hl_lines=[14,26,37,62]}
 package main
@@ -348,10 +348,10 @@ func main() {
 }
 ```
 
-In the above program, let's create a global variable `wg` of type `sync.WaitGroup` (line 14). In the `main()` function add `wg.Add(1)` (line 37). In the `ExitHandler` add `defer wg.Done()` (line 26), the `defer` keyword executes at the end of function. `wg.Wait()` check id the counter has turned to zero or not, in this it would when you visit `http://127.0.0.1:8000/exit`, this then continues to the next line.
+In the above program, let's create a global variable `wg` of type `sync.WaitGroup` (line 14). In the `main()` function add `wg.Add(1)` (line 37). In the `ExitHandler` add `defer wg.Done()` (line 26), the `defer` keyword executes at the end of function. `wg.Wait()` checks the counter has decremented to zero or not, in this case, it would when you visit `http://127.0.0.1:8000/exit`, this then continues to the next line.
 
 ## Conclusion
 
-Channels are the primary feature of Go language's coroutines, but they make it easier for users to use different ways to control the execution of coroutines in a program. It is up to you which one to use and it mostly depends on the program too, for a simple coroutines communication, channels should absolutely fine. Context on the other hand was made to use with servers but can also be used in simple programs. The sync library was developed to have low-level APIs for Go language to use internally but SyncGroup can be used as a high-level API to control coroutines execution.
+Channels are the star of Go language's coroutines, but they make it easier for users to use different ways to control the execution of coroutines in a program. It is up to you which one to use, and it mostly depends on the problem too, for a simple coroutines communication, channels should be fine. Context, on the other hand, was made to use with servers but can also be used in simple programs. The sync library was developed to have low-level APIs for Go language to use internally. Still, SyncGroup can be used as a high-level API to control coroutines execution too.
 
 I hope this post helps you in choosing the right one.
