@@ -9,7 +9,7 @@
         {{ $uikitIcons.Content | safeJS }}
     </script>
 
-    {{ $algoliasearchLite := resources.Get "js/algoliasearchLite.js" }}
+    {{ $algoliasearchLite := resources.Get "js/algoliasearch.umd.js" }}
     <script>
         {{ $algoliasearchLite.Content | safeJS }}
     </script>
