@@ -37,13 +37,6 @@ Before we go into the details, there are few common functions between these thre
 2. The server always starts in a goroutine.
 3. The program doesn't exit till some kind of wait request is completed.
 
-**Table of Content**
-
-- [Using with Channels](#using-with-channels)
-- [Using with Context](#using-with-context)
-- [Using with WaitGroup](#using-with-waitgroup)
-- [Conclusion](#conclusion)
-
 ## Using with Channels
 
 Channels are like pathways, it joins gorutines to send and receive messages. For example:
