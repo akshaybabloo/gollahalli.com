@@ -27,19 +27,22 @@ sitemap:
 
 > Full code can be found at [github.com/akshaybabloo/gracefully-exit-go-http-server](https://github.com/akshaybabloo/gracefully-exit-go-http-server)
 
-I am developing a CLI application that requires it to authenticate and obtain a token from an API. I had a problem of gracefully shutting down the the HTTP server from another function, in this case, after a token is received.
+I am developing a CLI application that requires it to authenticate and obtain a token from an API. I had a problem of gracefully shutting down the the HTTP server from another function, in this case, after a token is received. Go 1.8 introduced `Shutdown` that gracefully shuts down the server without interrupting any active connections.
 
 In this post we will look at using three ways to tell the server to shut down gracefully. Also, I am using Gorilla's mux router.
 
 Before we go into the details, there are few common functions between these three implementations:
 
 1. There are two handles (routes); `HomeHandler` - that routes to `127.0.0.1:8000/`, which is our index page and `ExitHandler` - that routes to `127.0.0.1:8000/exit`, which is used to shut down the server.
-2. The server always starts in a gorutine.
+2. The server always starts in a goroutine.
 3. The program doesn't exit till some kind of wait request is completed.
+
+**Table of Content**
 
 - [Using with Channels](#using-with-channels)
 - [Using with Context](#using-with-context)
 - [Using with WaitGroup](#using-with-waitgroup)
+- [Conclusion](#conclusion)
 
 ## Using with Channels
 
@@ -245,10 +248,117 @@ func main() {
 }
 ```
 
-From the above example, let's create a `httpServerHelper` struct with `cancelFunc` of type `context.CancelFunc` (line 13-15). The `context.WithCancel()`, returns a context and a cancel function, lets assign it to `stopHTTPServerCtx` and `cancel` (line 36), assign the `cancel()` function to `httpServerHelper` struct's `cancelFunc` and call it `serverHelper` (line 37). When you go to `http://127.0.0.1:8000/exit`, `cancel()` function is invoked which sends a `Done()` signal at line `61`. where there is no error and all the channels are executed, `context.Canceled` returns a string else an Error.
+From the above example, let's create a `httpServerHelper` structure with `cancelFunc` of type `context.CancelFunc` (line 13-15). The `context.WithCancel()`, returns a context and a cancel function, lets assign it to `stopHTTPServerCtx` and `cancel` (line 36), assign the `cancel()` function to `httpServerHelper` structure's `cancelFunc` and call it `serverHelper` (line 37). When you go to `http://127.0.0.1:8000/exit`, `cancel()` function is invoked which sends a `Done()` signal at line `61`. where there is no error and all the channels are executed, `context.Canceled` returns a string else an Error.
 
 ## Using with WaitGroup
 
-```go
+Unlike channels and context, SyncGroup doesn't use channels but uses a low level "mutual exclusion locks". `sync.WaitGroup` structure has three functions `Add()`, `Done()`, and `Wait()`. `Add()` takes in an integer value greater than `1`, `Done()` decrements the integer value by `1`, and `Wait()` stops the program going further till the integer becomes `0`.
 
+See [play.golang.org/p/OkdAXI8DdOz](https://play.golang.org/p/OkdAXI8DdOz)
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	wg := &sync.WaitGroup{}
+	wg.Add(1) // initialValue=1
+
+	go func() {
+		fmt.Println("Hello from gorutine")
+		// Hello from gorutine
+		time.Sleep(2 * time.Second) // wait for two seconds
+		wg.Done() // finalValue=(initialValue-1)
+	}()
+
+	wg.Wait() // if finalValue<0 break; else wait
+	fmt.Println("Hello World!")
+	// Hello World!
+}
 ```
+
+In the above example assign `sync.WaitGroup{}` to `wg`, because there is only one gorutine so adding `1` should be enough, if there are say four gorutine then you should have `wg.Add(4)` also, `wg.Done()` should be called four times. Once, gorutine reaches `wg.Done()` the `1` is decremented to `0`, `eg.Wait()` check for it and continues the program.
+
+```go {linenos=table,hl_lines=[14,26,37,62]}
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"net/http"
+	"sync"
+	"time"
+
+	"github.com/gorilla/mux"
+)
+
+var wg sync.WaitGroup
+
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	_, err := fmt.Fprintln(w, "<h1>Home of SyncGroup</h1><br><a href='/exit'>Exit</a>")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func ExitHandler(w http.ResponseWriter, r *http.Request) {
+	// subtract 1 from the WaitGroup
+	defer wg.Done()
+	w.WriteHeader(http.StatusOK)
+	_, err := fmt.Fprintln(w, "<h1>Bye from SyncGroup</h1>")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func main() {
+
+	// add an integer, as there is only one exit that we want so add 1
+	wg.Add(1)
+
+	r := mux.NewRouter()
+	r.HandleFunc("/", HomeHandler)
+	r.HandleFunc("/exit", ExitHandler)
+
+	fmt.Println("Server started at http://127.0.0.1:8000")
+
+	srv := &http.Server{
+		Handler: r,
+		Addr:    "127.0.0.1:8000",
+		// Good practice: enforce timeouts for servers you create!
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	go func() {
+		// always returns error. ErrServerClosed on graceful close
+		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+			// unexpected error. port in use?
+			log.Fatalf("ListenAndServe(): %v", err)
+		}
+	}()
+
+	// wait till the counter becomes 0
+	wg.Wait()
+
+	if err := srv.Shutdown(context.TODO()); err != nil {
+		panic(err) // failure/timeout shutting down the server gracefully
+	}
+	fmt.Println("Server closed - SyncGroup")
+}
+```
+
+In the above program, let's create a global variable `wg` of type `sync.WaitGroup` (line 14). In the `main()` function add `wg.Add(1)` (line 37). In the `ExitHandler` add `defer wg.Done()` (line 26), the `defer` keyword executes at the end of function. `wg.Wait()` check id the counter has turned to zero or not, in this it would when you visit `http://127.0.0.1:8000/exit`, this then continues to the next line.
+
+## Conclusion
+
+Channels are the primary feature of Go language's coroutines, but they make it easier for users to use different ways to control the execution of coroutines in a program. It is up to you which one to use and it mostly depends on the program too, for a simple coroutines communication, channels should absolutely fine. Context on the other hand was made to use with servers but can also be used in simple programs. The sync library was developed to have low-level APIs for Go language to use internally but SyncGroup can be used as a high-level API to control coroutines execution.
+
+I hope this post helps you in choosing the right one.
