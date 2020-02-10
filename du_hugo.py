@@ -54,6 +54,24 @@ def check_for_updates(override_version: str = None) -> str:
         if answer.lower() == 'n':
             sys.exit(0)
 
+    if get_local_hugo_version() is not None or get_local_hugo_version()[1:] == CURRENT_HUGO_VERSION:
+        print(f"New update found. Current version {CURRENT_HUGO_VERSION}, new version {hugo_response}")
+
+        answer = input("> Do you want to update to the newer version? (Y/n) ")
+
+        if answer == '':
+            print("Please select the correct option.")
+            sys.exit(1)
+        elif answer.lower() != 'y' and answer.lower() != 'n':
+            print("Please select either 'y' or 'n'.")
+            sys.exit(1)
+
+        if answer.lower() == 'y':
+            return hugo_response
+
+        if answer.lower() == 'n':
+            sys.exit(0)
+
 
 def download(version: str, download_to: str):
     """
