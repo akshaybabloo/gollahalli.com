@@ -16,7 +16,7 @@ from tqdm import tqdm
 try:
     with open('netlify.toml') as f:
         NETLIFY_CONFIG = toml.load(f)
-        CURRENT_HUGO_VERSION = NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']
+        CURRENT_HUGO_VERSION_NETLIFY = NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']
 except Exception:
     raise
 
@@ -57,8 +57,8 @@ def check_for_updates(override_version: str = None) -> str:
     if override_version is not None:
         return override_version
 
-    if not hugo_response == CURRENT_HUGO_VERSION:
-        print(f"New update found. Current version {CURRENT_HUGO_VERSION}, new version {hugo_response}")
+    if not hugo_response == CURRENT_HUGO_VERSION_NETLIFY:
+        print(f"New update found. Current version {CURRENT_HUGO_VERSION_NETLIFY}, new version {hugo_response}")
 
         answer = input("> Do you want to update to the newer version? (Y/n) ")
 
@@ -75,8 +75,8 @@ def check_for_updates(override_version: str = None) -> str:
         if answer.lower() == 'n':
             sys.exit(0)
 
-    if get_local_hugo_version() is not None or get_local_hugo_version()[1:] == CURRENT_HUGO_VERSION:
-        print(f"New update found. Current version {CURRENT_HUGO_VERSION}, new version {hugo_response}")
+    if get_local_hugo_version() is not None or get_local_hugo_version()[1:] == CURRENT_HUGO_VERSION_NETLIFY:
+        print(f"New update found. Current version {CURRENT_HUGO_VERSION_NETLIFY}, new version {hugo_response}")
 
         answer = input("> Do you want to update to the newer version? (Y/n) ")
 
