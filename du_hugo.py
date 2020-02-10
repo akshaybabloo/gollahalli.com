@@ -7,6 +7,7 @@ import tarfile
 import tempfile
 import zipfile
 from pathlib import Path
+from typing import Optional
 
 import requests
 import toml
@@ -22,6 +23,26 @@ except Exception:
 HUGO_BINARY_LOCATION = os.path.join(str(Path.home()), 'bin')
 OS_TYPE = platform.system()
 TEMP_FOLDER_PATH = tempfile.gettempdir()
+
+
+def get_local_hugo_version() -> Optional[str]:
+    """
+    Return the installed hugo version
+
+    :return: Version
+    """
+
+    try:
+        if OS_TYPE == 'Darwin':
+            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
+            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0].split("-")[0]
+        elif OS_TYPE == 'Windows':
+            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
+            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
+    except FileNotFoundError as e:
+        new_hugo_version = None
+
+    return new_hugo_version
 
 
 def check_for_updates(override_version: str = None) -> str:
@@ -154,20 +175,9 @@ def confirm_update():
     except Exception:
         raise
 
-    new_hugo_version = ''
     print("Confirming update")
 
-    try:
-        if OS_TYPE == 'Darwin':
-            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
-            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0].split("-")[0]
-        elif OS_TYPE == 'Windows':
-            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
-            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
-    except FileNotFoundError as e:
-        raise
-
-    if not 'v' + update_hugo_version == new_hugo_version:
+    if not 'v' + update_hugo_version == get_local_hugo_version():
         print("Hugo was not updated correctly")
         sys.exit(1)
 
