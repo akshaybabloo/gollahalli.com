@@ -7,6 +7,7 @@ import tarfile
 import tempfile
 import zipfile
 from pathlib import Path
+from typing import Optional
 
 import requests
 import toml
@@ -15,13 +16,33 @@ from tqdm import tqdm
 try:
     with open('netlify.toml') as f:
         NETLIFY_CONFIG = toml.load(f)
-        CURRENT_HUGO_VERSION = NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']
+        CURRENT_HUGO_VERSION_NETLIFY = NETLIFY_CONFIG['context']['production']['environment']['HUGO_VERSION']
 except Exception:
     raise
 
 HUGO_BINARY_LOCATION = os.path.join(str(Path.home()), 'bin')
 OS_TYPE = platform.system()
 TEMP_FOLDER_PATH = tempfile.gettempdir()
+
+
+def get_local_hugo_version() -> Optional[str]:
+    """
+    Return the installed hugo version
+
+    :return: Version
+    """
+
+    try:
+        if OS_TYPE == 'Darwin':
+            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
+            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0].split("-")[0]
+        elif OS_TYPE == 'Windows':
+            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
+            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
+    except FileNotFoundError as e:
+        new_hugo_version = None
+
+    return new_hugo_version
 
 
 def check_for_updates(override_version: str = None) -> str:
@@ -36,8 +57,26 @@ def check_for_updates(override_version: str = None) -> str:
     if override_version is not None:
         return override_version
 
-    if not hugo_response == CURRENT_HUGO_VERSION:
-        print(f"New update found. Current version {CURRENT_HUGO_VERSION}, new version {hugo_response}")
+    if not hugo_response == CURRENT_HUGO_VERSION_NETLIFY:
+        print(f"New update found. Current version {CURRENT_HUGO_VERSION_NETLIFY}, new version {hugo_response}")
+
+        answer = input("> Do you want to update to the newer version? (Y/n) ")
+
+        if answer == '':
+            print("Please select the correct option.")
+            sys.exit(1)
+        elif answer.lower() != 'y' and answer.lower() != 'n':
+            print("Please select either 'y' or 'n'.")
+            sys.exit(1)
+
+        if answer.lower() == 'y':
+            return hugo_response
+
+        if answer.lower() == 'n':
+            sys.exit(0)
+
+    if get_local_hugo_version() is not None or get_local_hugo_version()[1:] == CURRENT_HUGO_VERSION_NETLIFY:
+        print(f"New update found. Current version {CURRENT_HUGO_VERSION_NETLIFY}, new version {hugo_response}")
 
         answer = input("> Do you want to update to the newer version? (Y/n) ")
 
@@ -136,20 +175,9 @@ def confirm_update():
     except Exception:
         raise
 
-    new_hugo_version = ''
     print("Confirming update")
 
-    try:
-        if OS_TYPE == 'Darwin':
-            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
-            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0].split("-")[0]
-        elif OS_TYPE == 'Windows':
-            new_hugo_version = subprocess.check_output(["hugo", "version"]).strip()
-            new_hugo_version = new_hugo_version.decode('utf-8').split(" ")[4].split("/")[0]
-    except FileNotFoundError as e:
-        raise
-
-    if not 'v' + update_hugo_version == new_hugo_version:
+    if not 'v' + update_hugo_version == get_local_hugo_version():
         print("Hugo was not updated correctly")
         sys.exit(1)
 
