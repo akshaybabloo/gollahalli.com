@@ -1,9 +1,4 @@
-const {src, dest, parallel, series} = require('gulp');
-const toml = require('toml');
-const fs = require('fs');
-const del = require('del');
-
-var isInlineAsset = true;
+const {src, dest, parallel} = require('gulp');
 
 // Following are the default paths that the files will be moved to
 const cssFolderPath = './themes/Spark/assets/css/';
@@ -11,13 +6,12 @@ const jsFolderPath = './themes/Spark/assets/js/';
 const fontPath = './themes/Spark/static/font';
 
 // Following are the files that will be moved to their locations
-const cssFilesToMove = ['./node_modules/uikit/dist/css/uikit.css'];
-const cssMinFilesToMove = ['./node_modules/uikit/dist/css/uikit.min.css'];
+const cssFilesToMove = ['./node_modules/uikit/dist/css/uikit.css', './node_modules/uikit/dist/css/uikit.min.css'];
 const jsFilesToMove = ['./node_modules/uikit/dist/js/uikit.js',
     './node_modules/uikit/dist/js/uikit-icons.js',
     './node_modules/instantsearch.js/dist/instantsearch.development.js',
-    './node_modules/algoliasearch/dist/algoliasearch.umd.js'];
-const jsMinFilesToMove = ['./node_modules/uikit/dist/js/uikit.min.js',
+    './node_modules/algoliasearch/dist/algoliasearch.umd.js',
+    './node_modules/uikit/dist/js/uikit.min.js',
     './node_modules/uikit/dist/js/uikit-icons.min.js',
     './node_modules/instantsearch.js/dist/instantsearch.production.min.js',
     './node_modules/algoliasearch/dist/algoliasearch.umd.js'];
@@ -26,29 +20,14 @@ const fontFilesToMove = [
     './node_modules/firacode/distr/woff2/FiraCode-Regular.woff2'
 ];
 
-
-async function checkIsInlineAssets() {
-    isInlineAsset = toml.parse(fs.readFileSync('./config.toml').toString('utf8'))['params']['convertAssetsToInline'];
-}
-
 // Moves CSS files to their appropriate location
 function moveCss() {
-    if (isInlineAsset) {
-        return src(cssFilesToMove).pipe(dest(cssFolderPath));
-    } else {
-        // TODO: Finish the del
-        // del();
-        return src(cssMinFilesToMove).pipe(dest(cssFolderPath))
-    }
+    return src(cssFilesToMove).pipe(dest(cssFolderPath));
 }
 
 // Moves JS files to their appropriate location
 function moveJs() {
-    if (isInlineAsset) {
-        return src(jsFilesToMove).pipe(dest(jsFolderPath));
-    } else {
-        return src(jsMinFilesToMove).pipe(dest(jsFolderPath))
-    }
+    return src(jsFilesToMove).pipe(dest(jsFolderPath));
 }
 
 // Moves JS files to their appropriate location
@@ -57,4 +36,4 @@ function moveFont() {
 }
 
 // Run both functions in parallel
-exports.default = series(checkIsInlineAssets, parallel(moveCss, moveJs, moveFont));
+exports.default = parallel(moveCss, moveJs, moveFont);
