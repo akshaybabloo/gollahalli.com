@@ -11,9 +11,7 @@
     "build": "webpack"
   },
   "devDependencies": {
-    "del": "^5.1.0",
-    "gulp": "^4.0.2",
-    "toml": "^3.0.0"
+    "gulp": "^4.0.2"
   },
   "dependencies": {
     "algoliasearch": "^4.0.3",
