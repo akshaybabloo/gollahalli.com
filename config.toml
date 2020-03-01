@@ -48,7 +48,7 @@ enableRobotsTXT = true
     algoliaIndexName = "gollahalli-website"
     thumbnailUrl = "/img/akshay.jpg"
     acknowledge = false
-    convertAssetsToInline = true  # Converts external assets into minified inline assets
+    convertAssetsToInline = false  # Converts external assets into minified inline assets
     [params.scss]
         primary = "#c9cacc"
         secondary = "#c9cacc"

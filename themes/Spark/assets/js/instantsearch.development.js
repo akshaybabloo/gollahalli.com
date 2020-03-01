@@ -1,4 +1,4 @@
-/*! InstantSearch.js UNRELEASED (Thu, 23 Jan 2020 15:32:51 GMT) | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.3.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -530,7 +530,7 @@
         }
         return {};
       } else if (typeof attribute === 'string') {
-        return omit(refinementList, attribute);
+        return omit(refinementList, [attribute]);
       } else if (typeof attribute === 'function') {
         var hasChanged = false;
 
@@ -1232,7 +1232,7 @@
         if (!objectHasKeys_1(this.numericRefinements[attribute])) {
           return this.numericRefinements;
         }
-        return omit(this.numericRefinements, attribute);
+        return omit(this.numericRefinements, [attribute]);
       } else if (typeof attribute === 'function') {
         var hasChanged = false;
         var numericRefinements = this.numericRefinements;
@@ -3941,7 +3941,7 @@
 
   var requestBuilder_1 = requestBuilder;
 
-  var version = '3.1.0';
+  var version = '3.1.1';
 
   /**
    * Event triggered when a parameter is set or updated
@@ -7502,7 +7502,7 @@
     };
   };
 
-  var version$1 = '4.2.0';
+  var version$1 = '4.3.0';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -7577,11 +7577,14 @@
     var attribute = _ref.attribute,
         _ref$highlightedTagNa = _ref.highlightedTagName,
         highlightedTagName = _ref$highlightedTagNa === void 0 ? 'mark' : _ref$highlightedTagNa,
-        hit = _ref.hit;
-    var attributeValue = getPropertyByPath(hit, "_highlightResult.".concat(attribute, ".value")) || '';
+        hit = _ref.hit,
+        _ref$cssClasses = _ref.cssClasses,
+        cssClasses = _ref$cssClasses === void 0 ? {} : _ref$cssClasses;
+    var attributeValue = getPropertyByPath(hit, "_highlightResult.".concat(attribute, ".value")) || ''; // cx is not used, since it would be bundled as a dependency for Vue & Angular
+
     var className = suit({
       descendantName: 'highlighted'
-    });
+    }) + (cssClasses.highlighted ? " ".concat(cssClasses.highlighted) : '');
     return attributeValue.replace(new RegExp(TAG_REPLACEMENT.highlightPreTag, 'g'), "<".concat(highlightedTagName, " class=\"").concat(className, "\">")).replace(new RegExp(TAG_REPLACEMENT.highlightPostTag, 'g'), "</".concat(highlightedTagName, ">"));
   }
 
@@ -7590,11 +7593,14 @@
     var attribute = _ref.attribute,
         _ref$highlightedTagNa = _ref.highlightedTagName,
         highlightedTagName = _ref$highlightedTagNa === void 0 ? 'mark' : _ref$highlightedTagNa,
-        hit = _ref.hit;
-    var attributeValue = getPropertyByPath(hit, "_snippetResult.".concat(attribute, ".value")) || '';
+        hit = _ref.hit,
+        _ref$cssClasses = _ref.cssClasses,
+        cssClasses = _ref$cssClasses === void 0 ? {} : _ref$cssClasses;
+    var attributeValue = getPropertyByPath(hit, "_snippetResult.".concat(attribute, ".value")) || ''; // cx is not used, since it would be bundled as a dependency for Vue & Angular
+
     var className = suit$1({
       descendantName: 'highlighted'
-    });
+    }) + (cssClasses.highlighted ? " ".concat(cssClasses.highlighted) : '');
     return attributeValue.replace(new RegExp(TAG_REPLACEMENT.highlightPreTag, 'g'), "<".concat(highlightedTagName, " class=\"").concat(className, "\">")).replace(new RegExp(TAG_REPLACEMENT.highlightPostTag, 'g'), "</".concat(highlightedTagName, ">"));
   }
 

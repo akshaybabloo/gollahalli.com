@@ -11,16 +11,14 @@
     "build": "webpack"
   },
   "devDependencies": {
-    "del": "^5.1.0",
-    "gulp": "^4.0.2",
-    "toml": "^3.0.0"
+    "gulp": "^4.0.2"
   },
   "dependencies": {
     "algoliasearch": "^4.0.3",
     "firacode": "^2.0.0",
-    "instantsearch.js": "^4.2.0",
-    "material-components-web": "^5.0.0",
+    "instantsearch.js": "^4.3.0",
+    "material-components-web": "^5.1.0",
     "normalize.css": "^8.0.1",
-    "uikit": "^3.3.2"
+    "uikit": "^3.3.3"
   }
 }
