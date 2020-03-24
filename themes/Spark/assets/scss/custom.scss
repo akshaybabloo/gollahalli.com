@@ -278,3 +278,14 @@ pre code {
     }
   }
 }
+
+// Alert
+
+.uk-alert-danger {
+  background-color: rgba(197, 9, 26, 0.40) !important;
+  color: rgb(238, 172, 178) !important;
+
+  a {
+    color: rgb(238, 172, 178) !important;
+  }
+}

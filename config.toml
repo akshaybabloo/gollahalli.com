@@ -49,6 +49,10 @@ enableRobotsTXT = true
     thumbnailUrl = "/img/akshay.jpg"
     acknowledge = false
     convertAssetsToInline = false  # Converts external assets into minified inline assets
+    [params.alert]
+        body = "Stay home, protect yourself and everyone around you from COVID-19. For more information see - <a href='https://www.who.int/emergencies/diseases/novel-coronavirus-2019'>www.who.int/emergencies/diseases/novel-coronavirus-2019</a>"
+        type = "danger"
+        icon = ""
     [params.scss]
         primary = "#c9cacc"
         secondary = "#c9cacc"
