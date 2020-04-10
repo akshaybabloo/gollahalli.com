@@ -45,19 +45,19 @@ body {
 }
 
 .gol-subnav {
-    a {
-        color: $primary !important;
-        
-        &:hover, &:focus {
-          color: $secondary !important;
-          text-decoration: underline;
-          outline: none;
-        }
-    }
+  a {
+    color: $primary !important;
 
-     > :nth-child(n+2):not(.uk-first-column)::before {
-       border-left: 2px solid $primary !important;
-     }
+    &:hover, &:focus {
+      color: $secondary !important;
+      text-decoration: underline;
+      outline: none;
+    }
+  }
+
+  > :nth-child(n+2):not(.uk-first-column)::before {
+    border-left: 2px solid $primary !important;
+  }
 }
 
 .gol-tr-bgcolor {
