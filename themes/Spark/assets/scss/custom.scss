@@ -75,10 +75,10 @@ body {
 .uk-card-default {
   height: 100%;
   color: #000000;
-}
 
-.uk-card-default a {
-  color: #000000 !important;
+  a {
+    color: #000000 !important;
+  }
 }
 
 a.uk-card-default {
@@ -215,16 +215,20 @@ pre code {
 
 // Algolia search
 
-.ais-Hits-item a:not(.uk-icon) {
-  color: $text-color-dark !important;
-  text-decoration: none;
-  //border-bottom: 2px solid $text-color-dark !important;
-}
+.ais-Hits-item {
+  a {
+    &:not(.uk-icon) {
+      color: $text-color-dark !important;
+      text-decoration: none;
+      //border-bottom: 2px solid $text-color-dark !important;
+    }
 
-.ais-Hits-item a:hover:not(.uk-icon),
-.ais-Hits-item a:focus:not(.uk-icon) {
-  text-decoration: none;
-  border-bottom: 2px solid $text-color-dark !important;
+    &:hover:not(.uk-icon),
+    &:focus:not(.uk-icon) {
+      text-decoration: none;
+      border-bottom: 2px solid $text-color-dark !important;
+    }
+  }
 }
 
 // Highlight
