@@ -191,14 +191,16 @@ time {
   color: $label-text-color !important;
 }
 
-#searchBox input {
-  border: 1px solid $primary !important;
-  color: $primary !important;
-}
+#searchBox {
+  input {
+    border: 1px solid $primary !important;
+    color: $primary !important;
+  }
 
-#searchBox, .ais-SearchBox-loadingIndicator {
-  padding-right: 10px;
-  stroke: $primary !important;
+  &, .ais-SearchBox-loadingIndicator {
+    padding-right: 10px;
+    stroke: $primary !important;
+  }
 }
 
 .ais-SearchBox-loadingIcon {
