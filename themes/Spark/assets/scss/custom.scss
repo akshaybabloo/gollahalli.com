@@ -78,30 +78,31 @@ body {
 
   a {
     color: #000000 !important;
+
+    &:hover {
+      color: #000000 !important;
+    }
+  }
+
+  h4 {
+    color: #000000 !important;
+  }
+
+  h3 {
+    color: #000000 !important;
   }
 }
 
-a.uk-card-default {
-  color: #000000 !important;
-}
+a {
+  &.uk-card-default {
+    color: #000000 !important;
 
-.uk-card-default h4 {
-  color: #000000 !important;
-}
-
-.uk-card-default a:hover {
-  color: #000000 !important;
-}
-
-a.uk-card-default:hover {
-  color: #000000 !important;
-  text-decoration: none;
-  background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
-}
-
-
-.uk-card-default h3 {
-  color: #000000 !important;
+    &:hover {
+      color: #000000 !important;
+      text-decoration: none;
+      background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
+    }
+  }
 }
 
 .uk-link-text {
@@ -117,28 +118,32 @@ a.uk-card-default:hover {
   background: $label-background-color !important;
   color: $label-text-color !important;
   font-size: small;
+
+  a {
+    color: $label-text-color !important;
+    font-weight: 700;
+
+    &:hover, &:focus {
+      color: $label-text-color !important;
+    }
+
+  }
 }
 
-.uk-label a {
-  color: $label-text-color !important;
-  font-weight: 700;
-}
+.gol-links {
+  a {
+    &:not(.uk-icon) {
+      color: $text-color !important;
+      text-decoration: none;
+      border-bottom: 2px solid $text-color !important;
+    }
 
-.uk-label a:hover,
-.uk-label a:focus {
-  color: $label-text-color !important;
-}
-
-.gol-links a:not(.uk-icon) {
-  color: $text-color !important;
-  text-decoration: none;
-  border-bottom: 2px solid $text-color !important;
-}
-
-.gol-links a:hover:not(.uk-icon),
-.gol-links a:focus:not(.uk-icon) {
-  text-decoration: none;
-  border-bottom: 3px solid $primary !important;
+    &:hover:not(.uk-icon),
+    &:focus:not(.uk-icon) {
+      text-decoration: none;
+      border-bottom: 3px solid $primary !important;
+    }
+  }
 }
 
 a,
