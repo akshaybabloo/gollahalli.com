@@ -44,20 +44,20 @@ body {
   color: $primary !important;
 }
 
-.gol-subnav a {
-  color: $primary !important;
-}
+.gol-subnav {
+    a {
+        color: $primary !important;
+        
+        &:hover, &:focus {
+          color: $secondary !important;
+          text-decoration: underline;
+          outline: none;
+        }
+    }
 
-/* Hover + Focus */
-.gol-subnav a:hover,
-.gol-subnav a:focus {
-  color: $secondary !important;
-  text-decoration: underline;
-  outline: none;
-}
-
-.gol-subnav > ::before {
-  border-left: 2px solid $primary !important;
+     > :nth-child(n+2):not(.uk-first-column)::before {
+       border-left: 2px solid $primary !important;
+     }
 }
 
 .gol-tr-bgcolor {
