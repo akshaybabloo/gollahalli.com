@@ -18,7 +18,9 @@
 
                         <p class="uk-article-meta">{{.PublishDate.Format "January 2, 2006"}}
                             &bullet; {{ range .Params.tags }}
-                                <a href="{{ `/tags/` | relLangURL }}{{ . | urlize }}">{{ . }}</a> {{ end }}</p>
+                                <a href="{{ `/tags/` | relLangURL }}{{ . | urlize }}">{{ . }}</a> {{ end }}
+                        &bullet; {{ .ReadingTime }} minutes to read
+                        </p>
 
                         <div>
                             <ul class="uk-iconnav">
