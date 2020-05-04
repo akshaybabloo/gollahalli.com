@@ -123,8 +123,8 @@ def download(version: str, download_to: str):
         if total_length is None:
             file.write(response.content)
         else:
-            with tqdm(total=total_length / (32 * 1024.0), unit='B', unit_scale=True, unit_divisor=1024) as pbar:
-                for data in response.iter_content(chunk_size=32 * 1024):
+            with tqdm(total=total_length, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+                for data in response.iter_content(chunk_size=4096):
                     file.write(data)
                     pbar.update(len(data))
 
