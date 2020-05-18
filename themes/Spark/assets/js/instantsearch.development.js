@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.4.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.5.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -137,36 +137,6 @@
     };
 
     return _setPrototypeOf(o, p);
-  }
-
-  function isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function _construct(Parent, args, Class) {
-    if (isNativeReflectConstruct()) {
-      _construct = Reflect.construct;
-    } else {
-      _construct = function _construct(Parent, args, Class) {
-        var a = [null];
-        a.push.apply(a, args);
-        var Constructor = Function.bind.apply(Parent, a);
-        var instance = new Constructor();
-        if (Class) _setPrototypeOf(instance, Class.prototype);
-        return instance;
-      };
-    }
-
-    return _construct.apply(null, arguments);
   }
 
   function _objectWithoutPropertiesLoose(source, excluded) {
@@ -6798,7 +6768,7 @@
 
     var arrayLength = Math.round((end - start) / limitStep);
     return _toConsumableArray(Array(arrayLength)).map(function (_, current) {
-      return (start + current) * limitStep;
+      return start + current * limitStep;
     });
   }
 
@@ -7165,8 +7135,30 @@
   function isIndexWidget(widget) {
     return widget.$$type === 'ais.index';
   }
+  /**
+   * This is the same content as helper._change / setState, but allowing for extra
+   * UiState to be synchronized.
+   * see: https://github.com/algolia/algoliasearch-helper-js/blob/6b835ffd07742f2d6b314022cce6848f5cfecd4a/src/algoliasearch.helper.js#L1311-L1324
+   */
+
+  function privateHelperSetState(helper, _ref) {
+    var state = _ref.state,
+        isPageReset = _ref.isPageReset,
+        _uiState = _ref._uiState;
+
+    if (state !== helper.state) {
+      helper.state = state;
+      helper.emit('change', {
+        state: helper.state,
+        results: helper.lastResults,
+        isPageReset: isPageReset,
+        _uiState: _uiState
+      });
+    }
+  }
 
   function getLocalWidgetsState(widgets, widgetStateOptions) {
+    var initialUiState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     return widgets.filter(function (widget) {
       return !isIndexWidget(widget);
     }).reduce(function (uiState, widget) {
@@ -7175,7 +7167,7 @@
       }
 
       return widget.getWidgetState(uiState, widgetStateOptions);
-    }, {});
+    }, initialUiState);
   }
 
   function getLocalWidgetsSearchParameters(widgets, widgetSearchParametersOptions) {
@@ -7201,9 +7193,12 @@
     }
 
     indexWidgets.forEach(function (widget) {
-      var widgetHelper = widget.getHelper(); // @ts-ignore @TODO: remove "ts-ignore" once `resetPage()` is typed in the helper
-
-      widgetHelper.setState(widgetHelper.state.resetPage());
+      var widgetHelper = widget.getHelper();
+      privateHelperSetState(widgetHelper, {
+        // @ts-ignore @TODO: remove "ts-ignore" once `resetPage()` is typed in the helper
+        state: widgetHelper.state.resetPage(),
+        isPageReset: true
+      });
       resetPageFromWidgets(widget.getWidgets());
     });
   }
@@ -7284,16 +7279,19 @@
         localWidgets = localWidgets.concat(widgets);
 
         if (localInstantSearchInstance && Boolean(widgets.length)) {
-          helper.setState(getLocalWidgetsSearchParameters(localWidgets, {
-            uiState: localUiState,
-            initialSearchParameters: helper.state
-          }));
+          privateHelperSetState(helper, {
+            state: getLocalWidgetsSearchParameters(localWidgets, {
+              uiState: localUiState,
+              initialSearchParameters: helper.state
+            }),
+            _uiState: localUiState
+          });
           widgets.forEach(function (widget) {
             if (localInstantSearchInstance && widget.init) {
               widget.init({
                 helper: helper,
                 parent: _this,
-                uiState: {},
+                uiState: localInstantSearchInstance._initialUiState,
                 instantSearchInstance: localInstantSearchInstance,
                 state: helper.state,
                 templatesConfig: localInstantSearchInstance.templatesConfig,
@@ -7346,12 +7344,12 @@
 
         return this;
       },
-      init: function init(_ref) {
+      init: function init(_ref2) {
         var _this2 = this;
 
-        var instantSearchInstance = _ref.instantSearchInstance,
-            parent = _ref.parent,
-            uiState = _ref.uiState;
+        var instantSearchInstance = _ref2.instantSearchInstance,
+            parent = _ref2.parent,
+            uiState = _ref2.uiState;
         localInstantSearchInstance = instantSearchInstance;
         localParent = parent;
         localUiState = uiState[indexId] || {}; // The `mainHelper` is already defined at this point. The instance is created
@@ -7399,8 +7397,8 @@
         // It makes sense to replicate it at the `init` step. We have another
         // listener on `change` below, once `init` is done.
 
-        helper.on('change', function (_ref2) {
-          var isPageReset = _ref2.isPageReset;
+        helper.on('change', function (_ref3) {
+          var isPageReset = _ref3.isPageReset;
 
           if (isPageReset) {
             resetPageFromWidgets(localWidgets);
@@ -7420,8 +7418,8 @@
             });
           }
         });
-        derivedHelper.on('result', function (_ref3) {
-          var results = _ref3.results;
+        derivedHelper.on('result', function (_ref4) {
+          var results = _ref4.results;
           // The index does not render the results it schedules a new render
           // to let all the other indices emit their own results. It allows us to
           // run the render process in one pass.
@@ -7451,12 +7449,20 @@
         // configuration of the widget is pushed in the URL. That's what we want to avoid.
         // https://github.com/algolia/instantsearch.js/pull/994/commits/4a672ae3fd78809e213de0368549ef12e9dc9454
 
-        helper.on('change', function (_ref4) {
-          var state = _ref4.state;
+        helper.on('change', function (event) {
+          var state = event.state,
+              isPageReset = event.isPageReset; // @ts-ignore _uiState comes from privateHelperSetState and thus isn't typed on the helper event
+
+          var _uiState = event._uiState;
+
+          if (isPageReset) {
+            localUiState.page = undefined;
+          }
+
           localUiState = getLocalWidgetsState(localWidgets, {
             searchParameters: state,
             helper: helper
-          }); // We don't trigger an internal change when controlled because it
+          }, _uiState || {}); // We don't trigger an internal change when controlled because it
           // becomes the responsibility of `setUiState`.
 
           if (!instantSearchInstance.onStateChange) {
@@ -7534,7 +7540,7 @@
     };
   };
 
-  var version$1 = '4.4.0';
+  var version$1 = '4.5.0';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -7567,13 +7573,19 @@
 
   function escapeHits(hits) {
     if (hits.__escaped === undefined) {
-      hits = hits.map(function (hit) {
-        if (hit._highlightResult) {
-          hit._highlightResult = recursiveEscape(hit._highlightResult);
+      // We don't override the value on hit because it will mutate the raw results
+      // instead we make a shallow copy and we assign the escaped values on it.
+      hits = hits.map(function (_ref) {
+        var _highlightResult = _ref._highlightResult,
+            _snippetResult = _ref._snippetResult,
+            hit = _objectWithoutProperties(_ref, ["_highlightResult", "_snippetResult"]);
+
+        if (_highlightResult) {
+          hit._highlightResult = recursiveEscape(_highlightResult);
         }
 
-        if (hit._snippetResult) {
-          hit._snippetResult = recursiveEscape(hit._snippetResult);
+        if (_snippetResult) {
+          hit._snippetResult = recursiveEscape(_snippetResult);
         }
 
         return hit;
@@ -8646,8 +8658,11 @@
         }
 
         this.writeTimer = window.setTimeout(function () {
-          setWindowTitle(title);
-          window.history.pushState(routeState, title || '', url);
+          if (window.location.href !== url) {
+            setWindowTitle(title);
+            window.history.pushState(routeState, title || '', url);
+          }
+
           _this.writeTimer = undefined;
         }, this.writeDelay);
       }
@@ -8719,12 +8734,8 @@
     return BrowserHistory;
   }();
 
-  function historyRouter () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _construct(BrowserHistory, args);
+  function historyRouter (props) {
+    return new BrowserHistory(props);
   }
 
   var walk = function walk(current, callback) {
@@ -8852,7 +8863,9 @@
       _defineProperty(_assertThisInitialized(_this), "middleware", []);
 
       _defineProperty(_assertThisInitialized(_this), "scheduleSearch", defer(function () {
-        _this.mainHelper.search();
+        if (_this.started) {
+          _this.mainHelper.search();
+        }
       }));
 
       _defineProperty(_assertThisInitialized(_this), "scheduleRender", defer(function () {
@@ -9168,13 +9181,13 @@
           });
         });
         this.mainHelper = mainHelper;
-        this.middleware.forEach(function (m) {
-          m.subscribe();
-        });
         this.mainIndex.init({
           instantSearchInstance: this,
           parent: null,
           uiState: this._initialUiState
+        });
+        this.middleware.forEach(function (m) {
+          m.subscribe();
         });
         mainHelper.search(); // Keep the previous reference for legacy purpose, some pattern use
         // the direct Helper access `search.helper` (e.g multi-index).
@@ -13675,7 +13688,7 @@
     };
   };
 
-  function createVoiceSearchHelper(_ref) {
+  var createVoiceSearchHelper = function createVoiceSearchHelper(_ref) {
     var searchAsYouSpeak = _ref.searchAsYouSpeak,
         language = _ref.language,
         onQueryChange = _ref.onQueryChange,
@@ -13754,7 +13767,7 @@
       }
     };
 
-    var start = function start() {
+    var startListening = function startListening() {
       recognition = new SpeechRecognitionAPI();
 
       if (!recognition) {
@@ -13788,7 +13801,7 @@
       recognition = undefined;
     };
 
-    var stop = function stop() {
+    var stopListening = function stopListening() {
       dispose(); // Because `dispose` removes event listeners, `end` listener is not called.
       // So we're setting the `status` as `finished` here.
       // If we don't do it, it will be still `waiting` or `recognizing`.
@@ -13796,26 +13809,15 @@
       resetState('finished');
     };
 
-    var toggleListening = function toggleListening() {
-      if (!isBrowserSupported()) {
-        return;
-      }
-
-      if (isListening()) {
-        stop();
-      } else {
-        start();
-      }
-    };
-
     return {
       getState: getState,
       isBrowserSupported: isBrowserSupported,
       isListening: isListening,
-      toggleListening: toggleListening,
+      startListening: startListening,
+      stopListening: stopListening,
       dispose: dispose
     };
-  }
+  };
 
   var withUsage$p = createDocumentationMessageGenerator({
     name: 'voice-search',
@@ -13832,12 +13834,23 @@
             _ref$voiceSearchHelpe = _ref.voiceSearchHelper,
             isBrowserSupported = _ref$voiceSearchHelpe.isBrowserSupported,
             isListening = _ref$voiceSearchHelpe.isListening,
-            toggleListening = _ref$voiceSearchHelpe.toggleListening,
+            startListening = _ref$voiceSearchHelpe.startListening,
+            stopListening = _ref$voiceSearchHelpe.stopListening,
             getState = _ref$voiceSearchHelpe.getState;
         renderFn({
           isBrowserSupported: isBrowserSupported(),
           isListening: isListening(),
-          toggleListening: toggleListening,
+          toggleListening: function toggleListening() {
+            if (!isBrowserSupported()) {
+              return;
+            }
+
+            if (isListening()) {
+              stopListening();
+            } else {
+              startListening();
+            }
+          },
           voiceListeningState: getState(),
           widgetParams: widgetParams,
           instantSearchInstance: instantSearchInstance
@@ -13847,7 +13860,9 @@
       var _widgetParams$searchA = widgetParams.searchAsYouSpeak,
           searchAsYouSpeak = _widgetParams$searchA === void 0 ? false : _widgetParams$searchA,
           language = widgetParams.language,
-          additionalQueryParameters = widgetParams.additionalQueryParameters;
+          additionalQueryParameters = widgetParams.additionalQueryParameters,
+          _widgetParams$createV = widgetParams.createVoiceSearchHelper,
+          createVoiceSearchHelper$1 = _widgetParams$createV === void 0 ? createVoiceSearchHelper : _widgetParams$createV;
       return {
         $$type: 'ais.voiceSearch',
         init: function init(_ref2) {
@@ -13876,7 +13891,7 @@
             }
           };
 
-          this._voiceSearchHelper = createVoiceSearchHelper({
+          this._voiceSearchHelper = createVoiceSearchHelper$1({
             searchAsYouSpeak: searchAsYouSpeak,
             language: language,
             onQueryChange: function onQueryChange(query) {
@@ -20553,7 +20568,8 @@
         _ref2$searchAsYouSpea = _ref2.searchAsYouSpeak,
         searchAsYouSpeak = _ref2$searchAsYouSpea === void 0 ? false : _ref2$searchAsYouSpea,
         language = _ref2.language,
-        additionalQueryParameters = _ref2.additionalQueryParameters;
+        additionalQueryParameters = _ref2.additionalQueryParameters,
+        createVoiceSearchHelper = _ref2.createVoiceSearchHelper;
 
     if (!container) {
       throw new Error(withUsage$N('The `container` option is required.'));
@@ -20578,7 +20594,8 @@
       templates: _objectSpread2({}, defaultTemplates$f, {}, templates),
       searchAsYouSpeak: searchAsYouSpeak,
       language: language,
-      additionalQueryParameters: additionalQueryParameters
+      additionalQueryParameters: additionalQueryParameters,
+      createVoiceSearchHelper: createVoiceSearchHelper
     });
   };
 
