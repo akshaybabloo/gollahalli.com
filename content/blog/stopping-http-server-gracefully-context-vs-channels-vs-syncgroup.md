@@ -140,7 +140,7 @@ In the above example, we have a global channel - `stopHTTPServerChan` (line 13) 
 
 ## Using with Context
 
-> Note: According to the documentation, contexts should never be stored in `struct` type, but rather it should be passed through as an argument to a function. There are a few exceptions; `context.CancelFunc` is one such exception that can be put in a structure.
+> Note: According to the [documentation](https://golang.org/pkg/context/#:~:text=Do%20not%20store%20Contexts%20inside), contexts should never be stored in `struct` type, but rather it should be passed through as an argument to a function. There are a few exceptions; `context.CancelFunc` is one such exception that can be put in a structure.
 
 Contexts in the backend use channels to send and receive messages, but in a server scenario, every request received runs on a goroutine. Some HTTP requests might take more time than required, for fewer request the server should usually be able to handle them without using too many resources. Still, when there are 1000's of request per-second the system might crash or take more resources. For this reason, the context library comes with few helpful functions, such as - WithCancel, WithDeadline, WithTimeout, and WithValue - that helps in destroying a request if it takes more time that is allocated to it.
 
@@ -241,7 +241,7 @@ func main() {
 }
 ```
 
-From the above example, let's create a `httpServerHelper` structure with `cancelFunc` of type `context.CancelFunc` (line 13-15). The `context.WithCancel()`, returns a context and a cancel function, lets assign it to `stopHTTPServerCtx` and `cancel` (line 36), assign the `cancel()` function to `httpServerHelper` structure's `cancelFunc` and call it `serverHelper` (line 37). When you go to `http://127.0.0.1:8000/exit`, `cancel()` function is invoked which sends a `Done()` signal at line `61`. When there is no error and all the channels are executed, `context.Canceled` returns a string else an Error.
+From the above example, let's create a `httpServerHelper` structure with `cancelFunc` of type `context.CancelFunc` (line 13-15). The `context.WithCancel()`, returns a context and a cancel function, let's assign it to `stopHTTPServerCtx` and `cancel` (line 36), assign the `cancel()` function to `httpServerHelper` structure's `cancelFunc` and call it `serverHelper` (line 37). When you go to `http://127.0.0.1:8000/exit`, `cancel()` function is invoked which sends a `Done()` signal at line `61`. When there is no error and all the channels are executed, `context.Canceled` returns a string else an Error.
 
 ## Using with WaitGroup
 
@@ -275,7 +275,7 @@ func main() {
 }
 ```
 
-In the above example, assign `sync.WaitGroup{}` to `wg`, because there is only one goroutine so adding `1` should be enough, if there are say four goroutine then you should have `wg.Add(4)` also, `wg.Done()` should be called four times. Once, goroutine reaches `wg.Done()` the `1` is decremented to `0`, `eg.Wait()` check for it and continues the program.
+In the above example, assign `sync.WaitGroup{}` to `wg`, because there is only one goroutine so adding `1` should be enough, if there are say four goroutines then you should have `wg.Add(4)` also, `wg.Done()` should be called four times. Once, goroutine reaches `wg.Done()` the `1` is decremented to `0`, `eg.Wait()` check for it and continues the program.
 
 ```go {linenos=table,hl_lines=[14,26,37,62]}
 package main
@@ -348,7 +348,7 @@ func main() {
 }
 ```
 
-In the above program, let's create a global variable `wg` of type `sync.WaitGroup` (line 14). In the `main()` function add `wg.Add(1)` (line 37). In the `ExitHandler` add `defer wg.Done()` (line 26), the `defer` keyword executes at the end of function. `wg.Wait()` checks the counter has decremented to zero or not, in this case, it would when you visit `http://127.0.0.1:8000/exit`, this then continues to the next line.
+In the above program, let's create a global variable `wg` of type `sync.WaitGroup` (line 14). In the `main()` function add `wg.Add(1)` (line 37). In the `ExitHandler` add `defer wg.Done()` (line 26), the `defer` keyword executes at the end of the function. `wg.Wait()` checks the counter has decremented to zero or not, in this case, it would when you visit `http://127.0.0.1:8000/exit`, this then continues to the next line.
 
 ## Conclusion
 
