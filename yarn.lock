@@ -789,10 +789,10 @@ fined@^1.0.1:
     object.pick "^1.2.0"
     parse-filepath "^1.0.1"
 
-firacode@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/firacode/-/firacode-5.0.0.tgz#e2fa5a997c14e206042c8fe4cae7581072cb0c01"
-  integrity sha512-hNJhbXSWmsu39ii5TsOOZDXmqf+dPhuBG8+MaGwLwJbO/rxSGEOcNOjW0pdeQH9Ji9O6bQc5tEyMvoHv3Z5c8Q==
+firacode@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/firacode/-/firacode-5.1.0.tgz#d47eb1d3b7dbe48c3f92bb24045e4c96798eb72e"
+  integrity sha512-HVgAATbP4HDO5bn7CkGA3xEZ59KAxt8lVqJgtnrY0yrBA3vGi+jTPgRQlbush+fzNR5rJjAdeqkEuVRMW6lxTw==
 
 flagged-respawn@^1.0.0:
   version "1.0.1"
