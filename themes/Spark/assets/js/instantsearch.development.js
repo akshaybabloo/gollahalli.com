@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.5.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.6.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -6978,6 +6978,10 @@
     return states;
   };
 
+  function toArray(value) {
+    return Array.isArray(value) ? value : [value];
+  }
+
   /**
    * Logs a warning
    * This is used to log issues in development environment only.
@@ -7540,7 +7544,7 @@
     };
   };
 
-  var version$1 = '4.5.0';
+  var version$1 = '4.6.0';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -11006,7 +11010,7 @@
     }, {
       key: "isLastPage",
       value: function isLastPage() {
-        return this.currentPage === this.total - 1;
+        return this.currentPage === this.total - 1 || this.total === 0;
       }
     }, {
       key: "isFirstPage",
@@ -12610,8 +12614,8 @@
 
       var hasAnOffValue = userOff !== undefined;
       var hasAnOnValue = userOn !== undefined;
-      var on = hasAnOnValue ? escapeRefinement(userOn) : undefined;
-      var off = hasAnOffValue ? escapeRefinement(userOff) : undefined;
+      var on = hasAnOnValue ? toArray(userOn).map(escapeRefinement) : undefined;
+      var off = hasAnOffValue ? toArray(userOff).map(escapeRefinement) : undefined;
       return {
         $$type: 'ais.toggleRefinement',
         _toggleRefinement: function _toggleRefinement(helper) {
@@ -12621,16 +12625,24 @@
           // Checking
           if (!isRefined) {
             if (hasAnOffValue) {
-              helper.removeDisjunctiveFacetRefinement(attribute, off);
+              off.forEach(function (v) {
+                return helper.removeDisjunctiveFacetRefinement(attribute, v);
+              });
             }
 
-            helper.addDisjunctiveFacetRefinement(attribute, on);
+            on.forEach(function (v) {
+              return helper.addDisjunctiveFacetRefinement(attribute, v);
+            });
           } else {
             // Unchecking
-            helper.removeDisjunctiveFacetRefinement(attribute, on);
+            on.forEach(function (v) {
+              return helper.removeDisjunctiveFacetRefinement(attribute, v);
+            });
 
             if (hasAnOffValue) {
-              helper.addDisjunctiveFacetRefinement(attribute, off);
+              off.forEach(function (v) {
+                return helper.addDisjunctiveFacetRefinement(attribute, v);
+              });
             }
           }
 
@@ -12646,7 +12658,23 @@
 
           this._createURL = function (isCurrentlyRefined) {
             return function () {
-              return createURL(state.removeDisjunctiveFacetRefinement(attribute, isCurrentlyRefined ? on : off).addDisjunctiveFacetRefinement(attribute, isCurrentlyRefined ? off : on));
+              var valuesToRemove = isCurrentlyRefined ? on : off;
+
+              if (valuesToRemove) {
+                valuesToRemove.forEach(function (v) {
+                  state.removeDisjunctiveFacetRefinement(attribute, v);
+                });
+              }
+
+              var valuesToAdd = isCurrentlyRefined ? off : on;
+
+              if (valuesToAdd) {
+                valuesToAdd.forEach(function (v) {
+                  state.addDisjunctiveFacetRefinement(attribute, v);
+                });
+              }
+
+              return createURL(state);
             };
           };
 
@@ -12654,13 +12682,22 @@
             _this._toggleRefinement(helper, opts);
           };
 
-          var isRefined = state.isDisjunctiveFacetRefined(attribute, on); // no need to refine anything at init if no custom off values
+          var isRefined = on && on.every(function (v) {
+            return state.isDisjunctiveFacetRefined(attribute, v);
+          }); // no need to refine anything at init if no custom off values
 
           if (hasAnOffValue) {
             // Add filtering on the 'off' value if set
             if (!isRefined) {
               var currentPage = helper.state.page;
-              helper.addDisjunctiveFacetRefinement(attribute, off).setPage(currentPage);
+
+              if (off) {
+                off.forEach(function (v) {
+                  return helper.addDisjunctiveFacetRefinement(attribute, v);
+                });
+              }
+
+              helper.setPage(currentPage);
             }
           }
 
@@ -12692,7 +12729,9 @@
               results = _ref3.results,
               state = _ref3.state,
               instantSearchInstance = _ref3.instantSearchInstance;
-          var isRefined = helper.state.isDisjunctiveFacetRefined(attribute, on);
+          var isRefined = on && on.every(function (v) {
+            return helper.state.isDisjunctiveFacetRefined(attribute, v);
+          });
           var offValue = off === undefined ? false : off;
           var allFacetValues = results.getFacetValues(attribute) || [];
           var onData = find$1(allFacetValues, function (_ref4) {
@@ -12742,7 +12781,9 @@
         },
         getWidgetState: function getWidgetState(uiState, _ref8) {
           var searchParameters = _ref8.searchParameters;
-          var isRefined = searchParameters.isDisjunctiveFacetRefined(attribute, on);
+          var isRefined = on && on.every(function (v) {
+            return searchParameters.isDisjunctiveFacetRefined(attribute, v);
+          });
 
           if (!isRefined) {
             return uiState;
@@ -12758,12 +12799,24 @@
           var isRefined = Boolean(uiState.toggle && uiState.toggle[attribute]);
 
           if (isRefined) {
-            return withFacetConfiguration.addDisjunctiveFacetRefinement(attribute, on);
+            if (on) {
+              on.forEach(function (v) {
+                withFacetConfiguration = withFacetConfiguration.addDisjunctiveFacetRefinement(attribute, v);
+              });
+            }
+
+            return withFacetConfiguration;
           } // It's not refined with an `off` value
 
 
           if (hasAnOffValue) {
-            return withFacetConfiguration.addDisjunctiveFacetRefinement(attribute, off);
+            if (off) {
+              off.forEach(function (v) {
+                withFacetConfiguration = withFacetConfiguration.addDisjunctiveFacetRefinement(attribute, v);
+              });
+            }
+
+            return withFacetConfiguration;
           } // It's not refined without an `off` value
 
 
@@ -13405,14 +13458,8 @@
       }, []);
 
       var searchParameters = _objectSpread2({}, transformSearchParameters(new algoliasearchHelper_1.SearchParameters({
-        // @ts-ignore @TODO algoliasearch-helper@3.0.1 will contain the type
-        // `sumOrFiltersScores`.
-        // See https://github.com/algolia/algoliasearch-helper-js/pull/753
         sumOrFiltersScores: true,
         facetFilters: ["objectID:-".concat(hit.objectID)],
-        // @ts-ignore @TODO algoliasearch-helper@3.0.1 will contain the type
-        // `optionalFilters`.
-        // See https://github.com/algolia/algoliasearch-helper-js/pull/754
         optionalFilters: optionalFilters
       })));
 
@@ -17151,7 +17198,7 @@
         return this.pageLink({
           ariaLabel: 'Previous',
           additionalClassName: this.props.cssClasses.previousPageItem,
-          isDisabled: this.props.nbHits === 0 || isFirstPage,
+          isDisabled: isFirstPage,
           label: this.props.templates.previous,
           pageNumber: currentPage - 1,
           createURL: createURL
@@ -17166,7 +17213,7 @@
         return this.pageLink({
           ariaLabel: 'Next',
           additionalClassName: this.props.cssClasses.nextPageItem,
-          isDisabled: this.props.nbHits === 0 || isLastPage,
+          isDisabled: isLastPage,
           label: this.props.templates.next,
           pageNumber: currentPage + 1,
           createURL: createURL
@@ -17180,7 +17227,7 @@
         return this.pageLink({
           ariaLabel: 'First',
           additionalClassName: this.props.cssClasses.firstPageItem,
-          isDisabled: this.props.nbHits === 0 || isFirstPage,
+          isDisabled: isFirstPage,
           label: this.props.templates.first,
           pageNumber: 0,
           createURL: createURL
@@ -17195,7 +17242,7 @@
         return this.pageLink({
           ariaLabel: 'Last',
           additionalClassName: this.props.cssClasses.lastPageItem,
-          isDisabled: this.props.nbHits === 0 || isLastPage,
+          isDisabled: isLastPage,
           label: this.props.templates.last,
           pageNumber: nbPages - 1,
           createURL: createURL
@@ -17474,14 +17521,14 @@
 
       _defineProperty(_assertThisInitialized(_this), "onInput", function (name) {
         return function (event) {
-          _this.setState(_defineProperty({}, name, Number(event.currentTarget.value)));
+          _this.setState(_defineProperty({}, name, event.currentTarget.value));
         };
       });
 
       _defineProperty(_assertThisInitialized(_this), "onSubmit", function (event) {
         event.preventDefault();
 
-        _this.props.refine([_this.state.min, _this.state.max]);
+        _this.props.refine([_this.state.min && Number(_this.state.min), _this.state.max && Number(_this.state.max)]);
       });
 
       _this.state = {
@@ -19462,8 +19509,8 @@
    * @typedef {Object} ToggleWidgetOptions
    * @property {string|HTMLElement} container Place where to insert the widget in your webpage.
    * @property {string} attribute Name of the attribute for faceting (eg. "free_shipping").
-   * @property {string|number|boolean} on Value to filter on when checked.
-   * @property {string|number|boolean} off Value to filter on when unchecked.
+   * @property {string|number|boolean|array} on Value to filter on when checked.
+   * @property {string|number|boolean|array} off Value to filter on when unchecked.
    * element (when using the default template). By default when switching to `off`, no refinement will be asked. So you
    * will get both `true` and `false` results. If you set the off value to `false` then you will get only objects
    * having `false` has a value for the selected attribute.
