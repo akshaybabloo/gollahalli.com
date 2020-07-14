@@ -1,7 +1,7 @@
 <table class="uk-table uk-table-responsive">
     <tbody>
         {{ range . }}
-            {{ if or ( .current ) ( eq (lower .to) "present" ) }}
+            {{ if ( eq (lower .to) "present" ) }}
                 <tr class="gol-tr-bgcolor">
                     <td>{{ .from }} - {{ .to }}</td>
                     <td>
