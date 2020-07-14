@@ -86,9 +86,39 @@
       "where": "Auckland, New Zealand",
       "from": "2018-06-01",
       "to": "2020-06-30",
-      "to": "Present",
-      "current": true,
+      "description": "Worked on deploying Spiking Neural Network models on the cloud - neucube.io"
+    },
+    {
+      "title": "Web Application Developer",
+      "company": "Asia Pacific Neural Network Society.",
+      "where": "Auckland, New Zealand",
+      "from": "2019-06-01",
+      "to": "2020-07-01",
       "description": ""
+    },
+    {
+      "title": "Researcher",
+      "company": "AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "2019-06-01",
+      "to": "2020-07-30",
+      "description": "Analysing and classifying spatio-temporal brain data for detecting pain."
+    },
+    {
+      "title": "Teaching Assistant",
+      "company": "Computer and Mathematical Sciences, AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "2020-02-01",
+      "to": "2020-06-30",
+      "description": "C Programming"
+    },
+    {
+      "title": "Software Engineer",
+      "company": "AUT Ventures Limited.",
+      "where": "Auckland, New Zealand",
+      "from": "2020-07-06",
+      "to": "Present",
+      "description": "Machine learning models deployment in cloud on-demand."
     }
   ]
 }
