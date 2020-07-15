@@ -17,6 +17,6 @@
     "algoliasearch": "^4.3.0",
     "firacode": "^5.2.0",
     "instantsearch.js": "^4.7.0",
-    "uikit": "^3.5.4"
+    "uikit": "^3.5.5"
   }
 }
