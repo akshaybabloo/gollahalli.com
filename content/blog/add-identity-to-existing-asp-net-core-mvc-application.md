@@ -117,5 +117,6 @@ Create three controllers with their views as:
 1. `Account/LoginController.cs` and `Login/Index.cshtml` - This will be used to authenticate the user
 2. `Account/LogoutController.cs` and `Logout/Index.cshtml` - This will be used to logout the users session
 3. `Account/RegisterController.cs` and `Register/Index.cshtml` - This will be used to create a user
+4. `Account/ConfirmRegisterController.cs` and `ConfirmRegister/Index.cshtml` - This will be used to create a user
 
 ### Creating the Account Models
