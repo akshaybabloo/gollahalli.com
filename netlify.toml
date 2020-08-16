@@ -10,7 +10,7 @@ status = 301
 
 [build]
 publish = "public"
-command = "hugo --gc --minify && python utils.py"
+command = "yarn install && npx gulp && hugo --gc --minify && python utils.py"
 
 [context.deploy-preview]
 command = "yarn install && npx gulp && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
