@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.8.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.8.3 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -7803,7 +7803,7 @@
     };
   };
 
-  var version$1 = '4.8.0';
+  var version$1 = '4.8.3';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -9288,7 +9288,7 @@
       if (routing) {
         var routerOptions = typeof routing === 'boolean' ? undefined : routing;
 
-        _this.EXPERIMENTAL_use(createRouterMiddleware(routerOptions));
+        _this.use(createRouterMiddleware(routerOptions));
       }
 
       return _this;
@@ -9302,8 +9302,8 @@
 
 
     _createClass(InstantSearch, [{
-      key: "EXPERIMENTAL_use",
-      value: function EXPERIMENTAL_use() {
+      key: "use",
+      value: function use() {
         var _this2 = this;
 
         for (var _len = arguments.length, middleware = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -9328,6 +9328,13 @@
         }
 
         return this;
+      } // @major we shipped with EXPERIMENTAL_use, but have changed that to just `use` now
+
+    }, {
+      key: "EXPERIMENTAL_use",
+      value: function EXPERIMENTAL_use() {
+         _warning(false, 'The middleware API is now considered stable, so we recommend replacing `EXPERIMENTAL_use` with `use` before upgrading to the next major version.') ;
+        return this.use.apply(this, arguments);
       }
       /**
        * Adds a widget to the search instance.
@@ -10371,19 +10378,19 @@
             var payload = parseInsightsEvent(targetWithEvent);
             props.sendEvent(payload);
           }
-        } else {
-          // old way, e.g. instantsearch.insights("clickedObjectIDsAfterSearch", { .. })
-          var insightsTarget = findInsightsTarget(event.target, event.currentTarget, function (element) {
-            return hasDataAttributes(element);
-          });
+        } // old way, e.g. instantsearch.insights("clickedObjectIDsAfterSearch", { .. })
 
-          if (insightsTarget) {
-            var _readDataAttributes = readDataAttributes(insightsTarget),
-                method = _readDataAttributes.method,
-                _payload = _readDataAttributes.payload;
 
-            props.insights(method, _payload);
-          }
+        var insightsTarget = findInsightsTarget(event.target, event.currentTarget, function (element) {
+          return hasDataAttributes(element);
+        });
+
+        if (insightsTarget) {
+          var _readDataAttributes = readDataAttributes(insightsTarget),
+              method = _readDataAttributes.method,
+              _payload = _readDataAttributes.payload;
+
+          props.insights(method, _payload);
         }
       };
 
@@ -10459,7 +10466,7 @@
           };
 
           if (!isCurrentInOptions) {
-             _warning(state.hitsPerPage !== undefined, "\n`hitsPerPage` is not defined.\nThe option `hitsPerPage` needs to be set using the `configure` widget.\n\nLearn more: https://community.algolia.com/instantsearch.js/v2/widgets/configure.html\n            ") ;
+             _warning(state.hitsPerPage !== undefined, "\n`hitsPerPage` is not defined.\nThe option `hitsPerPage` needs to be set using the `configure` widget.\n\nLearn more: https://www.algolia.com/doc/api-reference/widgets/hits-per-page/js/\n            ") ;
              _warning(false, "\nThe `items` option of `hitsPerPage` does not contain the \"hits per page\" value coming from the state: ".concat(state.hitsPerPage, ".\n\nYou may want to add another entry to the `items` option with this value.")) ;
             items = [// The helper will convert the empty string to `undefined`.
             {
@@ -10707,7 +10714,7 @@
           }
 
           var isFirstPage = getFirstReceivedPage() === 0;
-          var isLastPage = results.nbPages <= results.page + 1;
+          var isLastPage = results.nbPages <= getLastReceivedPage() + 1;
           sendEvent('view', cachedHits[page]);
           renderFn({
             hits: extractHitsFromCachedHits(cachedHits),
@@ -12139,7 +12146,10 @@
                 highlightPreTag: escapeFacetValues ? TAG_PLACEHOLDER.highlightPreTag : TAG_REPLACEMENT.highlightPreTag,
                 highlightPostTag: escapeFacetValues ? TAG_PLACEHOLDER.highlightPostTag : TAG_REPLACEMENT.highlightPostTag
               };
-              helper.searchForFacetValues(attribute, query, _getLimit(isShowingMore), tags).then(function (results) {
+              helper.searchForFacetValues(attribute, query, // We cap the `maxFacetHits` value to 100 because the Algolia API
+              // doesn't support a greater number.
+              // See https://www.algolia.com/doc/api-reference/api-parameters/maxFacetHits/
+              Math.min(_getLimit(isShowingMore), 100), tags).then(function (results) {
                 var facetValues = escapeFacetValues ? escapeFacets(results.facetHits) : results.facetHits;
                 var normalizedFacetValues = transformItems(facetValues.map(function (_ref3) {
                   var value = _ref3.value,
