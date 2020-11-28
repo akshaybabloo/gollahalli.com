@@ -1,4 +1,4 @@
-/*! UIkit 3.5.8 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.5.10 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -2411,43 +2411,51 @@
             return;
         }
 
-        var parents = overflowParents(element).concat(element);
+        var parents = overflowParents(element).reverse();
+        var diff = 0;
+        return parents.reduce(function (fn, scrollElement, i) {
 
-        var promise = Promise.resolve();
-        var loop = function ( i ) {
-            promise = promise.then(function () { return new Promise(function (resolve) {
+            var scrollTop = scrollElement.scrollTop;
+            var scrollHeight = scrollElement.scrollHeight;
+            var clientHeight = scrollElement.clientHeight;
+            var maxScroll = scrollHeight - clientHeight;
 
-                    var scrollElement = parents[i];
-                    var element = parents[i + 1];
+            var top = Math.ceil(position(parents[i - 1] || element, getViewport(scrollElement)).top - offsetBy) + diff + scrollTop;
 
-                    var scroll = scrollElement.scrollTop;
-                    var top = Math.ceil(position(element, getViewport(scrollElement)).top - offsetBy);
-                    var duration = getDuration(Math.abs(top));
+            if (top > maxScroll) {
+                diff = top - maxScroll;
+                top = maxScroll;
+            } else {
+                diff = 0;
+            }
 
-                    var start = Date.now();
-                    var step = function () {
+            return function () { return scrollTo(scrollElement, top - scrollTop).then(fn); };
 
-                        var percent = ease(clamp((Date.now() - start) / duration));
+        }, function () { return Promise.resolve(); })();
 
-                        scrollTop(scrollElement, scroll + top * percent);
+        function scrollTo(element, top) {
+            return new Promise(function (resolve) {
 
-                        // scroll more if we have not reached our destination
-                        if (percent !== 1) {
-                            requestAnimationFrame(step);
-                        } else {
-                            resolve();
-                        }
+                var scroll = element.scrollTop;
+                var duration = getDuration(Math.abs(top));
+                var start = Date.now();
 
-                    };
+                (function step() {
 
-                    step();
-                }); }
-            );
-        };
+                    var percent = ease(clamp((Date.now() - start) / duration));
 
-        for (var i = 0; i < parents.length - 1; i++) loop( i );
+                    scrollTop(element, scroll + top * percent);
 
-        return promise;
+                    // scroll more if we have not reached our destination
+                    if (percent !== 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        resolve();
+                    }
+
+                })();
+            });
+        }
 
         function getDuration(dist) {
             return 40 * Math.pow(dist, .375);
@@ -3483,7 +3491,7 @@
     UIkit.data = '__uikit__';
     UIkit.prefix = 'uk-';
     UIkit.options = {};
-    UIkit.version = '3.5.8';
+    UIkit.version = '3.5.10';
 
     globalAPI(UIkit);
     hooksAPI(UIkit);
@@ -3496,12 +3504,24 @@
         inBrowser && ready(function () {
 
             UIkit.update();
-            on(window, 'load resize', function () { return UIkit.update(null, 'resize'); });
-            on(document, 'loadedmetadata load', function (ref) {
-                var target = ref.target;
 
-                return UIkit.update(target, 'resize');
-            }, true);
+            // throttle 'resize'
+            var pendingResize;
+            var handleResize = function () {
+                if (pendingResize) {
+                    return;
+                }
+                pendingResize = true;
+                fastdom.write(function () { return pendingResize = false; });
+                UIkit.update(null, 'resize');
+            };
+
+            on(window, 'load resize', handleResize);
+            on(document, 'loadedmetadata load', handleResize, true);
+
+            if ('ResizeObserver' in window) {
+                (new ResizeObserver(handleResize)).observe(document.documentElement);
+            }
 
             // throttle `scroll` event (Safari triggers multiple `scroll` events per frame)
             var pending;
@@ -5808,7 +5828,7 @@
             width: false,
             height: false,
             offsetTop: '50vh',
-            offsetLeft: 0,
+            offsetLeft: '50vw',
             target: false
         },
 
@@ -6014,7 +6034,7 @@
     function evaluateSize(size) {
         return startsWith(size, 'calc')
             ? size
-                .substring(5, size.length - 1)
+                .slice(5, -1)
                 .replace(sizeRe, function (size) { return toPx(size); })
                 .replace(/ /g, '')
                 .match(additionRe)
@@ -10720,11 +10740,8 @@
                 triggerUpdate$1(this.getItemIn(), 'itemin', {percent: percent, duration: duration, timing: timing, dir: dir});
                 prev && triggerUpdate$1(this.getItemIn(true), 'itemout', {percent: 1 - percent, duration: duration, timing: timing, dir: dir});
 
-                // Workaround for a bug in iOS Safari 14.0 which does not let you transition to the same value twice
-                var randomOffset = index(next) / 10000;
-
                 Transition
-                    .start(list, {transform: translate((-to + randomOffset) * (isRtl ? -1 : 1), 'px')}, duration, timing)
+                    .start(list, {transform: translate(-to * (isRtl ? -1 : 1), 'px')}, duration, timing)
                     .then(deferred.resolve, noop);
 
                 return deferred.promise;
@@ -11512,17 +11529,11 @@
                 var ref$1 = this.origin;
                 var offsetTop = ref$1.offsetTop;
                 var offsetLeft = ref$1.offsetLeft;
-                var ref$2 = this.drag;
-                var offsetHeight = ref$2.offsetHeight;
-                var offsetWidth = ref$2.offsetWidth;
-                var ref$3 = offset(window);
-                var right = ref$3.right;
-                var bottom = ref$3.bottom;
                 var target = document.elementFromPoint(x, y);
 
                 css(this.drag, {
-                    top: clamp(y - offsetTop, 0, bottom - offsetHeight),
-                    left: clamp(x - offsetLeft, 0, right - offsetWidth)
+                    top: y - offsetTop,
+                    left: x - offsetLeft
                 });
 
                 var sortable = this.getSortable(target);
@@ -11618,7 +11629,7 @@
 
             },
 
-            end: function(e) {
+            end: function() {
 
                 off(document, pointerMove, this.move);
                 off(document, pointerUp, this.end);
@@ -11732,9 +11743,9 @@
                 var bottom = ref.bottom;
                 var height = ref.height;
 
-                if (top < y && top + 30 > y) {
+                if (top < y && top + 35 > y) {
                     scroll -= dist;
-                } else if (bottom > y && bottom - 30 < y) {
+                } else if (bottom > y && bottom - 35 < y) {
                     scroll += dist;
                 } else {
                     return;

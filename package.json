@@ -14,9 +14,9 @@
     "gulp": "^4.0.2"
   },
   "dependencies": {
-    "algoliasearch": "^4.6.0",
+    "algoliasearch": "^4.8.2",
     "firacode": "^5.2.0",
-    "instantsearch.js": "^4.8.4",
-    "uikit": "^3.5.9"
+    "instantsearch.js": "^4.8.7",
+    "uikit": "^3.5.10"
   }
 }

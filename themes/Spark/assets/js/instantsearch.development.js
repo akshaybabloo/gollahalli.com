@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.8.3 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.8.7 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -6394,12 +6394,18 @@
   // was decided as too risky.
   // @MAJOR Replace with the native `Array.prototype.find` method
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
-  function find$1(items, predicate, thisArg) {
-    if (!Array.prototype.find) {
-      return items.filter(predicate, thisArg)[0];
+  function find$1(items, predicate) {
+    var value;
+
+    for (var i = 0; i < items.length; i++) {
+      value = items[i]; // inlined for performance: if (Call(predicate, thisArg, [value, i, list])) {
+
+      if (predicate(value, i, items)) {
+        return value;
+      }
     }
 
-    return items.find(predicate, thisArg);
+    return undefined;
   }
 
   function unescapeRefinement(value) {
@@ -7803,7 +7809,7 @@
     };
   };
 
-  var version$1 = '4.8.3';
+  var version$1 = '4.8.7';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
@@ -7948,7 +7954,12 @@
 
     return "data-insights-method=\"".concat(method, "\" data-insights-payload=\"").concat(serializedPayload, "\"");
   }
+  /**
+   * @deprecated This function will be still supported in 4.x releases, but not further. It is replaced by the `insights` middleware. For more information, visit https://www.algolia.com/doc/guides/getting-insights-and-analytics/search-analytics/click-through-and-conversions/how-to/send-click-and-conversion-events-with-instantsearch/js/
+   */
+
   function insights(method, payload) {
+     _warning(false, "`insights` function has been deprecated. It is still supported in 4.x releases, but not further. It is replaced by the `insights` middleware.\n\nFor more information, visit https://www.algolia.com/doc/guides/getting-insights-and-analytics/search-analytics/click-through-and-conversions/how-to/send-click-and-conversion-events-with-instantsearch/js/") ;
     return writeDataAttributes({
       method: method,
       payload: payload
@@ -7976,7 +7987,7 @@
     return undefined;
   }
 
-  function getInsightsAnonymousUserToken() {
+  function getInsightsAnonymousUserTokenInternal() {
     return getCookie(ANONYMOUS_TOKEN_COOKIE_KEY);
   }
 
@@ -9248,6 +9259,7 @@
         searchClient.addAlgoliaAgent("instantsearch.js (".concat(version$1, ")"));
       }
 
+       _warning(insightsClient === null, "`insightsClient` property has been deprecated. It is still supported in 4.x releases, but not further. It is replaced by the `insights` middleware.\n\nFor more information, visit https://www.algolia.com/doc/guides/getting-insights-and-analytics/search-analytics/click-through-and-conversions/how-to/send-click-and-conversion-events-with-instantsearch/js/") ;
        _warning(Boolean(insightsClient) || !hasDetectedInsightsClient(), withUsage$1("InstantSearch detected the Insights client in the global scope.\nTo connect InstantSearch to the Insights client, make sure to specify the `insightsClient` option:\n\nconst search = instantsearch({\n  /* ... */\n  insightsClient: window.aa,\n});")) ;
 
       if (insightsClient && typeof insightsClient !== 'function') {
@@ -10289,6 +10301,8 @@
 
   var wrapInsightsClient = function wrapInsightsClient(aa, results, hits) {
     return function (method, payload) {
+       _warning(false, "`insights` function has been deprecated. It is still supported in 4.x releases, but not further. It is replaced by the `insights` middleware.\n\nFor more information, visit https://www.algolia.com/doc/guides/getting-insights-and-analytics/search-analytics/click-through-and-conversions/how-to/send-click-and-conversion-events-with-instantsearch/js/") ;
+
       if (!aa) {
         var withInstantSearchUsage = createDocumentationMessageGenerator({
           name: 'instantsearch'
@@ -10309,6 +10323,11 @@
       aa(method, _objectSpread2({}, inferredPayload, {}, payload));
     };
   };
+  /**
+   * @deprecated This function will be still supported in 4.x releases, but not further. It is replaced by the `insights` middleware. For more information, visit https://www.algolia.com/doc/guides/getting-insights-and-analytics/search-analytics/click-through-and-conversions/how-to/send-click-and-conversion-events-with-instantsearch/js/
+   * It passes `insights` to `HitsWithInsightsListener` and `InfiniteHitsWithInsightsListener`.
+   */
+
 
   function withInsights(connector) {
     var wrapRenderFn = function wrapRenderFn(renderFn) {
@@ -10583,45 +10602,49 @@
           _ref4$cache = _ref4.cache,
           cache = _ref4$cache === void 0 ? getInMemoryCache() : _ref4$cache;
 
-      var cachedHits = undefined;
-      var prevState;
       var showPrevious;
       var showMore;
       var sendEvent;
       var bindEvent;
 
-      var getFirstReceivedPage = function getFirstReceivedPage() {
-        return Math.min.apply(Math, _toConsumableArray(Object.keys(cachedHits || {}).map(Number)));
+      var getFirstReceivedPage = function getFirstReceivedPage(state, cachedHits) {
+        var _state$page = state.page,
+            page = _state$page === void 0 ? 0 : _state$page;
+        var pages = Object.keys(cachedHits).map(Number);
+
+        if (pages.length === 0) {
+          return page;
+        } else {
+          return Math.min.apply(Math, [page].concat(_toConsumableArray(pages)));
+        }
       };
 
-      var getLastReceivedPage = function getLastReceivedPage() {
-        return Math.max.apply(Math, _toConsumableArray(Object.keys(cachedHits || {}).map(Number)));
+      var getLastReceivedPage = function getLastReceivedPage(state, cachedHits) {
+        var _state$page2 = state.page,
+            page = _state$page2 === void 0 ? 0 : _state$page2;
+        var pages = Object.keys(cachedHits).map(Number);
+
+        if (pages.length === 0) {
+          return page;
+        } else {
+          return Math.max.apply(Math, [page].concat(_toConsumableArray(pages)));
+        }
       };
 
-      var getShowPrevious = function getShowPrevious(helper) {
+      var getShowPrevious = function getShowPrevious(helper, cachedHits) {
         return function () {
           // Using the helper's `overrideStateWithoutTriggeringChangeEvent` method
           // avoid updating the browser URL when the user displays the previous page.
           helper.overrideStateWithoutTriggeringChangeEvent(_objectSpread2({}, helper.state, {
-            page: getFirstReceivedPage() - 1
+            page: getFirstReceivedPage(helper.state, cachedHits) - 1
           })).searchWithoutTriggeringOnStateChange();
         };
       };
 
-      var getShowMore = function getShowMore(helper) {
+      var getShowMore = function getShowMore(helper, cachedHits) {
         return function () {
-          helper.setPage(getLastReceivedPage() + 1).search();
+          helper.setPage(getLastReceivedPage(helper.state, cachedHits) + 1).search();
         };
-      };
-
-      var filterEmptyRefinements = function filterEmptyRefinements() {
-        var refinements = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        return Object.keys(refinements).filter(function (key) {
-          return Array.isArray(refinements[key]) ? refinements[key].length : Object.keys(refinements[key]).length;
-        }).reduce(function (obj, key) {
-          obj[key] = refinements[key];
-          return obj;
-        }, {});
       };
 
       return {
@@ -10629,8 +10652,11 @@
         init: function init(_ref5) {
           var instantSearchInstance = _ref5.instantSearchInstance,
               helper = _ref5.helper;
-          showPrevious = getShowPrevious(helper);
-          showMore = getShowMore(helper);
+          var cachedHits = cache.read({
+            state: helper.state
+          }) || {};
+          showPrevious = getShowPrevious(helper, cachedHits);
+          showMore = getShowMore(helper, cachedHits);
           sendEvent = createSendEventForHits({
             instantSearchInstance: instantSearchInstance,
             index: helper.getIndex(),
@@ -10641,15 +10667,13 @@
             widgetType: this.$$type
           });
           renderFn({
-            hits: extractHitsFromCachedHits(cache.read({
-              state: helper.state
-            }) || {}),
+            hits: extractHitsFromCachedHits(cachedHits),
             results: undefined,
             sendEvent: sendEvent,
             bindEvent: bindEvent,
             showPrevious: showPrevious,
             showMore: showMore,
-            isFirstPage: getFirstReceivedPage() === 0 || helper.state.page === undefined,
+            isFirstPage: helper.state.page === undefined || getFirstReceivedPage(helper.state, cachedHits) === 0,
             isLastPage: true,
             instantSearchInstance: instantSearchInstance,
             widgetParams: widgetParams
@@ -10659,32 +10683,8 @@
           var results = _ref6.results,
               state = _ref6.state,
               instantSearchInstance = _ref6.instantSearchInstance;
-
-          // Reset cache and received pages if anything changes in the
-          // search state, except for the page.
-          //
-          // We're doing this to "reset" the widget if a refinement or the
-          // query changes between renders, but we want to keep it as is
-          // if we only change pages.
-          var _state$page = state.page,
-              page = _state$page === void 0 ? 0 : _state$page,
-              facets = state.facets,
-              hierarchicalFacets = state.hierarchicalFacets,
-              disjunctiveFacets = state.disjunctiveFacets,
-              maxValuesPerFacet = state.maxValuesPerFacet,
-              currentState = _objectWithoutProperties(state, ["page", "facets", "hierarchicalFacets", "disjunctiveFacets", "maxValuesPerFacet"]);
-
-          currentState.facetsRefinements = filterEmptyRefinements(currentState.facetsRefinements);
-          currentState.hierarchicalFacetsRefinements = filterEmptyRefinements(currentState.hierarchicalFacetsRefinements);
-          currentState.disjunctiveFacetsRefinements = filterEmptyRefinements(currentState.disjunctiveFacetsRefinements);
-          currentState.numericRefinements = filterEmptyRefinements(currentState.numericRefinements);
-
-          if (!isEqual(currentState, prevState)) {
-            cachedHits = cache.read({
-              state: state
-            }) || {};
-            prevState = currentState;
-          }
+          var _state$page3 = state.page,
+              page = _state$page3 === void 0 ? 0 : _state$page3;
 
           if (escapeHTML && results.hits.length > 0) {
             results.hits = escapeHits(results.hits);
@@ -10698,12 +10698,9 @@
           // hits widgets mounted on the page.
 
           results.hits.__escaped = initialEscaped;
-
-          if (cachedHits === undefined) {
-            cachedHits = cache.read({
-              state: state
-            }) || {};
-          }
+          var cachedHits = cache.read({
+            state: state
+          }) || {};
 
           if (cachedHits[page] === undefined) {
             cachedHits[page] = results.hits;
@@ -10713,8 +10710,10 @@
             });
           }
 
-          var isFirstPage = getFirstReceivedPage() === 0;
-          var isLastPage = results.nbPages <= getLastReceivedPage() + 1;
+          var firstReceivedPage = getFirstReceivedPage(state, cachedHits);
+          var lastReceivedPage = getLastReceivedPage(state, cachedHits);
+          var isFirstPage = firstReceivedPage === 0;
+          var isLastPage = results.nbPages <= lastReceivedPage + 1;
           sendEvent('view', cachedHits[page]);
           renderFn({
             hits: extractHitsFromCachedHits(cachedHits),
@@ -13907,11 +13906,11 @@
         return function (searchParameters) {
           // Merge new `searchParameters` with the ones set from other widgets
           var actualState = getInitialSearchParameters(helper.state, widgetParams);
-          var nextSearchParameters = merge$1(actualState, new algoliasearchHelper_1.SearchParameters(searchParameters)); // Trigger a search with the resolved search parameters
+          var nextSearchParameters = merge$1(actualState, new algoliasearchHelper_1.SearchParameters(searchParameters)); // Update original `widgetParams.searchParameters` to the new refined one
 
-          helper.setState(nextSearchParameters).search(); // Update original `widgetParams.searchParameters` to the new refined one
+          widgetParams.searchParameters = searchParameters; // Trigger a search with the resolved search parameters
 
-          widgetParams.searchParameters = searchParameters;
+          helper.setState(nextSearchParameters).search();
         };
       }
 
@@ -19795,6 +19794,7 @@
     name: 'analytics'
   });
 
+  // @major this widget will be removed from the next major version.
   var analytics = function analytics(widgetParams) {
     var _ref = widgetParams || {},
         pushFunction = _ref.pushFunction,
@@ -19811,6 +19811,7 @@
       throw new Error(withUsage$I('The `pushFunction` option is required.'));
     }
 
+     _warning(false, "`analytics` widget has been deprecated. It is still supported in 4.x releases, but not further. It is replaced by the `insights` middleware.\n\nFor the migration, visit https://www.algolia.com/doc/guides/building-search-ui/upgrade-guides/js/#analytics-widget") ;
     var cachedState = null;
 
     var serializeRefinements = function serializeRefinements(parameters) {
@@ -21001,21 +21002,49 @@
     var insightsClient = _insightsClient === null ? noop : _insightsClient;
     return function (_ref2) {
       var instantSearchInstance = _ref2.instantSearchInstance;
-      insightsClient('_get', '_hasCredentials', function (hasCredentials) {
-        if (!hasCredentials) {
-          var _getAppIdAndApiKey = getAppIdAndApiKey(instantSearchInstance.client),
-              _getAppIdAndApiKey2 = _slicedToArray(_getAppIdAndApiKey, 2),
-              appId = _getAppIdAndApiKey2[0],
-              apiKey = _getAppIdAndApiKey2[1];
 
-          insightsClient('_get', '_userToken', function (userToken) {
-             _warning(!userToken, "You set userToken before `createInsightsMiddleware()` and it is ignored.\nPlease set the token after the `createInsightsMiddleware()` call.\n\ncreateInsightsMiddleware({ /* ... */ });\n\ninsightsClient('setUserToken', 'your-user-token');\n// or\naa('setUserToken', 'your-user-token');\n            ") ;
-          });
-          insightsClient('init', {
-            appId: appId,
-            apiKey: apiKey
-          });
-        }
+      var _getAppIdAndApiKey = getAppIdAndApiKey(instantSearchInstance.client),
+          _getAppIdAndApiKey2 = _slicedToArray(_getAppIdAndApiKey, 2),
+          appId = _getAppIdAndApiKey2[0],
+          apiKey = _getAppIdAndApiKey2[1];
+
+      var queuedUserToken = undefined;
+      var userTokenBeforeInit = undefined;
+
+      if (Array.isArray(insightsClient.queue)) {
+        // Context: The umd build of search-insights is asynchronously loaded by the snippet.
+        //
+        // When user calls `aa('setUserToken', 'my-user-token')` before `search-insights` is loaded,
+        // ['setUserToken', 'my-user-token'] gets stored in `aa.queue`.
+        // Whenever `search-insights` is finally loaded, it will process the queue.
+        //
+        // But here's the reason why we handle it here:
+        // At this point, even though `search-insights` is not loaded yet,
+        // we still want to read the token from the queue.
+        // Otherwise, the first search call will be fired without the token.
+        var _ref3 = find$1(insightsClient.queue.slice().reverse(), function (_ref5) {
+          var _ref6 = _slicedToArray(_ref5, 1),
+              method = _ref6[0];
+
+          return method === 'setUserToken';
+        }) || [];
+
+        var _ref4 = _slicedToArray(_ref3, 2);
+
+        queuedUserToken = _ref4[1];
+      }
+
+      insightsClient('_get', '_userToken', function (userToken) {
+        // If user has called `aa('setUserToken', 'my-user-token')` before creating
+        // the `insights` middleware, we store them temporarily and
+        // set it later on.
+        //
+        // Otherwise, the `init` call might override it with anonymous user token.
+        userTokenBeforeInit = userToken;
+      });
+      insightsClient('init', {
+        appId: appId,
+        apiKey: apiKey
       });
       return {
         onStateChange: function onStateChange() {},
@@ -21029,33 +21058,20 @@
           };
 
           instantSearchInstance.mainIndex.getHelper().setQueryParameter('clickAnalytics', true);
+          var anonymousUserToken = getInsightsAnonymousUserTokenInternal();
 
-          if (hasInsightsClient) {
+          if (hasInsightsClient && anonymousUserToken) {
             // When `aa('init', { ... })` is called, it creates an anonymous user token in cookie.
             // We can set it as userToken.
-            setUserTokenToSearch(getInsightsAnonymousUserToken());
-          }
+            setUserTokenToSearch(anonymousUserToken);
+          } // We consider the `userToken` coming from a `init` call to have a higher
+          // importance than the one coming from the queue.
 
-          if (Array.isArray(insightsClient.queue)) {
-            // Context: The umd build of search-insights is asynchronously loaded by the snippet.
-            //
-            // When user calls `aa('setUserToken', 'my-user-token')` before `search-insights` is loaded,
-            // ['setUserToken', 'my-user-token'] gets stored in `aa.queue`.
-            // Whenever `search-insights` is finally loaded, it will process the queue.
-            //
-            // But here's the reason why we handle it here:
-            // At this point, even though `search-insights` is not loaded yet,
-            // we still want to read the token from the queue.
-            // Otherwise, the first search call will be fired without the token.
-            insightsClient.queue.forEach(function (_ref3) {
-              var _ref4 = _slicedToArray(_ref3, 2),
-                  method = _ref4[0],
-                  firstArgument = _ref4[1];
 
-              if (method === 'setUserToken') {
-                setUserTokenToSearch(firstArgument);
-              }
-            });
+          if (userTokenBeforeInit) {
+            insightsClient('setUserToken', userTokenBeforeInit);
+          } else if (queuedUserToken) {
+            insightsClient('setUserToken', queuedUserToken);
           } // This updates userToken which is set explicitly by `aa('setUserToken', userToken)`
 
 
