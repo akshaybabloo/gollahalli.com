@@ -11,7 +11,8 @@
     "build": "webpack"
   },
   "devDependencies": {
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.3.0"
   },
   "dependencies": {
     "algoliasearch": "^4.8.3",
