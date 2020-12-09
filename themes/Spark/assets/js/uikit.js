@@ -1,4 +1,4 @@
-/*! UIkit 3.5.10 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
+/*! UIkit 3.5.14 | https://www.getuikit.com | (c) 2014 - 2020 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -302,11 +302,25 @@
 
     function noop() {}
 
-    function intersectRect(r1, r2) {
-        return r1.left < r2.right &&
-            r1.right > r2.left &&
-            r1.top < r2.bottom &&
-            r1.bottom > r2.top;
+    function intersectRect() {
+        var rects = [], len = arguments.length;
+        while ( len-- ) rects[ len ] = arguments[ len ];
+
+        return [['bottom', 'top'], ['right', 'left']].every(function (ref) {
+                var minProp = ref[0];
+                var maxProp = ref[1];
+
+                return Math.min.apply(Math, rects.map(function (ref) {
+                var min = ref[minProp];
+
+                return min;
+                })) - Math.max.apply(Math, rects.map(function (ref) {
+                var max = ref[maxProp];
+
+                return max;
+                })) > 0;
+        }
+        );
     }
 
     function pointInRect(point, rect) {
@@ -1600,112 +1614,6 @@
 
     };
 
-    var dirs = {
-        width: ['x', 'left', 'right'],
-        height: ['y', 'top', 'bottom']
-    };
-
-    function positionAt(element, target, elAttach, targetAttach, elOffset, targetOffset, flip, boundary) {
-
-        elAttach = getPos(elAttach);
-        targetAttach = getPos(targetAttach);
-
-        var flipped = {element: elAttach, target: targetAttach};
-
-        if (!element || !target) {
-            return flipped;
-        }
-
-        var dim = getDimensions(element);
-        var targetDim = getDimensions(target);
-        var position = targetDim;
-
-        moveTo(position, elAttach, dim, -1);
-        moveTo(position, targetAttach, targetDim, 1);
-
-        elOffset = getOffsets(elOffset, dim.width, dim.height);
-        targetOffset = getOffsets(targetOffset, targetDim.width, targetDim.height);
-
-        elOffset['x'] += targetOffset['x'];
-        elOffset['y'] += targetOffset['y'];
-
-        position.left += elOffset['x'];
-        position.top += elOffset['y'];
-
-        if (flip) {
-
-            var boundaries = [getDimensions(toWindow(element))];
-
-            if (boundary) {
-                boundaries.unshift(getDimensions(boundary));
-            }
-
-            each(dirs, function (ref, prop) {
-                var dir = ref[0];
-                var align = ref[1];
-                var alignFlip = ref[2];
-
-
-                if (!(flip === true || includes(flip, dir))) {
-                    return;
-                }
-
-                boundaries.some(function (boundary) {
-
-                    var elemOffset = elAttach[dir] === align
-                        ? -dim[prop]
-                        : elAttach[dir] === alignFlip
-                            ? dim[prop]
-                            : 0;
-
-                    var targetOffset = targetAttach[dir] === align
-                        ? targetDim[prop]
-                        : targetAttach[dir] === alignFlip
-                            ? -targetDim[prop]
-                            : 0;
-
-                    if (position[align] < boundary[align] || position[align] + dim[prop] > boundary[alignFlip]) {
-
-                        var centerOffset = dim[prop] / 2;
-                        var centerTargetOffset = targetAttach[dir] === 'center' ? -targetDim[prop] / 2 : 0;
-
-                        return elAttach[dir] === 'center' && (
-                            apply(centerOffset, centerTargetOffset)
-                            || apply(-centerOffset, -centerTargetOffset)
-                        ) || apply(elemOffset, targetOffset);
-
-                    }
-
-                    function apply(elemOffset, targetOffset) {
-
-                        var newVal = toFloat((position[align] + elemOffset + targetOffset - elOffset[dir] * 2).toFixed(4));
-
-                        if (newVal >= boundary[align] && newVal + dim[prop] <= boundary[alignFlip]) {
-                            position[align] = newVal;
-
-                            ['element', 'target'].forEach(function (el) {
-                                flipped[el][dir] = !elemOffset
-                                    ? flipped[el][dir]
-                                    : flipped[el][dir] === dirs[prop][1]
-                                        ? dirs[prop][2]
-                                        : dirs[prop][1];
-                            });
-
-                            return true;
-                        }
-
-                    }
-
-                });
-
-            });
-        }
-
-        offset(element, position);
-
-        return flipped;
-    }
-
     function offset(element, coordinates) {
 
         if (!coordinates) {
@@ -1819,62 +1727,20 @@
         };
     }
 
+    var dirs = {
+        width: ['left', 'right'],
+        height: ['top', 'bottom']
+    };
+
     function boxModelAdjust(element, prop, sizing) {
         if ( sizing === void 0 ) sizing = 'border-box';
 
         return css(element, 'boxSizing') === sizing
-            ? dirs[prop].slice(1).map(ucfirst).reduce(function (value, prop) { return value
+            ? dirs[prop].map(ucfirst).reduce(function (value, prop) { return value
                 + toFloat(css(element, ("padding" + prop)))
                 + toFloat(css(element, ("border" + prop + "Width"))); }
                 , 0)
             : 0;
-    }
-
-    function moveTo(position, attach, dim, factor) {
-        each(dirs, function (ref, prop) {
-            var dir = ref[0];
-            var align = ref[1];
-            var alignFlip = ref[2];
-
-            if (attach[dir] === alignFlip) {
-                position[align] += dim[prop] * factor;
-            } else if (attach[dir] === 'center') {
-                position[align] += dim[prop] * factor / 2;
-            }
-        });
-    }
-
-    function getPos(pos) {
-
-        var x = /left|center|right/;
-        var y = /top|center|bottom/;
-
-        pos = (pos || '').split(' ');
-
-        if (pos.length === 1) {
-            pos = x.test(pos[0])
-                ? pos.concat('center')
-                : y.test(pos[0])
-                    ? ['center'].concat(pos)
-                    : ['center', 'center'];
-        }
-
-        return {
-            x: x.test(pos[0]) ? pos[0] : 'center',
-            y: y.test(pos[1]) ? pos[1] : 'center'
-        };
-    }
-
-    function getOffsets(offsets, width, height) {
-
-        var ref = (offsets || '').split(' ');
-        var x = ref[0];
-        var y = ref[1];
-
-        return {
-            x: x ? toFloat(x) * (endsWith(x, '%') ? width / 100 : 1) : 0,
-            y: y ? toFloat(y) * (endsWith(y, '%') ? height / 100 : 1) : 0
-        };
     }
 
     function flipPosition(pos) {
@@ -2371,24 +2237,21 @@
             return false;
         }
 
-        var parents = overflowParents(element);
+        return intersectRect.apply(void 0, scrollParents(element).map(function (parent) {
 
-        return parents.every(function (parent, i) {
-
-            var client = offset(parents[i + 1] || element);
             var ref = offset(getViewport(parent));
             var top = ref.top;
             var left = ref.left;
             var bottom = ref.bottom;
             var right = ref.right;
 
-            return intersectRect(client, {
+            return {
                 top: top - offsetTop,
                 left: left - offsetLeft,
                 bottom: bottom + offsetTop,
                 right: right + offsetLeft
-            });
-        });
+            };
+        }).concat(offset(element)));
     }
 
     function scrollTop(element, top) {
@@ -2411,16 +2274,16 @@
             return;
         }
 
-        var parents = overflowParents(element).reverse();
+        var parents = scrollParents(element);
         var diff = 0;
         return parents.reduce(function (fn, scrollElement, i) {
 
             var scrollTop = scrollElement.scrollTop;
             var scrollHeight = scrollElement.scrollHeight;
-            var clientHeight = scrollElement.clientHeight;
-            var maxScroll = scrollHeight - clientHeight;
+            var viewport = getViewport(scrollElement);
+            var maxScroll = scrollHeight - height(viewport);
 
-            var top = Math.ceil(position(parents[i - 1] || element, getViewport(scrollElement)).top - offsetBy) + diff + scrollTop;
+            var top = Math.ceil(position(parents[i - 1] || element, viewport).top - offsetBy) + diff + scrollTop;
 
             if (top > maxScroll) {
                 diff = top - maxScroll;
@@ -2475,17 +2338,18 @@
             return 0;
         }
 
-        var scrollElement = last(scrollParents(element));
+        var ref = scrollParents(element, /auto|scroll/);
+        var scrollElement = ref[0];
         var scrollHeight = scrollElement.scrollHeight;
         var scrollTop = scrollElement.scrollTop;
         var viewport = getViewport(scrollElement);
-        var viewportHeight = offset(viewport).height;
+        var viewportHeight = height(viewport);
         var viewportTop = offsetPosition(element)[0] - scrollTop - offsetPosition(scrollElement)[0];
         var viewportDist = Math.min(viewportHeight, viewportTop + scrollTop);
 
         var top = viewportTop - viewportDist;
         var dist = Math.min(
-            offset(element).height + heightOffset + viewportDist,
+            height(element) + heightOffset + viewportDist,
             scrollHeight - (viewportTop + scrollTop),
             scrollHeight - viewportHeight
         );
@@ -2493,14 +2357,16 @@
         return clamp(-1 * top / dist);
     }
 
-    function scrollParents(element, overflowRe) {
-        if ( overflowRe === void 0 ) overflowRe = /auto|scroll/;
+    function scrollParents(element, overflowRe, scrollable) {
+        if ( overflowRe === void 0 ) overflowRe = /auto|scroll|hidden/;
+        if ( scrollable === void 0 ) scrollable = false;
 
         var scrollEl = getScrollingElement(element);
         var scrollParents = parents(element).filter(function (parent) { return parent === scrollEl
-            || overflowRe.test(css(parent, 'overflow'))
-            && parent.scrollHeight > Math.round(offset(parent).height); }
-        ).reverse();
+            || scrollEl.contains(parent)
+                && overflowRe.test(css(parent, 'overflow'))
+                && (!scrollable || parent.scrollHeight < height(parent)); }
+        );
         return scrollParents.length ? scrollParents : [scrollEl];
     }
 
@@ -2508,14 +2374,165 @@
         return scrollElement === getScrollingElement(scrollElement) ? window : scrollElement;
     }
 
-    function overflowParents(element) {
-        return scrollParents(element, /auto|scroll|hidden/);
-    }
-
     function getScrollingElement(element) {
         var ref = toWindow(element);
         var document = ref.document;
         return document.scrollingElement || document.documentElement;
+    }
+
+    var dirs$1 = {
+        width: ['x', 'left', 'right'],
+        height: ['y', 'top', 'bottom']
+    };
+
+    function positionAt(element, target, elAttach, targetAttach, elOffset, targetOffset, flip, boundary) {
+
+        elAttach = getPos(elAttach);
+        targetAttach = getPos(targetAttach);
+
+        var flipped = {element: elAttach, target: targetAttach};
+
+        if (!element || !target) {
+            return flipped;
+        }
+
+        var dim = offset(element);
+        var targetDim = offset(target);
+        var position = targetDim;
+
+        moveTo(position, elAttach, dim, -1);
+        moveTo(position, targetAttach, targetDim, 1);
+
+        elOffset = getOffsets(elOffset, dim.width, dim.height);
+        targetOffset = getOffsets(targetOffset, targetDim.width, targetDim.height);
+
+        elOffset['x'] += targetOffset['x'];
+        elOffset['y'] += targetOffset['y'];
+
+        position.left += elOffset['x'];
+        position.top += elOffset['y'];
+
+        if (flip) {
+
+            var boundaries = scrollParents(target).map(getViewport);
+
+            if (boundary && includes(boundaries, boundary)) {
+                boundaries.unshift(boundary);
+            }
+
+            boundaries = boundaries.map(function (el) { return offset(el); });
+
+            each(dirs$1, function (ref, prop) {
+                var dir = ref[0];
+                var align = ref[1];
+                var alignFlip = ref[2];
+
+
+                if (!(flip === true || includes(flip, dir))) {
+                    return;
+                }
+
+                boundaries.some(function (boundary) {
+
+                    var elemOffset = elAttach[dir] === align
+                        ? -dim[prop]
+                        : elAttach[dir] === alignFlip
+                            ? dim[prop]
+                            : 0;
+
+                    var targetOffset = targetAttach[dir] === align
+                        ? targetDim[prop]
+                        : targetAttach[dir] === alignFlip
+                            ? -targetDim[prop]
+                            : 0;
+
+                    if (position[align] < boundary[align] || position[align] + dim[prop] > boundary[alignFlip]) {
+
+                        var centerOffset = dim[prop] / 2;
+                        var centerTargetOffset = targetAttach[dir] === 'center' ? -targetDim[prop] / 2 : 0;
+
+                        return elAttach[dir] === 'center' && (
+                            apply(centerOffset, centerTargetOffset)
+                            || apply(-centerOffset, -centerTargetOffset)
+                        ) || apply(elemOffset, targetOffset);
+
+                    }
+
+                    function apply(elemOffset, targetOffset) {
+
+                        var newVal = toFloat((position[align] + elemOffset + targetOffset - elOffset[dir] * 2).toFixed(4));
+
+                        if (newVal >= boundary[align] && newVal + dim[prop] <= boundary[alignFlip]) {
+                            position[align] = newVal;
+
+                            ['element', 'target'].forEach(function (el) {
+                                flipped[el][dir] = !elemOffset
+                                    ? flipped[el][dir]
+                                    : flipped[el][dir] === dirs$1[prop][1]
+                                        ? dirs$1[prop][2]
+                                        : dirs$1[prop][1];
+                            });
+
+                            return true;
+                        }
+
+                    }
+
+                });
+
+            });
+        }
+
+        offset(element, position);
+
+        return flipped;
+    }
+
+    function moveTo(position, attach, dim, factor) {
+        each(dirs$1, function (ref, prop) {
+            var dir = ref[0];
+            var align = ref[1];
+            var alignFlip = ref[2];
+
+            if (attach[dir] === alignFlip) {
+                position[align] += dim[prop] * factor;
+            } else if (attach[dir] === 'center') {
+                position[align] += dim[prop] * factor / 2;
+            }
+        });
+    }
+
+    function getPos(pos) {
+
+        var x = /left|center|right/;
+        var y = /top|center|bottom/;
+
+        pos = (pos || '').split(' ');
+
+        if (pos.length === 1) {
+            pos = x.test(pos[0])
+                ? pos.concat('center')
+                : y.test(pos[0])
+                    ? ['center'].concat(pos)
+                    : ['center', 'center'];
+        }
+
+        return {
+            x: x.test(pos[0]) ? pos[0] : 'center',
+            y: y.test(pos[1]) ? pos[1] : 'center'
+        };
+    }
+
+    function getOffsets(offsets, width, height) {
+
+        var ref = (offsets || '').split(' ');
+        var x = ref[0];
+        var y = ref[1];
+
+        return {
+            x: x ? toFloat(x) * (endsWith(x, '%') ? width / 100 : 1) : 0,
+            y: y ? toFloat(y) * (endsWith(y, '%') ? height / 100 : 1) : 0
+        };
     }
 
     var IntersectionObserver = inBrowser && window.IntersectionObserver
@@ -2607,7 +2624,6 @@
         replaceClass: replaceClass,
         hasClass: hasClass,
         toggleClass: toggleClass,
-        positionAt: positionAt,
         offset: offset,
         position: position,
         offsetPosition: offsetPosition,
@@ -2710,6 +2726,7 @@
         play: play,
         pause: pause,
         mute: mute,
+        positionAt: positionAt,
         Promise: Promise,
         Deferred: Deferred,
         IntersectionObserver: IntersectionObserver,
@@ -3491,7 +3508,7 @@
     UIkit.data = '__uikit__';
     UIkit.prefix = 'uk-';
     UIkit.options = {};
-    UIkit.version = '3.5.10';
+    UIkit.version = '3.5.14';
 
     globalAPI(UIkit);
     hooksAPI(UIkit);
@@ -3544,10 +3561,10 @@
                 if ((css(target, 'animationName') || '').match(/^uk-.*(left|right)/)) {
 
                     started++;
-                    css(document.body, 'overflowX', 'hidden');
+                    css(document.documentElement, 'overflowX', 'hidden');
                     setTimeout(function () {
                         if (!--started) {
-                            css(document.body, 'overflowX', '');
+                            css(document.documentElement, 'overflowX', '');
                         }
                     }, toMs(css(target, 'animationDuration')) + 100);
                 }
@@ -7453,11 +7470,12 @@
                         return false;
                     }
 
-                    var scrollElement = last(scrollParents(this.targets[0]));
+                    var ref$1 = scrollParents(this.targets, /auto|scroll/, true);
+                    var scrollElement = ref$1[0];
                     var scrollTop = scrollElement.scrollTop;
                     var scrollHeight = scrollElement.scrollHeight;
                     var viewport = getViewport(scrollElement);
-                    var max = scrollHeight - offset(viewport).height;
+                    var max = scrollHeight - height(viewport);
                     var active = false;
 
                     if (scrollTop === max) {
@@ -10814,8 +10832,7 @@
                 return sortBy(slides(list).filter(function (slide) {
                     var slideLeft = getElLeft(slide, list);
                     return slideLeft >= left && slideLeft + offset(slide).width <= offset(list).width + left;
-                }), 'offsetLeft');
-
+                }), 'offsetLeft').concat(next);
             },
 
             updateTranslates: function() {
@@ -11437,7 +11454,7 @@
         },
 
         data: {
-            group: false,
+            group: '',
             threshold: 5,
             clsItem: 'uk-sortable-item',
             clsPlaceholder: 'uk-sortable-placeholder',
@@ -11522,41 +11539,47 @@
                     return;
                 }
 
-                // clamp to viewport
-                var ref = this.pos;
-                var x = ref.x;
-                var y = ref.y;
-                var ref$1 = this.origin;
-                var offsetTop = ref$1.offsetTop;
-                var offsetLeft = ref$1.offsetLeft;
-                var target = document.elementFromPoint(x, y);
+                var ref = this;
+                var ref_pos = ref.pos;
+                var x = ref_pos.x;
+                var y = ref_pos.y;
+                var ref_origin = ref.origin;
+                var offsetTop = ref_origin.offsetTop;
+                var offsetLeft = ref_origin.offsetLeft;
+                var placeholder = ref.placeholder;
 
                 css(this.drag, {
                     top: y - offsetTop,
                     left: x - offsetLeft
                 });
 
-                var sortable = this.getSortable(target);
-                var previous = this.getSortable(this.placeholder);
-                var move = sortable !== previous;
+                var sortable = this.getSortable(document.elementFromPoint(x, y));
 
-                if (!sortable || within(target, this.placeholder) || move && (!sortable.group || sortable.group !== previous.group)) {
+                if (!sortable) {
                     return;
                 }
 
-                target = sortable.target === target.parentNode && target || sortable.items.filter(function (element) { return within(target, element); })[0];
+                var items = sortable.items;
 
-                if (move) {
-                    previous.remove(this.placeholder);
-                } else if (!target) {
+                if (items.some(Transition.inProgress)) {
                     return;
                 }
 
-                sortable.insert(this.placeholder, target);
+                var target = findTarget(items, x, y);
 
-                if (!includes(this.touched, sortable)) {
-                    this.touched.push(sortable);
+                if (items.length && !target || target === placeholder) {
+                    return;
                 }
+
+                this.touched.add(sortable);
+
+                var previous = this.getSortable(placeholder);
+
+                if (sortable !== previous) {
+                    previous.remove(placeholder);
+                }
+
+                sortable.insert(placeholder, findInsertTarget(sortable.target, target, placeholder, x, y));
 
             },
 
@@ -11586,7 +11609,7 @@
 
                 e.preventDefault();
 
-                this.touched = [this];
+                this.touched = new Set([this]);
                 this.placeholder = placeholder;
                 this.origin = assign({target: target, index: index(placeholder)}, this.pos);
 
@@ -11630,6 +11653,8 @@
             },
 
             end: function() {
+                var this$1 = this;
+
 
                 off(document, pointerMove, this.move);
                 off(document, pointerUp, this.end);
@@ -11657,9 +11682,15 @@
                 remove(this.drag);
                 this.drag = null;
 
-                var classes = this.touched.map(function (sortable) { return ((sortable.clsPlaceholder) + " " + (sortable.clsItem)); }).join(' ');
-                this.touched.forEach(function (sortable) { return removeClass(sortable.items, classes); });
+                this.touched.forEach(function (ref) {
+                        var clsPlaceholder = ref.clsPlaceholder;
+                        var clsItem = ref.clsItem;
 
+                        return this$1.touched.forEach(function (sortable) { return removeClass(sortable.items, clsPlaceholder, clsItem); }
+                    );
+                }
+                );
+                this.touched = null;
                 removeClass(document.documentElement, this.clsDragState);
 
             },
@@ -11668,23 +11699,15 @@
                 var this$1 = this;
 
 
+                if (target && (element === target || element === target.previousElementSibling)) {
+                    return;
+                }
+
                 addClass(this.items, this.clsItem);
 
-                var insert = function () {
-
-                    if (target) {
-
-                        if (!within(element, this$1.target) || isPredecessor(element, target)) {
-                            before(target, element);
-                        } else {
-                            after(target, element);
-                        }
-
-                    } else {
-                        append(this$1.target, element);
-                    }
-
-                };
+                var insert = function () { return target
+                    ? before(target, element)
+                    : append(this$1.target, element); };
 
                 if (this.animation) {
                     this.animate(insert);
@@ -11709,16 +11732,18 @@
             },
 
             getSortable: function(element) {
-                return element && (this.$getComponent(element, 'sortable') || this.getSortable(element.parentNode));
+                do {
+                    var sortable = this.$getComponent(element, 'sortable');
+
+                    if (sortable && sortable.group === this.group) {
+                        return sortable;
+                    }
+                } while ((element = parent(element)));
             }
 
         }
 
     };
-
-    function isPredecessor(element, target) {
-        return element.parentNode === target.parentNode && index(element) > index(target);
-    }
 
     var trackTimer;
     function trackScroll(pos) {
@@ -11733,7 +11758,7 @@
             var dist = (Date.now() - last) * .3;
             last = Date.now();
 
-            scrollParents(document.elementFromPoint(x, pos.y)).some(function (scrollEl) {
+            scrollParents(document.elementFromPoint(x, pos.y)).reverse().some(function (scrollEl) {
 
                 var scroll = scrollEl.scrollTop;
                 var scrollHeight = scrollEl.scrollHeight;
@@ -11774,13 +11799,71 @@
         css(clone, assign({
             boxSizing: 'border-box',
             width: element.offsetWidth,
-            height: element.offsetHeight,
-            overflow: 'hidden'
+            height: element.offsetHeight
         }, css(element, ['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'])));
 
         height(clone.firstElementChild, height(element.firstElementChild));
 
         return clone;
+    }
+
+    function findTarget(items, x, y) {
+        for (var i = 0; i < items.length; i++) {
+            if (pointInRect({x: x, y: y}, items[i].getBoundingClientRect())) {
+                return items[i];
+            }
+        }
+    }
+
+    function findInsertTarget(list, target, placeholder, x, y) {
+
+        var items = children(list);
+
+        if (!items.length) {
+            return;
+        }
+
+        var single = items.length === 1;
+
+        if (single) {
+            append(list, placeholder);
+        }
+
+        var horizontal = isHorizontal(children(list));
+
+        if (single) {
+            remove(placeholder);
+        }
+
+        var rect = target.getBoundingClientRect();
+        if (!horizontal) {
+            return y < rect.top + rect.height / 2
+                ? target
+                : target.nextElementSibling;
+        }
+
+        var placeholderRect = placeholder.getBoundingClientRect();
+        var sameLine = intersectLine(
+            [rect.top, rect.bottom],
+            [placeholderRect.top, placeholderRect.bottom]
+        );
+        return sameLine && x > rect.left + rect.width / 2 || !sameLine && placeholderRect.top < rect.top
+            ? target.nextElementSibling
+            : target;
+    }
+
+    function isHorizontal(items) {
+        return items.some(function (el, i) {
+            var rectA = el.getBoundingClientRect();
+            return items.slice(i + 1).some(function (el) {
+                var rectB = el.getBoundingClientRect();
+                return !intersectLine([rectA.left, rectA.right], [rectB.left, rectB.right]);
+            });
+        });
+    }
+
+    function intersectLine(lineA, lineB) {
+        return lineA[1] > lineB[0] && lineB[1] > lineA[0];
     }
 
     var obj$1;
