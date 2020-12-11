@@ -11,12 +11,13 @@
     "build": "webpack"
   },
   "devDependencies": {
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.3.0"
   },
   "dependencies": {
     "algoliasearch": "^4.8.3",
     "firacode": "^5.2.0",
     "instantsearch.js": "^4.9.1",
-    "uikit": "^3.5.14"
+    "uikit": "^3.5.15"
   }
 }
