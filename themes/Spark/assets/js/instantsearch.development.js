@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.9.1 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.9.2 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -408,6 +408,13 @@
 
   var objectHasKeys_1 = objectHasKeys;
 
+  var isValidUserToken = function isValidUserToken(userToken) {
+    if (userToken === null) {
+      return false;
+    }
+    return /^[a-zA-Z0-9_-]{1,64}$/.test(userToken);
+  };
+
   /**
    * Functions to manipulate refinement lists
    *
@@ -637,6 +644,9 @@
   function SearchParameters(newParameters) {
     var params = newParameters ? SearchParameters._parseNumbers(newParameters) : {};
 
+    if (params.userToken !== undefined && !isValidUserToken(params.userToken)) {
+      console.warn('[algoliasearch-helper] The `userToken` parameter is invalid. This can lead to wrong analytics.\n  - Format: [a-zA-Z0-9_-]{1,64}');
+    }
     /**
      * This attribute contains the list of all the conjunctive facets
      * used. This list will be added to requested facets in the
@@ -3954,7 +3964,7 @@
 
   var requestBuilder_1 = requestBuilder;
 
-  var version = '3.3.3';
+  var version = '3.3.4';
 
   /**
    * Event triggered when a parameter is set or updated
@@ -7915,7 +7925,7 @@
     instantSearchInstance.renderState = _objectSpread2({}, instantSearchInstance.renderState, _defineProperty({}, parentIndexName, _objectSpread2({}, instantSearchInstance.renderState[parentIndexName], {}, renderState)));
   }
 
-  var version$1 = '4.9.1';
+  var version$1 = '4.9.2';
 
   var TAG_PLACEHOLDER = {
     highlightPreTag: '__ais-highlight__',
