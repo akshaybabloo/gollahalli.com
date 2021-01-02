@@ -29,31 +29,31 @@ siteMapImages:
 
 With the arrival of Qt 6 and the complete integration of CMake, I wanted to give Qt another try before I give up and go to Electron. So far it has been good.
 
-I have been trying to create an app that uses [QListWidget](https://doc.qt.io/qt-6/qlistwidgetitem.html) with custom widgets as a list, to list recently viewed files. The custom widget contains a label and a button, this button deletes itself on click. I had trouble connecting the child widget to the parent and if you had the same problem then this article could help you.
+I have been trying to create an app that uses [QListWidget](https://doc.qt.io/qt-6/qlistwidgetitem.html) with custom widgets as a list, to list recently viewed files. The custom widget contains a label and a button, this button deletes itself on clicking. I had trouble connecting the child widget to the parent, and if you had the same problem then this article could help you.
 
 > The code can be found at [https://github.com/akshaybabloo/qlistwidget-custom-widget](https://github.com/akshaybabloo/qlistwidget-custom-widget)
 
 ## Some Basics
 
-Lets look at some basics before we dive into the project. If you are OK with the basics move to the [fun part](#project-structure).
+Let's look at some basics before we dive into the project. If you are OK with the basics, move to the [fun part](#project-structure).
 
 ### What is Qt?
 
-[Qt](https://www.qt.io/) (spelled as cute) is a cross platform UI development platform that formally supports C++, Python and Qt QML programming languages.
+[Qt](https://www.qt.io/) (read as cute) is a cross platform UI development platform that formally supports C++, Python and Qt QML programming languages.
 
 ### Qt License Restriction
 
-Although Qt can be used by anyone the company does have a stricter licencing program. If you are using the open source version of Qt you need to adhere to [LGPL](http://www.gnu.org/licenses/lgpl-3.0.html)/[GPL](http://www.gnu.org/licenses/gpl-3.0.html) restrictions. Which basically means your source code should be open for others to view.
+Although Qt can be used by anyone, the company does have a stricter licencing program. If you are using the open source version of Qt, you need to adhere to [LGPL](http://www.gnu.org/licenses/lgpl-3.0.html)/[GPL](http://www.gnu.org/licenses/gpl-3.0.html) restrictions. Which basically means your source code should be open for others to view.
 
-So when choosing Qt as your next UI framework make sure you know the licencing restriction.
+So when choosing Qt as your next UI framework, make sure you know the licencing restriction.
 
-### What is Signals and Slots?
+### What are Signals and Slots?
 
 [Signals & Slots](https://doc.qt.io/qt-6/signalsandslots.html) are one of the main features in Qt that allows two objects to communicate without  importing them into your class. We will look at how to use this in our code.
 
 ### Why Qt?
 
-Speed and performance. That is literally the only reason why you want to use Qt. If that's something you are not bothered, I would recommend using [Electron](https://www.electronjs.org/) or [JavaFX](https://openjfx.io/). See their [website](https://www.qt.io/why-qt) for more information.
+Speed and performance. That is literally the only reason why you want to use Qt. If that's something you are not bothered with, I would recommend using [Electron](https://www.electronjs.org/) or [JavaFX](https://openjfx.io/). See their [website](https://www.qt.io/why-qt) for more information.
 
 ## Project Structure
 
@@ -73,7 +73,7 @@ qlistwidget-custom-widget
 
 ## Main Windows
 
-Let's create a simple `MainWindow` class without status bar and with all it's margins & spacing set to `0`. To this window, drag and drop the `List Widget` from the left pane.
+Let's create a simple `MainWindow` class without a status bar and with all it's margins & spacing set to `0`. To this window, drag and drop the `List Widget` from the left pane.
 
 ### Code
 
@@ -216,7 +216,7 @@ To the generated code, lets add two public methods - `QString getText()`, `void 
 
 #### void setText(const QString &text)
 
-This method sets the text of the QLabel in the ui, whose name is given as `label`
+This method sets the text of the QLabel in the UI, whose name is given as `label`
 
 ```cpp
 void CustomWidget::setText(const QString &text) {
@@ -240,7 +240,7 @@ This method is a signal that is used to `emit` a signal to an objects Slot.
 
 #### void on_toolButton_clicked()
 
-This is a slot method that reacts to the button - `x` - click on the UI. When the button is clicked we can use `emit` to send the text to the required method.
+This is a slot method that reacts to the button - `x` - click on the UI. When the button is clicked, we can use `emit` to send the text to the required method.
 
 ```cpp
 void CustomWidget::on_toolButton_clicked()
@@ -255,7 +255,7 @@ void CustomWidget::on_toolButton_clicked()
 
 [mainwindow.cpp](https://github.com/akshaybabloo/qlistwidget-custom-widget/blob/master/mainwindow.cpp) and [mainwindow.h](https://github.com/akshaybabloo/qlistwidget-custom-widget/blob/master/mainwindow.h)
 
-mainwindow.cpp and mainwindow.h are the entry point for UI, so we have to assign the `CustomWindow` object to `QListWidget` whose name in UI is `listWidget`. In this object we need to add some code to the constructor that creates new widgets and a private slot method - `void removeItem(const QString &text)` that receives a remove signal.
+mainwindow.cpp and mainwindow.h are the entry points for UI, so we have to assign the `CustomWindow` object to `QListWidget` whose name in UI is `listWidget`. In this object we need to add some code to the constructor that creates new widgets and a private slot method - `void removeItem(const QString &text)` that receives a remove signal.
 
 #### Add Code to Constructor
 
@@ -323,10 +323,10 @@ CustomWidget::CustomWidget(QWidget *parent) :
 }
 ```
 
-What we are saying here is - _connect current object (CustomWidget) whose object is sendRemoveItem to the parent (MainWindow) to its object removeItem()_
+What we are saying here is - _connect current class (CustomWidget) whose object is sendRemoveItem to the parent (MainWindow) whose object is removeItem()_
 
 ## Conclusion
 
-This article might be overwhelming but there are only few part of the code that actually matters - creating the UI, using the UI components and connecting them together - rest are automatically generated by the Qt Creator. There could be a better way of writing this, if you think you can come up with a better way to do this, please do comment below.
+This article might be overwhelming, but there are only few parts of the code that actually matter - creating the UI, using the UI components and connecting them together - rest are automatically generated by the Qt Creator. If you happen to come across a better alternative, please do comment below.
 
 Happy coding! :smile:
