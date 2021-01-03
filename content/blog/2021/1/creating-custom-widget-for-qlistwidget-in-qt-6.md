@@ -1,7 +1,7 @@
 ---
 title: "Creating Custom Widget for QListWidget in Qt 6"
 date: 2021-01-02T16:44:41+13:00
-draft: true
+draft: false
 categories: ["Tutorial"]
 tags: ["C++", "Qt6"]
 description: "Adding custom widgets to QListWidget and deleting them on button click - child to parent communication"
