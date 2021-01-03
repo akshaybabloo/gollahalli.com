@@ -5,7 +5,7 @@ draft: true
 categories: ["Tutorial"]
 tags: ["C++", "Qt6"]
 description: "Adding custom widgets to QListWidget and deleting them on button click - child to parent communication"
-images: ["/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/customwidget.png", "/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/mainwindow.png"]
+images: ["/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/application-demo-title.gif", "/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/customwidget.png", "/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/mainwindow.png", "/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/application-demo.gif"]
 ads: true
 # htmlScripts: []
 author:
@@ -21,10 +21,14 @@ sitemap:
   priority: 0.8
   changeFreq: monthly
 siteMapImages:
+  - imageLoc: "/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/application-demo-title.gif"
+    imageCaption: "Application demo."
   - imageLoc: "/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/customwidget.png"
     imageCaption: "Widget with button, label and a horizontal spacer."
   - imageLoc: "/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/mainwindow.png"
     imageCaption: "Main window with empty QListWidget."
+  - imageLoc: "/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/application-demo.gif"
+    imageCaption: "Application demo"
 ---
 
 With the arrival of Qt 6 and the complete integration of CMake, I wanted to give Qt another try before I give up and go to Electron. So far it has been good.
@@ -324,6 +328,12 @@ CustomWidget::CustomWidget(QWidget *parent) :
 ```
 
 What we are saying here is - _connect current class (CustomWidget) whose object is sendRemoveItem to the parent (MainWindow) whose object is removeItem()_
+
+## Run the Application (GIF)
+
+Once you run the application you should be able to delete any item from the list:
+
+{{< figure src="/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/application-demo.gif" title="Application demo." alt="Application demo." class="uk-align-center" >}}
 
 ## Conclusion
 
