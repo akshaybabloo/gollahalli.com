@@ -50,6 +50,7 @@ enableEmoji = true
     thumbnailUrl = "/img/akshay.jpg"
     acknowledge = false
     convertAssetsToInline = false  # Converts external assets into minified inline assets
+    cloudflareInsight = "83b998816e3e4417be0a7582d7645cd3"
     [params.sponsor]
         enable = true
         link = "https://github.com/sponsors/akshaybabloo"
