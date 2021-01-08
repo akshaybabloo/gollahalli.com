@@ -1092,10 +1092,10 @@ ini@^1.3.4:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.6.tgz#f1c46a2a93a253e7b3905115e74d527cd23061a1"
   integrity sha512-IZUoxEjNjubzrmvzZU4lKP7OnYmX72XRl3sqkfJhBKweKi5rnGi5+IUdlj/H1M+Ip5JQ1WzaDMOBRY90Ajc5jg==
 
-instantsearch.js@^4.9.2:
-  version "4.9.2"
-  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.9.2.tgz#fecdbbae0d1e09b47c7a04a374c6fbd768488984"
-  integrity sha512-k8aMBe2UiRw8XIaHXgOfJckND95GTT49O78bKc1H9ySTRxX0ttkLz00JpWwgUNyzu4N5ZXrFOya/aOEZJbIzrQ==
+instantsearch.js@^4.10.0:
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.10.0.tgz#74cb6b47f83e22d100aa7f9278bc70665fa098c2"
+  integrity sha512-Opwo3yhuCU4X3AbQUfI9OR5fvfc9zhd3OhPsU54CmZxjrq4ViJ0ySAeX9CC+3zlJ6kunTJKhxjBHUKv37mv1yQ==
   dependencies:
     "@types/googlemaps" "^3.39.6"
     algoliasearch-helper "^3.3.4"
@@ -2203,10 +2203,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-uikit@^3.6.7:
-  version "3.6.7"
-  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.6.7.tgz#db61ef4ab282d4d2a5faa44b9226f47a97ab9124"
-  integrity sha512-cbpaqmPKvMDHdPHHsdZFoX50rI5uqMuPkoPD6wVLQ1FiJ78MMPG0RKMtqB5lGU0fcI7yzJfDX+nqaSDu/bzVsQ==
+uikit@^3.6.9:
+  version "3.6.9"
+  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.6.9.tgz#468389832fd16f89987cee8571d8445295a916df"
+  integrity sha512-4GshI7lyr0Khtcjgz5VSw0ClP5Soemf+nmmKwhb/KMCf79YV0ABKUgJXApQjFMya22OL4SsM/8H339uDQDu+Hw==
 
 unc-path-regex@^0.1.2:
   version "0.1.2"
