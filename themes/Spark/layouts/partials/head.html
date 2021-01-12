@@ -5,8 +5,6 @@
 
 <title>{{ if ne .Site.Title .Title }}{{.Title}} &mdash; {{ end }}{{.Site.Title}}</title>
 
-<meta name="robots" content="index, follow">
-
 {{ if (isset .Params "externalurl") }}
 <meta http-equiv="refresh" content="2;url={{ .Params.externalurl }}" />
 {{ end -}}
@@ -38,8 +36,14 @@
   <meta itemprop="thumbnailUrl" content="{{ .Site.Params.thumbnailUrl | absURL }}"/>
 {{ end }}
 
-{{ if or .Params.noindex (isset .Params "externalurl") }}
+{{ if and (in .Permalink "tags") (.Site.Params.seo.noIndexTags) }}
+    <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+{{ else if and (in .Permalink "categories") (.Site.Params.seo.noIndexCategories) }}
+    <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+{{ else if or .Params.noindex (isset .Params "externalurl") }}
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+{{else}}
+    <meta name="robots" content="index, follow">
 {{end}}
 
 {{ if eq (getenv "HUGO_ENV") "production" }}
