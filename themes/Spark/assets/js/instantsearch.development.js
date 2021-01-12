@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.9.2 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.10.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -6922,6 +6922,158 @@
     }) : value;
   }
 
+  /**
+   * This implementation is taken from Lodash implementation.
+   * See: https://github.com/lodash/lodash/blob/4.17.11-npm/unescape.js
+   */
+  // Used to map HTML entities to characters.
+  var htmlEscapes$1 = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'"
+  }; // Used to match HTML entities and HTML characters.
+
+  var regexEscapedHtml = /&(amp|quot|lt|gt|#39);/g;
+  var regexHasEscapedHtml = RegExp(regexEscapedHtml.source);
+  /**
+   * Converts the HTML entities "&", "<", ">", '"', and "'" in `string` to their
+   * characters.
+   */
+
+  function unescape$1(value) {
+    return value && regexHasEscapedHtml.test(value) ? value.replace(regexEscapedHtml, function (character) {
+      return htmlEscapes$1[character];
+    }) : value;
+  }
+
+  var TAG_PLACEHOLDER = {
+    highlightPreTag: '__ais-highlight__',
+    highlightPostTag: '__/ais-highlight__'
+  };
+  var TAG_REPLACEMENT = {
+    highlightPreTag: '<mark>',
+    highlightPostTag: '</mark>'
+  };
+
+  function replaceTagsAndEscape(value) {
+    return escape$1(value).replace(new RegExp(TAG_PLACEHOLDER.highlightPreTag, 'g'), TAG_REPLACEMENT.highlightPreTag).replace(new RegExp(TAG_PLACEHOLDER.highlightPostTag, 'g'), TAG_REPLACEMENT.highlightPostTag);
+  }
+
+  function recursiveEscape(input) {
+    if (isPlainObject(input) && typeof input.value !== 'string') {
+      return Object.keys(input).reduce(function (acc, key) {
+        return _objectSpread2({}, acc, _defineProperty({}, key, recursiveEscape(input[key])));
+      }, {});
+    }
+
+    if (Array.isArray(input)) {
+      return input.map(recursiveEscape);
+    }
+
+    return _objectSpread2({}, input, {
+      value: replaceTagsAndEscape(input.value)
+    });
+  }
+
+  function escapeHits(hits) {
+    if (hits.__escaped === undefined) {
+      // We don't override the value on hit because it will mutate the raw results
+      // instead we make a shallow copy and we assign the escaped values on it.
+      hits = hits.map(function (_ref) {
+        var hit = _extends({}, _ref);
+
+        if (hit._highlightResult) {
+          hit._highlightResult = recursiveEscape(hit._highlightResult);
+        }
+
+        if (hit._snippetResult) {
+          hit._snippetResult = recursiveEscape(hit._snippetResult);
+        }
+
+        return hit;
+      });
+      hits.__escaped = true;
+    }
+
+    return hits;
+  }
+  function escapeFacets(facetHits) {
+    return facetHits.map(function (h) {
+      return _objectSpread2({}, h, {
+        highlighted: replaceTagsAndEscape(h.highlighted)
+      });
+    });
+  }
+
+  function concatHighlightedParts(parts) {
+    var highlightPreTag = TAG_REPLACEMENT.highlightPreTag,
+        highlightPostTag = TAG_REPLACEMENT.highlightPostTag;
+    return parts.map(function (part) {
+      return part.isHighlighted ? highlightPreTag + part.value + highlightPostTag : part.value;
+    }).join('');
+  }
+
+  function getHighlightedParts(highlightedValue) {
+    var highlightPostTag = TAG_REPLACEMENT.highlightPostTag,
+        highlightPreTag = TAG_REPLACEMENT.highlightPreTag;
+    var splitByPreTag = highlightedValue.split(highlightPreTag);
+    var firstValue = splitByPreTag.shift();
+    var elements = !firstValue ? [] : [{
+      value: firstValue,
+      isHighlighted: false
+    }];
+    splitByPreTag.forEach(function (split) {
+      var splitByPostTag = split.split(highlightPostTag);
+      elements.push({
+        value: splitByPostTag[0],
+        isHighlighted: true
+      });
+
+      if (splitByPostTag[1] !== '') {
+        elements.push({
+          value: splitByPostTag[1],
+          isHighlighted: false
+        });
+      }
+    });
+    return elements;
+  }
+
+  var hasAlphanumeric = new RegExp(/\w/i);
+  function getHighlightFromSiblings(parts, i) {
+    var _parts, _parts2;
+
+    var current = parts[i];
+    var isNextHighlighted = ((_parts = parts[i + 1]) === null || _parts === void 0 ? void 0 : _parts.isHighlighted) || true;
+    var isPreviousHighlighted = ((_parts2 = parts[i - 1]) === null || _parts2 === void 0 ? void 0 : _parts2.isHighlighted) || true;
+
+    if (!hasAlphanumeric.test(unescape$1(current.value)) && isPreviousHighlighted === isNextHighlighted) {
+      return isPreviousHighlighted;
+    }
+
+    return current.isHighlighted;
+  }
+
+  function reverseHighlightedParts(parts) {
+    if (!parts.some(function (part) {
+      return part.isHighlighted;
+    })) {
+      return parts.map(function (part) {
+        return _objectSpread2({}, part, {
+          isHighlighted: false
+        });
+      });
+    }
+
+    return parts.map(function (part, i) {
+      return _objectSpread2({}, part, {
+        isHighlighted: !getHighlightFromSiblings(parts, i)
+      });
+    });
+  }
+
   // We aren't using the native `Array.prototype.findIndex` because the refactor away from Lodash is not
   // published as a major version.
   // Relying on the `findIndex` polyfill on user-land, which before was only required for niche use-cases,
@@ -7435,7 +7587,7 @@
     }
   }
 
-  function getLocalWidgetsState(widgets, widgetStateOptions) {
+  function getLocalWidgetsUiState(widgets, widgetStateOptions) {
     var initialUiState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     return widgets.filter(function (widget) {
       return !isIndexWidget(widget);
@@ -7495,13 +7647,6 @@
     }, []);
   }
 
-  function resolveScopedResultsFromIndex(widget) {
-    var widgetParent = widget.getParent(); // If the widget is the root, we consider itself as the only sibling.
-
-    var widgetSiblings = widgetParent ? widgetParent.getWidgets() : [widget];
-    return resolveScopedResultsFromWidgets(widgetSiblings);
-  }
-
   var index = function index(props) {
     if (props === undefined || props.indexName === undefined) {
       throw new Error(withUsage('The `indexName` option is required.'));
@@ -7516,14 +7661,6 @@
     var localParent = null;
     var helper = null;
     var derivedHelper = null;
-
-    var createURL = function createURL(nextState) {
-      return localInstantSearchInstance._createURL(_defineProperty({}, indexId, getLocalWidgetsState(localWidgets, {
-        searchParameters: nextState,
-        helper: helper
-      })));
-    };
-
     return {
       $$type: 'ais.index',
       getIndexName: function getIndexName() {
@@ -7538,8 +7675,20 @@
       getResults: function getResults() {
         return derivedHelper && derivedHelper.lastResults;
       },
+      getScopedResults: function getScopedResults() {
+        var widgetParent = this.getParent(); // If the widget is the root, we consider itself as the only sibling.
+
+        var widgetSiblings = widgetParent ? widgetParent.getWidgets() : [this];
+        return resolveScopedResultsFromWidgets(widgetSiblings);
+      },
       getParent: function getParent() {
         return localParent;
+      },
+      createURL: function createURL(nextState) {
+        return localInstantSearchInstance._createURL(_defineProperty({}, indexId, getLocalWidgetsUiState(localWidgets, {
+          searchParameters: nextState,
+          helper: helper
+        })));
       },
       getWidgets: function getWidgets() {
         return localWidgets;
@@ -7580,7 +7729,7 @@
                 state: helper.state,
                 renderState: localInstantSearchInstance.renderState,
                 templatesConfig: localInstantSearchInstance.templatesConfig,
-                createURL: createURL,
+                createURL: _this.createURL,
                 scopedResults: [],
                 searchMetadata: {
                   isSearchStalled: localInstantSearchInstance._isSearchStalled
@@ -7603,7 +7752,7 @@
                 state: helper.state,
                 renderState: localInstantSearchInstance.renderState,
                 templatesConfig: localInstantSearchInstance.templatesConfig,
-                createURL: createURL,
+                createURL: _this.createURL,
                 scopedResults: [],
                 searchMetadata: {
                   isSearchStalled: localInstantSearchInstance._isSearchStalled
@@ -7640,7 +7789,7 @@
             });
             return next || state;
           }, helper.state);
-          localUiState = getLocalWidgetsState(localWidgets, {
+          localUiState = getLocalWidgetsUiState(localWidgets, {
             searchParameters: nextState,
             helper: helper
           });
@@ -7759,7 +7908,7 @@
               state: helper.state,
               renderState: instantSearchInstance.renderState,
               templatesConfig: instantSearchInstance.templatesConfig,
-              createURL: createURL,
+              createURL: _this2.createURL,
               scopedResults: [],
               searchMetadata: {
                 isSearchStalled: instantSearchInstance._isSearchStalled
@@ -7784,7 +7933,7 @@
               state: helper.state,
               renderState: instantSearchInstance.renderState,
               templatesConfig: instantSearchInstance.templatesConfig,
-              createURL: createURL,
+              createURL: _this2.createURL,
               scopedResults: [],
               searchMetadata: {
                 isSearchStalled: instantSearchInstance._isSearchStalled
@@ -7802,7 +7951,7 @@
           var state = event.state; // @ts-ignore _uiState comes from privateHelperSetState and thus isn't typed on the helper event
 
           var _uiState = event._uiState;
-          localUiState = getLocalWidgetsState(localWidgets, {
+          localUiState = getLocalWidgetsUiState(localWidgets, {
             searchParameters: state,
             helper: helper
           }, _uiState || {}); // We don't trigger an internal change when controlled because it
@@ -7829,11 +7978,11 @@
               parent: _this3,
               instantSearchInstance: instantSearchInstance,
               results: _this3.getResults(),
-              scopedResults: resolveScopedResultsFromIndex(_this3),
+              scopedResults: _this3.getScopedResults(),
               state: _this3.getResults()._state,
               renderState: instantSearchInstance.renderState,
               templatesConfig: instantSearchInstance.templatesConfig,
-              createURL: createURL,
+              createURL: _this3.createURL,
               searchMetadata: {
                 isSearchStalled: instantSearchInstance._isSearchStalled
               }
@@ -7858,11 +8007,11 @@
               parent: _this3,
               instantSearchInstance: instantSearchInstance,
               results: _this3.getResults(),
-              scopedResults: resolveScopedResultsFromIndex(_this3),
+              scopedResults: _this3.getScopedResults(),
               state: _this3.getResults()._state,
               renderState: instantSearchInstance.renderState,
               templatesConfig: instantSearchInstance.templatesConfig,
-              createURL: createURL,
+              createURL: _this3.createURL,
               searchMetadata: {
                 isSearchStalled: instantSearchInstance._isSearchStalled
               }
@@ -7909,7 +8058,7 @@
         });
       },
       refreshUiState: function refreshUiState() {
-        localUiState = getLocalWidgetsState(localWidgets, {
+        localUiState = getLocalWidgetsUiState(localWidgets, {
           searchParameters: this.getHelper().state,
           helper: this.getHelper()
         });
@@ -7925,66 +8074,7 @@
     instantSearchInstance.renderState = _objectSpread2({}, instantSearchInstance.renderState, _defineProperty({}, parentIndexName, _objectSpread2({}, instantSearchInstance.renderState[parentIndexName], {}, renderState)));
   }
 
-  var version$1 = '4.9.2';
-
-  var TAG_PLACEHOLDER = {
-    highlightPreTag: '__ais-highlight__',
-    highlightPostTag: '__/ais-highlight__'
-  };
-  var TAG_REPLACEMENT = {
-    highlightPreTag: '<mark>',
-    highlightPostTag: '</mark>'
-  };
-
-  function replaceTagsAndEscape(value) {
-    return escape$1(value).replace(new RegExp(TAG_PLACEHOLDER.highlightPreTag, 'g'), TAG_REPLACEMENT.highlightPreTag).replace(new RegExp(TAG_PLACEHOLDER.highlightPostTag, 'g'), TAG_REPLACEMENT.highlightPostTag);
-  }
-
-  function recursiveEscape(input) {
-    if (isPlainObject(input) && typeof input.value !== 'string') {
-      return Object.keys(input).reduce(function (acc, key) {
-        return _objectSpread2({}, acc, _defineProperty({}, key, recursiveEscape(input[key])));
-      }, {});
-    }
-
-    if (Array.isArray(input)) {
-      return input.map(recursiveEscape);
-    }
-
-    return _objectSpread2({}, input, {
-      value: replaceTagsAndEscape(input.value)
-    });
-  }
-
-  function escapeHits(hits) {
-    if (hits.__escaped === undefined) {
-      // We don't override the value on hit because it will mutate the raw results
-      // instead we make a shallow copy and we assign the escaped values on it.
-      hits = hits.map(function (_ref) {
-        var hit = _extends({}, _ref);
-
-        if (hit._highlightResult) {
-          hit._highlightResult = recursiveEscape(hit._highlightResult);
-        }
-
-        if (hit._snippetResult) {
-          hit._snippetResult = recursiveEscape(hit._snippetResult);
-        }
-
-        return hit;
-      });
-      hits.__escaped = true;
-    }
-
-    return hits;
-  }
-  function escapeFacets(facetHits) {
-    return facetHits.map(function (h) {
-      return _objectSpread2({}, h, {
-        highlighted: replaceTagsAndEscape(h.highlighted)
-      });
-    });
-  }
+  var version$1 = '4.10.0';
 
   var NAMESPACE = 'ais';
   var component = function component(componentName) {
@@ -8019,7 +8109,28 @@
     return attributeValue.replace(new RegExp(TAG_REPLACEMENT.highlightPreTag, 'g'), "<".concat(highlightedTagName, " class=\"").concat(className, "\">")).replace(new RegExp(TAG_REPLACEMENT.highlightPostTag, 'g'), "</".concat(highlightedTagName, ">"));
   }
 
-  var suit$1 = component('Snippet');
+  var suit$1 = component('ReverseHighlight');
+  function reverseHighlight(_ref) {
+    var attribute = _ref.attribute,
+        _ref$highlightedTagNa = _ref.highlightedTagName,
+        highlightedTagName = _ref$highlightedTagNa === void 0 ? 'mark' : _ref$highlightedTagNa,
+        hit = _ref.hit,
+        _ref$cssClasses = _ref.cssClasses,
+        cssClasses = _ref$cssClasses === void 0 ? {} : _ref$cssClasses;
+
+    var _ref2 = getPropertyByPath(hit._highlightResult, attribute) || {},
+        _ref2$value = _ref2.value,
+        attributeValue = _ref2$value === void 0 ? '' : _ref2$value; // cx is not used, since it would be bundled as a dependency for Vue & Angular
+
+
+    var className = suit$1({
+      descendantName: 'highlighted'
+    }) + (cssClasses.highlighted ? " ".concat(cssClasses.highlighted) : '');
+    var reverseHighlightedValue = concatHighlightedParts(reverseHighlightedParts(getHighlightedParts(attributeValue)));
+    return reverseHighlightedValue.replace(new RegExp(TAG_REPLACEMENT.highlightPreTag, 'g'), "<".concat(highlightedTagName, " class=\"").concat(className, "\">")).replace(new RegExp(TAG_REPLACEMENT.highlightPostTag, 'g'), "</".concat(highlightedTagName, ">"));
+  }
+
+  var suit$2 = component('Snippet');
   function snippet(_ref) {
     var attribute = _ref.attribute,
         _ref$highlightedTagNa = _ref.highlightedTagName,
@@ -8033,10 +8144,31 @@
         attributeValue = _ref2$value === void 0 ? '' : _ref2$value; // cx is not used, since it would be bundled as a dependency for Vue & Angular
 
 
-    var className = suit$1({
+    var className = suit$2({
       descendantName: 'highlighted'
     }) + (cssClasses.highlighted ? " ".concat(cssClasses.highlighted) : '');
     return attributeValue.replace(new RegExp(TAG_REPLACEMENT.highlightPreTag, 'g'), "<".concat(highlightedTagName, " class=\"").concat(className, "\">")).replace(new RegExp(TAG_REPLACEMENT.highlightPostTag, 'g'), "</".concat(highlightedTagName, ">"));
+  }
+
+  var suit$3 = component('ReverseSnippet');
+  function reverseSnippet(_ref) {
+    var attribute = _ref.attribute,
+        _ref$highlightedTagNa = _ref.highlightedTagName,
+        highlightedTagName = _ref$highlightedTagNa === void 0 ? 'mark' : _ref$highlightedTagNa,
+        hit = _ref.hit,
+        _ref$cssClasses = _ref.cssClasses,
+        cssClasses = _ref$cssClasses === void 0 ? {} : _ref$cssClasses;
+
+    var _ref2 = getPropertyByPath(hit._snippetResult, attribute) || {},
+        _ref2$value = _ref2.value,
+        attributeValue = _ref2$value === void 0 ? '' : _ref2$value; // cx is not used, since it would be bundled as a dependency for Vue & Angular
+
+
+    var className = suit$3({
+      descendantName: 'highlighted'
+    }) + (cssClasses.highlighted ? " ".concat(cssClasses.highlighted) : '');
+    var reverseHighlightedValue = concatHighlightedParts(reverseHighlightedParts(getHighlightedParts(attributeValue)));
+    return reverseHighlightedValue.replace(new RegExp(TAG_REPLACEMENT.highlightPreTag, 'g'), "<".concat(highlightedTagName, " class=\"").concat(className, "\">")).replace(new RegExp(TAG_REPLACEMENT.highlightPostTag, 'g'), "</".concat(highlightedTagName, ">"));
   }
 
   function readDataAttributes(domElement) {
@@ -8131,6 +8263,16 @@
           throw new Error("\nThe highlight helper expects a JSON object of the format:\n{ \"attribute\": \"name\", \"highlightedTagName\": \"mark\" }");
         }
       },
+      reverseHighlight: function reverseHighlight$1(options, render) {
+        try {
+          var reverseHighlightOptions = JSON.parse(options);
+          return render(reverseHighlight(_objectSpread2({}, reverseHighlightOptions, {
+            hit: this
+          })));
+        } catch (error) {
+          throw new Error("\n  The reverseHighlight helper expects a JSON object of the format:\n  { \"attribute\": \"name\", \"highlightedTagName\": \"mark\" }");
+        }
+      },
       snippet: function snippet$1(options, render) {
         try {
           var snippetOptions = JSON.parse(options);
@@ -8139,6 +8281,16 @@
           })));
         } catch (error) {
           throw new Error("\nThe snippet helper expects a JSON object of the format:\n{ \"attribute\": \"name\", \"highlightedTagName\": \"mark\" }");
+        }
+      },
+      reverseSnippet: function reverseSnippet$1(options, render) {
+        try {
+          var reverseSnippetOptions = JSON.parse(options);
+          return render(reverseSnippet(_objectSpread2({}, reverseSnippetOptions, {
+            hit: this
+          })));
+        } catch (error) {
+          throw new Error("\n  The reverseSnippet helper expects a JSON object of the format:\n  { \"attribute\": \"name\", \"highlightedTagName\": \"mark\" }");
         }
       },
       insights: function insights$1(options, render) {
@@ -14929,7 +15081,7 @@
   var withUsage$q = createDocumentationMessageGenerator({
     name: 'clear-refinements'
   });
-  var suit$2 = component('ClearRefinements');
+  var suit$4 = component('ClearRefinements');
 
   var renderer = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -14976,11 +15128,11 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$2(), userCssClasses.root),
-      button: classnames(suit$2({
+      root: classnames(suit$4(), userCssClasses.root),
+      button: classnames(suit$4({
         descendantName: 'button'
       }), userCssClasses.button),
-      disabledButton: classnames(suit$2({
+      disabledButton: classnames(suit$4({
         descendantName: 'button',
         modifierName: 'disabled'
       }), userCssClasses.disabledButton)
@@ -15074,7 +15226,7 @@
   var withUsage$r = createDocumentationMessageGenerator({
     name: 'current-refinements'
   });
-  var suit$3 = component('CurrentRefinements');
+  var suit$5 = component('CurrentRefinements');
 
   var renderer$1 = function renderer(_ref, isFirstRender) {
     var items = _ref.items,
@@ -15107,23 +15259,23 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$3(), userCssClasses.root),
-      list: classnames(suit$3({
+      root: classnames(suit$5(), userCssClasses.root),
+      list: classnames(suit$5({
         descendantName: 'list'
       }), userCssClasses.list),
-      item: classnames(suit$3({
+      item: classnames(suit$5({
         descendantName: 'item'
       }), userCssClasses.item),
-      label: classnames(suit$3({
+      label: classnames(suit$5({
         descendantName: 'label'
       }), userCssClasses.label),
-      category: classnames(suit$3({
+      category: classnames(suit$5({
         descendantName: 'category'
       }), userCssClasses.category),
-      categoryLabel: classnames(suit$3({
+      categoryLabel: classnames(suit$5({
         descendantName: 'categoryLabel'
       }), userCssClasses.categoryLabel),
-      delete: classnames(suit$3({
+      delete: classnames(suit$5({
         descendantName: 'delete'
       }), userCssClasses.delete)
     };
@@ -15549,7 +15701,7 @@
   var withUsage$s = createDocumentationMessageGenerator({
     name: 'geo-search'
   });
-  var suit$4 = component('GeoSearch');
+  var suit$6 = component('GeoSearch');
   /**
    * @typedef {object} HTMLMarkerOptions
    * @property {object} [anchor] The offset from the marker's position.
@@ -15685,35 +15837,35 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$4(), userCssClasses.root),
+      root: classnames(suit$6(), userCssClasses.root),
       // Required only to mount / unmount the Preact tree
-      tree: suit$4({
+      tree: suit$6({
         descendantName: 'tree'
       }),
-      map: classnames(suit$4({
+      map: classnames(suit$6({
         descendantName: 'map'
       }), userCssClasses.map),
-      control: classnames(suit$4({
+      control: classnames(suit$6({
         descendantName: 'control'
       }), userCssClasses.control),
-      label: classnames(suit$4({
+      label: classnames(suit$6({
         descendantName: 'label'
       }), userCssClasses.label),
-      selectedLabel: classnames(suit$4({
+      selectedLabel: classnames(suit$6({
         descendantName: 'label',
         modifierName: 'selected'
       }), userCssClasses.selectedLabel),
-      input: classnames(suit$4({
+      input: classnames(suit$6({
         descendantName: 'input'
       }), userCssClasses.input),
-      redo: classnames(suit$4({
+      redo: classnames(suit$6({
         descendantName: 'redo'
       }), userCssClasses.redo),
-      disabledRedo: classnames(suit$4({
+      disabledRedo: classnames(suit$6({
         descendantName: 'redo',
         modifierName: 'disabled'
       }), userCssClasses.disabledRedo),
-      reset: classnames(suit$4({
+      reset: classnames(suit$6({
         descendantName: 'reset'
       }), userCssClasses.reset)
     };
@@ -15745,7 +15897,7 @@
       return new HTMLMarker(_objectSpread2({}, customHTMLMarker.createOptions(item), {}, rest, {
         __id: item.objectID,
         position: item._geoloc,
-        className: classnames(suit$4({
+        className: classnames(suit$6({
           descendantName: 'marker'
         })),
         template: renderTemplate({
@@ -16250,7 +16402,7 @@
   var withUsage$t = createDocumentationMessageGenerator({
     name: 'hierarchical-menu'
   });
-  var suit$5 = component('HierarchicalMenu');
+  var suit$7 = component('HierarchicalMenu');
 
   var renderer$3 = function renderer(_ref) {
     var cssClasses = _ref.cssClasses,
@@ -16427,41 +16579,41 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$5(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$5({
+      root: classnames(suit$7(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$7({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      list: classnames(suit$5({
+      list: classnames(suit$7({
         descendantName: 'list'
       }), userCssClasses.list),
-      childList: classnames(suit$5({
+      childList: classnames(suit$7({
         descendantName: 'list',
         modifierName: 'child'
       }), userCssClasses.childList),
-      item: classnames(suit$5({
+      item: classnames(suit$7({
         descendantName: 'item'
       }), userCssClasses.item),
-      selectedItem: classnames(suit$5({
+      selectedItem: classnames(suit$7({
         descendantName: 'item',
         modifierName: 'selected'
       }), userCssClasses.selectedItem),
-      parentItem: classnames(suit$5({
+      parentItem: classnames(suit$7({
         descendantName: 'item',
         modifierName: 'parent'
       }), userCssClasses.parentItem),
-      link: classnames(suit$5({
+      link: classnames(suit$7({
         descendantName: 'link'
       }), userCssClasses.link),
-      label: classnames(suit$5({
+      label: classnames(suit$7({
         descendantName: 'label'
       }), userCssClasses.label),
-      count: classnames(suit$5({
+      count: classnames(suit$7({
         descendantName: 'count'
       }), userCssClasses.count),
-      showMore: classnames(suit$5({
+      showMore: classnames(suit$7({
         descendantName: 'showMore'
       }), userCssClasses.showMore),
-      disabledShowMore: classnames(suit$5({
+      disabledShowMore: classnames(suit$7({
         descendantName: 'showMore',
         modifierName: 'disabled'
       }), userCssClasses.disabledShowMore)
@@ -16544,7 +16696,7 @@
   var withUsage$u = createDocumentationMessageGenerator({
     name: 'hits'
   });
-  var suit$6 = component('Hits');
+  var suit$8 = component('Hits');
   var HitsWithInsightsListener = insightsListener(Hits);
 
   var renderer$4 = function renderer(_ref) {
@@ -16598,14 +16750,14 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$6(), userCssClasses.root),
-      emptyRoot: classnames(suit$6({
+      root: classnames(suit$8(), userCssClasses.root),
+      emptyRoot: classnames(suit$8({
         modifierName: 'empty'
       }), userCssClasses.emptyRoot),
-      list: classnames(suit$6({
+      list: classnames(suit$8({
         descendantName: 'list'
       }), userCssClasses.list),
-      item: classnames(suit$6({
+      item: classnames(suit$8({
         descendantName: 'item'
       }), userCssClasses.item)
     };
@@ -16650,7 +16802,7 @@
   var withUsage$v = createDocumentationMessageGenerator({
     name: 'hits-per-page'
   });
-  var suit$7 = component('HitsPerPage');
+  var suit$9 = component('HitsPerPage');
 
   var renderer$5 = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -16691,11 +16843,11 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$7(), userCssClasses.root),
-      select: classnames(suit$7({
+      root: classnames(suit$9(), userCssClasses.root),
+      select: classnames(suit$9({
         descendantName: 'select'
       }), userCssClasses.select),
-      option: classnames(suit$7({
+      option: classnames(suit$9({
         descendantName: 'option'
       }), userCssClasses.option)
     };
@@ -16783,7 +16935,7 @@
   var withUsage$w = createDocumentationMessageGenerator({
     name: 'infinite-hits'
   });
-  var suit$8 = component('InfiniteHits');
+  var suit$a = component('InfiniteHits');
   var InfiniteHitsWithInsightsListener = insightsListener(InfiniteHits);
 
   var renderer$6 = function renderer(_ref) {
@@ -16849,27 +17001,27 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$8(), userCssClasses.root),
-      emptyRoot: classnames(suit$8({
+      root: classnames(suit$a(), userCssClasses.root),
+      emptyRoot: classnames(suit$a({
         modifierName: 'empty'
       }), userCssClasses.emptyRoot),
-      item: classnames(suit$8({
+      item: classnames(suit$a({
         descendantName: 'item'
       }), userCssClasses.item),
-      list: classnames(suit$8({
+      list: classnames(suit$a({
         descendantName: 'list'
       }), userCssClasses.list),
-      loadPrevious: classnames(suit$8({
+      loadPrevious: classnames(suit$a({
         descendantName: 'loadPrevious'
       }), userCssClasses.loadPrevious),
-      disabledLoadPrevious: classnames(suit$8({
+      disabledLoadPrevious: classnames(suit$a({
         descendantName: 'loadPrevious',
         modifierName: 'disabled'
       }), userCssClasses.disabledLoadPrevious),
-      loadMore: classnames(suit$8({
+      loadMore: classnames(suit$a({
         descendantName: 'loadMore'
       }), userCssClasses.loadMore),
-      disabledLoadMore: classnames(suit$8({
+      disabledLoadMore: classnames(suit$a({
         descendantName: 'loadMore',
         modifierName: 'disabled'
       }), userCssClasses.disabledLoadMore)
@@ -16901,7 +17053,7 @@
   var withUsage$x = createDocumentationMessageGenerator({
     name: 'menu'
   });
-  var suit$9 = component('Menu');
+  var suit$b = component('Menu');
 
   var renderer$7 = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -17023,33 +17175,33 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$9(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$9({
+      root: classnames(suit$b(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$b({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      list: classnames(suit$9({
+      list: classnames(suit$b({
         descendantName: 'list'
       }), userCssClasses.list),
-      item: classnames(suit$9({
+      item: classnames(suit$b({
         descendantName: 'item'
       }), userCssClasses.item),
-      selectedItem: classnames(suit$9({
+      selectedItem: classnames(suit$b({
         descendantName: 'item',
         modifierName: 'selected'
       }), userCssClasses.selectedItem),
-      link: classnames(suit$9({
+      link: classnames(suit$b({
         descendantName: 'link'
       }), userCssClasses.link),
-      label: classnames(suit$9({
+      label: classnames(suit$b({
         descendantName: 'label'
       }), userCssClasses.label),
-      count: classnames(suit$9({
+      count: classnames(suit$b({
         descendantName: 'count'
       }), userCssClasses.count),
-      showMore: classnames(suit$9({
+      showMore: classnames(suit$b({
         descendantName: 'showMore'
       }), userCssClasses.showMore),
-      disabledShowMore: classnames(suit$9({
+      disabledShowMore: classnames(suit$b({
         descendantName: 'showMore',
         modifierName: 'disabled'
       }), userCssClasses.disabledShowMore)
@@ -17093,7 +17245,7 @@
   var withUsage$y = createDocumentationMessageGenerator({
     name: 'refinement-list'
   });
-  var suit$a = component('RefinementList');
+  var suit$c = component('RefinementList');
   var searchBoxSuit = component('SearchBox');
   /**
    * Transforms the searchable templates by removing the `searchable` prefix.
@@ -17289,42 +17441,42 @@
     var containerNode = getContainerNode(container);
     var templates = transformTemplates(_objectSpread2({}, defaultTemplates$7, {}, userTemplates));
     var cssClasses = {
-      root: classnames(suit$a(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$a({
+      root: classnames(suit$c(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$c({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      list: classnames(suit$a({
+      list: classnames(suit$c({
         descendantName: 'list'
       }), userCssClasses.list),
-      item: classnames(suit$a({
+      item: classnames(suit$c({
         descendantName: 'item'
       }), userCssClasses.item),
-      selectedItem: classnames(suit$a({
+      selectedItem: classnames(suit$c({
         descendantName: 'item',
         modifierName: 'selected'
       }), userCssClasses.selectedItem),
-      searchBox: classnames(suit$a({
+      searchBox: classnames(suit$c({
         descendantName: 'searchBox'
       }), userCssClasses.searchBox),
-      label: classnames(suit$a({
+      label: classnames(suit$c({
         descendantName: 'label'
       }), userCssClasses.label),
-      checkbox: classnames(suit$a({
+      checkbox: classnames(suit$c({
         descendantName: 'checkbox'
       }), userCssClasses.checkbox),
-      labelText: classnames(suit$a({
+      labelText: classnames(suit$c({
         descendantName: 'labelText'
       }), userCssClasses.labelText),
-      count: classnames(suit$a({
+      count: classnames(suit$c({
         descendantName: 'count'
       }), userCssClasses.count),
-      noResults: classnames(suit$a({
+      noResults: classnames(suit$c({
         descendantName: 'noResults'
       }), userCssClasses.noResults),
-      showMore: classnames(suit$a({
+      showMore: classnames(suit$c({
         descendantName: 'showMore'
       }), userCssClasses.showMore),
-      disabledShowMore: classnames(suit$a({
+      disabledShowMore: classnames(suit$c({
         descendantName: 'showMore',
         modifierName: 'disabled'
       }), userCssClasses.disabledShowMore),
@@ -17390,7 +17542,7 @@
   var withUsage$z = createDocumentationMessageGenerator({
     name: 'numeric-menu'
   });
-  var suit$b = component('NumericMenu');
+  var suit$d = component('NumericMenu');
 
   var renderer$9 = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -17441,27 +17593,27 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$b(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$b({
+      root: classnames(suit$d(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$d({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      list: classnames(suit$b({
+      list: classnames(suit$d({
         descendantName: 'list'
       }), userCssClasses.list),
-      item: classnames(suit$b({
+      item: classnames(suit$d({
         descendantName: 'item'
       }), userCssClasses.item),
-      selectedItem: classnames(suit$b({
+      selectedItem: classnames(suit$d({
         descendantName: 'item',
         modifierName: 'selected'
       }), userCssClasses.selectedItem),
-      label: classnames(suit$b({
+      label: classnames(suit$d({
         descendantName: 'label'
       }), userCssClasses.label),
-      radio: classnames(suit$b({
+      radio: classnames(suit$d({
         descendantName: 'radio'
       }), userCssClasses.radio),
-      labelText: classnames(suit$b({
+      labelText: classnames(suit$d({
         descendantName: 'labelText'
       }), userCssClasses.labelText)
     };
@@ -17689,7 +17841,7 @@
   var withUsage$A = createDocumentationMessageGenerator({
     name: 'pagination'
   });
-  var suit$c = component('Pagination');
+  var suit$e = component('Pagination');
   var defaultTemplates$9 = {
     previous: '‹',
     next: '›',
@@ -17841,45 +17993,45 @@
     var scrollTo = userScrollTo === true ? 'body' : userScrollTo;
     var scrollToNode = scrollTo !== false ? getContainerNode(scrollTo) : false;
     var cssClasses = {
-      root: classnames(suit$c(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$c({
+      root: classnames(suit$e(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$e({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      list: classnames(suit$c({
+      list: classnames(suit$e({
         descendantName: 'list'
       }), userCssClasses.list),
-      item: classnames(suit$c({
+      item: classnames(suit$e({
         descendantName: 'item'
       }), userCssClasses.item),
-      firstPageItem: classnames(suit$c({
+      firstPageItem: classnames(suit$e({
         descendantName: 'item',
         modifierName: 'firstPage'
       }), userCssClasses.firstPageItem),
-      lastPageItem: classnames(suit$c({
+      lastPageItem: classnames(suit$e({
         descendantName: 'item',
         modifierName: 'lastPage'
       }), userCssClasses.lastPageItem),
-      previousPageItem: classnames(suit$c({
+      previousPageItem: classnames(suit$e({
         descendantName: 'item',
         modifierName: 'previousPage'
       }), userCssClasses.previousPageItem),
-      nextPageItem: classnames(suit$c({
+      nextPageItem: classnames(suit$e({
         descendantName: 'item',
         modifierName: 'nextPage'
       }), userCssClasses.nextPageItem),
-      pageItem: classnames(suit$c({
+      pageItem: classnames(suit$e({
         descendantName: 'item',
         modifierName: 'page'
       }), userCssClasses.pageItem),
-      selectedItem: classnames(suit$c({
+      selectedItem: classnames(suit$e({
         descendantName: 'item',
         modifierName: 'selected'
       }), userCssClasses.selectedItem),
-      disabledItem: classnames(suit$c({
+      disabledItem: classnames(suit$e({
         descendantName: 'item',
         modifierName: 'disabled'
       }), userCssClasses.disabledItem),
-      link: classnames(suit$c({
+      link: classnames(suit$e({
         descendantName: 'link'
       }), userCssClasses.link)
     };
@@ -18013,7 +18165,7 @@
   var withUsage$B = createDocumentationMessageGenerator({
     name: 'range-input'
   });
-  var suit$d = component('RangeInput');
+  var suit$f = component('RangeInput');
 
   var renderer$b = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -18141,31 +18293,31 @@
     }, userTemplates);
 
     var cssClasses = {
-      root: classnames(suit$d(), userCssClasses.root),
-      noRefinement: classnames(suit$d({
+      root: classnames(suit$f(), userCssClasses.root),
+      noRefinement: classnames(suit$f({
         modifierName: 'noRefinement'
       })),
-      form: classnames(suit$d({
+      form: classnames(suit$f({
         descendantName: 'form'
       }), userCssClasses.form),
-      label: classnames(suit$d({
+      label: classnames(suit$f({
         descendantName: 'label'
       }), userCssClasses.label),
-      input: classnames(suit$d({
+      input: classnames(suit$f({
         descendantName: 'input'
       }), userCssClasses.input),
-      inputMin: classnames(suit$d({
+      inputMin: classnames(suit$f({
         descendantName: 'input',
         modifierName: 'min'
       }), userCssClasses.inputMin),
-      inputMax: classnames(suit$d({
+      inputMax: classnames(suit$f({
         descendantName: 'input',
         modifierName: 'max'
       }), userCssClasses.inputMax),
-      separator: classnames(suit$d({
+      separator: classnames(suit$f({
         descendantName: 'separator'
       }), userCssClasses.separator),
-      submit: classnames(suit$d({
+      submit: classnames(suit$f({
         descendantName: 'submit'
       }), userCssClasses.submit)
     };
@@ -18191,7 +18343,7 @@
   var withUsage$C = createDocumentationMessageGenerator({
     name: 'search-box'
   });
-  var suit$e = component('SearchBox');
+  var suit$g = component('SearchBox');
 
   var renderer$c = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -18308,29 +18460,29 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$e(), userCssClasses.root),
-      form: classnames(suit$e({
+      root: classnames(suit$g(), userCssClasses.root),
+      form: classnames(suit$g({
         descendantName: 'form'
       }), userCssClasses.form),
-      input: classnames(suit$e({
+      input: classnames(suit$g({
         descendantName: 'input'
       }), userCssClasses.input),
-      submit: classnames(suit$e({
+      submit: classnames(suit$g({
         descendantName: 'submit'
       }), userCssClasses.submit),
-      submitIcon: classnames(suit$e({
+      submitIcon: classnames(suit$g({
         descendantName: 'submitIcon'
       }), userCssClasses.submitIcon),
-      reset: classnames(suit$e({
+      reset: classnames(suit$g({
         descendantName: 'reset'
       }), userCssClasses.reset),
-      resetIcon: classnames(suit$e({
+      resetIcon: classnames(suit$g({
         descendantName: 'resetIcon'
       }), userCssClasses.resetIcon),
-      loadingIndicator: classnames(suit$e({
+      loadingIndicator: classnames(suit$g({
         descendantName: 'loadingIndicator'
       }), userCssClasses.loadingIndicator),
-      loadingIcon: classnames(suit$e({
+      loadingIcon: classnames(suit$g({
         descendantName: 'loadingIcon'
       }), userCssClasses.loadingIcon)
     };
@@ -19200,7 +19352,7 @@
   var withUsage$D = createDocumentationMessageGenerator({
     name: 'range-slider'
   });
-  var suit$f = component('RangeSlider');
+  var suit$h = component('RangeSlider');
 
   var renderer$d = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -19325,8 +19477,8 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$f(), userCssClasses.root),
-      disabledRoot: classnames(suit$f({
+      root: classnames(suit$h(), userCssClasses.root),
+      disabledRoot: classnames(suit$h({
         modifierName: 'disabled'
       }), userCssClasses.disabledRoot)
     };
@@ -19355,7 +19507,7 @@
   var withUsage$E = createDocumentationMessageGenerator({
     name: 'sort-by'
   });
-  var suit$g = component('SortBy');
+  var suit$i = component('SortBy');
 
   var renderer$e = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -19438,11 +19590,11 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$g(), userCssClasses.root),
-      select: classnames(suit$g({
+      root: classnames(suit$i(), userCssClasses.root),
+      select: classnames(suit$i({
         descendantName: 'select'
       }), userCssClasses.select),
-      option: classnames(suit$g({
+      option: classnames(suit$i({
         descendantName: 'option'
       }), userCssClasses.option)
     };
@@ -19467,7 +19619,7 @@
   var withUsage$F = createDocumentationMessageGenerator({
     name: 'rating-menu'
   });
-  var suit$h = component('RatingMenu');
+  var suit$j = component('RatingMenu');
 
   var _ref3 =
   /*#__PURE__*/
@@ -19511,12 +19663,12 @@
         xmlns: "http://www.w3.org/2000/svg",
         style: "display:none;"
       }, h("symbol", {
-        id: suit$h({
+        id: suit$j({
           descendantName: 'starSymbol'
         }),
         viewBox: "0 0 24 24"
       }, _ref3), h("symbol", {
-        id: suit$h({
+        id: suit$j({
           descendantName: 'starEmptySymbol'
         }),
         viewBox: "0 0 24 24"
@@ -19598,42 +19750,42 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$h(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$h({
+      root: classnames(suit$j(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$j({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      list: classnames(suit$h({
+      list: classnames(suit$j({
         descendantName: 'list'
       }), userCssClasses.list),
-      item: classnames(suit$h({
+      item: classnames(suit$j({
         descendantName: 'item'
       }), userCssClasses.item),
-      selectedItem: classnames(suit$h({
+      selectedItem: classnames(suit$j({
         descendantName: 'item',
         modifierName: 'selected'
       }), userCssClasses.selectedItem),
-      disabledItem: classnames(suit$h({
+      disabledItem: classnames(suit$j({
         descendantName: 'item',
         modifierName: 'disabled'
       }), userCssClasses.disabledItem),
-      link: classnames(suit$h({
+      link: classnames(suit$j({
         descendantName: 'link'
       }), userCssClasses.link),
-      starIcon: classnames(suit$h({
+      starIcon: classnames(suit$j({
         descendantName: 'starIcon'
       }), userCssClasses.starIcon),
-      fullStarIcon: classnames(suit$h({
+      fullStarIcon: classnames(suit$j({
         descendantName: 'starIcon',
         modifierName: 'full'
       }), userCssClasses.fullStarIcon),
-      emptyStarIcon: classnames(suit$h({
+      emptyStarIcon: classnames(suit$j({
         descendantName: 'starIcon',
         modifierName: 'empty'
       }), userCssClasses.emptyStarIcon),
-      label: classnames(suit$h({
+      label: classnames(suit$j({
         descendantName: 'label'
       }), userCssClasses.label),
-      count: classnames(suit$h({
+      count: classnames(suit$j({
         descendantName: 'count'
       }), userCssClasses.count)
     };
@@ -19692,7 +19844,7 @@
   var withUsage$G = createDocumentationMessageGenerator({
     name: 'stats'
   });
-  var suit$i = component('Stats');
+  var suit$k = component('Stats');
 
   var renderer$g = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -19794,8 +19946,8 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$i(), userCssClasses.root),
-      text: classnames(suit$i({
+      root: classnames(suit$k(), userCssClasses.root),
+      text: classnames(suit$k({
         descendantName: 'text'
       }), userCssClasses.text)
     };
@@ -19845,7 +19997,7 @@
   var withUsage$H = createDocumentationMessageGenerator({
     name: 'toggle-refinement'
   });
-  var suit$j = component('ToggleRefinement');
+  var suit$l = component('ToggleRefinement');
 
   var renderer$h = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -19959,14 +20111,14 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$j(), userCssClasses.root),
-      label: classnames(suit$j({
+      root: classnames(suit$l(), userCssClasses.root),
+      label: classnames(suit$l({
         descendantName: 'label'
       }), userCssClasses.label),
-      checkbox: classnames(suit$j({
+      checkbox: classnames(suit$l({
         descendantName: 'checkbox'
       }), userCssClasses.checkbox),
-      labelText: classnames(suit$j({
+      labelText: classnames(suit$l({
         descendantName: 'labelText'
       }), userCssClasses.labelText)
     };
@@ -20208,7 +20360,7 @@
   var withUsage$J = createDocumentationMessageGenerator({
     name: 'breadcrumb'
   });
-  var suit$k = component('Breadcrumb');
+  var suit$m = component('Breadcrumb');
 
   var renderer$i = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -20260,24 +20412,24 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$k(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$k({
+      root: classnames(suit$m(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$m({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      list: classnames(suit$k({
+      list: classnames(suit$m({
         descendantName: 'list'
       }), userCssClasses.list),
-      item: classnames(suit$k({
+      item: classnames(suit$m({
         descendantName: 'item'
       }), userCssClasses.item),
-      selectedItem: classnames(suit$k({
+      selectedItem: classnames(suit$m({
         descendantName: 'item',
         modifierName: 'selected'
       }), userCssClasses.selectedItem),
-      separator: classnames(suit$k({
+      separator: classnames(suit$m({
         descendantName: 'separator'
       }), userCssClasses.separator),
-      link: classnames(suit$k({
+      link: classnames(suit$m({
         descendantName: 'link'
       }), userCssClasses.link)
     };
@@ -20349,7 +20501,7 @@
   var withUsage$K = createDocumentationMessageGenerator({
     name: 'menu-select'
   });
-  var suit$l = component('MenuSelect');
+  var suit$n = component('MenuSelect');
 
   var renderer$j = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -20444,14 +20596,14 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$l(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$l({
+      root: classnames(suit$n(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$n({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      select: classnames(suit$l({
+      select: classnames(suit$n({
         descendantName: 'select'
       }), userCssClasses.select),
-      option: classnames(suit$l({
+      option: classnames(suit$n({
         descendantName: 'option'
       }), userCssClasses.option)
     };
@@ -20519,7 +20671,7 @@
   };
 
   /** @jsx h */
-  var suit$m = component('PoweredBy');
+  var suit$o = component('PoweredBy');
   var withUsage$L = createDocumentationMessageGenerator({
     name: 'powered-by'
   });
@@ -20587,13 +20739,13 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$m(), suit$m({
+      root: classnames(suit$o(), suit$o({
         modifierName: theme === 'dark' ? 'dark' : 'light'
       }), userCssClasses.root),
-      link: classnames(suit$m({
+      link: classnames(suit$o({
         descendantName: 'link'
       }), userCssClasses.link),
-      logo: classnames(suit$m({
+      logo: classnames(suit$o({
         descendantName: 'logo'
       }), userCssClasses.logo)
     };
@@ -20683,7 +20835,7 @@
   var withUsage$M = createDocumentationMessageGenerator({
     name: 'panel'
   });
-  var suit$n = component('Panel');
+  var suit$p = component('Panel');
 
   var renderer$l = function renderer(_ref) {
     var containerNode = _ref.containerNode,
@@ -20731,29 +20883,29 @@
       return false;
     };
     var cssClasses = {
-      root: classnames(suit$n(), userCssClasses.root),
-      noRefinementRoot: classnames(suit$n({
+      root: classnames(suit$p(), userCssClasses.root),
+      noRefinementRoot: classnames(suit$p({
         modifierName: 'noRefinement'
       }), userCssClasses.noRefinementRoot),
-      collapsibleRoot: classnames(suit$n({
+      collapsibleRoot: classnames(suit$p({
         modifierName: 'collapsible'
       }), userCssClasses.collapsibleRoot),
-      collapsedRoot: classnames(suit$n({
+      collapsedRoot: classnames(suit$p({
         modifierName: 'collapsed'
       }), userCssClasses.collapsedRoot),
-      collapseButton: classnames(suit$n({
+      collapseButton: classnames(suit$p({
         descendantName: 'collapseButton'
       }), userCssClasses.collapseButton),
-      collapseIcon: classnames(suit$n({
+      collapseIcon: classnames(suit$p({
         descendantName: 'collapseIcon'
       }), userCssClasses.collapseIcon),
-      body: classnames(suit$n({
+      body: classnames(suit$p({
         descendantName: 'body'
       }), userCssClasses.body),
-      header: classnames(suit$n({
+      header: classnames(suit$p({
         descendantName: 'header'
       }), userCssClasses.header),
-      footer: classnames(suit$n({
+      footer: classnames(suit$p({
         descendantName: 'footer'
       }), userCssClasses.footer)
     };
@@ -20910,7 +21062,7 @@
   var withUsage$N = createDocumentationMessageGenerator({
     name: 'voice-search'
   });
-  var suit$o = component('VoiceSearch');
+  var suit$q = component('VoiceSearch');
 
   var renderer$m = function renderer(_ref) {
     var isBrowserSupported = _ref.isBrowserSupported,
@@ -20949,11 +21101,11 @@
 
     var containerNode = getContainerNode(container);
     var cssClasses = {
-      root: classnames(suit$o(), userCssClasses.root),
-      button: classnames(suit$o({
+      root: classnames(suit$q(), userCssClasses.root),
+      button: classnames(suit$q({
         descendantName: 'button'
       }), userCssClasses.button),
-      status: classnames(suit$o({
+      status: classnames(suit$q({
         descendantName: 'status'
       }), userCssClasses.status)
     };
@@ -20992,7 +21144,7 @@
   var withUsage$O = createDocumentationMessageGenerator({
     name: 'query-rule-custom-data'
   });
-  var suit$p = component('QueryRuleCustomData');
+  var suit$r = component('QueryRuleCustomData');
 
   var renderer$n = function renderer(_ref) {
     var items = _ref.items,
@@ -21024,7 +21176,7 @@
     }
 
     var cssClasses = {
-      root: classnames(suit$p(), userCssClasses.root)
+      root: classnames(suit$r(), userCssClasses.root)
     };
     var defaultTemplates = {
       default: function _default(_ref3) {
@@ -21437,7 +21589,9 @@
   instantsearch.version = version$1;
   instantsearch.createInfiniteHitsSessionStorageCache = createInfiniteHitsSessionStorageCache;
   instantsearch.highlight = highlight;
+  instantsearch.reverseHighlight = reverseHighlight;
   instantsearch.snippet = snippet;
+  instantsearch.reverseSnippet = reverseSnippet;
   instantsearch.insights = insights;
   instantsearch.middlewares = middlewares;
 
