@@ -70,3 +70,6 @@ enableEmoji = true
         labelBackgroundColor = "#e2e8f0"
         labelTextColor = "#1a202c"
         headers = "#fc8181"
+    [params.seo]
+        noIndexTags = true
+        noIndexCategories = true
