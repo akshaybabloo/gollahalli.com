@@ -33,7 +33,7 @@
             {{ end }}
             {{ if $showNumber }}
                 {{ if eq . $pag }}
-                    <li class="uk-active"><span class="uk-badge">{{ .PageNumber }}</span></li>
+                    <li class="uk-active"><span style="text-decoration: underline">{{ .PageNumber }}</span></li>
                 {{ else }}
                     <li><a onclick="ga('send', 'event', 'Pagination', 'click', 'Go to page: {{ .PageNumber }}')"
                            href="{{ .URL }}"><span>{{ .PageNumber }}</span></a></li>
