@@ -1092,10 +1092,10 @@ ini@^1.3.4:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.6.tgz#f1c46a2a93a253e7b3905115e74d527cd23061a1"
   integrity sha512-IZUoxEjNjubzrmvzZU4lKP7OnYmX72XRl3sqkfJhBKweKi5rnGi5+IUdlj/H1M+Ip5JQ1WzaDMOBRY90Ajc5jg==
 
-instantsearch.js@^4.13.1:
-  version "4.13.1"
-  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.13.1.tgz#3afba8dae31578aa3047d7dd02485bf30bf22818"
-  integrity sha512-hM2lpq8YXxaQvvSNem1XX0Jh4XMt8cC7yx5/CKtOpIwmzccakv+7M9SBUMhTC7qwwKu4XpXuBj/Zm8uGbex2+A==
+instantsearch.js@^4.13.2:
+  version "4.13.2"
+  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.13.2.tgz#bd523b3c86c71312c1e1a0679efc8c6a513dbee4"
+  integrity sha512-r9BHNn2p5cnLsJYwMmnjAYKtWjmXMUJA6Ysct01gfJzxhsl3+ys1F8AoGwCaFzzegPHpHSYNUuySu0x80YVEYQ==
   dependencies:
     "@types/googlemaps" "^3.39.6"
     algoliasearch-helper "^3.3.4"
