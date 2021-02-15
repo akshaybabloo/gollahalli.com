@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.10.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.14.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -6472,7 +6472,7 @@
   }
 
   function getRefinements(results, state) {
-    var clearsQuery = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var includesQuery = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     var refinements = [];
     var _state$facetsRefineme = state.facetsRefinements,
         facetsRefinements = _state$facetsRefineme === void 0 ? {} : _state$facetsRefineme,
@@ -6542,7 +6542,7 @@
       });
     });
 
-    if (clearsQuery && state.query && state.query.trim()) {
+    if (includesQuery && state.query && state.query.trim()) {
       refinements.push({
         attribute: 'query',
         type: 'query',
@@ -6651,8 +6651,14 @@
     _warning.cache = {};
   }
 
-  // Some connectors are responsible for multiple widgets so we need
+  /**
+   * A typed version of Object.keys, to use when looping over a static object
+   * inspired from https://stackoverflow.com/a/65117465/3185307
+   */
+  var keys = Object.keys;
+
   // to map them.
+
   function getWidgetNames(connectorName) {
     switch (connectorName) {
       case 'range':
@@ -6730,15 +6736,21 @@
     var mountedWidgets = index.getWidgets().map(function (widget) {
       return widget.$$type;
     }).filter(Boolean);
-    var missingWidgets = Object.keys(indexUiState).reduce(function (acc, parameter) {
-      var requiredWidgets = stateToWidgetsMap[parameter] && stateToWidgetsMap[parameter].widgets;
+    var missingWidgets = keys(indexUiState).reduce(function (acc, parameter) {
+      var widgetUiState = stateToWidgetsMap[parameter];
+
+      if (!widgetUiState) {
+        return acc;
+      }
+
+      var requiredWidgets = widgetUiState.widgets;
 
       if (requiredWidgets && !requiredWidgets.some(function (requiredWidget) {
         return mountedWidgets.includes(requiredWidget);
       })) {
         acc.push([parameter, {
-          connectors: stateToWidgetsMap[parameter].connectors,
-          widgets: stateToWidgetsMap[parameter].widgets.map(function (widgetIdentifier) {
+          connectors: widgetUiState.connectors,
+          widgets: widgetUiState.widgets.map(function (widgetIdentifier) {
             return widgetIdentifier.split('ais.')[1];
           })
         }]);
@@ -7379,7 +7391,7 @@
             payload: {
               eventName: eventName,
               index: helper.getIndex(),
-              filters: ["".concat(attribute, ":").concat(JSON.stringify(facetValue))]
+              filters: ["".concat(attribute, ":").concat(facetValue)]
             }
           });
         }
@@ -7663,6 +7675,7 @@
     var derivedHelper = null;
     return {
       $$type: 'ais.index',
+      $$widgetType: 'ais.index',
       getIndexName: function getIndexName() {
         return indexName;
       },
@@ -7811,6 +7824,13 @@
         var instantSearchInstance = _ref2.instantSearchInstance,
             parent = _ref2.parent,
             uiState = _ref2.uiState;
+
+        if (helper !== null) {
+          // helper is already initialized, therefore we do not need to set up
+          // any listeners
+          return;
+        }
+
         localInstantSearchInstance = instantSearchInstance;
         localParent = parent;
         localUiState = uiState[indexId] || {}; // The `mainHelper` is already defined at this point. The instance is created
@@ -7922,7 +7942,9 @@
           }
         });
         localWidgets.forEach(function (widget) {
-           _warning(!widget.getWidgetState, 'The `getWidgetState` method is renamed `getWidgetUiState` and will no longer exist under that name in InstantSearch.js 5.x. Please use `getWidgetUiState` instead.') ;
+           _warning( // if it has NO getWidgetState or if it has getWidgetUiState, we don't warn
+          // aka we warn if there's _only_ getWidgetState
+          !widget.getWidgetState || Boolean(widget.getWidgetUiState), 'The `getWidgetState` method is renamed `getWidgetUiState` and will no longer exist under that name in InstantSearch.js 5.x. Please use `getWidgetUiState` instead.') ;
 
           if (widget.init) {
             widget.init({
@@ -8074,7 +8096,7 @@
     instantSearchInstance.renderState = _objectSpread2({}, instantSearchInstance.renderState, _defineProperty({}, parentIndexName, _objectSpread2({}, instantSearchInstance.renderState[parentIndexName], {}, renderState)));
   }
 
-  var version$1 = '4.10.0';
+  var version$1 = '4.14.0';
 
   var NAMESPACE = 'ais';
   var component = function component(componentName) {
@@ -9346,6 +9368,88 @@
     };
   };
 
+  function extractPayload(widgets, instantSearchInstance, payload) {
+    var parent = instantSearchInstance.mainIndex;
+    var initOptions = {
+      instantSearchInstance: instantSearchInstance,
+      parent: parent,
+      scopedResults: [],
+      state: parent.getHelper().state,
+      helper: parent.getHelper(),
+      createURL: parent.createURL,
+      uiState: instantSearchInstance._initialUiState,
+      renderState: instantSearchInstance.renderState,
+      templatesConfig: instantSearchInstance.templatesConfig,
+      searchMetadata: {
+        isSearchStalled: instantSearchInstance._isSearchStalled
+      }
+    };
+    widgets.forEach(function (widget) {
+      var widgetParams = {};
+
+      if (widget.getWidgetRenderState) {
+        var renderState = widget.getWidgetRenderState(initOptions);
+
+        if (renderState && renderState.widgetParams) {
+          widgetParams = renderState.widgetParams;
+        }
+      } // since we destructure in all widgets, the parameters with defaults are set to "undefined"
+
+
+      var params = Object.keys(widgetParams).filter(function (key) {
+        return widgetParams[key] !== undefined;
+      });
+      payload.widgets.push({
+        type: widget.$$type,
+        widgetType: widget.$$widgetType,
+        params: params
+      });
+
+      if (widget.$$type === 'ais.index') {
+        extractPayload(widget.getWidgets(), instantSearchInstance, payload);
+      }
+    });
+  }
+
+  function isMetadataEnabled() {
+    return typeof window !== 'undefined' && window.navigator.userAgent.indexOf('Algolia Crawler') > -1;
+  }
+  /**
+   * Exposes the metadata of mounted widgets in a custom
+   * `<meta name="instantsearch:widgets" />` tag. The metadata per widget is:
+   * - applied parameters
+   * - widget name
+   * - connector name
+   */
+
+  function createMetadataMiddleware() {
+    return function (_ref) {
+      var instantSearchInstance = _ref.instantSearchInstance;
+      var payload = {
+        widgets: []
+      };
+      var payloadContainer = document.createElement('meta');
+      var refNode = document.querySelector('head');
+      payloadContainer.name = 'instantsearch:widgets';
+      return {
+        onStateChange: function onStateChange() {},
+        subscribe: function subscribe() {
+          // using setTimeout here to delay extraction until widgets have been added in a tick (e.g. Vue)
+          setTimeout(function () {
+            extractPayload(instantSearchInstance.mainIndex.getWidgets(), instantSearchInstance, payload);
+            payloadContainer.content = JSON.stringify(payload);
+            refNode.appendChild(payloadContainer);
+          }, 0);
+        },
+        unsubscribe: function unsubscribe() {
+          var _payloadContainer$par;
+
+          (_payloadContainer$par = payloadContainer.parentNode) === null || _payloadContainer$par === void 0 ? void 0 : _payloadContainer$par.removeChild(payloadContainer);
+        }
+      };
+    };
+  }
+
   var withUsage$1 = createDocumentationMessageGenerator({
     name: 'instantsearch'
   });
@@ -9517,6 +9621,10 @@
         var routerOptions = typeof routing === 'boolean' ? undefined : routing;
 
         _this.use(createRouterMiddleware(routerOptions));
+      }
+
+      if (isMetadataEnabled()) {
+        _this.use(createMetadataMiddleware());
       }
 
       return _this;
@@ -9934,10 +10042,10 @@
         includedAttributes = _ref5.includedAttributes,
         excludedAttributes = _ref5.excludedAttributes,
         transformItems = _ref5.transformItems;
-    var clearsQuery = includedAttributes.indexOf('query') !== -1 || excludedAttributes.indexOf('query') === -1;
+    var includesQuery = includedAttributes.indexOf('query') !== -1 || excludedAttributes.indexOf('query') === -1;
     return {
       helper: scopedResult.helper,
-      items: transformItems(uniq(getRefinements(scopedResult.results, scopedResult.helper.state, clearsQuery).map(function (refinement) {
+      items: transformItems(uniq(getRefinements(scopedResult.results, scopedResult.helper.state, includesQuery).map(function (refinement) {
         return refinement.attribute;
       }).filter(function (attribute) {
         return (// If the array is empty (default case), we keep all the attributes
@@ -9946,7 +10054,7 @@
         );
       }).filter(function (attribute) {
         return (// If the query is included, we ignore the default `excludedAttributes = ['query']`
-          attribute === 'query' && clearsQuery || // Otherwise, ignore the excluded attributes
+          attribute === 'query' && includesQuery || // Otherwise, ignore the excluded attributes
           excludedAttributes.indexOf(attribute) === -1
         );
       })))
@@ -10043,13 +10151,13 @@
         helper = _ref3.helper,
         includedAttributes = _ref3.includedAttributes,
         excludedAttributes = _ref3.excludedAttributes;
-    var clearsQuery = (includedAttributes || []).indexOf('query') !== -1 || (excludedAttributes || []).indexOf('query') === -1;
+    var includesQuery = (includedAttributes || []).indexOf('query') !== -1 || (excludedAttributes || []).indexOf('query') === -1;
     var filterFunction = includedAttributes ? function (item) {
       return includedAttributes.indexOf(item.attribute) !== -1;
     } : function (item) {
       return excludedAttributes.indexOf(item.attribute) === -1;
     };
-    var items = getRefinements(results, helper.state, clearsQuery).map(normalizeRefinement).filter(filterFunction);
+    var items = getRefinements(results, helper.state, includesQuery).map(normalizeRefinement).filter(filterFunction);
     return items.reduce(function (allItems, currentItem) {
       return [].concat(_toConsumableArray(allItems.filter(function (item) {
         return item.attribute !== currentItem.attribute;
@@ -10155,7 +10263,7 @@
    */
 
   /**
-   * @typedef {Object} CustomHierarchicalMenuWidgetOptions
+   * @typedef {Object} CustomHierarchicalMenuWidgetParams
    * @property {string[]} attributes Attributes to use to generate the hierarchy of the menu.
    * @property {string} [separator = '>'] Separator used in the attributes to separate level values.
    * @property {string} [rootPath = null] Prefix path to use if the first level is not the root level.
@@ -10175,7 +10283,7 @@
    * @property {function(item.value): string} createURL Creates an url for the next state for a clicked item.
    * @property {HierarchicalMenuItem[]} items Values to be rendered.
    * @property {function(item.value)} refine Sets the path of the hierarchical filter and triggers a new search.
-   * @property {Object} widgetParams All original `CustomHierarchicalMenuWidgetOptions` forwarded to the `renderFn`.
+   * @property {Object} widgetParams All original `CustomHierarchicalMenuWidgetParams` forwarded to the `renderFn`.
    */
 
   /**
@@ -10189,7 +10297,7 @@
    * @type {Connector}
    * @param {function(HierarchicalMenuRenderingOptions, boolean)} renderFn Rendering function for the custom **HierarchicalMenu** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomHierarchicalMenuWidgetOptions)} Re-usable widget factory for a custom **HierarchicalMenu** widget.
+   * @return {function(CustomHierarchicalMenuWidgetParams)} Re-usable widget factory for a custom **HierarchicalMenu** widget.
    */
 
   function connectHierarchicalMenu(renderFn) {
@@ -11096,7 +11204,7 @@
    */
 
   /**
-   * @typedef {Object} CustomMenuWidgetOptions
+   * @typedef {Object} CustomMenuWidgetParams
    * @property {string} attribute Name of the attribute for faceting (eg. "free_shipping").
    * @property {number} [limit = 10] How many facets values to retrieve.
    * @property {boolean} [showMore = false] Whether to display a button that expands the number of items.
@@ -11113,7 +11221,7 @@
    * @property {function(item.value): string} createURL Creates the URL for a single item name in the list.
    * @property {function(item.value)} refine Filter the search to item value.
    * @property {boolean} canRefine True if refinement can be applied.
-   * @property {Object} widgetParams All original `CustomMenuWidgetOptions` forwarded to the `renderFn`.
+   * @property {Object} widgetParams All original `CustomMenuWidgetParams` forwarded to the `renderFn`.
    * @property {boolean} isShowingMore True if the menu is displaying all the menu items.
    * @property {function} toggleShowMore Toggles the number of values displayed between `limit` and `showMore.limit`.
    * @property {boolean} canToggleShowMore `true` if the toggleShowMore button can be activated (enough items to display more or
@@ -11131,7 +11239,7 @@
    * @type {Connector}
    * @param {function(MenuRenderingOptions, boolean)} renderFn Rendering function for the custom **Menu** widget. widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomMenuWidgetOptions)} Re-usable widget factory for a custom **Menu** widget.
+   * @return {function(CustomMenuWidgetParams)} Re-usable widget factory for a custom **Menu** widget.
    * @example
    * // custom `renderFn` to render the custom Menu widget
    * function renderFn(MenuRenderingOptions, isFirstRendering) {
@@ -12179,11 +12287,13 @@
               lowerBound = _value$split$map2[0],
               upperBound = _value$split$map2[1];
 
-          if (isFiniteNumber(lowerBound)) {
+          if (isFiniteNumber(lowerBound) && (!isFiniteNumber(minBound) || minBound < lowerBound)) {
+            widgetSearchParameters = widgetSearchParameters.removeNumericRefinement(attribute, '>=');
             widgetSearchParameters = widgetSearchParameters.addNumericRefinement(attribute, '>=', lowerBound);
           }
 
-          if (isFiniteNumber(upperBound)) {
+          if (isFiniteNumber(upperBound) && (!isFiniteNumber(maxBound) || upperBound < maxBound)) {
+            widgetSearchParameters = widgetSearchParameters.removeNumericRefinement(attribute, '<=');
             widgetSearchParameters = widgetSearchParameters.addNumericRefinement(attribute, '<=', upperBound);
           }
 
@@ -12206,7 +12316,7 @@
    */
 
   /**
-   * @typedef {Object} CustomRefinementListWidgetOptions
+   * @typedef {Object} CustomRefinementListWidgetParams
    * @property {string} attribute The name of the attribute in the records.
    * @property {"and"|"or"} [operator = 'or'] How the filters are combined together.
    * @property {number} [limit = 10] The max number of items to display when
@@ -12229,7 +12339,7 @@
    * @property {boolean} canRefine `true` if a refinement can be applied.
    * @property {boolean} canToggleShowMore `true` if the toggleShowMore button can be activated (enough items to display more or
    * already displaying more than `limit` items)
-   * @property {Object} widgetParams All original `CustomRefinementListWidgetOptions` forwarded to the `renderFn`.
+   * @property {Object} widgetParams All original `CustomRefinementListWidgetParams` forwarded to the `renderFn`.
    * @property {boolean} isShowingMore True if the menu is displaying all the menu items.
    * @property {function} toggleShowMore Toggles the number of values displayed between `limit` and `showMoreLimit`.
    */
@@ -12243,7 +12353,7 @@
    * @type {Connector}
    * @param {function(RefinementListRenderingOptions, boolean)} renderFn Rendering function for the custom **RefinementList** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomRefinementListWidgetOptions)} Re-usable widget factory for a custom **RefinementList** widget.
+   * @return {function(CustomRefinementListWidgetParams)} Re-usable widget factory for a custom **RefinementList** widget.
    * @example
    * // custom `renderFn` to render the custom RefinementList widget
    * function renderFn(RefinementListRenderingOptions, isFirstRendering) {
@@ -12580,7 +12690,7 @@
     connector: true
   });
   /**
-   * @typedef {Object} CustomSearchBoxWidgetOptions
+   * @typedef {Object} CustomSearchBoxWidgetParams
    * @property {function(string, function(string))} [queryHook = undefined] A function that will be called every time
    * a new value for the query is set. The first parameter is the query and the second is a
    * function to actually trigger the search. The function takes the query as the parameter.
@@ -12593,7 +12703,7 @@
    * @property {string} query The query from the last search.
    * @property {function(string)} refine Sets a new query and searches.
    * @property {function()} clear Remove the query and perform search.
-   * @property {Object} widgetParams All original `CustomSearchBoxWidgetOptions` forwarded to the `renderFn`.
+   * @property {Object} widgetParams All original `CustomSearchBoxWidgetParams` forwarded to the `renderFn`.
    * @property {boolean} isSearchStalled `true` if the search results takes more than a certain time to come back
    * from Algolia servers. This can be configured on the InstantSearch constructor with the attribute
    * `stalledSearchDelay` which is 200ms, by default.
@@ -12607,7 +12717,7 @@
    * @type {Connector}
    * @param {function(SearchBoxRenderingOptions, boolean)} renderFn Rendering function for the custom **SearchBox** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomSearchBoxWidgetOptions)} Re-usable widget factory for a custom **SearchBox** widget.
+   * @return {function(CustomSearchBoxWidgetParams)} Re-usable widget factory for a custom **SearchBox** widget.
    * @example
    * // custom `renderFn` to render the custom SearchBox widget
    * function renderFn(SearchBoxRenderingOptions, isFirstRendering) {
@@ -12739,7 +12849,7 @@
    */
 
   /**
-   * @typedef {Object} CustomSortByWidgetOptions
+   * @typedef {Object} CustomSortByWidgetParams
    * @property {SortByItem[]} items Array of objects defining the different indices to choose from.
    * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
    */
@@ -12750,7 +12860,7 @@
    * @property {SortByItem[]} options All the available indices
    * @property {function(string)} refine Switches indices and triggers a new search.
    * @property {boolean} hasNoResults `true` if the last search contains no result.
-   * @property {Object} widgetParams All original `CustomSortByWidgetOptions` forwarded to the `renderFn`.
+   * @property {Object} widgetParams All original `CustomSortByWidgetParams` forwarded to the `renderFn`.
    */
 
   /**
@@ -12765,7 +12875,7 @@
    * @type {Connector}
    * @param {function(SortByRenderingOptions, boolean)} renderFn Rendering function for the custom **SortBy** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomSortByWidgetOptions)} Re-usable widget factory for a custom **SortBy** widget.
+   * @return {function(CustomSortByWidgetParams)} Re-usable widget factory for a custom **SortBy** widget.
    * @example
    * // custom `renderFn` to render the custom SortBy widget
    * function renderFn(SortByRenderingOptions, isFirstRendering) {
@@ -12904,6 +13014,8 @@
     connector: true
   });
   var $$type$2 = 'ais.ratingMenu';
+  var MAX_VALUES_PER_FACET_API_LIMIT = 1000;
+  var STEP = 1;
 
   var createSendEvent$1 = function createSendEvent(_ref) {
     var instantSearchInstance = _ref.instantSearchInstance,
@@ -12955,7 +13067,7 @@
    */
 
   /**
-   * @typedef {Object} CustomStarRatingWidgetOptions
+   * @typedef {Object} CustomStarRatingWidgetParams
    * @property {string} attribute Name of the attribute for faceting (eg. "free_shipping").
    * @property {number} [max = 5] The maximum rating value.
    */
@@ -12968,7 +13080,7 @@
    * @property {function(string)} refine Selects a rating to filter the results
    * (takes the filter value as parameter). Takes the value of an item as parameter.
    * @property {boolean} hasNoResults `true` if the last search contains no result.
-   * @property {Object} widgetParams All original `CustomStarRatingWidgetOptions` forwarded to the `renderFn`.
+   * @property {Object} widgetParams All original `CustomStarRatingWidgetParams` forwarded to the `renderFn`.
    */
 
   /**
@@ -12981,7 +13093,7 @@
    * @type {Connector}
    * @param {function(StarRatingRenderingOptions, boolean)} renderFn Rendering function for the custom **StarRating** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomStarRatingWidgetOptions)} Re-usable widget factory for a custom **StarRating** widget.
+   * @return {function(CustomStarRatingWidgetParams)} Re-usable widget factory for a custom **StarRating** widget.
    * @example
    * // custom `renderFn` to render the custom StarRating widget
    * function renderFn(StarRatingRenderingOptions, isFirstRendering) {
@@ -13048,24 +13160,58 @@
       }
 
       var _getRefinedStar = function getRefinedStar(state) {
-        var refinements = state.getDisjunctiveRefinements(attribute);
+        var _values$;
 
-        if (!refinements.length) {
+        var values = state.getNumericRefinements(attribute);
+
+        if (!((_values$ = values['>=']) === null || _values$ === void 0 ? void 0 : _values$.length)) {
           return undefined;
         }
 
-        return Math.min.apply(Math, _toConsumableArray(refinements.map(Number)));
+        return values['>='][0];
+      };
+
+      var getFacetsMaxDecimalPlaces = function getFacetsMaxDecimalPlaces(facetResults) {
+        var maxDecimalPlaces = 0;
+        facetResults.forEach(function (facetResult) {
+          var _facetResult$name$spl = facetResult.name.split('.'),
+              _facetResult$name$spl2 = _slicedToArray(_facetResult$name$spl, 2),
+              _facetResult$name$spl3 = _facetResult$name$spl2[1],
+              decimal = _facetResult$name$spl3 === void 0 ? '' : _facetResult$name$spl3;
+
+          maxDecimalPlaces = Math.max(maxDecimalPlaces, decimal.length);
+        });
+        return maxDecimalPlaces;
+      };
+
+      var getFacetValuesWarningMessage = function getFacetValuesWarningMessage(_ref2) {
+        var maxDecimalPlaces = _ref2.maxDecimalPlaces,
+            maxFacets = _ref2.maxFacets,
+            maxValuesPerFacet = _ref2.maxValuesPerFacet;
+        var maxDecimalPlacesInRange = Math.max(0, Math.floor(Math.log10(MAX_VALUES_PER_FACET_API_LIMIT / max)));
+        var maxFacetsInRange = Math.min(MAX_VALUES_PER_FACET_API_LIMIT, Math.pow(10, maxDecimalPlacesInRange) * max);
+        var solutions = [];
+
+        if (maxFacets > MAX_VALUES_PER_FACET_API_LIMIT) {
+          solutions.push("- Update your records to lower the precision of the values in the \"".concat(attribute, "\" attribute (for example: ").concat(5.123456789.toPrecision(maxDecimalPlaces + 1), " to ").concat(5.123456789.toPrecision(maxDecimalPlacesInRange + 1), ")"));
+        }
+
+        if (maxValuesPerFacet < maxFacetsInRange) {
+          solutions.push("- Increase the maximum number of facet values to ".concat(maxFacetsInRange, " using the \"configure\" widget ").concat(createDocumentationLink({
+            name: 'configure'
+          }), " and the \"maxValuesPerFacet\" parameter https://www.algolia.com/doc/api-reference/api-parameters/maxValuesPerFacet/"));
+        }
+
+        return "The ".concat(attribute, " attribute can have ").concat(maxFacets, " different values (0 to ").concat(max, " with a maximum of ").concat(maxDecimalPlaces, " decimals = ").concat(maxFacets, ") but you retrieved only ").concat(maxValuesPerFacet, " facet values. Therefore the number of results that match the refinements can be incorrect.\n").concat(solutions.length ? "To resolve this problem you can:\n".concat(solutions.join('\n')) : "");
       };
 
       var toggleRefinement = function toggleRefinement(helper, facetValue) {
         sendEvent('click', facetValue);
         var isRefined = _getRefinedStar(helper.state) === Number(facetValue);
-        helper.removeDisjunctiveFacetRefinement(attribute);
+        helper.removeNumericRefinement(attribute);
 
         if (!isRefined) {
-          for (var val = Number(facetValue); val <= max; ++val) {
-            helper.addDisjunctiveFacetRefinement(attribute, val);
-          }
+          helper.addNumericRefinement(attribute, '<=', max).addNumericRefinement(attribute, '>=', facetValue);
         }
 
         helper.search();
@@ -13075,11 +13221,11 @@
         toggleRefinementFactory: function toggleRefinementFactory(helper) {
           return toggleRefinement.bind(_this, helper);
         },
-        createURLFactory: function createURLFactory(_ref2) {
-          var state = _ref2.state,
-              createURL = _ref2.createURL;
+        createURLFactory: function createURLFactory(_ref3) {
+          var state = _ref3.state,
+              createURL = _ref3.createURL;
           return function (value) {
-            return createURL(state.toggleRefinement(attribute, value));
+            return createURL(state.removeNumericRefinement(attribute).addNumericRefinement(attribute, '<=', max).addNumericRefinement(attribute, '>=', value));
           };
         }
       };
@@ -13102,12 +13248,12 @@
             ratingMenu: _objectSpread2({}, renderState.ratingMenu, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
           });
         },
-        getWidgetRenderState: function getWidgetRenderState(_ref3) {
-          var helper = _ref3.helper,
-              results = _ref3.results,
-              state = _ref3.state,
-              instantSearchInstance = _ref3.instantSearchInstance,
-              createURL = _ref3.createURL;
+        getWidgetRenderState: function getWidgetRenderState(_ref4) {
+          var helper = _ref4.helper,
+              results = _ref4.results,
+              state = _ref4.state,
+              instantSearchInstance = _ref4.instantSearchInstance,
+              createURL = _ref4.createURL;
           var facetValues = [];
 
           if (!sendEvent) {
@@ -13122,51 +13268,55 @@
           }
 
           if (results) {
-            var allValues = {};
-
-            for (var v = max; v >= 0; --v) {
-              allValues[v] = 0;
-            }
-
-            (results.getFacetValues(attribute) || []).forEach(function (facet) {
-              var val = Math.round(facet.name);
-
-              if (!val || val > max) {
-                return;
-              }
-
-              for (var _v = val; _v >= 1; --_v) {
-                allValues[_v] += facet.count;
-              }
-            });
+            var facetResults = results.getFacetValues(attribute);
+            var maxValuesPerFacet = facetResults.length;
+            var maxDecimalPlaces = getFacetsMaxDecimalPlaces(facetResults);
+            var maxFacets = Math.pow(10, maxDecimalPlaces) * max;
+             _warning(maxFacets <= maxValuesPerFacet, getFacetValuesWarningMessage({
+              maxDecimalPlaces: maxDecimalPlaces,
+              maxFacets: maxFacets,
+              maxValuesPerFacet: maxValuesPerFacet
+            })) ;
 
             var refinedStar = _getRefinedStar(state);
 
-            for (var star = max - 1; star >= 1; --star) {
-              var count = allValues[star];
+            var _loop = function _loop(star) {
+              var isRefined = refinedStar === star;
+              var count = facetResults.filter(function (f) {
+                return Number(f.name) >= star && Number(f.name) <= max;
+              }).map(function (f) {
+                return f.count;
+              }).reduce(function (sum, current) {
+                return sum + current;
+              }, 0);
 
-              if (refinedStar && star !== refinedStar && count === 0) {
+              if (refinedStar && !isRefined && count === 0) {
                 // skip count==0 when at least 1 refinement is enabled
                 // eslint-disable-next-line no-continue
-                continue;
+                return "continue";
               }
 
-              var stars = [];
-
-              for (var i = 1; i <= max; ++i) {
-                stars.push(i <= star);
-              }
+              var stars = _toConsumableArray(new Array(Math.floor(max / STEP))).map(function (v, i) {
+                return i * STEP < star;
+              });
 
               facetValues.push({
                 stars: stars,
                 name: String(star),
                 value: String(star),
                 count: count,
-                isRefined: refinedStar === star
+                isRefined: isRefined
               });
+            };
+
+            for (var star = STEP; star < max; star += STEP) {
+              var _ret = _loop(star);
+
+              if (_ret === "continue") continue;
             }
           }
 
+          facetValues = facetValues.reverse();
           return {
             items: facetValues,
             hasNoResults: results ? results.nbHits === 0 : true,
@@ -13179,13 +13329,13 @@
             widgetParams: widgetParams
           };
         },
-        dispose: function dispose(_ref4) {
-          var state = _ref4.state;
+        dispose: function dispose(_ref5) {
+          var state = _ref5.state;
           unmountFn();
-          return state.removeDisjunctiveFacet(attribute);
+          return state.removeNumericRefinement(attribute);
         },
-        getWidgetUiState: function getWidgetUiState(uiState, _ref5) {
-          var searchParameters = _ref5.searchParameters;
+        getWidgetUiState: function getWidgetUiState(uiState, _ref6) {
+          var searchParameters = _ref6.searchParameters;
 
           var value = _getRefinedStar(searchParameters);
 
@@ -13197,24 +13347,19 @@
             ratingMenu: _objectSpread2({}, uiState.ratingMenu, _defineProperty({}, attribute, value))
           });
         },
-        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref6) {
-          var uiState = _ref6.uiState;
+        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref7) {
+          var uiState = _ref7.uiState;
           var value = uiState.ratingMenu && uiState.ratingMenu[attribute];
           var withoutRefinements = searchParameters.clearRefinements(attribute);
           var withDisjunctiveFacet = withoutRefinements.addDisjunctiveFacet(attribute);
 
           if (!value) {
             return withDisjunctiveFacet.setQueryParameters({
-              disjunctiveFacetsRefinements: _objectSpread2({}, withDisjunctiveFacet.disjunctiveFacetsRefinements, _defineProperty({}, attribute, []))
+              numericRefinements: _objectSpread2({}, withDisjunctiveFacet.numericRefinements, _defineProperty({}, attribute, []))
             });
           }
 
-          return range({
-            start: Number(value),
-            end: max + 1
-          }).reduce(function (parameters, number) {
-            return parameters.addDisjunctiveFacetRefinement(attribute, number);
-          }, withDisjunctiveFacet);
+          return withDisjunctiveFacet.addNumericRefinement(attribute, '<=', max).addNumericRefinement(attribute, '>=', value);
         }
       };
     };
@@ -13232,11 +13377,11 @@
    * @property {number} page The current page.
    * @property {number} processingTimeMS The time taken to compute the results inside the Algolia engine.
    * @property {string} query The query used for the current search.
-   * @property {object} widgetParams All original `CustomStatsWidgetOptions` forwarded to the `renderFn`.
+   * @property {object} widgetParams All original `CustomStatsWidgetParams` forwarded to the `renderFn`.
    */
 
   /**
-   * @typedef {Object} CustomStatsWidgetOptions
+   * @typedef {Object} CustomStatsWidgetParams
    */
 
   /**
@@ -13246,7 +13391,7 @@
    * @type {Connector}
    * @param {function(StatsRenderingOptions, boolean)} renderFn Rendering function for the custom **Stats** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomStatsWidgetOptions)} Re-usable widget factory for a custom **Stats** widget.
+   * @return {function(CustomStatsWidgetParams)} Re-usable widget factory for a custom **Stats** widget.
    * @example
    * // custom `renderFn` to render the custom Stats widget
    * function renderFn(StatsRenderingOptions, isFirstRendering) {
@@ -13364,7 +13509,7 @@
             eventName: eventName,
             index: helper.getIndex(),
             filters: on.map(function (value) {
-              return "".concat(attribute, ":").concat(JSON.stringify(value));
+              return "".concat(attribute, ":").concat(value);
             })
           }
         });
@@ -13380,7 +13525,7 @@
    */
 
   /**
-   * @typedef {Object} CustomToggleWidgetOptions
+   * @typedef {Object} CustomToggleWidgetParams
    * @property {string} attribute Name of the attribute for faceting (eg. "free_shipping").
    * @property {Object} [on = true] Value to filter on when toggled.
    * @property {Object} [off] Value to filter on when not toggled.
@@ -13391,7 +13536,7 @@
    * @property {ToggleValue} value The current toggle value.
    * @property {function():string} createURL Creates an URL for the next state.
    * @property {function(value)} refine Updates to the next state by applying the toggle refinement.
-   * @property {Object} widgetParams All original `CustomToggleWidgetOptions` forwarded to the `renderFn`.
+   * @property {Object} widgetParams All original `CustomToggleWidgetParams` forwarded to the `renderFn`.
    */
 
   /**
@@ -13405,7 +13550,7 @@
    * @type {Connector}
    * @param {function(ToggleRenderingOptions, boolean)} renderFn Rendering function for the custom **Toggle** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomToggleWidgetOptions)} Re-usable widget factory for a custom **Toggle** widget.
+   * @return {function(CustomToggleWidgetParams)} Re-usable widget factory for a custom **Toggle** widget.
    * @example
    * // custom `renderFn` to render the custom ClearAll widget
    * function renderFn(ToggleRenderingOptions, isFirstRendering) {
@@ -13865,7 +14010,7 @@
    */
 
   /**
-   * @typedef {Object} CustomGeoSearchWidgetOptions
+   * @typedef {Object} CustomGeoSearchWidgetParams
    * @property {boolean} [enableRefineOnMapMove=true] If true, refine will be triggered as you move the map.
    * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
    */
@@ -13882,7 +14027,7 @@
    * @property {function(): boolean} isRefineOnMapMove Return true if the user is able to refine on map move.
    * @property {function()} setMapMoveSinceLastRefine Set the fact that the map has moved since the last refinement, should be call on each map move. The call to the function triggers a new rendering only when the value change.
    * @property {function(): boolean} hasMapMoveSinceLastRefine Return true if the map has move since the last refinement.
-   * @property {Object} widgetParams All original `CustomGeoSearchWidgetOptions` forwarded to the `renderFn`.
+   * @property {Object} widgetParams All original `CustomGeoSearchWidgetParams` forwarded to the `renderFn`.
    * @property {LatLng} [position] The current position of the search.
    */
 
@@ -13897,7 +14042,7 @@
    *
    * @param {function(GeoSearchRenderingOptions, boolean)} renderFn Rendering function for the custom **GeoSearch** widget.
    * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomGeoSearchWidgetOptions)} Re-usable widget factory for a custom **GeoSearch** widget.
+   * @return {function(CustomGeoSearchWidgetParams)} Re-usable widget factory for a custom **GeoSearch** widget.
    * @staticExample
    * // This example use Leaflet for the rendering, be sure to have the library correctly setup
    * // before trying the demo. You can find more details in their documentation (link below).
@@ -14342,8 +14487,8 @@
         optionalFilters: optionalFilters
       })));
 
-      var makeConfigure = connectConfigure(renderFn, unmountFn);
-      return _objectSpread2({}, makeConfigure({
+      var makeWidget = connectConfigure(renderFn, unmountFn);
+      return _objectSpread2({}, makeWidget({
         searchParameters: searchParameters
       }), {
         $$type: 'ais.configureRelatedItems'
@@ -14496,7 +14641,7 @@
     var ruleContexts = Object.keys(trackedFilters).reduce(function (facets, facetName) {
       var facetRefinements = getRefinements( // An empty object is technically not a `SearchResults` but `getRefinements`
       // only accesses properties, meaning it will not throw with an empty object.
-      helper.lastResults || {}, sharedHelperState).filter(function (refinement) {
+      helper.lastResults || {}, sharedHelperState, true).filter(function (refinement) {
         return refinement.attribute === facetName;
       }).map(function (refinement) {
         return refinement.numericValue || refinement.name;
@@ -15077,7 +15222,6 @@
     resetLabel: 'Clear refinements'
   };
 
-  /** @jsx h */
   var withUsage$q = createDocumentationMessageGenerator({
     name: 'clear-refinements'
   });
@@ -15111,8 +15255,8 @@
     };
   };
 
-  var clearRefinements$1 = function clearRefinements(widgetOptions) {
-    var _ref3 = widgetOptions || {},
+  var clearRefinements$1 = function clearRefinements(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         _ref3$templates = _ref3.templates,
         templates = _ref3$templates === void 0 ? defaultTemplates : _ref3$templates,
@@ -15146,10 +15290,12 @@
     var makeWidget = connectClearRefinements(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       includedAttributes: includedAttributes,
       excludedAttributes: excludedAttributes,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.clearRefinements'
     });
   };
 
@@ -15162,14 +15308,18 @@
     // This is a renderless widget that falls back to the connector's
     // noop render and unmount functions.
     var makeWidget = connectConfigure(noop);
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       searchParameters: widgetParams
+    }), {
+      $$widgetType: 'ais.configure'
     });
   };
 
   var configureRelatedItems = function configureRelatedItems(widgetParams) {
     var makeWidget = connectConfigureRelatedItems(noop);
-    return makeWidget(widgetParams);
+    return _objectSpread2({}, makeWidget(widgetParams), {
+      $$widgetType: 'ais.configureRelatedItems'
+    });
   };
 
   /** @jsx h */
@@ -15222,7 +15372,6 @@
     })));
   };
 
-  /** @jsx h */
   var withUsage$r = createDocumentationMessageGenerator({
     name: 'current-refinements'
   });
@@ -15282,12 +15431,14 @@
     var makeWidget = connectCurrentRefinements(renderer$1, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       container: containerNode,
       cssClasses: cssClasses,
       includedAttributes: includedAttributes,
       excludedAttributes: excludedAttributes,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.currentRefinements'
     });
   };
 
@@ -15748,7 +15899,7 @@
    */
 
   /**
-   * @typedef {object} GeoSearchWidgetOptions
+   * @typedef {object} GeoSearchWidgetParams
    * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
    * @property {object} googleReference Reference to the global `window.google` object. <br />
    * See [the documentation](https://developers.google.com/maps/documentation/javascript/tutorial) for more information.
@@ -15781,7 +15932,7 @@
    * Don't forget to explicitly set the `height` of the map container (default class `.ais-geo-search--map`), otherwise it won't be shown (it's a requirement of Google Maps).
    *
    * @devNovel GeoSearch
-   * @param {GeoSearchWidgetOptions} $0 Options of the GeoSearch widget.
+   * @param {GeoSearchWidgetParams} widgetParams Options of the GeoSearch widget.
    * @return {Widget} A new instance of GeoSearch widget.
    * @staticExample
    * search.addWidgets([
@@ -15792,8 +15943,8 @@
    * ]);
    */
 
-  var geoSearch = function geoSearch() {
-    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  var geoSearch = function geoSearch(widgetParams) {
+    var _ref = widgetParams || {},
         _ref$initialZoom = _ref.initialZoom,
         initialZoom = _ref$initialZoom === void 0 ? 1 : _ref$initialZoom,
         _ref$initialPosition = _ref.initialPosition,
@@ -15816,7 +15967,7 @@
         enableRefineControl = _ref$enableRefineCont === void 0 ? true : _ref$enableRefineCont,
         container = _ref.container,
         googleReference = _ref.googleReference,
-        widgetParams = _objectWithoutProperties(_ref, ["initialZoom", "initialPosition", "templates", "cssClasses", "builtInMarker", "customHTMLMarker", "enableRefine", "enableClearMapRefinement", "enableRefineControl", "container", "googleReference"]);
+        otherWidgetParams = _objectWithoutProperties(_ref, ["initialZoom", "initialPosition", "templates", "cssClasses", "builtInMarker", "customHTMLMarker", "enableRefine", "enableClearMapRefinement", "enableRefineControl", "container", "googleReference"]);
 
     var defaultBuiltInMarker = {
       createOptions: noop,
@@ -15911,10 +16062,10 @@
     var createMarker = !customHTMLMarker ? createBuiltInMarker : createCustomHTMLMarker; // prettier-ignore
 
     var markerOptions = !customHTMLMarker ? builtInMarker : customHTMLMarker;
-    var makeGeoSearch = connectGeoSearch(renderer$2, function () {
+    var makeWidget = connectGeoSearch(renderer$2, function () {
       return I(null, containerNode);
     });
-    return makeGeoSearch(_objectSpread2({}, widgetParams, {
+    return _objectSpread2({}, makeWidget(_objectSpread2({}, otherWidgetParams, {
       renderState: {},
       container: containerNode,
       googleReference: googleReference,
@@ -15927,7 +16078,9 @@
       enableRefine: enableRefine,
       enableClearMapRefinement: enableClearMapRefinement,
       enableRefineControl: enableRefineControl
-    }));
+    })), {
+      $$widgetType: 'ais.geoSearch'
+    });
   };
 
   function RefinementListItem(_ref) {
@@ -16398,7 +16551,6 @@
     showMoreText: "\n    {{#isShowingMore}}\n      Show less\n    {{/isShowingMore}}\n    {{^isShowingMore}}\n      Show more\n    {{/isShowingMore}}\n  "
   };
 
-  /** @jsx h */
   var withUsage$t = createDocumentationMessageGenerator({
     name: 'hierarchical-menu'
   });
@@ -16464,7 +16616,7 @@
    */
 
   /**
-   * @typedef {Object} HierarchicalMenuWidgetOptions
+   * @typedef {Object} HierarchicalMenuWidgetParams
    * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
    * @property {string[]} attributes Array of attributes to use to generate the hierarchy of the menu.
    * @property {string} [separator = " > "] Separator used in the attributes to separate level values.
@@ -16543,7 +16695,7 @@
    * @type {WidgetFactory}
    * @devNovel HierarchicalMenu
    * @category filter
-   * @param {HierarchicalMenuWidgetOptions} $0 The HierarchicalMenu widget options.
+   * @param {HierarchicalMenuWidgetParams} widgetParams The HierarchicalMenu widget options.
    * @return {Widget} A new HierarchicalMenu widget instance.
    * @example
    * search.addWidgets([
@@ -16555,8 +16707,8 @@
    */
 
 
-  function hierarchicalMenu() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function hierarchicalMenu(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         attributes = _ref3.attributes,
         separator = _ref3.separator,
@@ -16625,10 +16777,10 @@
       showMore: showMore,
       renderState: {}
     });
-    var makeHierarchicalMenu = connectHierarchicalMenu(specializedRenderer, function () {
+    var makeWidget = connectHierarchicalMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeHierarchicalMenu({
+    return _objectSpread2({}, makeWidget({
       attributes: attributes,
       separator: separator,
       rootPath: rootPath,
@@ -16638,6 +16790,8 @@
       showMoreLimit: showMoreLimit,
       sortBy: sortBy,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.hierarchicalMenu'
     });
   }
 
@@ -16692,7 +16846,6 @@
     }
   };
 
-  /** @jsx h */
   var withUsage$u = createDocumentationMessageGenerator({
     name: 'hits'
   });
@@ -16734,8 +16887,8 @@
     };
   };
 
-  var hits = function hits(widgetOptions) {
-    var _ref3 = widgetOptions || {},
+  var hits = function hits(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         escapeHTML = _ref3.escapeHTML,
         transformItems = _ref3.transformItems,
@@ -16767,12 +16920,14 @@
       renderState: {},
       templates: templates
     });
-    var makeHits = withInsights(connectHits)(specializedRenderer, function () {
+    var makeWidget = withInsights(connectHits)(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeHits({
+    return _objectSpread2({}, makeWidget({
       escapeHTML: escapeHTML,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.hits'
     });
   };
 
@@ -16798,7 +16953,6 @@
     }));
   }
 
-  /** @jsx h */
   var withUsage$v = createDocumentationMessageGenerator({
     name: 'hits-per-page'
   });
@@ -16829,8 +16983,8 @@
     };
   };
 
-  var hitsPerPage = function hitsPerPage(widgetOptions) {
-    var _ref5 = widgetOptions || {},
+  var hitsPerPage = function hitsPerPage(widgetParams) {
+    var _ref5 = widgetParams || {},
         container = _ref5.container,
         items = _ref5.items,
         _ref5$cssClasses = _ref5.cssClasses,
@@ -16855,12 +17009,14 @@
       containerNode: containerNode,
       cssClasses: cssClasses
     });
-    var makeHitsPerPage = connectHitsPerPage(specializedRenderer, function () {
+    var makeWidget = connectHitsPerPage(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeHitsPerPage({
+    return _objectSpread2({}, makeWidget({
       items: items,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.hitsPerPage'
     });
   };
 
@@ -16931,7 +17087,6 @@
     }
   };
 
-  /** @jsx h */
   var withUsage$w = createDocumentationMessageGenerator({
     name: 'infinite-hits'
   });
@@ -16983,8 +17138,8 @@
     };
   };
 
-  var infiniteHits = function infiniteHits() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  var infiniteHits = function infiniteHits(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         escapeHTML = _ref3.escapeHTML,
         transformItems = _ref3.transformItems,
@@ -17033,14 +17188,16 @@
       showPrevious: showPrevious,
       renderState: {}
     });
-    var makeInfiniteHits = withInsights(connectInfiniteHits)(specializedRenderer, function () {
+    var makeWidget = withInsights(connectInfiniteHits)(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeInfiniteHits({
+    return _objectSpread2({}, makeWidget({
       escapeHTML: escapeHTML,
       transformItems: transformItems,
       showPrevious: showPrevious,
       cache: cache
+    }), {
+      $$widgetType: 'ais.infiniteHits'
     });
   };
 
@@ -17118,7 +17275,7 @@
    */
 
   /**
-   * @typedef {Object} MenuWidgetOptions
+   * @typedef {Object} MenuWidgetParams
    * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
    * @property {string} attribute Name of the attribute for faceting
    * @property {string[]|function} [sortBy=['isRefined', 'name:asc']] How to sort refinements. Possible values: `count|isRefined|name:asc|name:desc`.
@@ -17143,7 +17300,7 @@
    * @type {WidgetFactory}
    * @devNovel Menu
    * @category filter
-   * @param {MenuWidgetOptions} $0 The Menu widget options.
+   * @param {MenuWidgetParams} widgetParams The Menu widget options.
    * @return {Widget} Creates a new instance of the Menu widget.
    * @example
    * search.addWidgets([
@@ -17156,8 +17313,9 @@
    */
 
 
-  function menu(_ref3) {
-    var container = _ref3.container,
+  function menu(widgetParams) {
+    var _ref3 = widgetParams || {},
+        container = _ref3.container,
         attribute = _ref3.attribute,
         sortBy = _ref3.sortBy,
         limit = _ref3.limit,
@@ -17216,13 +17374,15 @@
     var makeWidget = connectMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       attribute: attribute,
       limit: limit,
       showMore: showMore,
       showMoreLimit: showMoreLimit,
       sortBy: sortBy,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.menu'
     });
   }
 
@@ -17353,7 +17513,7 @@
    */
 
   /**
-   * @typedef {Object} RefinementListWidgetOptions
+   * @typedef {Object} RefinementListWidgetParams
    * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
    * @property {string} attribute Name of the attribute for faceting.
    * @property {"and"|"or"} [operator="or"] How to apply refinements. Possible values: `or`, `and`
@@ -17396,7 +17556,7 @@
    * @type {WidgetFactory}
    * @devNovel RefinementList
    * @category filter
-   * @param {RefinementListWidgetOptions} $0 The RefinementList widget options that you use to customize the widget.
+   * @param {RefinementListWidgetParams} widgetParams The RefinementList widget options that you use to customize the widget.
    * @return {Widget} Creates a new instance of the RefinementList widget.
    * @example
    * search.addWidgets([
@@ -17410,8 +17570,8 @@
    */
 
 
-  function refinementList() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function refinementList(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         attribute = _ref3.attribute,
         operator = _ref3.operator,
@@ -17521,7 +17681,7 @@
     var makeWidget = connectRefinementList(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       attribute: attribute,
       operator: operator,
       limit: limit,
@@ -17530,6 +17690,8 @@
       sortBy: sortBy,
       escapeFacetValues: escapeFacetValues,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.refinementList'
     });
   }
 
@@ -17538,7 +17700,6 @@
     item: "<label class=\"{{cssClasses.label}}\">\n  <input type=\"radio\" class=\"{{cssClasses.radio}}\" name=\"{{attribute}}\"{{#isRefined}} checked{{/isRefined}} />\n  <span class=\"{{cssClasses.labelText}}\">{{label}}</span>\n</label>"
   };
 
-  /** @jsx h */
   var withUsage$z = createDocumentationMessageGenerator({
     name: 'numeric-menu'
   });
@@ -17576,8 +17737,8 @@
     };
   };
 
-  var numericMenu = function numericMenu(widgetOptions) {
-    var _ref3 = widgetOptions || {},
+  var numericMenu = function numericMenu(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         attribute = _ref3.attribute,
         items = _ref3.items,
@@ -17624,13 +17785,15 @@
       renderState: {},
       templates: templates
     });
-    var makeNumericMenu = connectNumericMenu(specializedRenderer, function () {
+    var makeWidget = connectNumericMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeNumericMenu({
+    return _objectSpread2({}, makeWidget({
       attribute: attribute,
       items: items,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.numericMenu'
     });
   };
 
@@ -17922,7 +18085,7 @@
    */
 
   /**
-   * @typedef {Object} PaginationWidgetOptions
+   * @typedef {Object} PaginationWidgetParams
    * @property  {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
    * @property  {number} [totalPages] The max number of pages to browse.
    * @property  {number} [padding=3] The number of pages to display on each side of the current page.
@@ -17949,7 +18112,7 @@
    * @type {WidgetFactory}
    * @devNovel Pagination
    * @category navigation
-   * @param {PaginationWidgetOptions} $0 Options for the Pagination widget.
+   * @param {PaginationWidgetParams} widgetParams Options for the Pagination widget.
    * @return {Widget} A new instance of Pagination widget.
    * @example
    * search.addWidgets([
@@ -17965,8 +18128,8 @@
    */
 
 
-  function pagination() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function pagination(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         _ref3$templates = _ref3.templates,
         userTemplates = _ref3$templates === void 0 ? {} : _ref3$templates,
@@ -18052,9 +18215,11 @@
     var makeWidget = connectPagination(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       totalPages: totalPages,
       padding: padding
+    }), {
+      $$widgetType: 'ais.pagination'
     });
   }
 
@@ -18230,7 +18395,7 @@
    */
 
   /**
-   * @typedef {Object} RangeInputWidgetOptions
+   * @typedef {Object} RangeInputWidgetParams
    * @property {string|HTMLElement} container Valid CSS Selector as a string or DOMElement.
    * @property {string} attribute Name of the attribute for faceting.
    * @property {number} [min] Minimal slider value, default to automatically computed from the result set.
@@ -18252,7 +18417,7 @@
    * @type {WidgetFactory}
    * @devNovel RangeInput
    * @category filter
-   * @param {RangeInputWidgetOptions} $0 The RangeInput widget options.
+   * @param {RangeInputWidgetParams} widgetParams The RangeInput widget options.
    * @return {Widget} A new instance of RangeInput widget.
    * @example
    * search.addWidgets([
@@ -18268,8 +18433,8 @@
    */
 
 
-  function rangeInput() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function rangeInput(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         attribute = _ref3.attribute,
         min = _ref3.min,
@@ -18336,7 +18501,8 @@
       max: max,
       precision: precision
     }), {
-      $$type: 'ais.rangeInput'
+      $$type: 'ais.rangeInput',
+      $$widgetType: 'ais.rangeInput'
     });
   }
 
@@ -18395,7 +18561,7 @@
    */
 
   /**
-   * @typedef {Object} SearchBoxWidgetOptions
+   * @typedef {Object} SearchBoxWidgetParams
    * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget
    * @property {string} [placeholder] The placeholder of the input
    * @property {boolean} [autofocus=false] Whether the input should be autofocused
@@ -18422,7 +18588,7 @@
    * @type {WidgetFactory}
    * @devNovel SearchBox
    * @category basic
-   * @param {SearchBoxWidgetOptions} $0 Options used to configure a SearchBox widget.
+   * @param {SearchBoxWidgetParams} widgetParams Options used to configure a SearchBox widget.
    * @return {Widget} Creates a new instance of the SearchBox widget.
    * @example
    * search.addWidgets([
@@ -18434,8 +18600,8 @@
    */
 
 
-  function searchBox() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function searchBox(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         _ref3$placeholder = _ref3.placeholder,
         placeholder = _ref3$placeholder === void 0 ? '' : _ref3$placeholder,
@@ -18500,8 +18666,10 @@
     var makeWidget = connectSearchBox(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       queryHook: queryHook
+    }), {
+      $$widgetType: 'ais.searchBox'
     });
   }
 
@@ -19409,7 +19577,7 @@
    */
 
   /**
-   * @typedef {Object} RangeSliderWidgetOptions
+   * @typedef {Object} RangeSliderWidgetParams
    * @property  {string|HTMLElement} container CSS Selector or DOMElement to insert the widget.
    * @property  {string} attribute Name of the attribute for faceting.
    * @property  {boolean|RangeSliderTooltipOptions} [tooltips=true] Should we show tooltips or not.
@@ -19438,7 +19606,7 @@
    * @type {WidgetFactory}
    * @devNovel RangeSlider
    * @category filter
-   * @param {RangeSliderWidgetOptions} $0 RangeSlider widget options.
+   * @param {RangeSliderWidgetParams} widgetParams RangeSlider widget options.
    * @return {Widget} A new RangeSlider widget instance.
    * @example
    * search.addWidgets([
@@ -19455,8 +19623,8 @@
    */
 
 
-  function rangeSlider() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function rangeSlider(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         attribute = _ref3.attribute,
         min = _ref3.min,
@@ -19499,11 +19667,11 @@
       max: max,
       precision: precision
     }), {
-      $$type: 'ais.rangeSlider'
+      $$type: 'ais.rangeSlider',
+      $$widgetType: 'ais.rangeSlider'
     });
   }
 
-  /** @jsx h */
   var withUsage$E = createDocumentationMessageGenerator({
     name: 'sort-by'
   });
@@ -19545,7 +19713,7 @@
    */
 
   /**
-   * @typedef {Object} SortByWidgetOptions
+   * @typedef {Object} SortByWidgetParams
    * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
    * @property {SortByIndexDefinition[]} items Array of objects defining the different indices to choose from.
    * @property {SortByWidgetCssClasses} [cssClasses] CSS classes to be added.
@@ -19560,7 +19728,7 @@
    * @type {WidgetFactory}
    * @devNovel SortBy
    * @category sort
-   * @param {SortByWidgetOptions} $0 Options for the SortBy widget
+   * @param {SortByWidgetParams} widgetParams Options for the SortBy widget
    * @return {Widget} Creates a new instance of the SortBy widget.
    * @example
    * search.addWidgets([
@@ -19576,8 +19744,8 @@
    */
 
 
-  function sortBy() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function sortBy(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         items = _ref3.items,
         _ref3$cssClasses = _ref3.cssClasses,
@@ -19605,9 +19773,11 @@
     var makeWidget = connectSortBy(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       items: items,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.sortBy'
     });
   }
 
@@ -19615,7 +19785,6 @@
     item: "{{#count}}<a class=\"{{cssClasses.link}}\" aria-label=\"{{value}} & up\" href=\"{{href}}\">{{/count}}{{^count}}<div class=\"{{cssClasses.link}}\" aria-label=\"{{value}} & up\" disabled>{{/count}}\n  {{#stars}}<svg class=\"{{cssClasses.starIcon}} {{#.}}{{cssClasses.fullStarIcon}}{{/.}}{{^.}}{{cssClasses.emptyStarIcon}}{{/.}}\" aria-hidden=\"true\" width=\"24\" height=\"24\">\n    {{#.}}<use xlink:href=\"#ais-RatingMenu-starSymbol\"></use>{{/.}}{{^.}}<use xlink:href=\"#ais-RatingMenu-starEmptySymbol\"></use>{{/.}}\n  </svg>{{/stars}}\n  <span class=\"{{cssClasses.label}}\">& Up</span>\n  {{#count}}<span class=\"{{cssClasses.count}}\">{{#helpers.formatNumber}}{{count}}{{/helpers.formatNumber}}</span>{{/count}}\n{{#count}}</a>{{/count}}{{^count}}</div>{{/count}}"
   };
 
-  /** @jsx h */
   var withUsage$F = createDocumentationMessageGenerator({
     name: 'rating-menu'
   });
@@ -19697,7 +19866,7 @@
    */
 
   /**
-   * @typedef {Object} RatingMenuWidgetOptions
+   * @typedef {Object} RatingMenuWidgetParams
    * @property {string|HTMLElement} container Place where to insert the widget in your webpage.
    * @property {string} attribute Name of the attribute in your records that contains the ratings.
    * @property {number} [max = 5] The maximum rating value.
@@ -19720,7 +19889,7 @@
    * @type {WidgetFactory}
    * @devNovel RatingMenu
    * @category filter
-   * @param {RatingMenuWidgetOptions} $0 RatingMenu widget options.
+   * @param {RatingMenuWidgetParams} widgetParams RatingMenu widget options.
    * @return {Widget} A new RatingMenu widget instance.
    * @example
    * search.addWidgets([
@@ -19733,8 +19902,8 @@
    */
 
 
-  function ratingMenu() {
-    var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function ratingMenu(widgetParams) {
+    var _ref5 = widgetParams || {},
         container = _ref5.container,
         attribute = _ref5.attribute,
         _ref5$max = _ref5.max,
@@ -19798,9 +19967,11 @@
     var makeWidget = connectRatingMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       attribute: attribute,
       max: max
+    }), {
+      $$widgetType: 'ais.ratingMenu'
     });
   }
 
@@ -19840,7 +20011,6 @@
     text: "{{#hasNoResults}}No results{{/hasNoResults}}\n    {{#hasOneResult}}1 result{{/hasOneResult}}\n    {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}} found in {{processingTimeMS}}ms"
   };
 
-  /** @jsx h */
   var withUsage$G = createDocumentationMessageGenerator({
     name: 'stats'
   });
@@ -19907,7 +20077,7 @@
    */
 
   /**
-   * @typedef {Object} StatsWidgetOptions
+   * @typedef {Object} StatsWidgetParams
    * @property {string|HTMLElement} container Place where to insert the widget in your webpage.
    * @property {StatsWidgetTemplates} [templates] Templates to use for the widget.
    * @property {StatsWidgetCssClasses} [cssClasses] CSS classes to add.
@@ -19921,7 +20091,7 @@
    * @type {WidgetFactory}
    * @devNovel Stats
    * @category metadata
-   * @param {StatsWidgetOptions} $0 Stats widget options. Some keys are mandatory: `container`,
+   * @param {StatsWidgetParams} widgetParams Stats widget options. Some keys are mandatory: `container`,
    * @return {Widget} A new stats widget instance
    * @example
    * search.addWidgets([
@@ -19932,8 +20102,8 @@
    */
 
 
-  function stats() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function stats(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         _ref3$cssClasses = _ref3.cssClasses,
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses,
@@ -19960,7 +20130,9 @@
     var makeWidget = connectStats(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget();
+    return _objectSpread2({}, makeWidget(), {
+      $$widgetType: 'ais.stats'
+    });
   }
 
   var ToggleRefinement = function ToggleRefinement(_ref) {
@@ -19993,7 +20165,6 @@
     labelText: '{{name}}'
   };
 
-  /** @jsx h */
   var withUsage$H = createDocumentationMessageGenerator({
     name: 'toggle-refinement'
   });
@@ -20050,7 +20221,7 @@
    */
 
   /**
-   * @typedef {Object} ToggleWidgetOptions
+   * @typedef {Object} ToggleWidgetParams
    * @property {string|HTMLElement} container Place where to insert the widget in your webpage.
    * @property {string} attribute Name of the attribute for faceting (eg. "free_shipping").
    * @property {string|number|boolean|array} on Value to filter on when checked.
@@ -20077,7 +20248,7 @@
    * @type {WidgetFactory}
    * @devNovel ToggleRefinement
    * @category filter
-   * @param {ToggleWidgetOptions} $0 Options for the ToggleRefinement widget.
+   * @param {ToggleWidgetParams} widgetParams Options for the ToggleRefinement widget.
    * @return {Widget} A new instance of the ToggleRefinement widget
    * @example
    * search.addWidgets([
@@ -20093,8 +20264,8 @@
    */
 
 
-  function toggleRefinement() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function toggleRefinement(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         attribute = _ref3.attribute,
         _ref3$cssClasses = _ref3.cssClasses,
@@ -20131,10 +20302,12 @@
     var makeWidget = connectToggleRefinement(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       attribute: attribute,
       on: on,
       off: off
+    }), {
+      $$widgetType: 'ais.toggleRefinement'
     });
   }
 
@@ -20258,6 +20431,8 @@
     };
 
     return {
+      $$type: 'ais.analytics',
+      $$widgetType: 'ais.analytics',
       init: function init() {
         if (triggerOnUIInteraction === true) {
           document.addEventListener('click', onClick);
@@ -20356,7 +20531,6 @@
     separator: '>'
   };
 
-  /** @jsx h */
   var withUsage$J = createDocumentationMessageGenerator({
     name: 'breadcrumb'
   });
@@ -20394,8 +20568,8 @@
     };
   };
 
-  var breadcrumb = function breadcrumb(widgetOptions) {
-    var _ref3 = widgetOptions || {},
+  var breadcrumb = function breadcrumb(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         attributes = _ref3.attributes,
         separator = _ref3.separator,
@@ -20439,14 +20613,16 @@
       renderState: {},
       templates: templates
     });
-    var makeBreadcrumb = connectBreadcrumb(specializedRenderer, function () {
+    var makeWidget = connectBreadcrumb(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeBreadcrumb({
+    return _objectSpread2({}, makeWidget({
       attributes: attributes,
       separator: separator,
       rootPath: rootPath,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.breadcrumb'
     });
   };
 
@@ -20497,7 +20673,6 @@
     defaultOption: 'See all'
   };
 
-  /** @jsx h */
   var withUsage$K = createDocumentationMessageGenerator({
     name: 'menu-select'
   });
@@ -20548,7 +20723,7 @@
    */
 
   /**
-   * @typedef {Object} MenuSelectWidgetOptions
+   * @typedef {Object} MenuSelectWidgetParams
    * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
    * @property {string} attribute Name of the attribute for faceting
    * @property {string[]|function} [sortBy=['name:asc']] How to sort refinements. Possible values: `count|isRefined|name:asc|name:desc`.
@@ -20564,7 +20739,7 @@
    * Create a menu select out of a facet
    * @type {WidgetFactory}
    * @category filter
-   * @param {MenuSelectWidgetOptions} $0 The Menu select widget options.
+   * @param {MenuSelectWidgetParams} widgetParams The Menu select widget options.
    * @return {Widget} Creates a new instance of the Menu select widget.
    * @example
    * search.addWidgets([
@@ -20577,8 +20752,9 @@
    */
 
 
-  function menuSelect(_ref3) {
-    var container = _ref3.container,
+  function menuSelect(widgetParams) {
+    var _ref3 = widgetParams || {},
+        container = _ref3.container,
         attribute = _ref3.attribute,
         _ref3$sortBy = _ref3.sortBy,
         sortBy = _ref3$sortBy === void 0 ? ['name:asc'] : _ref3$sortBy,
@@ -20616,11 +20792,13 @@
     var makeWidget = connectMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       attribute: attribute,
       limit: limit,
       sortBy: sortBy,
       transformItems: transformItems
+    }), {
+      $$widgetType: 'ais.menuSelect'
     });
   }
 
@@ -20630,14 +20808,14 @@
   /*#__PURE__*/
   h("path", {
     fill: "#5468FF",
-    d: "M78.99.94h16.6a2.97 2.97 0 0 1 2.96 2.96v16.6a2.97 2.97 0 0 1-2.97 2.96h-16.6a2.97 2.97 0 0 1-2.96-2.96V3.9A2.96 2.96 0 0 1 79 .94"
+    d: "M78.99.94h16.6a2.97 2.97 0 012.96 2.96v16.6a2.97 2.97 0 01-2.97 2.96h-16.6a2.97 2.97 0 01-2.96-2.96V3.9A2.96 2.96 0 0179 .94"
   });
 
   var _ref3$1 =
   /*#__PURE__*/
   h("path", {
     fill: "#FFF",
-    d: "M89.63 5.97v-.78a.98.98 0 0 0-.98-.97h-2.28a.98.98 0 0 0-.97.97V6c0 .09.08.15.17.13a7.13 7.13 0 0 1 3.9-.02c.08.02.16-.04.16-.13m-6.25 1L83 6.6a.98.98 0 0 0-1.38 0l-.46.46a.97.97 0 0 0 0 1.38l.38.39c.06.06.15.04.2-.02a7.49 7.49 0 0 1 1.63-1.62c.07-.04.08-.14.02-.2m4.16 2.45v3.34c0 .1.1.17.2.12l2.97-1.54c.06-.03.08-.12.05-.18a3.7 3.7 0 0 0-3.08-1.87c-.07 0-.14.06-.14.13m0 8.05a4.49 4.49 0 1 1 0-8.98 4.49 4.49 0 0 1 0 8.98m0-10.85a6.37 6.37 0 1 0 0 12.74 6.37 6.37 0 0 0 0-12.74"
+    d: "M89.63 5.97v-.78a.98.98 0 00-.98-.97h-2.28a.98.98 0 00-.97.97V6c0 .09.08.15.17.13a7.13 7.13 0 013.9-.02c.08.02.16-.04.16-.13m-6.25 1L83 6.6a.98.98 0 00-1.38 0l-.46.46a.97.97 0 000 1.38l.38.39c.06.06.15.04.2-.02a7.49 7.49 0 011.63-1.62c.07-.04.08-.14.02-.2m4.16 2.45v3.34c0 .1.1.17.2.12l2.97-1.54c.06-.03.08-.12.05-.18a3.7 3.7 0 00-3.08-1.87c-.07 0-.14.06-.14.13m0 8.05a4.49 4.49 0 110-8.98 4.49 4.49 0 010 8.98m0-10.85a6.37 6.37 0 100 12.74 6.37 6.37 0 000-12.74"
   });
 
   var PoweredBy = function PoweredBy(_ref) {
@@ -20663,14 +20841,13 @@
       }
     }, h("path", {
       fill: theme === 'dark' ? '#FFF' : '#5D6494',
-      d: "M6.97 6.68V8.3a4.47 4.47 0 0 0-2.42-.67 2.2 2.2 0 0 0-1.38.4c-.34.26-.5.6-.5 1.02 0 .43.16.77.49 1.03.33.25.83.53 1.51.83a7.04 7.04 0 0 1 1.9 1.08c.34.24.58.54.73.89.15.34.23.74.23 1.18 0 .95-.33 1.7-1 2.24a4 4 0 0 1-2.6.81 5.71 5.71 0 0 1-2.94-.68v-1.71c.84.63 1.81.94 2.92.94.58 0 1.05-.14 1.39-.4.34-.28.5-.65.5-1.13 0-.29-.1-.55-.3-.8a2.2 2.2 0 0 0-.65-.53 23.03 23.03 0 0 0-1.64-.78 13.67 13.67 0 0 1-1.11-.64c-.12-.1-.28-.22-.46-.4a1.72 1.72 0 0 1-.39-.5 4.46 4.46 0 0 1-.22-.6c-.07-.23-.1-.48-.1-.75 0-.91.33-1.63 1-2.17a4 4 0 0 1 2.57-.8c.97 0 1.8.18 2.47.52zm7.47 5.7v-.3a2.26 2.26 0 0 0-.5-1.44c-.3-.35-.74-.53-1.32-.53-.53 0-.99.2-1.37.58-.38.39-.62.95-.72 1.68h3.91zm1 2.79v1.4c-.6.34-1.38.51-2.36.51a4.02 4.02 0 0 1-3-1.13 4.04 4.04 0 0 1-1.11-2.97c0-1.3.34-2.32 1.02-3.06a3.38 3.38 0 0 1 2.6-1.1c1.03 0 1.85.32 2.46.96.6.64.9 1.57.9 2.78 0 .33-.03.68-.09 1.04h-5.31c.1.7.4 1.24.89 1.61.49.38 1.1.56 1.85.56.86 0 1.58-.2 2.15-.6zm6.61-1.78h-1.21c-.6 0-1.05.12-1.35.36-.3.23-.46.53-.46.89 0 .37.12.66.36.88.23.2.57.32 1.02.32.5 0 .9-.15 1.2-.43.3-.28.44-.65.44-1.1v-.92zm-4.07-2.55V9.33a4.96 4.96 0 0 1 2.5-.55c2.1 0 3.17 1.03 3.17 3.08V17H22.1v-.96c-.42.68-1.15 1.02-2.19 1.02-.76 0-1.38-.22-1.84-.66-.46-.44-.7-1-.7-1.68 0-.78.3-1.38.88-1.81.59-.43 1.4-.65 2.46-.65h1.34v-.46c0-.55-.13-.97-.4-1.25-.26-.29-.7-.43-1.32-.43-.86 0-1.65.24-2.35.72zm9.34-1.93v1.42c.39-1 1.1-1.5 2.12-1.5.15 0 .31.02.5.05v1.53c-.23-.1-.48-.14-.76-.14-.54 0-.99.24-1.34.71a2.8 2.8 0 0 0-.52 1.71V17h-1.57V8.91h1.57zm5 4.09a3 3 0 0 0 .76 2.01c.47.53 1.14.8 2 .8.64 0 1.24-.18 1.8-.53v1.4c-.53.32-1.2.48-2 .48a3.98 3.98 0 0 1-4.17-4.18c0-1.16.38-2.15 1.14-2.98a4 4 0 0 1 3.1-1.23c.7 0 1.34.15 1.92.44v1.44a3.24 3.24 0 0 0-1.77-.5A2.65 2.65 0 0 0 32.33 13zm7.92-7.28v4.58c.46-1 1.3-1.5 2.5-1.5.8 0 1.42.24 1.9.73.48.5.72 1.17.72 2.05V17H43.8v-5.1c0-.56-.14-.99-.43-1.29-.28-.3-.65-.45-1.1-.45-.54 0-1 .2-1.42.6-.4.4-.61 1.02-.61 1.85V17h-1.56V5.72h1.56zM55.2 15.74c.6 0 1.1-.25 1.5-.76.4-.5.6-1.16.6-1.95 0-.92-.2-1.62-.6-2.12-.4-.5-.92-.74-1.55-.74-.56 0-1.05.22-1.5.67-.44.45-.66 1.13-.66 2.06 0 .96.22 1.67.64 2.14.43.47.95.7 1.57.7zM53 5.72v4.42a2.74 2.74 0 0 1 2.43-1.34c1.03 0 1.86.38 2.51 1.15.65.76.97 1.78.97 3.05 0 1.13-.3 2.1-.92 2.9-.62.81-1.47 1.21-2.54 1.21s-1.9-.45-2.46-1.34V17h-1.58V5.72H53zm9.9 11.1l-3.22-7.9h1.74l1 2.62 1.26 3.42c.1-.32.48-1.46 1.15-3.42l.91-2.63h1.66l-2.92 7.87c-.78 2.07-1.96 3.1-3.56 3.1-.28 0-.53-.02-.73-.07v-1.34c.17.04.35.06.54.06 1.03 0 1.76-.57 2.17-1.7z"
+      d: "M6.97 6.68V8.3a4.47 4.47 0 00-2.42-.67 2.2 2.2 0 00-1.38.4c-.34.26-.5.6-.5 1.02 0 .43.16.77.49 1.03.33.25.83.53 1.51.83a7.04 7.04 0 011.9 1.08c.34.24.58.54.73.89.15.34.23.74.23 1.18 0 .95-.33 1.7-1 2.24a4 4 0 01-2.6.81 5.71 5.71 0 01-2.94-.68v-1.71c.84.63 1.81.94 2.92.94.58 0 1.05-.14 1.39-.4.34-.28.5-.65.5-1.13 0-.29-.1-.55-.3-.8a2.2 2.2 0 00-.65-.53 23.03 23.03 0 00-1.64-.78 13.67 13.67 0 01-1.11-.64c-.12-.1-.28-.22-.46-.4a1.72 1.72 0 01-.39-.5 4.46 4.46 0 01-.22-.6c-.07-.23-.1-.48-.1-.75 0-.91.33-1.63 1-2.17a4 4 0 012.57-.8c.97 0 1.8.18 2.47.52zm7.47 5.7v-.3a2.26 2.26 0 00-.5-1.44c-.3-.35-.74-.53-1.32-.53-.53 0-.99.2-1.37.58a2.9 2.9 0 00-.72 1.68h3.91zm1 2.79v1.4c-.6.34-1.38.51-2.36.51a4.02 4.02 0 01-3-1.13 4.04 4.04 0 01-1.11-2.97c0-1.3.34-2.32 1.02-3.06a3.38 3.38 0 012.6-1.1c1.03 0 1.85.32 2.46.96.6.64.9 1.57.9 2.78 0 .33-.03.68-.09 1.04h-5.31c.1.7.4 1.24.89 1.61.49.38 1.1.56 1.85.56.86 0 1.58-.2 2.15-.6zm6.61-1.78h-1.21c-.6 0-1.05.12-1.35.36-.3.23-.46.53-.46.89 0 .37.12.66.36.88.23.2.57.32 1.02.32.5 0 .9-.15 1.2-.43.3-.28.44-.65.44-1.1v-.92zm-4.07-2.55V9.33a4.96 4.96 0 012.5-.55c2.1 0 3.17 1.03 3.17 3.08V17H22.1v-.96c-.42.68-1.15 1.02-2.19 1.02-.76 0-1.38-.22-1.84-.66-.46-.44-.7-1-.7-1.68 0-.78.3-1.38.88-1.81.59-.43 1.4-.65 2.46-.65h1.34v-.46c0-.55-.13-.97-.4-1.25-.26-.29-.7-.43-1.32-.43-.86 0-1.65.24-2.35.72zm9.34-1.93v1.42c.39-1 1.1-1.5 2.12-1.5.15 0 .31.02.5.05v1.53c-.23-.1-.48-.14-.76-.14-.54 0-.99.24-1.34.71a2.8 2.8 0 00-.52 1.71V17h-1.57V8.91h1.57zm5 4.09a3 3 0 00.76 2.01c.47.53 1.14.8 2 .8.64 0 1.24-.18 1.8-.53v1.4c-.53.32-1.2.48-2 .48a3.98 3.98 0 01-4.17-4.18c0-1.16.38-2.15 1.14-2.98a4 4 0 013.1-1.23c.7 0 1.34.15 1.92.44v1.44a3.24 3.24 0 00-1.77-.5A2.65 2.65 0 0032.33 13zm7.92-7.28v4.58c.46-1 1.3-1.5 2.5-1.5.8 0 1.42.24 1.9.73.48.5.72 1.17.72 2.05V17H43.8v-5.1c0-.56-.14-.99-.43-1.29-.28-.3-.65-.45-1.1-.45-.54 0-1 .2-1.42.6-.4.4-.61 1.02-.61 1.85V17h-1.56V5.72h1.56zM55.2 15.74c.6 0 1.1-.25 1.5-.76.4-.5.6-1.16.6-1.95 0-.92-.2-1.62-.6-2.12-.4-.5-.92-.74-1.55-.74-.56 0-1.05.22-1.5.67-.44.45-.66 1.13-.66 2.06 0 .96.22 1.67.64 2.14.43.47.95.7 1.57.7zM53 5.72v4.42a2.74 2.74 0 012.43-1.34c1.03 0 1.86.38 2.51 1.15.65.76.97 1.78.97 3.05 0 1.13-.3 2.1-.92 2.9-.62.81-1.47 1.21-2.54 1.21s-1.9-.45-2.46-1.34V17h-1.58V5.72H53zm9.9 11.1l-3.22-7.9h1.74l1 2.62 1.26 3.42c.1-.32.48-1.46 1.15-3.42l.91-2.63h1.66l-2.92 7.87c-.78 2.07-1.96 3.1-3.56 3.1-.28 0-.53-.02-.73-.07v-1.34c.17.04.35.06.54.06 1.03 0 1.76-.57 2.17-1.7z"
     }), _ref2$1, _ref3$1, h("path", {
       fill: theme === 'dark' ? '#FFF' : '#5468FF',
-      d: "M120.92 18.8c-4.38.02-4.38-3.54-4.38-4.1V1.36l2.67-.42v13.25c0 .32 0 2.36 1.71 2.37v2.24zm-10.84-2.18c.82 0 1.43-.04 1.85-.12v-2.72a5.48 5.48 0 0 0-1.57-.2c-.3 0-.6.02-.9.07-.3.04-.57.12-.81.24-.24.11-.44.28-.58.49a.93.93 0 0 0-.22.65c0 .63.22 1 .61 1.23.4.24.94.36 1.62.36zm-.23-9.7c.88 0 1.62.11 2.23.33.6.22 1.09.53 1.44.92.36.4.61.92.76 1.48.16.56.23 1.17.23 1.85v6.87c-.4.1-1.03.2-1.86.32-.84.12-1.78.18-2.82.18-.69 0-1.32-.07-1.9-.2a4 4 0 0 1-1.46-.63c-.4-.3-.72-.67-.96-1.13a4.3 4.3 0 0 1-.34-1.8c0-.66.13-1.08.39-1.53.26-.45.6-.82 1.04-1.1.45-.3.95-.5 1.54-.62a8.8 8.8 0 0 1 3.79.05v-.44c0-.3-.04-.6-.11-.87a1.78 1.78 0 0 0-1.1-1.22c-.31-.12-.7-.2-1.15-.2a9.75 9.75 0 0 0-2.95.46l-.33-2.19c.34-.12.84-.23 1.48-.35.65-.12 1.34-.18 2.08-.18zm52.84 9.63c.82 0 1.43-.05 1.85-.13V13.7a5.42 5.42 0 0 0-1.57-.2c-.3 0-.6.02-.9.07-.3.04-.57.12-.81.24-.24.12-.44.28-.58.5a.93.93 0 0 0-.22.65c0 .63.22.99.61 1.23.4.24.94.36 1.62.36zm-.23-9.7c.88 0 1.63.11 2.23.33.6.22 1.1.53 1.45.92.35.39.6.92.76 1.48.15.56.23 1.18.23 1.85v6.88c-.41.08-1.03.19-1.87.31-.83.12-1.77.18-2.81.18-.7 0-1.33-.06-1.9-.2a4 4 0 0 1-1.47-.63c-.4-.3-.72-.67-.95-1.13a4.3 4.3 0 0 1-.34-1.8c0-.66.13-1.08.38-1.53.26-.45.61-.82 1.05-1.1.44-.3.95-.5 1.53-.62a8.8 8.8 0 0 1 3.8.05v-.43c0-.31-.04-.6-.12-.88-.07-.28-.2-.52-.38-.73a1.78 1.78 0 0 0-.73-.5c-.3-.1-.68-.2-1.14-.2a9.85 9.85 0 0 0-2.95.47l-.32-2.19a11.63 11.63 0 0 1 3.55-.53zm-8.03-1.27a1.62 1.62 0 0 0 0-3.24 1.62 1.62 0 1 0 0 3.24zm1.35 13.22h-2.7V7.27l2.7-.42V18.8zm-4.72 0c-4.38.02-4.38-3.54-4.38-4.1l-.01-13.34 2.67-.42v13.25c0 .32 0 2.36 1.72 2.37v2.24zm-8.7-5.9a4.7 4.7 0 0 0-.74-2.79 2.4 2.4 0 0 0-2.07-1 2.4 2.4 0 0 0-2.06 1 4.7 4.7 0 0 0-.74 2.8c0 1.16.25 1.94.74 2.62a2.4 2.4 0 0 0 2.07 1.02c.88 0 1.57-.34 2.07-1.02.49-.68.73-1.46.73-2.63zm2.74 0a6.46 6.46 0 0 1-1.52 4.23c-.49.53-1.07.94-1.76 1.22-.68.29-1.73.45-2.26.45-.53 0-1.58-.15-2.25-.45a5.1 5.1 0 0 1-2.88-3.13 7.3 7.3 0 0 1-.01-4.84 5.13 5.13 0 0 1 2.9-3.1 5.67 5.67 0 0 1 2.22-.42c.81 0 1.56.14 2.24.42.69.29 1.28.69 1.75 1.22.49.52.87 1.15 1.14 1.89a7 7 0 0 1 .43 2.5zm-20.14 0c0 1.11.25 2.36.74 2.88.5.52 1.13.78 1.91.78a4.07 4.07 0 0 0 2.12-.6V9.33c-.19-.04-.99-.2-1.76-.23a2.67 2.67 0 0 0-2.23 1 4.73 4.73 0 0 0-.78 2.8zm7.44 5.27c0 1.82-.46 3.16-1.4 4-.94.85-2.37 1.27-4.3 1.27-.7 0-2.17-.13-3.34-.4l.43-2.11c.98.2 2.27.26 2.95.26 1.08 0 1.84-.22 2.3-.66.46-.43.68-1.08.68-1.94v-.44a5.2 5.2 0 0 1-2.54.6 5.6 5.6 0 0 1-2.01-.36 4.2 4.2 0 0 1-2.58-2.71 9.88 9.88 0 0 1 .02-5.35 4.92 4.92 0 0 1 2.93-2.96 6.6 6.6 0 0 1 2.43-.46 19.64 19.64 0 0 1 4.43.66v10.6z"
+      d: "M120.92 18.8c-4.38.02-4.38-3.54-4.38-4.1V1.36l2.67-.42v13.25c0 .32 0 2.36 1.71 2.37v2.24zm-10.84-2.18c.82 0 1.43-.04 1.85-.12v-2.72a5.48 5.48 0 00-1.57-.2c-.3 0-.6.02-.9.07-.3.04-.57.12-.81.24-.24.11-.44.28-.58.49a.93.93 0 00-.22.65c0 .63.22 1 .61 1.23.4.24.94.36 1.62.36zm-.23-9.7c.88 0 1.62.11 2.23.33.6.22 1.09.53 1.44.92.36.4.61.92.76 1.48.16.56.23 1.17.23 1.85v6.87a21.69 21.69 0 01-4.68.5c-.69 0-1.32-.07-1.9-.2a4 4 0 01-1.46-.63 3.3 3.3 0 01-.96-1.13 4.3 4.3 0 01-.34-1.8 3.13 3.13 0 011.43-2.63c.45-.3.95-.5 1.54-.62a8.8 8.8 0 013.79.05v-.44c0-.3-.04-.6-.11-.87a1.78 1.78 0 00-1.1-1.22 3.2 3.2 0 00-1.15-.2 9.75 9.75 0 00-2.95.46l-.33-2.19a11.43 11.43 0 013.56-.53zm52.84 9.63c.82 0 1.43-.05 1.85-.13V13.7a5.42 5.42 0 00-1.57-.2c-.3 0-.6.02-.9.07-.3.04-.57.12-.81.24-.24.12-.44.28-.58.5a.93.93 0 00-.22.65c0 .63.22.99.61 1.23.4.24.94.36 1.62.36zm-.23-9.7c.88 0 1.63.11 2.23.33.6.22 1.1.53 1.45.92.35.39.6.92.76 1.48.15.56.23 1.18.23 1.85v6.88c-.41.08-1.03.19-1.87.31-.83.12-1.77.18-2.81.18-.7 0-1.33-.06-1.9-.2a4 4 0 01-1.47-.63c-.4-.3-.72-.67-.95-1.13a4.3 4.3 0 01-.34-1.8c0-.66.13-1.08.38-1.53.26-.45.61-.82 1.05-1.1.44-.3.95-.5 1.53-.62a8.8 8.8 0 013.8.05v-.43c0-.31-.04-.6-.12-.88-.07-.28-.2-.52-.38-.73a1.78 1.78 0 00-.73-.5c-.3-.1-.68-.2-1.14-.2a9.85 9.85 0 00-2.95.47l-.32-2.19a11.63 11.63 0 013.55-.53zm-8.03-1.27a1.62 1.62 0 000-3.24 1.62 1.62 0 100 3.24zm1.35 13.22h-2.7V7.27l2.7-.42V18.8zm-4.72 0c-4.38.02-4.38-3.54-4.38-4.1l-.01-13.34 2.67-.42v13.25c0 .32 0 2.36 1.72 2.37v2.24zm-8.7-5.9a4.7 4.7 0 00-.74-2.79 2.4 2.4 0 00-2.07-1 2.4 2.4 0 00-2.06 1 4.7 4.7 0 00-.74 2.8c0 1.16.25 1.94.74 2.62a2.4 2.4 0 002.07 1.02c.88 0 1.57-.34 2.07-1.02a4.2 4.2 0 00.73-2.63zm2.74 0a6.46 6.46 0 01-1.52 4.23c-.49.53-1.07.94-1.76 1.22-.68.29-1.73.45-2.26.45a6.6 6.6 0 01-2.25-.45 5.1 5.1 0 01-2.88-3.13 7.3 7.3 0 01-.01-4.84 5.13 5.13 0 012.9-3.1 5.67 5.67 0 012.22-.42c.81 0 1.56.14 2.24.42.69.29 1.28.69 1.75 1.22.49.52.87 1.15 1.14 1.89a7 7 0 01.43 2.5zm-20.14 0c0 1.11.25 2.36.74 2.88.5.52 1.13.78 1.91.78a4.07 4.07 0 002.12-.6V9.33c-.19-.04-.99-.2-1.76-.23a2.67 2.67 0 00-2.23 1 4.73 4.73 0 00-.78 2.8zm7.44 5.27c0 1.82-.46 3.16-1.4 4-.94.85-2.37 1.27-4.3 1.27-.7 0-2.17-.13-3.34-.4l.43-2.11c.98.2 2.27.26 2.95.26 1.08 0 1.84-.22 2.3-.66.46-.43.68-1.08.68-1.94v-.44a5.2 5.2 0 01-2.54.6 5.6 5.6 0 01-2.01-.36 4.2 4.2 0 01-2.58-2.71 9.88 9.88 0 01.02-5.35 4.92 4.92 0 012.93-2.96 6.6 6.6 0 012.43-.46 19.64 19.64 0 014.43.66v10.6z"
     }))));
   };
 
-  /** @jsx h */
   var suit$o = component('PoweredBy');
   var withUsage$L = createDocumentationMessageGenerator({
     name: 'powered-by'
@@ -20702,7 +20879,7 @@
    */
 
   /**
-   * @typedef {Object} PoweredByWidgetOptions
+   * @typedef {Object} PoweredByWidgetParams
    * @property {string|HTMLElement} container Place where to insert the widget in your webpage.
    * @property {string} [theme] The theme of the logo ("light" or "dark").
    * @property {PoweredByWidgetCssClasses} [cssClasses] CSS classes to add.
@@ -20713,7 +20890,7 @@
    * @type {WidgetFactory}
    * @devNovel PoweredBy
    * @category metadata
-   * @param {PoweredByWidgetOptions} $0 PoweredBy widget options. Some keys are mandatory: `container`,
+   * @param {PoweredByWidgetParams} widgetParams PoweredBy widget options. Some keys are mandatory: `container`,
    * @return {Widget} A new poweredBy widget instance
    * @example
    * search.addWidgets([
@@ -20725,8 +20902,8 @@
    */
 
 
-  function poweredBy() {
-    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  function poweredBy(widgetParams) {
+    var _ref3 = widgetParams || {},
         container = _ref3.container,
         _ref3$cssClasses = _ref3.cssClasses,
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses,
@@ -20756,8 +20933,10 @@
     var makeWidget = connectPoweredBy(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       theme: theme
+    }), {
+      $$widgetType: 'ais.poweredBy'
     });
   }
 
@@ -20863,8 +21042,8 @@
    * The panel widget wraps other widgets in a consistent panel design.
    * It also reacts, indicates and sets CSS classes when widgets are no longer relevant for refining.
    */
-  var panel = function panel(widgetParams) {
-    var _ref3 = widgetParams || {},
+  var panel = function panel(panelWidgetParams) {
+    var _ref3 = panelWidgetParams || {},
         _ref3$templates = _ref3.templates,
         templates = _ref3$templates === void 0 ? {} : _ref3$templates,
         _ref3$hidden = _ref3.hidden,
@@ -20910,8 +21089,8 @@
       }), userCssClasses.footer)
     };
     return function (widgetFactory) {
-      return function (widgetOptions) {
-        var _ref4 = widgetOptions || {},
+      return function (widgetParams) {
+        var _ref4 = widgetParams || {},
             container = _ref4.container;
 
         if (!container) {
@@ -20938,7 +21117,7 @@
           collapsible: collapsible,
           collapsed: false
         });
-        var widget = widgetFactory(_objectSpread2({}, widgetOptions, {
+        var widget = widgetFactory(_objectSpread2({}, widgetParams, {
           container: bodyContainerNode
         }));
         return _objectSpread2({}, widget, {
@@ -21083,8 +21262,8 @@
     }), container);
   };
 
-  var voiceSearch = function voiceSearch() {
-    var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  var voiceSearch = function voiceSearch(widgetParams) {
+    var _ref2 = widgetParams || {},
         container = _ref2.container,
         _ref2$cssClasses = _ref2.cssClasses,
         userCssClasses = _ref2$cssClasses === void 0 ? {} : _ref2$cssClasses,
@@ -21112,7 +21291,7 @@
     var makeWidget = connectVoiceSearch(renderer$m, function () {
       return I(null, containerNode);
     });
-    return makeWidget({
+    return _objectSpread2({}, makeWidget({
       container: containerNode,
       cssClasses: cssClasses,
       templates: _objectSpread2({}, defaultTemplates$f, {}, templates),
@@ -21120,6 +21299,8 @@
       language: language,
       additionalQueryParameters: additionalQueryParameters,
       createVoiceSearchHelper: createVoiceSearchHelper
+    }), {
+      $$widgetType: 'ais.voiceSearch'
     });
   };
 
@@ -21159,8 +21340,8 @@
     }), container);
   };
 
-  var queryRuleCustomData = function queryRuleCustomData() {
-    var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+  var queryRuleCustomData = function queryRuleCustomData(widgetParams) {
+    var _ref2 = widgetParams || {},
         container = _ref2.container,
         _ref2$cssClasses = _ref2.cssClasses,
         userCssClasses = _ref2$cssClasses === void 0 ? {} : _ref2$cssClasses,
@@ -21188,16 +21369,16 @@
     var templates = _objectSpread2({}, defaultTemplates, {}, userTemplates);
 
     var containerNode = getContainerNode(container);
-    var makeQueryRuleCustomData = connectQueryRules(renderer$n, function () {
+    var makeWidget = connectQueryRules(renderer$n, function () {
       I(null, containerNode);
     });
-    return _objectSpread2({}, makeQueryRuleCustomData({
+    return _objectSpread2({}, makeWidget({
       container: containerNode,
       cssClasses: cssClasses,
       templates: templates,
       transformItems: transformItems
     }), {
-      $$type: 'ais.queryRuleCustomData'
+      $$widgetType: 'ais.queryRuleCustomData'
     });
   };
 
@@ -21213,7 +21394,7 @@
     }
 
     return _objectSpread2({}, connectQueryRules(noop)(widgetParams), {
-      $$type: 'ais.queryRuleContext'
+      $$widgetType: 'ais.queryRuleContext'
     });
   };
 
@@ -21240,6 +21421,7 @@
     };
     return {
       $$type: 'ais.places',
+      $$widgetType: 'ais.places',
       init: function init(_ref2) {
         var helper = _ref2.helper;
         placesAutocomplete.on('change', function (eventOptions) {
@@ -21355,6 +21537,7 @@
   var createInsightsMiddleware = function createInsightsMiddleware(props) {
     var _ref = props || {},
         _insightsClient = _ref.insightsClient,
+        insightsInitParams = _ref.insightsInitParams,
         onEvent = _ref.onEvent;
 
     if (_insightsClient !== null && !_insightsClient) {
@@ -21407,10 +21590,10 @@
         // Otherwise, the `init` call might override it with anonymous user token.
         userTokenBeforeInit = userToken;
       });
-      insightsClient('init', {
+      insightsClient('init', _objectSpread2({
         appId: appId,
         apiKey: apiKey
-      });
+      }, insightsInitParams));
       return {
         onStateChange: function onStateChange() {},
         subscribe: function subscribe() {
@@ -21467,7 +21650,9 @@
   var middlewares = /*#__PURE__*/Object.freeze({
     __proto__: null,
     createInsightsMiddleware: createInsightsMiddleware,
-    createRouterMiddleware: createRouterMiddleware
+    createRouterMiddleware: createRouterMiddleware,
+    isMetadataEnabled: isMetadataEnabled,
+    createMetadataMiddleware: createMetadataMiddleware
   });
 
 
