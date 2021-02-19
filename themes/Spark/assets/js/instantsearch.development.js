@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.14.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.14.2 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -6,6 +6,8 @@
 }(this, (function () { 'use strict';
 
   function _typeof(obj) {
+    "@babel/helpers - typeof";
+
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function (obj) {
         return typeof obj;
@@ -139,6 +141,19 @@
     return _setPrototypeOf(o, p);
   }
 
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function _objectWithoutPropertiesLoose(source, excluded) {
     if (source == null) return {};
     var target = {};
@@ -191,20 +206,35 @@
     return _assertThisInitialized(self);
   }
 
+  function _createSuper(Derived) {
+    var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+    return function _createSuperInternal() {
+      var Super = _getPrototypeOf(Derived),
+          result;
+
+      if (hasNativeReflectConstruct) {
+        var NewTarget = _getPrototypeOf(this).constructor;
+
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
+      }
+
+      return _possibleConstructorReturn(this, result);
+    };
+  }
+
   function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
 
   function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
   }
 
   function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-      return arr2;
-    }
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
   }
 
   function _arrayWithHoles(arr) {
@@ -212,14 +242,11 @@
   }
 
   function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
   }
 
   function _iterableToArrayLimit(arr, i) {
-    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-      return;
-    }
-
+    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
     var _arr = [];
     var _n = true;
     var _d = false;
@@ -245,12 +272,29 @@
     return _arr;
   }
 
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
   function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance");
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   function clone(value) {
@@ -6351,7 +6395,7 @@
     var compileOptions = arguments.length > 1 ? arguments[1] : undefined;
     var data = arguments.length > 2 ? arguments[2] : undefined;
     return Object.keys(helpers).reduce(function (acc, helperKey) {
-      return _objectSpread2({}, acc, _defineProperty({}, helperKey, function () {
+      return _objectSpread2(_objectSpread2({}, acc), {}, _defineProperty({}, helperKey, function () {
         var _this = this;
 
         return function (text) {
@@ -6388,7 +6432,7 @@
     }
 
     var transformedHelpers = transformHelpersToHogan(helpers, compileOptions, data);
-    return hogan.compile(template, compileOptions).render(_objectSpread2({}, data, {
+    return hogan.compile(template, compileOptions).render(_objectSpread2(_objectSpread2({}, data), {}, {
       helpers: transformedHelpers
     })).replace(/[ \n\r\t\f\xA0]+/g, function (spaces) {
       return spaces.replace(/(^|\xA0+)[^\xA0]+/g, '$1 ');
@@ -6976,7 +7020,7 @@
   function recursiveEscape(input) {
     if (isPlainObject(input) && typeof input.value !== 'string') {
       return Object.keys(input).reduce(function (acc, key) {
-        return _objectSpread2({}, acc, _defineProperty({}, key, recursiveEscape(input[key])));
+        return _objectSpread2(_objectSpread2({}, acc), {}, _defineProperty({}, key, recursiveEscape(input[key])));
       }, {});
     }
 
@@ -6984,7 +7028,7 @@
       return input.map(recursiveEscape);
     }
 
-    return _objectSpread2({}, input, {
+    return _objectSpread2(_objectSpread2({}, input), {}, {
       value: replaceTagsAndEscape(input.value)
     });
   }
@@ -7013,7 +7057,7 @@
   }
   function escapeFacets(facetHits) {
     return facetHits.map(function (h) {
-      return _objectSpread2({}, h, {
+      return _objectSpread2(_objectSpread2({}, h), {}, {
         highlighted: replaceTagsAndEscape(h.highlighted)
       });
     });
@@ -7073,14 +7117,14 @@
       return part.isHighlighted;
     })) {
       return parts.map(function (part) {
-        return _objectSpread2({}, part, {
+        return _objectSpread2(_objectSpread2({}, part), {}, {
           isHighlighted: false
         });
       });
     }
 
     return parts.map(function (part, i) {
-      return _objectSpread2({}, part, {
+      return _objectSpread2(_objectSpread2({}, part), {}, {
         isHighlighted: !getHighlightFromSiblings(parts, i)
       });
     });
@@ -7162,31 +7206,31 @@
 
   var mergeFacetRefinements = function mergeFacetRefinements(left, right) {
     return left.setQueryParameters({
-      facetsRefinements: _objectSpread2({}, left.facetsRefinements, {}, right.facetsRefinements)
+      facetsRefinements: _objectSpread2(_objectSpread2({}, left.facetsRefinements), right.facetsRefinements)
     });
   };
 
   var mergeFacetsExcludes = function mergeFacetsExcludes(left, right) {
     return left.setQueryParameters({
-      facetsExcludes: _objectSpread2({}, left.facetsExcludes, {}, right.facetsExcludes)
+      facetsExcludes: _objectSpread2(_objectSpread2({}, left.facetsExcludes), right.facetsExcludes)
     });
   };
 
   var mergeDisjunctiveFacetsRefinements = function mergeDisjunctiveFacetsRefinements(left, right) {
     return left.setQueryParameters({
-      disjunctiveFacetsRefinements: _objectSpread2({}, left.disjunctiveFacetsRefinements, {}, right.disjunctiveFacetsRefinements)
+      disjunctiveFacetsRefinements: _objectSpread2(_objectSpread2({}, left.disjunctiveFacetsRefinements), right.disjunctiveFacetsRefinements)
     });
   };
 
   var mergeNumericRefinements = function mergeNumericRefinements(left, right) {
     return left.setQueryParameters({
-      numericRefinements: _objectSpread2({}, left.numericRefinements, {}, right.numericRefinements)
+      numericRefinements: _objectSpread2(_objectSpread2({}, left.numericRefinements), right.numericRefinements)
     });
   };
 
   var mergeHierarchicalFacetsRefinements = function mergeHierarchicalFacetsRefinements(left, right) {
     return left.setQueryParameters({
-      hierarchicalFacetsRefinements: _objectSpread2({}, left.hierarchicalFacetsRefinements, {}, right.hierarchicalFacetsRefinements)
+      hierarchicalFacetsRefinements: _objectSpread2(_objectSpread2({}, left.hierarchicalFacetsRefinements), right.hierarchicalFacetsRefinements)
     });
   };
 
@@ -7335,7 +7379,7 @@
 
   var addAbsolutePosition = function addAbsolutePosition(hits, page, hitsPerPage) {
     return hits.map(function (hit, idx) {
-      return _objectSpread2({}, hit, {
+      return _objectSpread2(_objectSpread2({}, hit), {}, {
         __position: hitsPerPage * page + idx + 1
       });
     });
@@ -7347,7 +7391,7 @@
     }
 
     return hits.map(function (hit) {
-      return _objectSpread2({}, hit, {
+      return _objectSpread2(_objectSpread2({}, hit), {}, {
         __queryID: queryID
       });
     });
@@ -8066,7 +8110,7 @@
       getWidgetUiState: function getWidgetUiState(uiState) {
         return localWidgets.filter(isIndexWidget).reduce(function (previousUiState, innerIndex) {
           return innerIndex.getWidgetUiState(previousUiState);
-        }, _objectSpread2({}, uiState, _defineProperty({}, this.getIndexId(), localUiState)));
+        }, _objectSpread2(_objectSpread2({}, uiState), {}, _defineProperty({}, this.getIndexId(), localUiState)));
       },
       getWidgetState: function getWidgetState(uiState) {
          _warning(false, 'The `getWidgetState` method is renamed `getWidgetUiState` and will no longer exist under that name in InstantSearch.js 5.x. Please use `getWidgetUiState` instead.') ;
@@ -8093,10 +8137,10 @@
         instantSearchInstance = _ref7.instantSearchInstance,
         parent = _ref7.parent;
     var parentIndexName = parent ? parent.getIndexId() : instantSearchInstance.mainIndex.getIndexId();
-    instantSearchInstance.renderState = _objectSpread2({}, instantSearchInstance.renderState, _defineProperty({}, parentIndexName, _objectSpread2({}, instantSearchInstance.renderState[parentIndexName], {}, renderState)));
+    instantSearchInstance.renderState = _objectSpread2(_objectSpread2({}, instantSearchInstance.renderState), {}, _defineProperty({}, parentIndexName, _objectSpread2(_objectSpread2({}, instantSearchInstance.renderState[parentIndexName]), renderState)));
   }
 
-  var version$1 = '4.14.0';
+  var version$1 = '4.14.2';
 
   var NAMESPACE = 'ais';
   var component = function component(componentName) {
@@ -8278,7 +8322,7 @@
       highlight: function highlight$1(options, render) {
         try {
           var highlightOptions = JSON.parse(options);
-          return render(highlight(_objectSpread2({}, highlightOptions, {
+          return render(highlight(_objectSpread2(_objectSpread2({}, highlightOptions), {}, {
             hit: this
           })));
         } catch (error) {
@@ -8288,7 +8332,7 @@
       reverseHighlight: function reverseHighlight$1(options, render) {
         try {
           var reverseHighlightOptions = JSON.parse(options);
-          return render(reverseHighlight(_objectSpread2({}, reverseHighlightOptions, {
+          return render(reverseHighlight(_objectSpread2(_objectSpread2({}, reverseHighlightOptions), {}, {
             hit: this
           })));
         } catch (error) {
@@ -8298,7 +8342,7 @@
       snippet: function snippet$1(options, render) {
         try {
           var snippetOptions = JSON.parse(options);
-          return render(snippet(_objectSpread2({}, snippetOptions, {
+          return render(snippet(_objectSpread2(_objectSpread2({}, snippetOptions), {}, {
             hit: this
           })));
         } catch (error) {
@@ -8308,7 +8352,7 @@
       reverseSnippet: function reverseSnippet$1(options, render) {
         try {
           var reverseSnippetOptions = JSON.parse(options);
-          return render(reverseSnippet(_objectSpread2({}, reverseSnippetOptions, {
+          return render(reverseSnippet(_objectSpread2(_objectSpread2({}, reverseSnippetOptions), {}, {
             hit: this
           })));
         } catch (error) {
@@ -8345,13 +8389,13 @@
     return {
       stateToRoute: function stateToRoute(uiState) {
         return Object.keys(uiState).reduce(function (state, indexId) {
-          return _objectSpread2({}, state, _defineProperty({}, indexId, getIndexStateWithoutConfigure(uiState[indexId])));
+          return _objectSpread2(_objectSpread2({}, state), {}, _defineProperty({}, indexId, getIndexStateWithoutConfigure(uiState[indexId])));
         }, {});
       },
       routeToState: function routeToState() {
         var routeState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         return Object.keys(routeState).reduce(function (state, indexId) {
-          return _objectSpread2({}, state, _defineProperty({}, indexId, getIndexStateWithoutConfigure(routeState[indexId])));
+          return _objectSpread2(_objectSpread2({}, state), {}, _defineProperty({}, indexId, getIndexStateWithoutConfigure(routeState[indexId])));
         }, {});
       }
     };
@@ -9182,9 +9226,7 @@
     }
   };
 
-  var BrowserHistory =
-  /*#__PURE__*/
-  function () {
+  var BrowserHistory = /*#__PURE__*/function () {
     /**
      * Initializes a new storage provider that syncs the search state to the URL
      * using web APIs (`window.location.pushState` and `onpopstate` event).
@@ -9337,14 +9379,14 @@
 
       function topLevelCreateURL(nextState) {
         var uiState = Object.keys(nextState).reduce(function (acc, indexId) {
-          return _objectSpread2({}, acc, _defineProperty({}, indexId, nextState[indexId]));
+          return _objectSpread2(_objectSpread2({}, acc), {}, _defineProperty({}, indexId, nextState[indexId]));
         }, instantSearchInstance.mainIndex.getWidgetUiState({}));
         var route = stateMapping.stateToRoute(uiState);
         return router.createURL(route);
       }
 
       instantSearchInstance._createURL = topLevelCreateURL;
-      instantSearchInstance._initialUiState = _objectSpread2({}, instantSearchInstance._initialUiState, {}, stateMapping.routeToState(router.read()));
+      instantSearchInstance._initialUiState = _objectSpread2(_objectSpread2({}, instantSearchInstance._initialUiState), stateMapping.routeToState(router.read()));
       var lastRouteState = undefined;
       return {
         onStateChange: function onStateChange(_ref2) {
@@ -9467,17 +9509,17 @@
    * created using the `instantsearch` factory function.
    * It emits the 'render' event every time a search is done
    */
-  var InstantSearch =
-  /*#__PURE__*/
-  function (_EventEmitter) {
+  var InstantSearch = /*#__PURE__*/function (_EventEmitter) {
     _inherits(InstantSearch, _EventEmitter);
+
+    var _super = _createSuper(InstantSearch);
 
     function InstantSearch(options) {
       var _this;
 
       _classCallCheck(this, InstantSearch);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(InstantSearch).call(this));
+      _this = _super.call(this);
 
       _defineProperty(_assertThisInitialized(_this), "client", void 0);
 
@@ -9972,13 +10014,13 @@
         $$type: 'ais.clearRefinements',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -9986,7 +10028,7 @@
           unmountFn();
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             clearRefinements: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -10087,13 +10129,13 @@
         $$type: 'ais.currentRefinements',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -10101,7 +10143,7 @@
           unmountFn();
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             currentRefinements: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -10365,7 +10407,7 @@
         },
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
@@ -10381,7 +10423,7 @@
               subValue.data = _this2._prepareFacetValues(subValue.data);
             }
 
-            return _objectSpread2({}, subValue, {
+            return _objectSpread2(_objectSpread2({}, subValue), {}, {
               label: label,
               value: value
             });
@@ -10390,7 +10432,7 @@
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
           toggleShowMore = this.createToggleShowMore(renderOptions);
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -10406,8 +10448,8 @@
           return state.removeHierarchicalFacet(hierarchicalFacetName).setQueryParameter('maxValuesPerFacet', undefined);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
-            hierarchicalMenu: _objectSpread2({}, renderState.hierarchicalMenu, _defineProperty({}, hierarchicalFacetName, this.getWidgetRenderState(renderOptions)))
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            hierarchicalMenu: _objectSpread2(_objectSpread2({}, renderState.hierarchicalMenu), {}, _defineProperty({}, hierarchicalFacetName, this.getWidgetRenderState(renderOptions)))
           });
         },
         getWidgetRenderState: function getWidgetRenderState(_ref3) {
@@ -10480,8 +10522,8 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
-            hierarchicalMenu: _objectSpread2({}, uiState.hierarchicalMenu, _defineProperty({}, hierarchicalFacetName, path))
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            hierarchicalMenu: _objectSpread2(_objectSpread2({}, uiState.hierarchicalMenu), {}, _defineProperty({}, hierarchicalFacetName, path))
           });
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref5) {
@@ -10506,7 +10548,7 @@
 
           if (!values) {
             return withMaxValuesPerFacet.setQueryParameters({
-              hierarchicalFacetsRefinements: _objectSpread2({}, withMaxValuesPerFacet.hierarchicalFacetsRefinements, _defineProperty({}, hierarchicalFacetName, []))
+              hierarchicalFacetsRefinements: _objectSpread2(_objectSpread2({}, withMaxValuesPerFacet.hierarchicalFacetsRefinements), {}, _defineProperty({}, hierarchicalFacetName, []))
             });
           }
 
@@ -10538,19 +10580,19 @@
       return {
         $$type: 'ais.hits',
         init: function init(initOptions) {
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: initOptions.instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var renderState = this.getWidgetRenderState(renderOptions);
           renderState.sendEvent('view', renderState.hits);
-          renderFn(_objectSpread2({}, renderState, {
+          renderFn(_objectSpread2(_objectSpread2({}, renderState), {}, {
             instantSearchInstance: renderOptions.instantSearchInstance
           }), false);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             hits: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -10613,7 +10655,7 @@
           }
 
           return state.setQueryParameters(Object.keys(TAG_PLACEHOLDER).reduce(function (acc, key) {
-            return _objectSpread2({}, acc, _defineProperty({}, key, undefined));
+            return _objectSpread2(_objectSpread2({}, acc), {}, _defineProperty({}, key, undefined));
           }, {}));
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(state) {
@@ -10719,7 +10761,7 @@
         hits: hits,
         objectIDs: payload.objectIDs
       });
-      aa(method, _objectSpread2({}, inferredPayload, {}, payload));
+      aa(method, _objectSpread2(_objectSpread2({}, inferredPayload), payload));
     };
   };
   /**
@@ -10737,7 +10779,7 @@
 
         if (results && hits && instantSearchInstance) {
           var insights = wrapInsightsClient(instantSearchInstance.insightsClient, results, hits);
-          return renderFn(_objectSpread2({}, renderOptions, {
+          return renderFn(_objectSpread2(_objectSpread2({}, renderOptions), {}, {
             insights: insights
           }), isFirstRender);
         }
@@ -10861,7 +10903,7 @@
       var normalizeItems = function normalizeItems(_ref2) {
         var hitsPerPage = _ref2.hitsPerPage;
         return items.map(function (item) {
-          return _objectSpread2({}, item, {
+          return _objectSpread2(_objectSpread2({}, item), {}, {
             isRefined: Number(item.value) === Number(hitsPerPage)
           });
         });
@@ -10900,13 +10942,13 @@
             }].concat(_toConsumableArray(items));
           }
 
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -10916,7 +10958,7 @@
           return state.setQueryParameter('hitsPerPage', undefined);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             hitsPerPage: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -10944,7 +10986,7 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
             hitsPerPage: hitsPerPage
           });
         },
@@ -11043,7 +11085,7 @@
         return function () {
           // Using the helper's `overrideStateWithoutTriggeringChangeEvent` method
           // avoid updating the browser URL when the user displays the previous page.
-          helper.overrideStateWithoutTriggeringChangeEvent(_objectSpread2({}, helper.state, {
+          helper.overrideStateWithoutTriggeringChangeEvent(_objectSpread2(_objectSpread2({}, helper.state), {}, {
             page: getFirstReceivedPage(helper.state, cachedHits) - 1
           })).searchWithoutTriggeringOnStateChange();
         };
@@ -11058,7 +11100,7 @@
       return {
         $$type: 'ais.infiniteHits',
         init: function init(initOptions) {
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: initOptions.instantSearchInstance
           }), true);
         },
@@ -11066,12 +11108,12 @@
           var instantSearchInstance = renderOptions.instantSearchInstance;
           var widgetRenderState = this.getWidgetRenderState(renderOptions);
           sendEvent('view', widgetRenderState.currentPageHits);
-          renderFn(_objectSpread2({}, widgetRenderState, {
+          renderFn(_objectSpread2(_objectSpread2({}, widgetRenderState), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             infiniteHits: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -11153,7 +11195,7 @@
           }
 
           return stateWithoutPage.setQueryParameters(Object.keys(TAG_PLACEHOLDER).reduce(function (acc, key) {
-            return _objectSpread2({}, acc, _defineProperty({}, key, undefined));
+            return _objectSpread2(_objectSpread2({}, acc), {}, _defineProperty({}, key, undefined));
           }, {}));
         },
         getWidgetUiState: function getWidgetUiState(uiState, _ref7) {
@@ -11166,7 +11208,7 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
             // The page in the UI state is incremented by one
             // to expose the user value (not `0`).
             page: page + 1
@@ -11336,13 +11378,13 @@
         },
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -11352,7 +11394,7 @@
           return state.removeHierarchicalFacet(attribute).setQueryParameter('maxValuesPerFacet', undefined);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             menu: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -11406,7 +11448,7 @@
                   value = _ref4.path,
                   item = _objectWithoutProperties(_ref4, ["name", "path"]);
 
-              return _objectSpread2({}, item, {
+              return _objectSpread2(_objectSpread2({}, item), {}, {
                 label: label,
                 value: value
               });
@@ -11436,8 +11478,8 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
-            menu: _objectSpread2({}, uiState.menu, _defineProperty({}, attribute, value))
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            menu: _objectSpread2(_objectSpread2({}, uiState.menu), {}, _defineProperty({}, attribute, value))
           });
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref6) {
@@ -11453,7 +11495,7 @@
 
           if (!value) {
             return withMaxValuesPerFacet.setQueryParameters({
-              hierarchicalFacetsRefinements: _objectSpread2({}, withMaxValuesPerFacet.hierarchicalFacetsRefinements, _defineProperty({}, attribute, []))
+              hierarchicalFacetsRefinements: _objectSpread2(_objectSpread2({}, withMaxValuesPerFacet.hierarchicalFacetsRefinements), {}, _defineProperty({}, attribute, []))
             });
           }
 
@@ -11542,7 +11584,7 @@
               label = _ref3.label;
           return {
             label: label,
-            value: window.encodeURI(JSON.stringify({
+            value: encodeURI(JSON.stringify({
               start: start,
               end: end
             })),
@@ -11560,13 +11602,13 @@
         $$type: $$type,
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -11581,8 +11623,8 @@
           var equal = values['='] && values['='][0];
 
           if (equal || equal === 0) {
-            return _objectSpread2({}, uiState, {
-              numericMenu: _objectSpread2({}, uiState.numericMenu, _defineProperty({}, attribute, "".concat(values['='])))
+            return _objectSpread2(_objectSpread2({}, uiState), {}, {
+              numericMenu: _objectSpread2(_objectSpread2({}, uiState.numericMenu), {}, _defineProperty({}, attribute, "".concat(values['='])))
             });
           }
 
@@ -11593,8 +11635,8 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
-            numericMenu: _objectSpread2({}, uiState.numericMenu, _defineProperty({}, attribute, "".concat(min, ":").concat(max)))
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            numericMenu: _objectSpread2(_objectSpread2({}, uiState.numericMenu), {}, _defineProperty({}, attribute, "".concat(min, ":").concat(max)))
           });
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref6) {
@@ -11604,7 +11646,7 @@
 
           if (!value) {
             return withoutRefinements.setQueryParameters({
-              numericRefinements: _objectSpread2({}, withoutRefinements.numericRefinements, _defineProperty({}, attribute, {}))
+              numericRefinements: _objectSpread2(_objectSpread2({}, withoutRefinements.numericRefinements), {}, _defineProperty({}, attribute, {}))
             });
           }
 
@@ -11624,8 +11666,8 @@
           return withMaxRefinement;
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
-            numericMenu: _objectSpread2({}, renderState.numericMenu, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            numericMenu: _objectSpread2(_objectSpread2({}, renderState.numericMenu), {}, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
           });
         },
         getWidgetRenderState: function getWidgetRenderState(_ref7) {
@@ -11701,7 +11743,7 @@
 
   function getRefinedState(state, attribute, facetValue) {
     var resolvedState = state;
-    var refinedOption = JSON.parse(window.decodeURI(facetValue)); // @TODO: why is array / element mixed here & hasRefinements; seems wrong?
+    var refinedOption = JSON.parse(decodeURI(facetValue)); // @TODO: why is array / element mixed here & hasRefinements; seems wrong?
 
     var currentRefinements = resolvedState.getNumericRefinements(attribute);
 
@@ -11756,9 +11798,7 @@
     return currentRefinements[operator] !== undefined && currentRefinements[operator].includes(value);
   }
 
-  var Paginator =
-  /*#__PURE__*/
-  function () {
+  var Paginator = /*#__PURE__*/function () {
     function Paginator(params) {
       _classCallCheck(this, Paginator);
 
@@ -11867,13 +11907,13 @@
         $$type: 'ais.pagination',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -11890,7 +11930,7 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
             page: page + 1
           });
         },
@@ -11939,7 +11979,7 @@
           };
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             pagination: this.getWidgetRenderState(renderOptions)
           });
         }
@@ -12184,18 +12224,18 @@
       return {
         $$type: $$type$1,
         init: function init(initOptions) {
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: initOptions.instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: renderOptions.instantSearchInstance
           }), false);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
-            range: _objectSpread2({}, renderState.range, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            range: _objectSpread2(_objectSpread2({}, renderState.range), {}, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
           });
         },
         getWidgetRenderState: function getWidgetRenderState(_ref13) {
@@ -12234,7 +12274,7 @@
             format: rangeFormatter,
             range: currentRange,
             sendEvent: createSendEvent(instantSearchInstance, helper, currentRange),
-            widgetParams: _objectSpread2({}, widgetParams, {
+            widgetParams: _objectSpread2(_objectSpread2({}, widgetParams), {}, {
               precision: precision
             }),
             start: start
@@ -12258,14 +12298,14 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
-            range: _objectSpread2({}, uiState.range, _defineProperty({}, attribute, "".concat(min, ":").concat(max)))
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            range: _objectSpread2(_objectSpread2({}, uiState.range), {}, _defineProperty({}, attribute, "".concat(min, ":").concat(max)))
           });
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref16) {
           var uiState = _ref16.uiState;
           var widgetSearchParameters = searchParameters.addDisjunctiveFacet(attribute).setQueryParameters({
-            numericRefinements: _objectSpread2({}, searchParameters.numericRefinements, _defineProperty({}, attribute, {}))
+            numericRefinements: _objectSpread2(_objectSpread2({}, searchParameters.numericRefinements), {}, _defineProperty({}, attribute, {}))
           });
 
           if (isFiniteNumber(minBound)) {
@@ -12446,7 +12486,7 @@
         var label = _ref.name,
             item = _objectWithoutProperties(_ref, ["name"]);
 
-        return _objectSpread2({}, item, {
+        return _objectSpread2(_objectSpread2({}, item), {}, {
           label: label,
           value: label,
           highlighted: label
@@ -12475,9 +12515,9 @@
 
             if (query === '' && lastItemsFromMainSearch) {
               // render with previous data from the helper.
-              renderFn(_objectSpread2({}, _this.getWidgetRenderState(_objectSpread2({}, renderOptions, {
+              renderFn(_objectSpread2(_objectSpread2({}, _this.getWidgetRenderState(_objectSpread2(_objectSpread2({}, renderOptions), {}, {
                 results: lastResultsFromMainSearch
-              })), {
+              }))), {}, {
                 instantSearchInstance: instantSearchInstance
               }));
             } else {
@@ -12494,15 +12534,15 @@
                   var value = _ref2.value,
                       item = _objectWithoutProperties(_ref2, ["value"]);
 
-                  return _objectSpread2({}, item, {
+                  return _objectSpread2(_objectSpread2({}, item), {}, {
                     value: value,
                     label: value
                   });
                 }));
                 var canToggleShowMore = _this.isShowingMore && lastItemsFromMainSearch.length > limit;
-                renderFn(_objectSpread2({}, _this.getWidgetRenderState(_objectSpread2({}, renderOptions, {
+                renderFn(_objectSpread2(_objectSpread2({}, _this.getWidgetRenderState(_objectSpread2(_objectSpread2({}, renderOptions), {}, {
                   results: lastResultsFromMainSearch
-                })), {
+                }))), {}, {
                   items: normalizedFacetValues,
                   canToggleShowMore: canToggleShowMore,
                   canRefine: true,
@@ -12539,18 +12579,18 @@
           return _getLimit(this.isShowingMore);
         },
         init: function init(initOptions) {
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: initOptions.instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: renderOptions.instantSearchInstance
           }), false);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
-            refinementList: _objectSpread2({}, renderState.refinementList, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            refinementList: _objectSpread2(_objectSpread2({}, renderState.refinementList), {}, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
           });
         },
         getWidgetRenderState: function getWidgetRenderState(renderOptions) {
@@ -12592,7 +12632,7 @@
                 var value = _ref3.value,
                     item = _objectWithoutProperties(_ref3, ["value"]);
 
-                return _objectSpread2({}, item, {
+                return _objectSpread2(_objectSpread2({}, item), {}, {
                   value: value,
                   label: value
                 });
@@ -12658,8 +12698,8 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
-            refinementList: _objectSpread2({}, uiState.refinementList, _defineProperty({}, attribute, values))
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            refinementList: _objectSpread2(_objectSpread2({}, uiState.refinementList), {}, _defineProperty({}, attribute, values))
           });
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref6) {
@@ -12674,7 +12714,7 @@
 
           if (!values) {
             var key = isDisjunctive ? 'disjunctiveFacetsRefinements' : 'facetsRefinements';
-            return withMaxValuesPerFacet.setQueryParameters(_defineProperty({}, key, _objectSpread2({}, withMaxValuesPerFacet[key], _defineProperty({}, attribute, []))));
+            return withMaxValuesPerFacet.setQueryParameters(_defineProperty({}, key, _objectSpread2(_objectSpread2({}, withMaxValuesPerFacet[key]), {}, _defineProperty({}, attribute, []))));
           }
 
           return values.reduce(function (parameters, value) {
@@ -12768,13 +12808,13 @@
         $$type: 'ais.searchBox',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -12784,7 +12824,7 @@
           return state.setQueryParameter('query', undefined);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             searchBox: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -12826,7 +12866,7 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
             query: query
           });
         },
@@ -12945,13 +12985,13 @@
             return item.value === currentIndex;
           });
            _warning(isCurrentIndexInItems, "The index named \"".concat(currentIndex, "\" is not listed in the `items` of `sortBy`.")) ;
-          renderFn(_objectSpread2({}, widgetRenderState, {
+          renderFn(_objectSpread2(_objectSpread2({}, widgetRenderState), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -12961,7 +13001,7 @@
           return state.setIndex(this.initialIndex);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             sortBy: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -12997,7 +13037,7 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
             sortBy: currentIndex
           });
         },
@@ -13164,7 +13204,7 @@
 
         var values = state.getNumericRefinements(attribute);
 
-        if (!((_values$ = values['>=']) === null || _values$ === void 0 ? void 0 : _values$.length)) {
+        if (!((_values$ = values['>=']) !== null && _values$ !== void 0 && _values$.length)) {
           return undefined;
         }
 
@@ -13233,19 +13273,19 @@
         $$type: $$type$2,
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
-            ratingMenu: _objectSpread2({}, renderState.ratingMenu, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            ratingMenu: _objectSpread2(_objectSpread2({}, renderState.ratingMenu), {}, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
           });
         },
         getWidgetRenderState: function getWidgetRenderState(_ref4) {
@@ -13343,8 +13383,8 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
-            ratingMenu: _objectSpread2({}, uiState.ratingMenu, _defineProperty({}, attribute, value))
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            ratingMenu: _objectSpread2(_objectSpread2({}, uiState.ratingMenu), {}, _defineProperty({}, attribute, value))
           });
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref7) {
@@ -13355,7 +13395,7 @@
 
           if (!value) {
             return withDisjunctiveFacet.setQueryParameters({
-              numericRefinements: _objectSpread2({}, withDisjunctiveFacet.numericRefinements, _defineProperty({}, attribute, []))
+              numericRefinements: _objectSpread2(_objectSpread2({}, withDisjunctiveFacet.numericRefinements), {}, _defineProperty({}, attribute, []))
             });
           }
 
@@ -13421,13 +13461,13 @@
         $$type: 'ais.stats',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -13435,7 +13475,7 @@
           unmountFn();
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             stats: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -13677,13 +13717,13 @@
         $$type: $$type$3,
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -13693,7 +13733,7 @@
           return state.removeDisjunctiveFacet(attribute);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             toggleRefinement: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -13803,8 +13843,8 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
-            toggle: _objectSpread2({}, uiState.toggle, _defineProperty({}, attribute, isRefined))
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            toggle: _objectSpread2(_objectSpread2({}, uiState.toggle), {}, _defineProperty({}, attribute, isRefined))
           });
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref10) {
@@ -13835,7 +13875,7 @@
 
 
           return withFacetConfiguration.setQueryParameters({
-            disjunctiveFacetsRefinements: _objectSpread2({}, searchParameters.disjunctiveFacetsRefinements, _defineProperty({}, attribute, []))
+            disjunctiveFacetsRefinements: _objectSpread2(_objectSpread2({}, searchParameters.disjunctiveFacetsRefinements), {}, _defineProperty({}, attribute, []))
           });
         }
       };
@@ -13873,12 +13913,12 @@
       return {
         $$type: 'ais.breadcrumb',
         init: function init(initOptions) {
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: initOptions.instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: renderOptions.instantSearchInstance
           }), false);
         },
@@ -13886,8 +13926,8 @@
           unmountFn();
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
-            breadcrumb: _objectSpread2({}, renderState.breadcrumb, _defineProperty({}, hierarchicalFacetName, this.getWidgetRenderState(renderOptions)))
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            breadcrumb: _objectSpread2(_objectSpread2({}, renderState.breadcrumb), {}, _defineProperty({}, hierarchicalFacetName, this.getWidgetRenderState(renderOptions)))
           });
         },
         getWidgetRenderState: function getWidgetRenderState(_ref2) {
@@ -14181,7 +14221,7 @@
           var isFirstRendering = true;
           widgetState.internalToggleRefineOnMapMove = createInternalToggleRefinementOnMapMove(noop, initArgs);
           widgetState.internalSetMapMoveSinceLastRefine = createInternalSetMapMoveSinceLastRefine(noop, initArgs);
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initArgs), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initArgs)), {}, {
             instantSearchInstance: instantSearchInstance
           }), isFirstRendering);
         },
@@ -14205,7 +14245,7 @@
           widgetState.internalSetMapMoveSinceLastRefine = createInternalSetMapMoveSinceLastRefine(this.render.bind(this), renderArgs);
           var widgetRenderState = this.getWidgetRenderState(renderArgs);
           sendEvent('view', widgetRenderState.items);
-          renderFn(_objectSpread2({}, widgetRenderState, {
+          renderFn(_objectSpread2(_objectSpread2({}, widgetRenderState), {}, {
             instantSearchInstance: instantSearchInstance
           }), isFirstRendering);
         },
@@ -14242,7 +14282,7 @@
           };
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             geoSearch: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -14259,7 +14299,7 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
             geoSearch: {
               boundingBox: boundingBox
             }
@@ -14300,18 +14340,18 @@
         $$type: 'ais.poweredBy',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             poweredBy: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -14342,7 +14382,7 @@
     // the state. The function `setQueryParameters` omits the values that
     // are `undefined` on the next state.
     return state.setQueryParameters(Object.keys(widgetParams.searchParameters).reduce(function (acc, key) {
-      return _objectSpread2({}, acc, _defineProperty({}, key, undefined));
+      return _objectSpread2(_objectSpread2({}, acc), {}, _defineProperty({}, key, undefined));
     }, {}));
   }
 
@@ -14372,13 +14412,13 @@
         $$type: 'ais.configure',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -14391,9 +14431,9 @@
           var _renderState$configur;
 
           var widgetRenderState = this.getWidgetRenderState(renderOptions);
-          return _objectSpread2({}, renderState, {
-            configure: _objectSpread2({}, widgetRenderState, {
-              widgetParams: _objectSpread2({}, widgetRenderState.widgetParams, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            configure: _objectSpread2(_objectSpread2({}, widgetRenderState), {}, {
+              widgetParams: _objectSpread2(_objectSpread2({}, widgetRenderState.widgetParams), {}, {
                 searchParameters: merge$1(new algoliasearchHelper_1.SearchParameters((_renderState$configur = renderState.configure) === null || _renderState$configur === void 0 ? void 0 : _renderState$configur.widgetParams.searchParameters), new algoliasearchHelper_1.SearchParameters(widgetRenderState.widgetParams.searchParameters)).getQueryParams()
               })
             })
@@ -14413,11 +14453,11 @@
         },
         getWidgetSearchParameters: function getWidgetSearchParameters(state, _ref3) {
           var uiState = _ref3.uiState;
-          return merge$1(state, new algoliasearchHelper_1.SearchParameters(_objectSpread2({}, uiState.configure, {}, widgetParams.searchParameters)));
+          return merge$1(state, new algoliasearchHelper_1.SearchParameters(_objectSpread2(_objectSpread2({}, uiState.configure), widgetParams.searchParameters)));
         },
         getWidgetUiState: function getWidgetUiState(uiState) {
-          return _objectSpread2({}, uiState, {
-            configure: _objectSpread2({}, uiState.configure, {}, widgetParams.searchParameters)
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            configure: _objectSpread2(_objectSpread2({}, uiState.configure), widgetParams.searchParameters)
           });
         }
       };
@@ -14488,9 +14528,9 @@
       })));
 
       var makeWidget = connectConfigure(renderFn, unmountFn);
-      return _objectSpread2({}, makeWidget({
+      return _objectSpread2(_objectSpread2({}, makeWidget({
         searchParameters: searchParameters
-      }), {
+      })), {}, {
         $$type: 'ais.configureRelatedItems'
       });
     };
@@ -14518,7 +14558,7 @@
         $$type: 'ais.autocomplete',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
@@ -14530,12 +14570,12 @@
                 hits = _ref3.hits;
             sendEvent('view', hits);
           });
-          renderFn(_objectSpread2({}, renderState, {
+          renderFn(_objectSpread2(_objectSpread2({}, renderState), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             autocomplete: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -14584,7 +14624,7 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
             query: query
           });
         },
@@ -14598,7 +14638,7 @@
             return searchParameters.setQueryParameters(parameters);
           }
 
-          return searchParameters.setQueryParameters(_objectSpread2({}, parameters, {}, TAG_PLACEHOLDER));
+          return searchParameters.setQueryParameters(_objectSpread2(_objectSpread2({}, parameters), TAG_PLACEHOLDER));
         },
         dispose: function dispose(_ref7) {
           var state = _ref7.state;
@@ -14610,7 +14650,7 @@
           }
 
           return stateWithoutQuery.setQueryParameters(Object.keys(TAG_PLACEHOLDER).reduce(function (acc, key) {
-            return _objectSpread2({}, acc, _defineProperty({}, key, undefined));
+            return _objectSpread2(_objectSpread2({}, acc), {}, _defineProperty({}, key, undefined));
           }, {}));
         }
       };
@@ -14674,7 +14714,7 @@
     var ruleContexts = transformRuleContexts(nextRuleContexts).slice(0, 10);
 
     if (!isEqual(previousRuleContexts, ruleContexts)) {
-      helper.overrideStateWithoutTriggeringChangeEvent(_objectSpread2({}, sharedHelperState, {
+      helper.overrideStateWithoutTriggeringChangeEvent(_objectSpread2(_objectSpread2({}, sharedHelperState), {}, {
         ruleContexts: ruleContexts
       }));
     }
@@ -14736,14 +14776,14 @@
             helper.on('change', onHelperChange);
           }
 
-          _render(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          _render(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
 
-          _render(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          _render(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
@@ -14761,7 +14801,7 @@
           };
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             queryRules: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -14810,7 +14850,7 @@
 
     var setState = function setState() {
       var newState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      state = _objectSpread2({}, state, {}, newState);
+      state = _objectSpread2(_objectSpread2({}, state), newState);
       onStateChange();
     };
 
@@ -14931,18 +14971,18 @@
         $$type: 'ais.voiceSearch',
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(initOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
         },
         render: function render(renderOptions) {
           var instantSearchInstance = renderOptions.instantSearchInstance;
-          renderFn(_objectSpread2({}, this.getWidgetRenderState(renderOptions), {
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
             instantSearchInstance: instantSearchInstance
           }), false);
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
-          return _objectSpread2({}, renderState, {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
             voiceSearch: this.getWidgetRenderState(renderOptions)
           });
         },
@@ -14982,7 +15022,7 @@
                 return _this._refine(query);
               },
               onStateChange: function onStateChange() {
-                renderFn(_objectSpread2({}, _this.getWidgetRenderState(renderOptions), {
+                renderFn(_objectSpread2(_objectSpread2({}, _this.getWidgetRenderState(renderOptions)), {}, {
                   instantSearchInstance: instantSearchInstance
                 }), false);
               }
@@ -15048,7 +15088,7 @@
             return uiState;
           }
 
-          return _objectSpread2({}, uiState, {
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
             query: query
           });
         },
@@ -15141,15 +15181,15 @@
   }());
   });
 
-  var Template =
-  /*#__PURE__*/
-  function (_Component) {
+  var Template = /*#__PURE__*/function (_Component) {
     _inherits(Template, _Component);
+
+    var _super = _createSuper(Template);
 
     function Template() {
       _classCallCheck(this, Template);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(Template).apply(this, arguments));
+      return _super.apply(this, arguments);
     }
 
     _createClass(Template, [{
@@ -15290,11 +15330,11 @@
     var makeWidget = connectClearRefinements(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       includedAttributes: includedAttributes,
       excludedAttributes: excludedAttributes,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.clearRefinements'
     });
   };
@@ -15308,16 +15348,16 @@
     // This is a renderless widget that falls back to the connector's
     // noop render and unmount functions.
     var makeWidget = connectConfigure(noop);
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       searchParameters: widgetParams
-    }), {
+    })), {}, {
       $$widgetType: 'ais.configure'
     });
   };
 
   var configureRelatedItems = function configureRelatedItems(widgetParams) {
     var makeWidget = connectConfigureRelatedItems(noop);
-    return _objectSpread2({}, makeWidget(widgetParams), {
+    return _objectSpread2(_objectSpread2({}, makeWidget(widgetParams)), {}, {
       $$widgetType: 'ais.configureRelatedItems'
     });
   };
@@ -15431,13 +15471,13 @@
     var makeWidget = connectCurrentRefinements(renderer$1, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       container: containerNode,
       cssClasses: cssClasses,
       includedAttributes: includedAttributes,
       excludedAttributes: excludedAttributes,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.currentRefinements'
     });
   };
@@ -15732,10 +15772,10 @@
 
   // eslint-disable-next-line no-undef
   var createHTMLMarker = function createHTMLMarker(googleReference) {
-    var HTMLMarker =
-    /*#__PURE__*/
-    function (_googleReference$maps) {
+    var HTMLMarker = /*#__PURE__*/function (_googleReference$maps) {
       _inherits(HTMLMarker, _googleReference$maps);
+
+      var _super = _createSuper(HTMLMarker);
 
       function HTMLMarker(_ref) {
         var _this;
@@ -15753,7 +15793,7 @@
 
         _classCallCheck(this, HTMLMarker);
 
-        _this = _possibleConstructorReturn(this, _getPrototypeOf(HTMLMarker).call(this));
+        _this = _super.call(this);
 
         _defineProperty(_assertThisInitialized(_this), "__id", void 0);
 
@@ -16021,19 +16061,19 @@
       }), userCssClasses.reset)
     };
 
-    var templates = _objectSpread2({}, defaultTemplates$1, {}, userTemplates);
+    var templates = _objectSpread2(_objectSpread2({}, defaultTemplates$1), userTemplates);
 
-    var builtInMarker = _objectSpread2({}, defaultBuiltInMarker, {}, userBuiltInMarker);
+    var builtInMarker = _objectSpread2(_objectSpread2({}, defaultBuiltInMarker), userBuiltInMarker);
 
     var isCustomHTMLMarker = Boolean(userCustomHTMLMarker) || Boolean(userTemplates.HTMLMarker);
 
-    var customHTMLMarker = isCustomHTMLMarker && _objectSpread2({}, defaultCustomHTMLMarker, {}, userCustomHTMLMarker);
+    var customHTMLMarker = isCustomHTMLMarker && _objectSpread2(_objectSpread2({}, defaultCustomHTMLMarker), userCustomHTMLMarker);
 
     var createBuiltInMarker = function createBuiltInMarker(_ref2) {
       var item = _ref2.item,
           rest = _objectWithoutProperties(_ref2, ["item"]);
 
-      return new googleReference.maps.Marker(_objectSpread2({}, builtInMarker.createOptions(item), {}, rest, {
+      return new googleReference.maps.Marker(_objectSpread2(_objectSpread2(_objectSpread2({}, builtInMarker.createOptions(item)), rest), {}, {
         __id: item.objectID,
         position: item._geoloc
       }));
@@ -16045,7 +16085,7 @@
       var item = _ref3.item,
           rest = _objectWithoutProperties(_ref3, ["item"]);
 
-      return new HTMLMarker(_objectSpread2({}, customHTMLMarker.createOptions(item), {}, rest, {
+      return new HTMLMarker(_objectSpread2(_objectSpread2(_objectSpread2({}, customHTMLMarker.createOptions(item)), rest), {}, {
         __id: item.objectID,
         position: item._geoloc,
         className: classnames(suit$6({
@@ -16065,7 +16105,7 @@
     var makeWidget = connectGeoSearch(renderer$2, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget(_objectSpread2({}, otherWidgetParams, {
+    return _objectSpread2(_objectSpread2({}, makeWidget(_objectSpread2(_objectSpread2({}, otherWidgetParams), {}, {
       renderState: {},
       container: containerNode,
       googleReference: googleReference,
@@ -16078,7 +16118,7 @@
       enableRefine: enableRefine,
       enableClearMapRefinement: enableClearMapRefinement,
       enableRefineControl: enableRefineControl
-    })), {
+    }))), {}, {
       $$widgetType: 'ais.geoSearch'
     });
   };
@@ -16107,14 +16147,12 @@
     })), subItems);
   }
 
-  var SearchBox =
-  /*#__PURE__*/
-  function (_Component) {
+  var SearchBox = /*#__PURE__*/function (_Component) {
     _inherits(SearchBox, _Component);
 
-    function SearchBox() {
-      var _getPrototypeOf2;
+    var _super = _createSuper(SearchBox);
 
+    function SearchBox() {
       var _this;
 
       _classCallCheck(this, SearchBox);
@@ -16123,7 +16161,7 @@
         args[_key] = arguments[_key];
       }
 
-      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(SearchBox)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      _this = _super.call.apply(_super, [this].concat(args));
 
       _defineProperty(_assertThisInitialized(_this), "state", {
         query: _this.props.query,
@@ -16200,7 +16238,7 @@
 
     _createClass(SearchBox, [{
       key: "resetInput",
-
+      value:
       /**
        * This public method is used in the RefinementList SFFV search box
        * to reset the input state when an item is selected.
@@ -16208,7 +16246,7 @@
        * @see RefinementList#componentWillReceiveProps
        * @return {undefined}
        */
-      value: function resetInput() {
+      function resetInput() {
         this.setState({
           query: ''
         });
@@ -16327,17 +16365,17 @@
     refine: noop
   });
 
-  var RefinementList$1 =
-  /*#__PURE__*/
-  function (_Component) {
+  var RefinementList$1 = /*#__PURE__*/function (_Component) {
     _inherits(RefinementList, _Component);
+
+    var _super = _createSuper(RefinementList);
 
     function RefinementList(props) {
       var _this;
 
       _classCallCheck(this, RefinementList);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(RefinementList).call(this, props));
+      _this = _super.call(this, props);
       _this.handleItemClick = _this.handleItemClick.bind(_assertThisInitialized(_this));
       return _this;
     }
@@ -16378,7 +16416,7 @@
 
         var url = this.props.createURL(facetValue.value);
 
-        var templateData = _objectSpread2({}, facetValue, {
+        var templateData = _objectSpread2(_objectSpread2({}, facetValue), {}, {
           url: url,
           attribute: this.props.attribute,
           cssClasses: this.props.cssClasses,
@@ -16780,7 +16818,7 @@
     var makeWidget = connectHierarchicalMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attributes: attributes,
       separator: separator,
       rootPath: rootPath,
@@ -16790,7 +16828,7 @@
       showMoreLimit: showMoreLimit,
       sortBy: sortBy,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.hierarchicalMenu'
     });
   }
@@ -16824,7 +16862,7 @@
           className: cssClasses.item
         },
         key: hit.objectID,
-        data: _objectSpread2({}, hit, {
+        data: _objectSpread2(_objectSpread2({}, hit), {}, {
           __hitIndex: position
         }),
         bindEvent: bindEvent
@@ -16923,10 +16961,10 @@
     var makeWidget = withInsights(connectHits)(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       escapeHTML: escapeHTML,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.hits'
     });
   };
@@ -17012,10 +17050,10 @@
     var makeWidget = connectHitsPerPage(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       items: items,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.hitsPerPage'
     });
   };
@@ -17062,7 +17100,7 @@
           className: cssClasses.item
         },
         key: hit.objectID,
-        data: _objectSpread2({}, hit, {
+        data: _objectSpread2(_objectSpread2({}, hit), {}, {
           __hitIndex: position
         }),
         bindEvent: bindEvent
@@ -17191,12 +17229,12 @@
     var makeWidget = withInsights(connectInfiniteHits)(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       escapeHTML: escapeHTML,
       transformItems: transformItems,
       showPrevious: showPrevious,
       cache: cache
-    }), {
+    })), {}, {
       $$widgetType: 'ais.infiniteHits'
     });
   };
@@ -17237,7 +17275,7 @@
       }
 
       var facetValues = items.map(function (facetValue) {
-        return _objectSpread2({}, facetValue, {
+        return _objectSpread2(_objectSpread2({}, facetValue), {}, {
           url: createURL(facetValue.name)
         });
       });
@@ -17374,14 +17412,14 @@
     var makeWidget = connectMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attribute: attribute,
       limit: limit,
       showMore: showMore,
       showMoreLimit: showMoreLimit,
       sortBy: sortBy,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.menu'
     });
   }
@@ -17417,7 +17455,7 @@
    */
 
   function transformTemplates(templates) {
-    var allTemplates = _objectSpread2({}, templates, {
+    var allTemplates = _objectSpread2(_objectSpread2({}, templates), {}, {
       submit: templates.searchableSubmit,
       reset: templates.searchableReset,
       loadingIndicator: templates.searchableLoadingIndicator
@@ -17599,7 +17637,7 @@
 
     var escapeFacetValues = searchable ? Boolean(searchableEscapeFacetValues) : false;
     var containerNode = getContainerNode(container);
-    var templates = transformTemplates(_objectSpread2({}, defaultTemplates$7, {}, userTemplates));
+    var templates = transformTemplates(_objectSpread2(_objectSpread2({}, defaultTemplates$7), userTemplates));
     var cssClasses = {
       root: classnames(suit$c(), userCssClasses.root),
       noRefinementRoot: classnames(suit$c({
@@ -17681,7 +17719,7 @@
     var makeWidget = connectRefinementList(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attribute: attribute,
       operator: operator,
       limit: limit,
@@ -17690,7 +17728,7 @@
       sortBy: sortBy,
       escapeFacetValues: escapeFacetValues,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.refinementList'
     });
   }
@@ -17788,11 +17826,11 @@
     var makeWidget = connectNumericMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attribute: attribute,
       items: items,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.numericMenu'
     });
   };
@@ -17834,14 +17872,12 @@
     }));
   }
 
-  var Pagination =
-  /*#__PURE__*/
-  function (_Component) {
+  var Pagination = /*#__PURE__*/function (_Component) {
     _inherits(Pagination, _Component);
 
-    function Pagination() {
-      var _getPrototypeOf2;
+    var _super = _createSuper(Pagination);
 
+    function Pagination() {
       var _this;
 
       _classCallCheck(this, Pagination);
@@ -17850,7 +17886,7 @@
         args[_key] = arguments[_key];
       }
 
-      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Pagination)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      _this = _super.call.apply(_super, [this].concat(args));
 
       _defineProperty(_assertThisInitialized(_this), "handleClick", function (pageNumber, event) {
         if (isSpecialClick(event)) {
@@ -18199,7 +18235,7 @@
       }), userCssClasses.link)
     };
 
-    var templates = _objectSpread2({}, defaultTemplates$9, {}, userTemplates);
+    var templates = _objectSpread2(_objectSpread2({}, defaultTemplates$9), userTemplates);
 
     var specializedRenderer = renderer$a({
       containerNode: containerNode,
@@ -18215,25 +18251,25 @@
     var makeWidget = connectPagination(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       totalPages: totalPages,
       padding: padding
-    }), {
+    })), {}, {
       $$widgetType: 'ais.pagination'
     });
   }
 
-  var RangeInput =
-  /*#__PURE__*/
-  function (_Component) {
+  var RangeInput = /*#__PURE__*/function (_Component) {
     _inherits(RangeInput, _Component);
+
+    var _super = _createSuper(RangeInput);
 
     function RangeInput(props) {
       var _this;
 
       _classCallCheck(this, RangeInput);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(RangeInput).call(this, props));
+      _this = _super.call(this, props);
 
       _defineProperty(_assertThisInitialized(_this), "onInput", function (name) {
         return function (event) {
@@ -18495,12 +18531,12 @@
     var makeWidget = connectRange(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attribute: attribute,
       min: min,
       max: max,
       precision: precision
-    }), {
+    })), {}, {
       $$type: 'ais.rangeInput',
       $$widgetType: 'ais.rangeInput'
     });
@@ -18656,7 +18692,7 @@
       containerNode: containerNode,
       cssClasses: cssClasses,
       placeholder: placeholder,
-      templates: _objectSpread2({}, defaultTemplates$6, {}, templates),
+      templates: _objectSpread2(_objectSpread2({}, defaultTemplates$6), templates),
       autofocus: autofocus,
       searchAsYouType: searchAsYouType,
       showReset: showReset,
@@ -18666,9 +18702,9 @@
     var makeWidget = connectSearchBox(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       queryHook: queryHook
-    }), {
+    })), {}, {
       $$widgetType: 'ais.searchBox'
     });
   }
@@ -18717,15 +18753,15 @@
     ev.preventDefault();
   }
 
-  var Button =
-  /*#__PURE__*/
-  function (_Component) {
+  var Button = /*#__PURE__*/function (_Component) {
     _inherits(Button, _Component);
+
+    var _super = _createSuper(Button);
 
     function Button() {
       _classCallCheck(this, Button);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(Button).apply(this, arguments));
+      return _super.apply(this, arguments);
     }
 
     _createClass(Button, [{
@@ -18740,23 +18776,21 @@
     return Button;
   }(m);
 
-  var _ref2 =
-  /*#__PURE__*/
-  h("div", {
+  var _ref2 = h("div", {
     className: "rheostat-background"
   });
 
-  var Rheostat =
-  /*#__PURE__*/
-  function (_Component2) {
+  var Rheostat = /*#__PURE__*/function (_Component2) {
     _inherits(Rheostat, _Component2);
+
+    var _super2 = _createSuper(Rheostat);
 
     function Rheostat(props) {
       var _this;
 
       _classCallCheck(this, Rheostat);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(Rheostat).call(this, props));
+      _this = _super2.call(this, props);
 
       _defineProperty(_assertThisInitialized(_this), "state", {
         className: getClassName(_this.props),
@@ -19378,7 +19412,7 @@
     var value = Array.isArray(children) ? children[0] : children;
     var pitValue = Math.round(parseInt(value, 10) * 100) / 100;
     return h("div", {
-      style: _objectSpread2({}, style, {
+      style: _objectSpread2(_objectSpread2({}, style), {}, {
         marginLeft: positionValue === 100 ? '-2px' : 0
       }),
       className: classnames('rheostat-marker', 'rheostat-marker-horizontal', {
@@ -19389,14 +19423,12 @@
     }, pitValue));
   };
 
-  var Slider =
-  /*#__PURE__*/
-  function (_Component) {
+  var Slider = /*#__PURE__*/function (_Component) {
     _inherits(Slider, _Component);
 
-    function Slider() {
-      var _getPrototypeOf2;
+    var _super = _createSuper(Slider);
 
+    function Slider() {
       var _this;
 
       _classCallCheck(this, Slider);
@@ -19405,7 +19437,7 @@
         args[_key] = arguments[_key];
       }
 
-      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Slider)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      _this = _super.call.apply(_super, [this].concat(args));
 
       _defineProperty(_assertThisInitialized(_this), "handleChange", function (_ref) {
         var values = _ref.values;
@@ -19437,9 +19469,14 @@
     }
 
     _createClass(Slider, [{
+      key: "isDisabled",
+      get: function get() {
+        return this.props.min >= this.props.max;
+      }
+    }, {
       key: "computeDefaultPitPoints",
-      // creates an array number where to display a pit point on the slider
-      value: function computeDefaultPitPoints(_ref2) {
+      value: // creates an array number where to display a pit point on the slider
+      function computeDefaultPitPoints(_ref2) {
         var min = _ref2.min,
             max = _ref2.max;
         var totalLength = max - min;
@@ -19506,11 +19543,6 @@
           values: this.isDisabled ? [min, max] : values,
           disabled: this.isDisabled
         }));
-      }
-    }, {
-      key: "isDisabled",
-      get: function get() {
-        return this.props.min >= this.props.max;
       }
     }]);
 
@@ -19661,12 +19693,12 @@
     var makeWidget = connectRange(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attribute: attribute,
       min: min,
       max: max,
       precision: precision
-    }), {
+    })), {}, {
       $$type: 'ais.rangeSlider',
       $$widgetType: 'ais.rangeSlider'
     });
@@ -19773,10 +19805,10 @@
     var makeWidget = connectSortBy(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       items: items,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.sortBy'
     });
   }
@@ -19790,15 +19822,11 @@
   });
   var suit$j = component('RatingMenu');
 
-  var _ref3 =
-  /*#__PURE__*/
-  h("path", {
+  var _ref3 = h("path", {
     d: "M12 .288l2.833 8.718h9.167l-7.417 5.389 2.833 8.718-7.416-5.388-7.417 5.388 2.833-8.718-7.416-5.389h9.167z"
   });
 
-  var _ref4 =
-  /*#__PURE__*/
-  h("path", {
+  var _ref4 = h("path", {
     d: "M12 6.76l1.379 4.246h4.465l-3.612 2.625 1.379 4.246-3.611-2.625-3.612 2.625 1.379-4.246-3.612-2.625h4.465l1.38-4.246zm0-6.472l-2.833 8.718h-9.167l7.416 5.389-2.833 8.718 7.417-5.388 7.416 5.388-2.833-8.718 7.417-5.389h-9.167l-2.833-8.718z"
   });
 
@@ -19967,10 +19995,10 @@
     var makeWidget = connectRatingMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attribute: attribute,
       max: max
-    }), {
+    })), {}, {
       $$widgetType: 'ais.ratingMenu'
     });
   }
@@ -20130,7 +20158,7 @@
     var makeWidget = connectStats(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget(), {
+    return _objectSpread2(_objectSpread2({}, makeWidget()), {}, {
       $$widgetType: 'ais.stats'
     });
   }
@@ -20302,11 +20330,11 @@
     var makeWidget = connectToggleRefinement(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attribute: attribute,
       on: on,
       off: off
-    }), {
+    })), {}, {
       $$widgetType: 'ais.toggleRefinement'
     });
   }
@@ -20391,7 +20419,7 @@
       }
 
       var serializedParams = [];
-      var serializedRefinements = serializeRefinements(_objectSpread2({}, analyticsState.state.disjunctiveFacetsRefinements, {}, analyticsState.state.facetsRefinements, {}, analyticsState.state.hierarchicalFacetsRefinements));
+      var serializedRefinements = serializeRefinements(_objectSpread2(_objectSpread2(_objectSpread2({}, analyticsState.state.disjunctiveFacetsRefinements), analyticsState.state.facetsRefinements), analyticsState.state.hierarchicalFacetsRefinements));
       var serializedNumericRefinements = serializeNumericRefinements(analyticsState.state.numericRefinements);
 
       if (serializedRefinements !== '') {
@@ -20468,7 +20496,7 @@
         }
       },
       getRenderState: function getRenderState(renderState, renderOptions) {
-        return _objectSpread2({}, renderState, {
+        return _objectSpread2(_objectSpread2({}, renderState), {}, {
           analytics: this.getWidgetRenderState(renderOptions)
         });
       },
@@ -20616,12 +20644,12 @@
     var makeWidget = connectBreadcrumb(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attributes: attributes,
       separator: separator,
       rootPath: rootPath,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.breadcrumb'
     });
   };
@@ -20792,28 +20820,24 @@
     var makeWidget = connectMenu(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       attribute: attribute,
       limit: limit,
       sortBy: sortBy,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.menuSelect'
     });
   }
 
   /** @jsx h */
 
-  var _ref2$1 =
-  /*#__PURE__*/
-  h("path", {
+  var _ref2$1 = h("path", {
     fill: "#5468FF",
     d: "M78.99.94h16.6a2.97 2.97 0 012.96 2.96v16.6a2.97 2.97 0 01-2.97 2.96h-16.6a2.97 2.97 0 01-2.96-2.96V3.9A2.96 2.96 0 0179 .94"
   });
 
-  var _ref3$1 =
-  /*#__PURE__*/
-  h("path", {
+  var _ref3$1 = h("path", {
     fill: "#FFF",
     d: "M89.63 5.97v-.78a.98.98 0 00-.98-.97h-2.28a.98.98 0 00-.97.97V6c0 .09.08.15.17.13a7.13 7.13 0 013.9-.02c.08.02.16-.04.16-.13m-6.25 1L83 6.6a.98.98 0 00-1.38 0l-.46.46a.97.97 0 000 1.38l.38.39c.06.06.15.04.2-.02a7.49 7.49 0 011.63-1.62c.07-.04.08-.14.02-.2m4.16 2.45v3.34c0 .1.1.17.2.12l2.97-1.54c.06-.03.08-.12.05-.18a3.7 3.7 0 00-3.08-1.87c-.07 0-.14.06-.14.13m0 8.05a4.49 4.49 0 110-8.98 4.49 4.49 0 010 8.98m0-10.85a6.37 6.37 0 100 12.74 6.37 6.37 0 000-12.74"
   });
@@ -20933,9 +20957,9 @@
     var makeWidget = connectPoweredBy(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       theme: theme
-    }), {
+    })), {}, {
       $$widgetType: 'ais.poweredBy'
     });
   }
@@ -21109,7 +21133,7 @@
           containerNode: getContainerNode(container),
           bodyContainerNode: bodyContainerNode,
           cssClasses: cssClasses,
-          templates: _objectSpread2({}, defaultTemplates, {}, templates)
+          templates: _objectSpread2(_objectSpread2({}, defaultTemplates), templates)
         });
         renderPanel({
           options: {},
@@ -21117,10 +21141,10 @@
           collapsible: collapsible,
           collapsed: false
         });
-        var widget = widgetFactory(_objectSpread2({}, widgetParams, {
+        var widget = widgetFactory(_objectSpread2(_objectSpread2({}, widgetParams), {}, {
           container: bodyContainerNode
         }));
-        return _objectSpread2({}, widget, {
+        return _objectSpread2(_objectSpread2({}, widget), {}, {
           dispose: function dispose() {
             I(null, getContainerNode(container));
 
@@ -21143,7 +21167,7 @@
 
             var renderOptions = args[0];
 
-            var options = _objectSpread2({}, widget.getWidgetRenderState ? widget.getWidgetRenderState(renderOptions) : {}, {}, renderOptions);
+            var options = _objectSpread2(_objectSpread2({}, widget.getWidgetRenderState ? widget.getWidgetRenderState(renderOptions) : {}), renderOptions);
 
             renderPanel({
               options: options,
@@ -21291,15 +21315,15 @@
     var makeWidget = connectVoiceSearch(renderer$m, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       container: containerNode,
       cssClasses: cssClasses,
-      templates: _objectSpread2({}, defaultTemplates$f, {}, templates),
+      templates: _objectSpread2(_objectSpread2({}, defaultTemplates$f), templates),
       searchAsYouSpeak: searchAsYouSpeak,
       language: language,
       additionalQueryParameters: additionalQueryParameters,
       createVoiceSearchHelper: createVoiceSearchHelper
-    }), {
+    })), {}, {
       $$widgetType: 'ais.voiceSearch'
     });
   };
@@ -21366,18 +21390,18 @@
       }
     };
 
-    var templates = _objectSpread2({}, defaultTemplates, {}, userTemplates);
+    var templates = _objectSpread2(_objectSpread2({}, defaultTemplates), userTemplates);
 
     var containerNode = getContainerNode(container);
     var makeWidget = connectQueryRules(renderer$n, function () {
       I(null, containerNode);
     });
-    return _objectSpread2({}, makeWidget({
+    return _objectSpread2(_objectSpread2({}, makeWidget({
       container: containerNode,
       cssClasses: cssClasses,
       templates: templates,
       transformItems: transformItems
-    }), {
+    })), {}, {
       $$widgetType: 'ais.queryRuleCustomData'
     });
   };
@@ -21393,7 +21417,7 @@
       throw new Error(withUsage$P('The `trackedFilters` option is required.'));
     }
 
-    return _objectSpread2({}, connectQueryRules(noop)(widgetParams), {
+    return _objectSpread2(_objectSpread2({}, connectQueryRules(noop)(widgetParams)), {}, {
       $$widgetType: 'ais.queryRuleContext'
     });
   };
@@ -21458,7 +21482,7 @@
           return uiStateWithoutPlaces;
         }
 
-        return _objectSpread2({}, uiState, {
+        return _objectSpread2(_objectSpread2({}, uiState), {}, {
           places: {
             query: state.query,
             position: position
@@ -21486,7 +21510,7 @@
         return searchParameters.setQueryParameter('insideBoundingBox', undefined).setQueryParameter('aroundLatLngViaIP', false).setQueryParameter('aroundLatLng', position || undefined);
       },
       getRenderState: function getRenderState(renderState, renderOptions) {
-        return _objectSpread2({}, renderState, {
+        return _objectSpread2(_objectSpread2({}, renderState), {}, {
           places: this.getWidgetRenderState(renderOptions)
         });
       },
@@ -21597,15 +21621,17 @@
       return {
         onStateChange: function onStateChange() {},
         subscribe: function subscribe() {
+          // At the time this middleware is subscribed, `mainIndex.init()` is already called.
+          // It means `mainIndex.getHelper()` exists.
+          var helper = instantSearchInstance.mainIndex.getHelper();
+
           var setUserTokenToSearch = function setUserTokenToSearch(userToken) {
-            // At the time this middleware is subscribed, `mainIndex.init()` is already called.
-            // It means `mainIndex.getHelper()` exists.
             if (userToken) {
-              instantSearchInstance.mainIndex.getHelper().setQueryParameter('userToken', userToken);
+              helper.setState(helper.state.setQueryParameter('userToken', userToken));
             }
           };
 
-          instantSearchInstance.mainIndex.getHelper().setQueryParameter('clickAnalytics', true);
+          helper.setState(helper.state.setQueryParameter('clickAnalytics', true));
           var anonymousUserToken = getInsightsAnonymousUserTokenInternal();
 
           if (hasInsightsClient && anonymousUserToken) {
