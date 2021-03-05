@@ -313,3 +313,24 @@ pre code {
     fill: red !important;
   }
 }
+
+// table
+
+.uk-table {
+  border-collapse:separate !important;
+  border: 1px solid white !important;
+  border-radius:6px;
+  -moz-border-radius:6px;
+
+  td {
+    word-break: keep-all !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -moz-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    line-break: anywhere !important;
+  }
+
+}
