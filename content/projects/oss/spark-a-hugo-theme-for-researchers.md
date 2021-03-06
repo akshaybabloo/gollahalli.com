@@ -7,4 +7,6 @@ tags: ["Hugo", "Go"]
 description: "Spark, a hugo theme for researchers."
 images: []
 externalUrl: "https://github.com/akshaybabloo/spark-hugo-theme"
+_build:
+    render: never
 ---

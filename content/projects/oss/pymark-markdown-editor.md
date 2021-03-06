@@ -7,4 +7,6 @@ tags: ["Python"]
 description: "A Minimalistic Markdown Editor"
 images: []
 ExternalUrl: "https://github.com/akshaybabloo/PyMark"
+_build:
+    render: never
 ---

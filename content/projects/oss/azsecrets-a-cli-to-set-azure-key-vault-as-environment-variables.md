@@ -7,4 +7,6 @@ tags: ["Python", "Azure"]
 description: "A CLI tool to make Azure KeyVault secrets into environment variables."
 images: []
 externalUrl: "https://github.com/akshaybabloo/azsecrets"
+_build:
+    render: never
 ---

@@ -7,4 +7,6 @@ tags: ["Artificial Intelligence"]
 description: "Developed website for Asia Pacific Neural Network Society"
 images: []
 externalUrl: "https://github.com/apnns/apnns.org"
+_build:
+    render: never
 ---

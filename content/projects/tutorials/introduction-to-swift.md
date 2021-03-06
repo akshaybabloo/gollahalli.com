@@ -7,4 +7,6 @@ tags: ["Swift"]
 description: "Complete how-to tutorial on using Apple's new programming language - Swift."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Swift-notes"
+_build:
+    render: never
 ---

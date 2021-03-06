@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.14.2 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.16.1 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -4008,7 +4008,7 @@
 
   var requestBuilder_1 = requestBuilder;
 
-  var version = '3.3.4';
+  var version = '3.4.4';
 
   /**
    * Event triggered when a parameter is set or updated
@@ -4245,6 +4245,49 @@
       if (self._currentNbQueries === 0) self.emit('searchQueueEmpty');
       throw e;
     });
+  };
+
+   /**
+   * Start the search for answers with the parameters set in the state.
+   * This method returns a promise.
+   * @param {Object} options - the options for answers API call
+   * @param {string[]} options.attributesForPrediction - Attributes to use for predictions. If empty, `searchableAttributes` is used instead.
+   * @param {string[]} options.queryLanguages - The languages in the query. Currently only supports ['en'].
+   * @param {number} options.nbHits - Maximum number of answers to retrieve from the Answers Engine. Cannot be greater than 1000.
+   *
+   * @return {promise} the answer results
+   */
+  AlgoliaSearchHelper.prototype.findAnswers = function(options) {
+    var state = this.state;
+    var derivedHelper = this.derivedHelpers[0];
+    if (!derivedHelper) {
+      return Promise.resolve([]);
+    }
+    var derivedState = derivedHelper.getModifiedState(state);
+    var data = merge_1(
+      {
+        attributesForPrediction: options.attributesForPrediction,
+        nbHits: options.nbHits
+      },
+      {
+        params: omit(requestBuilder_1._getHitsSearchParams(derivedState), [
+          'attributesToSnippet',
+          'hitsPerPage',
+          'restrictSearchableAttributes',
+          'snippetEllipsisText' // FIXME remove this line once the engine is fixed.
+        ])
+      }
+    );
+
+    var errorMessage = 'search for answers was called, but this client does not have a function client.initIndex(index).findAnswers';
+    if (typeof this.client.initIndex !== 'function') {
+      throw new Error(errorMessage);
+    }
+    var index = this.client.initIndex(derivedState.index);
+    if (typeof index.findAnswers !== 'function') {
+      throw new Error(errorMessage);
+    }
+    return index.findAnswers(derivedState.query, options.queryLanguages, data);
   };
 
   /**
@@ -5577,15 +5620,16 @@
     });
   }
 
-  function prepareTemplates() {
-    var defaultTemplates = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  function prepareTemplates( // can not use = {} here, since the template could have different constraints
+  defaultTemplates) {
     var templates = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var allKeys = uniq([].concat(_toConsumableArray(Object.keys(defaultTemplates)), _toConsumableArray(Object.keys(templates))));
+    var allKeys = uniq([].concat(_toConsumableArray(Object.keys(defaultTemplates || {})), _toConsumableArray(Object.keys(templates))));
     return allKeys.reduce(function (config, key) {
-      var defaultTemplate = defaultTemplates[key];
+      var defaultTemplate = defaultTemplates ? defaultTemplates[key] : undefined;
       var customTemplate = templates[key];
       var isCustomTemplate = customTemplate !== undefined && customTemplate !== defaultTemplate;
-      config.templates[key] = isCustomTemplate ? customTemplate : defaultTemplate;
+      config.templates[key] = isCustomTemplate ? customTemplate // typescript doesn't recognize that this condition asserts customTemplate is defined
+      : defaultTemplate;
       config.useCustomCompileOptions[key] = isCustomTemplate;
       return config;
     }, {
@@ -7385,7 +7429,7 @@
     });
   };
 
-  var addQueryID = function addQueryID(hits, queryID) {
+  function addQueryID(hits, queryID) {
     if (!queryID) {
       return hits;
     }
@@ -7395,7 +7439,7 @@
         __queryID: queryID
       });
     });
-  };
+  }
 
   function isFacetRefined(helper, facet, value) {
     if (helper.state.isHierarchicalFacet(facet)) {
@@ -7613,6 +7657,69 @@
       });
     });
     return filters;
+  }
+
+  // copied from
+  // https://github.com/algolia/autocomplete.js/blob/307a7acc4283e10a19cb7d067f04f1bea79dc56f/packages/autocomplete-core/src/utils/createConcurrentSafePromise.ts#L1:L1
+
+  /**
+   * Creates a runner that executes promises in a concurrent-safe way.
+   *
+   * This is useful to prevent older promises to resolve after a newer promise,
+   * otherwise resulting in stale resolved values.
+   */
+  function createConcurrentSafePromise() {
+    var basePromiseId = -1;
+    var latestResolvedId = -1;
+    var latestResolvedValue = undefined;
+    return function runConcurrentSafePromise(promise) {
+      var currentPromiseId = ++basePromiseId;
+      return Promise.resolve(promise).then(function (x) {
+        // The promise might take too long to resolve and get outdated. This would
+        // result in resolving stale values.
+        // When this happens, we ignore the promise value and return the one
+        // coming from the latest resolved value.
+        //
+        // +----------------------------------+
+        // |        100ms                     |
+        // | run(1) +--->  R1                 |
+        // |        300ms                     |
+        // | run(2) +-------------> R2 (SKIP) |
+        // |        200ms                     |
+        // | run(3) +--------> R3             |
+        // +----------------------------------+
+        if (latestResolvedValue && currentPromiseId < latestResolvedId) {
+          return latestResolvedValue;
+        }
+
+        latestResolvedId = currentPromiseId;
+        latestResolvedValue = x;
+        return x;
+      });
+    };
+  }
+
+  // Debounce a function call to the trailing edge.
+  // The debounced function returns a promise.
+  function debounce(func, wait) {
+    var lastTimeout = null;
+    return function () {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      // @ts-ignore-next-line
+      return new Promise(function (resolve, reject) {
+        if (lastTimeout) {
+          clearTimeout(lastTimeout);
+        }
+
+        lastTimeout = setTimeout(function () {
+          lastTimeout = null;
+          Promise.resolve(func.apply(void 0, args)).then(resolve).catch(reject);
+        }, wait);
+      });
+    };
   }
 
   var withUsage = createDocumentationMessageGenerator({
@@ -8140,7 +8247,7 @@
     instantSearchInstance.renderState = _objectSpread2(_objectSpread2({}, instantSearchInstance.renderState), {}, _defineProperty({}, parentIndexName, _objectSpread2(_objectSpread2({}, instantSearchInstance.renderState[parentIndexName]), renderState)));
   }
 
-  var version$1 = '4.14.2';
+  var version$1 = '4.16.1';
 
   var NAMESPACE = 'ais';
   var component = function component(componentName) {
@@ -11237,38 +11344,6 @@
     name: 'menu',
     connector: true
   });
-  /**
-   * @typedef {Object} MenuItem
-   * @property {string} value The value of the menu item.
-   * @property {string} label Human-readable value of the menu item.
-   * @property {number} count Number of results matched after refinement is applied.
-   * @property {boolean} isRefined Indicates if the refinement is applied.
-   */
-
-  /**
-   * @typedef {Object} CustomMenuWidgetParams
-   * @property {string} attribute Name of the attribute for faceting (eg. "free_shipping").
-   * @property {number} [limit = 10] How many facets values to retrieve.
-   * @property {boolean} [showMore = false] Whether to display a button that expands the number of items.
-   * @property {number} [showMoreLimit = 20] How many facets values to retrieve when `toggleShowMore` is called, this value is meant to be greater than `limit` option.
-   * @property {string[]|function} [sortBy = ['isRefined', 'name:asc']] How to sort refinements. Possible values: `count|isRefined|name:asc|name:desc`.
-   *
-   * You can also use a sort function that behaves like the standard Javascript [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Syntax).
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
-   */
-
-  /**
-   * @typedef {Object} MenuRenderingOptions
-   * @property {MenuItem[]} items The elements that can be refined for the current search results.
-   * @property {function(item.value): string} createURL Creates the URL for a single item name in the list.
-   * @property {function(item.value)} refine Filter the search to item value.
-   * @property {boolean} canRefine True if refinement can be applied.
-   * @property {Object} widgetParams All original `CustomMenuWidgetParams` forwarded to the `renderFn`.
-   * @property {boolean} isShowingMore True if the menu is displaying all the menu items.
-   * @property {function} toggleShowMore Toggles the number of values displayed between `limit` and `showMore.limit`.
-   * @property {boolean} canToggleShowMore `true` if the toggleShowMore button can be activated (enough items to display more or
-   * already displaying more than `limit` items)
-   */
 
   /**
    * **Menu** connector provides the logic to build a widget that will give the user the ability to choose a single value for a specific facet. The typical usage of menu is for navigation in categories.
@@ -11278,66 +11353,25 @@
    * one that is currently selected.
    *
    * **Requirement:** the attribute passed as `attribute` must be present in "attributes for faceting" on the Algolia dashboard or configured as attributesForFaceting via a set settings call to the Algolia API.
-   * @type {Connector}
-   * @param {function(MenuRenderingOptions, boolean)} renderFn Rendering function for the custom **Menu** widget. widget.
-   * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomMenuWidgetParams)} Re-usable widget factory for a custom **Menu** widget.
-   * @example
-   * // custom `renderFn` to render the custom Menu widget
-   * function renderFn(MenuRenderingOptions, isFirstRendering) {
-   *   if (isFirstRendering) {
-   *     MenuRenderingOptions.widgetParams.containerNode
-   *       .html('<select></select');
-   *
-   *     MenuRenderingOptions.widgetParams.containerNode
-   *       .find('select')
-   *       .on('change', function(event) {
-   *         MenuRenderingOptions.refine(event.target.value);
-   *       });
-   *   }
-   *
-   *   var options = MenuRenderingOptions.items.map(function(item) {
-   *     return item.isRefined
-   *       ? '<option value="' + item.value + '" selected>' + item.label + '</option>'
-   *       : '<option value="' + item.value + '">' + item.label + '</option>';
-   *   });
-   *
-   *   MenuRenderingOptions.widgetParams.containerNode
-   *     .find('select')
-   *     .html(options);
-   * }
-   *
-   * // connect `renderFn` to Menu logic
-   * var customMenu = instantsearch.connectors.connectMenu(renderFn);
-   *
-   * // mount widget on the page
-   * search.addWidgets([
-   *   customMenu({
-   *     containerNode: $('#custom-menu-container'),
-   *     attribute: 'categories',
-   *     limit: 10,
-   *   })
-   * ]);
    */
-
-  function connectMenu(renderFn) {
+  var connectMenu = function connectMenu(renderFn) {
     var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
     checkRendering(renderFn, withUsage$8());
-    return function () {
-      var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var attribute = widgetParams.attribute,
-          _widgetParams$limit = widgetParams.limit,
-          limit = _widgetParams$limit === void 0 ? 10 : _widgetParams$limit,
-          _widgetParams$showMor = widgetParams.showMore,
-          showMore = _widgetParams$showMor === void 0 ? false : _widgetParams$showMor,
-          _widgetParams$showMor2 = widgetParams.showMoreLimit,
-          showMoreLimit = _widgetParams$showMor2 === void 0 ? 20 : _widgetParams$showMor2,
-          _widgetParams$sortBy = widgetParams.sortBy,
-          sortBy = _widgetParams$sortBy === void 0 ? ['isRefined', 'name:asc'] : _widgetParams$sortBy,
-          _widgetParams$transfo = widgetParams.transformItems,
-          transformItems = _widgetParams$transfo === void 0 ? function (items) {
+    return function (widgetParams) {
+      var _ref = widgetParams || {},
+          attribute = _ref.attribute,
+          _ref$limit = _ref.limit,
+          limit = _ref$limit === void 0 ? 10 : _ref$limit,
+          _ref$showMore = _ref.showMore,
+          showMore = _ref$showMore === void 0 ? false : _ref$showMore,
+          _ref$showMoreLimit = _ref.showMoreLimit,
+          showMoreLimit = _ref$showMoreLimit === void 0 ? 20 : _ref$showMoreLimit,
+          _ref$sortBy = _ref.sortBy,
+          sortBy = _ref$sortBy === void 0 ? ['isRefined', 'name:asc'] : _ref$sortBy,
+          _ref$transformItems = _ref.transformItems,
+          transformItems = _ref$transformItems === void 0 ? function (items) {
         return items;
-      } : _widgetParams$transfo;
+      } : _ref$transformItems;
 
       if (!attribute) {
         throw new Error(withUsage$8('The `attribute` option is required.'));
@@ -11347,35 +11381,35 @@
         throw new Error(withUsage$8('The `showMoreLimit` option must be greater than `limit`.'));
       }
 
-      var sendEvent; // Provide the same function to the `renderFn` so that way the user
+      var sendEvent;
+
+      var _createURL;
+
+      var _refine; // Provide the same function to the `renderFn` so that way the user
       // has to only bind it once when `isFirstRendering` for instance
 
+
+      var isShowingMore = false;
+
       var toggleShowMore = function toggleShowMore() {};
+
+      function createToggleShowMore(renderOptions, widget) {
+        return function () {
+          isShowingMore = !isShowingMore;
+          widget.render(renderOptions);
+        };
+      }
 
       function cachedToggleShowMore() {
         toggleShowMore();
       }
 
+      function getLimit() {
+        return isShowingMore ? showMoreLimit : limit;
+      }
+
       return {
         $$type: 'ais.menu',
-        isShowingMore: false,
-        createToggleShowMore: function createToggleShowMore(_ref) {
-          var _this = this;
-
-          var results = _ref.results,
-              instantSearchInstance = _ref.instantSearchInstance;
-          return function () {
-            _this.isShowingMore = !_this.isShowingMore;
-
-            _this.render({
-              results: results,
-              instantSearchInstance: instantSearchInstance
-            });
-          };
-        },
-        getLimit: function getLimit() {
-          return this.isShowingMore ? showMoreLimit : limit;
-        },
         init: function init(initOptions) {
           var instantSearchInstance = initOptions.instantSearchInstance;
           renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
@@ -11395,14 +11429,14 @@
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
           return _objectSpread2(_objectSpread2({}, renderState), {}, {
-            menu: this.getWidgetRenderState(renderOptions)
+            menu: _objectSpread2(_objectSpread2({}, renderState.menu), {}, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
           });
         },
-        getWidgetRenderState: function getWidgetRenderState(_ref3) {
-          var results = _ref3.results,
-              createURL = _ref3.createURL,
-              instantSearchInstance = _ref3.instantSearchInstance,
-              helper = _ref3.helper;
+        getWidgetRenderState: function getWidgetRenderState(renderOptions) {
+          var results = renderOptions.results,
+              createURL = renderOptions.createURL,
+              instantSearchInstance = renderOptions.instantSearchInstance,
+              helper = renderOptions.helper;
           var items = [];
           var canToggleShowMore = false;
 
@@ -11415,38 +11449,37 @@
             });
           }
 
-          if (!this._createURL) {
-            this._createURL = function (facetValue) {
-              return createURL(helper.state.toggleRefinement(attribute, facetValue));
+          if (!_createURL) {
+            _createURL = function _createURL(facetValue) {
+              return createURL(helper.state.toggleFacetRefinement(attribute, facetValue));
             };
           }
 
-          if (!this._refine) {
-            this._refine = function (facetValue) {
+          if (!_refine) {
+            _refine = function _refine(facetValue) {
               var _helper$getHierarchic = helper.getHierarchicalFacetBreadcrumb(attribute),
                   _helper$getHierarchic2 = _slicedToArray(_helper$getHierarchic, 1),
                   refinedItem = _helper$getHierarchic2[0];
 
               sendEvent('click', facetValue ? facetValue : refinedItem);
-              helper.toggleRefinement(attribute, facetValue ? facetValue : refinedItem).search();
+              helper.toggleFacetRefinement(attribute, facetValue ? facetValue : refinedItem).search();
             };
           }
 
-          toggleShowMore = this.createToggleShowMore({
-            results: results,
-            instantSearchInstance: instantSearchInstance
-          });
+          if (renderOptions.results) {
+            toggleShowMore = createToggleShowMore(renderOptions, this);
+          }
 
           if (results) {
             var facetValues = results.getFacetValues(attribute, {
               sortBy: sortBy
             });
-            var facetItems = facetValues && facetValues.data ? facetValues.data : [];
-            canToggleShowMore = showMore && (this.isShowingMore || facetItems.length > this.getLimit());
-            items = transformItems(facetItems.slice(0, this.getLimit()).map(function (_ref4) {
-              var label = _ref4.name,
-                  value = _ref4.path,
-                  item = _objectWithoutProperties(_ref4, ["name", "path"]);
+            var facetItems = facetValues && !Array.isArray(facetValues) && facetValues.data ? facetValues.data : [];
+            canToggleShowMore = showMore && (isShowingMore || facetItems.length > getLimit());
+            items = transformItems(facetItems.slice(0, getLimit()).map(function (_ref3) {
+              var label = _ref3.name,
+                  value = _ref3.path,
+                  item = _objectWithoutProperties(_ref3, ["name", "path"]);
 
               return _objectSpread2(_objectSpread2({}, item), {}, {
                 label: label,
@@ -11457,18 +11490,18 @@
 
           return {
             items: items,
-            createURL: this._createURL,
-            refine: this._refine,
+            createURL: _createURL,
+            refine: _refine,
             sendEvent: sendEvent,
             canRefine: items.length > 0,
             widgetParams: widgetParams,
-            isShowingMore: this.isShowingMore,
+            isShowingMore: isShowingMore,
             toggleShowMore: cachedToggleShowMore,
             canToggleShowMore: canToggleShowMore
           };
         },
-        getWidgetUiState: function getWidgetUiState(uiState, _ref5) {
-          var searchParameters = _ref5.searchParameters;
+        getWidgetUiState: function getWidgetUiState(uiState, _ref4) {
+          var searchParameters = _ref4.searchParameters;
 
           var _searchParameters$get = searchParameters.getHierarchicalFacetBreadcrumb(attribute),
               _searchParameters$get2 = _slicedToArray(_searchParameters$get, 1),
@@ -11482,8 +11515,8 @@
             menu: _objectSpread2(_objectSpread2({}, uiState.menu), {}, _defineProperty({}, attribute, value))
           });
         },
-        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref6) {
-          var uiState = _ref6.uiState;
+        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref5) {
+          var uiState = _ref5.uiState;
           var value = uiState.menu && uiState.menu[attribute];
           var withFacetConfiguration = searchParameters.removeHierarchicalFacet(attribute).addHierarchicalFacet({
             name: attribute,
@@ -11503,7 +11536,7 @@
         }
       };
     };
-  }
+  };
 
   var withUsage$9 = createDocumentationMessageGenerator({
     name: 'numeric-menu',
@@ -13487,6 +13520,8 @@
             return {
               hitsPerPage: helper.state.hitsPerPage,
               nbHits: 0,
+              nbSortedHits: undefined,
+              areHitsSorted: false,
               nbPages: 0,
               page: helper.state.page || 0,
               processingTimeMS: -1,
@@ -13498,6 +13533,8 @@
           return {
             hitsPerPage: results.hitsPerPage,
             nbHits: results.nbHits,
+            nbSortedHits: results.nbSortedHits,
+            areHitsSorted: typeof results.appliedRelevancyStrictness !== 'undefined' && results.appliedRelevancyStrictness > 0 && results.nbSortedHits !== results.nbHits,
             nbPages: results.nbPages,
             page: results.page,
             processingTimeMS: results.processingTimeMS,
@@ -15100,6 +15137,201 @@
     };
   };
 
+  function hasFindAnswersMethod(answersIndex) {
+    return typeof answersIndex.findAnswers === 'function';
+  }
+
+  var withUsage$q = createDocumentationMessageGenerator({
+    name: 'answers',
+    connector: true
+  });
+
+  var connectAnswers = function connectAnswers(renderFn) {
+    var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
+    checkRendering(renderFn, withUsage$q());
+    return function (widgetParams) {
+      var _ref = widgetParams || {},
+          queryLanguages = _ref.queryLanguages,
+          attributesForPrediction = _ref.attributesForPrediction,
+          _ref$nbHits = _ref.nbHits,
+          nbHits = _ref$nbHits === void 0 ? 1 : _ref$nbHits,
+          _ref$renderDebounceTi = _ref.renderDebounceTime,
+          renderDebounceTime = _ref$renderDebounceTi === void 0 ? 100 : _ref$renderDebounceTi,
+          _ref$searchDebounceTi = _ref.searchDebounceTime,
+          searchDebounceTime = _ref$searchDebounceTi === void 0 ? 100 : _ref$searchDebounceTi,
+          _ref$escapeHTML = _ref.escapeHTML,
+          escapeHTML = _ref$escapeHTML === void 0 ? true : _ref$escapeHTML,
+          _ref$extraParameters = _ref.extraParameters,
+          extraParameters = _ref$extraParameters === void 0 ? {} : _ref$extraParameters; // @ts-ignore checking for the wrong value
+
+
+      if (!queryLanguages || queryLanguages.length === 0) {
+        throw new Error(withUsage$q('The `queryLanguages` expects an array of strings.'));
+      }
+
+      var runConcurrentSafePromise = createConcurrentSafePromise();
+      var lastResult;
+      var isLoading = false;
+      var debouncedRender = debounce(renderFn, renderDebounceTime);
+      var debouncedRefine;
+      return {
+        $$type: 'ais.answers',
+        init: function init(initOptions) {
+          var state = initOptions.state,
+              instantSearchInstance = initOptions.instantSearchInstance;
+          var answersIndex = instantSearchInstance.client.initIndex(state.index);
+
+          if (!hasFindAnswersMethod(answersIndex)) {
+            throw new Error(withUsage$q('`algoliasearch` >= 4.8.0 required.'));
+          }
+
+          debouncedRefine = debounce(answersIndex.findAnswers, searchDebounceTime);
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
+            instantSearchInstance: initOptions.instantSearchInstance
+          }), true);
+        },
+        render: function render(renderOptions) {
+          var _this = this;
+
+          var query = renderOptions.state.query;
+
+          if (!query) {
+            // renders nothing with empty query
+            lastResult = {};
+            isLoading = false;
+            renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
+              instantSearchInstance: renderOptions.instantSearchInstance
+            }), false);
+            return;
+          } // render the loader
+
+
+          lastResult = {};
+          isLoading = true;
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
+            instantSearchInstance: renderOptions.instantSearchInstance
+          }), false); // call /answers API
+
+          runConcurrentSafePromise(debouncedRefine(query, queryLanguages, _objectSpread2(_objectSpread2({}, extraParameters), {}, {
+            nbHits: nbHits,
+            attributesForPrediction: attributesForPrediction
+          }))).then(function (results) {
+            if (!results) {
+              // It's undefined when it's debounced.
+              return;
+            }
+
+            if (escapeHTML && results.hits.length > 0) {
+              results.hits = escapeHits(results.hits);
+            }
+
+            var initialEscaped = results.hits.__escaped;
+            results.hits = addAbsolutePosition(results.hits, 0, nbHits);
+            results.hits = addQueryID(results.hits, results.queryID); // Make sure the escaped tag stays, even after mapping over the hits.
+            // This prevents the hits from being double-escaped if there are multiple
+            // hits widgets mounted on the page.
+
+            results.hits.__escaped = initialEscaped;
+            lastResult = results;
+            isLoading = false;
+            debouncedRender(_objectSpread2(_objectSpread2({}, _this.getWidgetRenderState(renderOptions)), {}, {
+              instantSearchInstance: renderOptions.instantSearchInstance
+            }), false);
+          });
+        },
+        getRenderState: function getRenderState(renderState, renderOptions) {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            answers: this.getWidgetRenderState(renderOptions)
+          });
+        },
+        getWidgetRenderState: function getWidgetRenderState() {
+          var _lastResult;
+
+          return {
+            hits: ((_lastResult = lastResult) === null || _lastResult === void 0 ? void 0 : _lastResult.hits) || [],
+            isLoading: isLoading,
+            widgetParams: widgetParams
+          };
+        },
+        dispose: function dispose(_ref2) {
+          var state = _ref2.state;
+          unmountFn();
+          return state;
+        },
+        getWidgetSearchParameters: function getWidgetSearchParameters(state) {
+          return state;
+        }
+      };
+    };
+  };
+
+  var connectRelevantSort = function connectRelevantSort() {
+    var renderFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop;
+    var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
+    return function (widgetParams) {
+      var connectorState = {};
+      return {
+        $$type: 'ais.relevantSort',
+        init: function init(initOptions) {
+          var instantSearchInstance = initOptions.instantSearchInstance;
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
+            instantSearchInstance: instantSearchInstance
+          }), true);
+        },
+        render: function render(renderOptions) {
+          var instantSearchInstance = renderOptions.instantSearchInstance;
+          renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(renderOptions)), {}, {
+            instantSearchInstance: instantSearchInstance
+          }), false);
+        },
+        dispose: function dispose(_ref) {
+          var state = _ref.state;
+          unmountFn();
+          return state.setQueryParameter('relevancyStrictness', undefined);
+        },
+        getRenderState: function getRenderState(renderState, renderOptions) {
+          return _objectSpread2(_objectSpread2({}, renderState), {}, {
+            relevantSort: this.getWidgetRenderState(renderOptions)
+          });
+        },
+        getWidgetRenderState: function getWidgetRenderState(_ref2) {
+          var results = _ref2.results,
+              helper = _ref2.helper;
+
+          if (!connectorState.refine) {
+            connectorState.refine = function (relevancyStrictness) {
+              helper.setQueryParameter('relevancyStrictness', relevancyStrictness).search();
+            };
+          }
+
+          var _ref3 = results || {},
+              appliedRelevancyStrictness = _ref3.appliedRelevancyStrictness;
+
+          return {
+            isRelevantSorted: typeof appliedRelevancyStrictness !== 'undefined' && appliedRelevancyStrictness > 0,
+            isVirtualReplica: appliedRelevancyStrictness !== undefined,
+            refine: connectorState.refine,
+            widgetParams: widgetParams
+          };
+        },
+        getWidgetSearchParameters: function getWidgetSearchParameters(state, _ref4) {
+          var _uiState$relevantSort, _uiState$relevantSort2;
+
+          var uiState = _ref4.uiState;
+          return state.setQueryParameter('relevancyStrictness', (_uiState$relevantSort = (_uiState$relevantSort2 = uiState.relevantSort) === null || _uiState$relevantSort2 === void 0 ? void 0 : _uiState$relevantSort2.relevancyStrictness) !== null && _uiState$relevantSort !== void 0 ? _uiState$relevantSort : state.relevancyStrictness);
+        },
+        getWidgetUiState: function getWidgetUiState(uiState, _ref5) {
+          var searchParameters = _ref5.searchParameters;
+          return _objectSpread2(_objectSpread2({}, uiState), {}, {
+            relevantSort: _objectSpread2(_objectSpread2({}, uiState.relevantSort), {}, {
+              relevancyStrictness: searchParameters.relevancyStrictness
+            })
+          });
+        }
+      };
+    };
+  };
+
 
 
   var connectors = /*#__PURE__*/Object.freeze({
@@ -15129,7 +15361,9 @@
     EXPERIMENTAL_connectConfigureRelatedItems: connectConfigureRelatedItems,
     connectAutocomplete: connectAutocomplete,
     connectQueryRules: connectQueryRules,
-    connectVoiceSearch: connectVoiceSearch
+    connectVoiceSearch: connectVoiceSearch,
+    EXPERIMENTAL_connectAnswers: connectAnswers,
+    connectRelevantSort: connectRelevantSort
   });
 
   var classnames = createCommonjsModule(function (module) {
@@ -15262,7 +15496,7 @@
     resetLabel: 'Clear refinements'
   };
 
-  var withUsage$q = createDocumentationMessageGenerator({
+  var withUsage$r = createDocumentationMessageGenerator({
     name: 'clear-refinements'
   });
   var suit$4 = component('ClearRefinements');
@@ -15307,7 +15541,7 @@
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
 
     if (!container) {
-      throw new Error(withUsage$q('The `container` option is required.'));
+      throw new Error(withUsage$r('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -15412,7 +15646,7 @@
     })));
   };
 
-  var withUsage$r = createDocumentationMessageGenerator({
+  var withUsage$s = createDocumentationMessageGenerator({
     name: 'current-refinements'
   });
   var suit$5 = component('CurrentRefinements');
@@ -15443,7 +15677,7 @@
         transformItems = _ref2.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$r('The `container` option is required.'));
+      throw new Error(withUsage$s('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -15889,7 +16123,7 @@
     return HTMLMarker;
   };
 
-  var withUsage$s = createDocumentationMessageGenerator({
+  var withUsage$t = createDocumentationMessageGenerator({
     name: 'geo-search'
   });
   var suit$6 = component('GeoSearch');
@@ -16019,11 +16253,11 @@
     };
 
     if (!container) {
-      throw new Error(withUsage$s('The `container` option is required.'));
+      throw new Error(withUsage$t('The `container` option is required.'));
     }
 
     if (!googleReference) {
-      throw new Error(withUsage$s('The `googleReference` option is required.'));
+      throw new Error(withUsage$t('The `googleReference` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -16589,7 +16823,7 @@
     showMoreText: "\n    {{#isShowingMore}}\n      Show less\n    {{/isShowingMore}}\n    {{^isShowingMore}}\n      Show more\n    {{/isShowingMore}}\n  "
   };
 
-  var withUsage$t = createDocumentationMessageGenerator({
+  var withUsage$u = createDocumentationMessageGenerator({
     name: 'hierarchical-menu'
   });
   var suit$7 = component('HierarchicalMenu');
@@ -16764,7 +16998,7 @@
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
 
     if (!container) {
-      throw new Error(withUsage$t('The `container` option is required.'));
+      throw new Error(withUsage$u('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -16884,7 +17118,7 @@
     }
   };
 
-  var withUsage$u = createDocumentationMessageGenerator({
+  var withUsage$v = createDocumentationMessageGenerator({
     name: 'hits'
   });
   var suit$8 = component('Hits');
@@ -16936,7 +17170,7 @@
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
 
     if (!container) {
-      throw new Error(withUsage$u('The `container` option is required.'));
+      throw new Error(withUsage$v('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -16991,7 +17225,7 @@
     }));
   }
 
-  var withUsage$v = createDocumentationMessageGenerator({
+  var withUsage$w = createDocumentationMessageGenerator({
     name: 'hits-per-page'
   });
   var suit$9 = component('HitsPerPage');
@@ -17030,7 +17264,7 @@
         transformItems = _ref5.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$v('The `container` option is required.'));
+      throw new Error(withUsage$w('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -17125,7 +17359,7 @@
     }
   };
 
-  var withUsage$w = createDocumentationMessageGenerator({
+  var withUsage$x = createDocumentationMessageGenerator({
     name: 'infinite-hits'
   });
   var suit$a = component('InfiniteHits');
@@ -17189,7 +17423,7 @@
         cache = _ref3.cache;
 
     if (!container) {
-      throw new Error(withUsage$w('The `container` option is required.'));
+      throw new Error(withUsage$x('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -17245,7 +17479,7 @@
     showMoreText: "\n    {{#isShowingMore}}\n      Show less\n    {{/isShowingMore}}\n    {{^isShowingMore}}\n      Show more\n    {{/isShowingMore}}\n  "
   };
 
-  var withUsage$x = createDocumentationMessageGenerator({
+  var withUsage$y = createDocumentationMessageGenerator({
     name: 'menu'
   });
   var suit$b = component('Menu');
@@ -17276,7 +17510,7 @@
 
       var facetValues = items.map(function (facetValue) {
         return _objectSpread2(_objectSpread2({}, facetValue), {}, {
-          url: createURL(facetValue.name)
+          url: createURL(facetValue.value)
         });
       });
       I(h(RefinementList$1, {
@@ -17292,66 +17526,8 @@
       }), containerNode);
     };
   };
-  /**
-   * @typedef {Object} MenuCSSClasses
-   * @property {string|string[]} [root] CSS class to add to the root element.
-   * @property {string|string[]} [noRefinementRoot] CSS class to add to the root element when no refinements.
-   * @property {string|string[]} [list] CSS class to add to the list element.
-   * @property {string|string[]} [item] CSS class to add to each item element.
-   * @property {string|string[]} [selectedItem] CSS class to add to each selected item element.
-   * @property {string|string[]} [link] CSS class to add to each link (when using the default template).
-   * @property {string|string[]} [label] CSS class to add to each label (when using the default template).
-   * @property {string|string[]} [count] CSS class to add to each count element (when using the default template).
-   * @property {string|string[]} [showMore] CSS class to add to the show more button.
-   * @property {string|string[]} [disabledShowMore] CSS class to add to the disabled show more button.
-   */
 
-  /**
-   * @typedef {Object} MenuTemplates
-   * @property {string|function({count: number, cssClasses: object, isRefined: boolean, label: string, url: string, value: string}):string} [item] Item template. The string template gets the same values as the function.
-   * @property {string} [showMoreText] Template used for the show more text, provided with `isShowingMore` data property.
-   */
-
-  /**
-   * @typedef {Object} MenuWidgetParams
-   * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
-   * @property {string} attribute Name of the attribute for faceting
-   * @property {string[]|function} [sortBy=['isRefined', 'name:asc']] How to sort refinements. Possible values: `count|isRefined|name:asc|name:desc`.
-   *
-   * You can also use a sort function that behaves like the standard Javascript [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Syntax).
-   * @property {MenuTemplates} [templates] Customize the output through templating.
-   * @property {number} [limit=10] How many facets values to retrieve.
-   * @property {boolean} [showMore=false] Limit the number of results and display a showMore button.
-   * @property {number} [showMoreLimit=20] Max number of values to display when showing more.
-   * @property {MenuCSSClasses} [cssClasses] CSS classes to add to the wrapping elements.
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
-   */
-
-  /**
-   * Create a menu based on a facet. A menu displays facet values and let the user selects only one value at a time.
-   * It also displays an empty value which lets the user "unselect" any previous selection.
-   *
-   * @requirements
-   * The attribute passed to `attribute` must be declared as an
-   * [attribute for faceting](https://www.algolia.com/doc/guides/searching/faceting/#declaring-attributes-for-faceting)
-   * in your Algolia settings.
-   * @type {WidgetFactory}
-   * @devNovel Menu
-   * @category filter
-   * @param {MenuWidgetParams} widgetParams The Menu widget options.
-   * @return {Widget} Creates a new instance of the Menu widget.
-   * @example
-   * search.addWidgets([
-   *   instantsearch.widgets.menu({
-   *     container: '#categories',
-   *     attribute: 'hierarchicalCategories.lvl0',
-   *     limit: 10,
-   *   })
-   * ]);
-   */
-
-
-  function menu(widgetParams) {
+  var menu = function menu(widgetParams) {
     var _ref3 = widgetParams || {},
         container = _ref3.container,
         attribute = _ref3.attribute,
@@ -17366,7 +17542,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$x('The `container` option is required.'));
+      throw new Error(withUsage$y('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -17422,7 +17598,7 @@
     })), {}, {
       $$widgetType: 'ais.menu'
     });
-  }
+  };
 
   /* eslint max-len: 0 */
   var defaultTemplates$6 = {
@@ -17440,7 +17616,7 @@
     searchableLoadingIndicator: defaultTemplates$6.loadingIndicator
   };
 
-  var withUsage$y = createDocumentationMessageGenerator({
+  var withUsage$z = createDocumentationMessageGenerator({
     name: 'refinement-list'
   });
   var suit$c = component('RefinementList');
@@ -17632,7 +17808,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$y('The `container` option is required.'));
+      throw new Error(withUsage$z('The `container` option is required.'));
     }
 
     var escapeFacetValues = searchable ? Boolean(searchableEscapeFacetValues) : false;
@@ -17738,7 +17914,7 @@
     item: "<label class=\"{{cssClasses.label}}\">\n  <input type=\"radio\" class=\"{{cssClasses.radio}}\" name=\"{{attribute}}\"{{#isRefined}} checked{{/isRefined}} />\n  <span class=\"{{cssClasses.labelText}}\">{{label}}</span>\n</label>"
   };
 
-  var withUsage$z = createDocumentationMessageGenerator({
+  var withUsage$A = createDocumentationMessageGenerator({
     name: 'numeric-menu'
   });
   var suit$d = component('NumericMenu');
@@ -17787,7 +17963,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$z('The `container` option is required.'));
+      throw new Error(withUsage$A('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -18037,7 +18213,7 @@
     nbPages: 0
   };
 
-  var withUsage$A = createDocumentationMessageGenerator({
+  var withUsage$B = createDocumentationMessageGenerator({
     name: 'pagination'
   });
   var suit$e = component('Pagination');
@@ -18185,7 +18361,7 @@
         userScrollTo = _ref3$scrollTo === void 0 ? 'body' : _ref3$scrollTo;
 
     if (!container) {
-      throw new Error(withUsage$A('The `container` option is required.'));
+      throw new Error(withUsage$B('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -18363,7 +18539,7 @@
     return RangeInput;
   }(m);
 
-  var withUsage$B = createDocumentationMessageGenerator({
+  var withUsage$C = createDocumentationMessageGenerator({
     name: 'range-input'
   });
   var suit$f = component('RangeInput');
@@ -18483,7 +18659,7 @@
         userTemplates = _ref3$templates === void 0 ? {} : _ref3$templates;
 
     if (!container) {
-      throw new Error(withUsage$B('The `container` option is required.'));
+      throw new Error(withUsage$C('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -18542,7 +18718,7 @@
     });
   }
 
-  var withUsage$C = createDocumentationMessageGenerator({
+  var withUsage$D = createDocumentationMessageGenerator({
     name: 'search-box'
   });
   var suit$g = component('SearchBox');
@@ -18657,7 +18833,7 @@
         templates = _ref3.templates;
 
     if (!container) {
-      throw new Error(withUsage$C('The `container` option is required.'));
+      throw new Error(withUsage$D('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -19549,7 +19725,7 @@
     return Slider;
   }(m);
 
-  var withUsage$D = createDocumentationMessageGenerator({
+  var withUsage$E = createDocumentationMessageGenerator({
     name: 'range-slider'
   });
   var suit$h = component('RangeSlider');
@@ -19672,7 +19848,7 @@
         tooltips = _ref3$tooltips === void 0 ? true : _ref3$tooltips;
 
     if (!container) {
-      throw new Error(withUsage$D('The `container` option is required.'));
+      throw new Error(withUsage$E('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -19704,7 +19880,7 @@
     });
   }
 
-  var withUsage$E = createDocumentationMessageGenerator({
+  var withUsage$F = createDocumentationMessageGenerator({
     name: 'sort-by'
   });
   var suit$i = component('SortBy');
@@ -19785,7 +19961,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$E('The `container` option is required.'));
+      throw new Error(withUsage$F('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -19817,7 +19993,7 @@
     item: "{{#count}}<a class=\"{{cssClasses.link}}\" aria-label=\"{{value}} & up\" href=\"{{href}}\">{{/count}}{{^count}}<div class=\"{{cssClasses.link}}\" aria-label=\"{{value}} & up\" disabled>{{/count}}\n  {{#stars}}<svg class=\"{{cssClasses.starIcon}} {{#.}}{{cssClasses.fullStarIcon}}{{/.}}{{^.}}{{cssClasses.emptyStarIcon}}{{/.}}\" aria-hidden=\"true\" width=\"24\" height=\"24\">\n    {{#.}}<use xlink:href=\"#ais-RatingMenu-starSymbol\"></use>{{/.}}{{^.}}<use xlink:href=\"#ais-RatingMenu-starEmptySymbol\"></use>{{/.}}\n  </svg>{{/stars}}\n  <span class=\"{{cssClasses.label}}\">& Up</span>\n  {{#count}}<span class=\"{{cssClasses.count}}\">{{#helpers.formatNumber}}{{count}}{{/helpers.formatNumber}}</span>{{/count}}\n{{#count}}</a>{{/count}}{{^count}}</div>{{/count}}"
   };
 
-  var withUsage$F = createDocumentationMessageGenerator({
+  var withUsage$G = createDocumentationMessageGenerator({
     name: 'rating-menu'
   });
   var suit$j = component('RatingMenu');
@@ -19942,7 +20118,7 @@
         templates = _ref5$templates === void 0 ? defaultTemplates$a : _ref5$templates;
 
     if (!container) {
-      throw new Error(withUsage$F('The `container` option is required.'));
+      throw new Error(withUsage$G('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -20005,6 +20181,8 @@
 
   var Stats = function Stats(_ref) {
     var nbHits = _ref.nbHits,
+        nbSortedHits = _ref.nbSortedHits,
+        areHitsSorted = _ref.areHitsSorted,
         hitsPerPage = _ref.hitsPerPage,
         nbPages = _ref.nbPages,
         page = _ref.page,
@@ -20021,11 +20199,16 @@
         className: cssClasses.text
       },
       data: {
+        hasManySortedResults: nbSortedHits > 1,
+        hasNoSortedResults: nbSortedHits === 0,
+        hasOneSortedResults: nbSortedHits === 1,
         hasManyResults: nbHits > 1,
         hasNoResults: nbHits === 0,
         hasOneResult: nbHits === 1,
+        areHitsSorted: areHitsSorted,
         hitsPerPage: hitsPerPage,
         nbHits: nbHits,
+        nbSortedHits: nbSortedHits,
         nbPages: nbPages,
         page: page,
         processingTimeMS: processingTimeMS,
@@ -20036,10 +20219,10 @@
   };
 
   var defaultTemplates$b = {
-    text: "{{#hasNoResults}}No results{{/hasNoResults}}\n    {{#hasOneResult}}1 result{{/hasOneResult}}\n    {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}} found in {{processingTimeMS}}ms"
+    text: "\n    {{#areHitsSorted}}\n      {{#hasNoSortedResults}}No relevant results{{/hasNoSortedResults}}\n      {{#hasOneSortedResults}}1 relevant result{{/hasOneSortedResults}}\n      {{#hasManySortedResults}}{{#helpers.formatNumber}}{{nbSortedHits}}{{/helpers.formatNumber}} relevant results{{/hasManySortedResults}}\n      sorted out of {{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}}\n    {{/areHitsSorted}}\n    {{^areHitsSorted}}\n      {{#hasNoResults}}No results{{/hasNoResults}}\n      {{#hasOneResult}}1 result{{/hasOneResult}}\n      {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}}\n    {{/areHitsSorted}}\n    found in {{processingTimeMS}}ms"
   };
 
-  var withUsage$G = createDocumentationMessageGenerator({
+  var withUsage$H = createDocumentationMessageGenerator({
     name: 'stats'
   });
   var suit$k = component('Stats');
@@ -20052,6 +20235,8 @@
     return function (_ref2, isFirstRendering) {
       var hitsPerPage = _ref2.hitsPerPage,
           nbHits = _ref2.nbHits,
+          nbSortedHits = _ref2.nbSortedHits,
+          areHitsSorted = _ref2.areHitsSorted,
           nbPages = _ref2.nbPages,
           page = _ref2.page,
           processingTimeMS = _ref2.processingTimeMS,
@@ -20071,6 +20256,8 @@
         cssClasses: cssClasses,
         hitsPerPage: hitsPerPage,
         nbHits: nbHits,
+        nbSortedHits: nbSortedHits,
+        areHitsSorted: areHitsSorted,
         nbPages: nbPages,
         page: page,
         processingTimeMS: processingTimeMS,
@@ -20082,7 +20269,7 @@
   /**
    * @typedef {Object} StatsWidgetTemplates
    * @property {string|function} [text] Text template, provided with `hasManyResults`,
-   * `hasNoResults`, `hasOneResult`, `hitsPerPage`, `nbHits`, `nbPages`, `page`, `processingTimeMS`, `query`.
+   * `hasNoResults`, `hasOneResult`, `hitsPerPage`, `nbHits`, `nbSortedHits`, `nbPages`, `page`, `processingTimeMS`, `query`.
    */
 
   /**
@@ -20098,6 +20285,7 @@
    * @property {boolean} hasOneResult True if the result set has exactly one result.
    * @property {number} hitsPerPage Number of hits per page.
    * @property {number} nbHits Number of hit in the result set.
+   * @property {number} nbSortedHits Subset of hits selected when relevancyStrictness is applied
    * @property {number} nbPages Number of pages in the result set with regard to the hitsPerPage and number of hits.
    * @property {number} page Number of the current page. First page is 0.
    * @property {number} processingTimeMS Time taken to compute the results inside the engine.
@@ -20139,7 +20327,7 @@
         templates = _ref3$templates === void 0 ? defaultTemplates$b : _ref3$templates;
 
     if (!container) {
-      throw new Error(withUsage$G('The `container` option is required.'));
+      throw new Error(withUsage$H('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -20193,7 +20381,7 @@
     labelText: '{{name}}'
   };
 
-  var withUsage$H = createDocumentationMessageGenerator({
+  var withUsage$I = createDocumentationMessageGenerator({
     name: 'toggle-refinement'
   });
   var suit$l = component('ToggleRefinement');
@@ -20305,7 +20493,7 @@
         off = _ref3.off;
 
     if (!container) {
-      throw new Error(withUsage$H('The `container` option is required.'));
+      throw new Error(withUsage$I('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -20339,7 +20527,7 @@
     });
   }
 
-  var withUsage$I = createDocumentationMessageGenerator({
+  var withUsage$J = createDocumentationMessageGenerator({
     name: 'analytics'
   });
 
@@ -20357,7 +20545,7 @@
         pushPagination = _ref$pushPagination === void 0 ? false : _ref$pushPagination;
 
     if (!pushFunction) {
-      throw new Error(withUsage$I('The `pushFunction` option is required.'));
+      throw new Error(withUsage$J('The `pushFunction` option is required.'));
     }
 
      _warning(false, "`analytics` widget has been deprecated. It is still supported in 4.x releases, but not further. It is replaced by the `insights` middleware.\n\nFor the migration, visit https://www.algolia.com/doc/guides/building-search-ui/upgrade-guides/js/#analytics-widget") ;
@@ -20559,7 +20747,7 @@
     separator: '>'
   };
 
-  var withUsage$J = createDocumentationMessageGenerator({
+  var withUsage$K = createDocumentationMessageGenerator({
     name: 'breadcrumb'
   });
   var suit$m = component('Breadcrumb');
@@ -20609,7 +20797,7 @@
         userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
 
     if (!container) {
-      throw new Error(withUsage$J('The `container` option is required.'));
+      throw new Error(withUsage$K('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -20701,7 +20889,7 @@
     defaultOption: 'See all'
   };
 
-  var withUsage$K = createDocumentationMessageGenerator({
+  var withUsage$L = createDocumentationMessageGenerator({
     name: 'menu-select'
   });
   var suit$n = component('MenuSelect');
@@ -20714,7 +20902,6 @@
     return function (_ref2, isFirstRendering) {
       var refine = _ref2.refine,
           items = _ref2.items,
-          canRefine = _ref2.canRefine,
           instantSearchInstance = _ref2.instantSearchInstance;
 
       if (isFirstRendering) {
@@ -20730,57 +20917,12 @@
         cssClasses: cssClasses,
         items: items,
         refine: refine,
-        templateProps: renderState.templateProps,
-        canRefine: canRefine
+        templateProps: renderState.templateProps
       }), containerNode);
     };
   };
-  /**
-   * @typedef {Object} MenuSelectCSSClasses
-   * @property {string|string[]} [root] CSS class to add to the root element.
-   * @property {string|string[]} [noRefinementRoot] CSS class to add to the root when there are no items to display
-   * @property {string|string[]} [select] CSS class to add to the select element.
-   * @property {string|string[]} [option] CSS class to add to the option element.
-   *
-   */
 
-  /**
-   * @typedef {Object} MenuSelectTemplates
-   * @property {string|function(label: string, count: number, isRefined: boolean, value: string)} [item] Item template, provided with `label`, `count`, `isRefined` and `value` data properties.
-   * @property {string} [defaultOption = 'See all'] Label of the "see all" option in the select.
-   */
-
-  /**
-   * @typedef {Object} MenuSelectWidgetParams
-   * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
-   * @property {string} attribute Name of the attribute for faceting
-   * @property {string[]|function} [sortBy=['name:asc']] How to sort refinements. Possible values: `count|isRefined|name:asc|name:desc`.
-   *
-   * You can also use a sort function that behaves like the standard Javascript [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Syntax).
-   * @property {MenuSelectTemplates} [templates] Customize the output through templating.
-   * @property {number} [limit=10] How many facets values to retrieve.
-   * @property {MenuSelectCSSClasses} [cssClasses] CSS classes to add to the wrapping elements.
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
-   */
-
-  /**
-   * Create a menu select out of a facet
-   * @type {WidgetFactory}
-   * @category filter
-   * @param {MenuSelectWidgetParams} widgetParams The Menu select widget options.
-   * @return {Widget} Creates a new instance of the Menu select widget.
-   * @example
-   * search.addWidgets([
-   *   instantsearch.widgets.menuSelect({
-   *     container: '#categories-menuSelect',
-   *     attribute: 'hierarchicalCategories.lvl0',
-   *     limit: 10,
-   *   })
-   * ]);
-   */
-
-
-  function menuSelect(widgetParams) {
+  var menuSelect = function menuSelect(widgetParams) {
     var _ref3 = widgetParams || {},
         container = _ref3.container,
         attribute = _ref3.attribute,
@@ -20795,7 +20937,7 @@
         transformItems = _ref3.transformItems;
 
     if (!container) {
-      throw new Error(withUsage$K('The `container` option is required.'));
+      throw new Error(withUsage$L('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -20828,7 +20970,7 @@
     })), {}, {
       $$widgetType: 'ais.menuSelect'
     });
-  }
+  };
 
   /** @jsx h */
 
@@ -20873,7 +21015,7 @@
   };
 
   var suit$o = component('PoweredBy');
-  var withUsage$L = createDocumentationMessageGenerator({
+  var withUsage$M = createDocumentationMessageGenerator({
     name: 'powered-by'
   });
 
@@ -20935,7 +21077,7 @@
         theme = _ref3$theme === void 0 ? 'light' : _ref3$theme;
 
     if (!container) {
-      throw new Error(withUsage$L('The `container` option is required.'));
+      throw new Error(withUsage$M('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -21035,7 +21177,7 @@
     }));
   }
 
-  var withUsage$M = createDocumentationMessageGenerator({
+  var withUsage$N = createDocumentationMessageGenerator({
     name: 'panel'
   });
   var suit$p = component('Panel');
@@ -21118,7 +21260,7 @@
             container = _ref4.container;
 
         if (!container) {
-          throw new Error(withUsage$M("The `container` option is required in the widget within the panel."));
+          throw new Error(withUsage$N("The `container` option is required in the widget within the panel."));
         }
 
         var defaultTemplates = {
@@ -21262,7 +21404,7 @@
     status: "<p>{{transcript}}</p>"
   };
 
-  var withUsage$N = createDocumentationMessageGenerator({
+  var withUsage$O = createDocumentationMessageGenerator({
     name: 'voice-search'
   });
   var suit$q = component('VoiceSearch');
@@ -21299,7 +21441,7 @@
         createVoiceSearchHelper = _ref2.createVoiceSearchHelper;
 
     if (!container) {
-      throw new Error(withUsage$N('The `container` option is required.'));
+      throw new Error(withUsage$O('The `container` option is required.'));
     }
 
     var containerNode = getContainerNode(container);
@@ -21346,7 +21488,7 @@
     });
   };
 
-  var withUsage$O = createDocumentationMessageGenerator({
+  var withUsage$P = createDocumentationMessageGenerator({
     name: 'query-rule-custom-data'
   });
   var suit$r = component('QueryRuleCustomData');
@@ -21377,7 +21519,7 @@
     } : _ref2$transformItems;
 
     if (!container) {
-      throw new Error(withUsage$O('The `container` option is required.'));
+      throw new Error(withUsage$P('The `container` option is required.'));
     }
 
     var cssClasses = {
@@ -21406,7 +21548,7 @@
     });
   };
 
-  var withUsage$P = createDocumentationMessageGenerator({
+  var withUsage$Q = createDocumentationMessageGenerator({
     name: 'query-rule-context'
   });
 
@@ -21414,7 +21556,7 @@
     var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     if (!widgetParams.trackedFilters) {
-      throw new Error(withUsage$P('The `trackedFilters` option is required.'));
+      throw new Error(withUsage$Q('The `trackedFilters` option is required.'));
     }
 
     return _objectSpread2(_objectSpread2({}, connectQueryRules(noop)(widgetParams)), {}, {
@@ -21522,6 +21664,250 @@
     };
   };
 
+  var defaultTemplates$g = {
+    header: '',
+    loader: '',
+    item: function item(_item) {
+      return JSON.stringify(_item);
+    }
+  };
+
+  var Answers = function Answers(_ref) {
+    var hits = _ref.hits,
+        isLoading = _ref.isLoading,
+        cssClasses = _ref.cssClasses,
+        templateProps = _ref.templateProps;
+    return h("div", {
+      className: classnames(cssClasses.root, _defineProperty({}, cssClasses.emptyRoot, hits.length === 0))
+    }, h(Template, _extends({}, templateProps, {
+      templateKey: "header",
+      rootProps: {
+        className: cssClasses.header
+      },
+      data: {
+        hits: hits,
+        isLoading: isLoading
+      }
+    })), isLoading ? h(Template, _extends({}, templateProps, {
+      templateKey: "loader",
+      rootProps: {
+        className: cssClasses.loader
+      }
+    })) : h("ul", {
+      className: cssClasses.list
+    }, hits.map(function (hit, position) {
+      return h(Template, _extends({}, templateProps, {
+        templateKey: "item",
+        rootTagName: "li",
+        rootProps: {
+          className: cssClasses.item
+        },
+        key: hit.objectID,
+        data: _objectSpread2(_objectSpread2({}, hit), {}, {
+          __hitIndex: position
+        })
+      }));
+    })));
+  };
+
+  var withUsage$R = createDocumentationMessageGenerator({
+    name: 'answers'
+  });
+  var suit$s = component('Answers');
+
+  var renderer$o = function renderer(_ref) {
+    var renderState = _ref.renderState,
+        cssClasses = _ref.cssClasses,
+        containerNode = _ref.containerNode,
+        templates = _ref.templates;
+    return function (_ref2, isFirstRendering) {
+      var hits = _ref2.hits,
+          isLoading = _ref2.isLoading,
+          instantSearchInstance = _ref2.instantSearchInstance;
+
+      if (isFirstRendering) {
+        renderState.templateProps = prepareTemplateProps({
+          defaultTemplates: defaultTemplates$g,
+          templatesConfig: instantSearchInstance.templatesConfig,
+          templates: templates
+        });
+        return;
+      }
+
+      I(h(Answers, {
+        cssClasses: cssClasses,
+        hits: hits,
+        isLoading: isLoading,
+        templateProps: renderState.templateProps
+      }), containerNode);
+    };
+  };
+
+  var answersWidget = function answersWidget(widgetParams) {
+    var _ref3 = widgetParams || {},
+        container = _ref3.container,
+        attributesForPrediction = _ref3.attributesForPrediction,
+        queryLanguages = _ref3.queryLanguages,
+        nbHits = _ref3.nbHits,
+        searchDebounceTime = _ref3.searchDebounceTime,
+        renderDebounceTime = _ref3.renderDebounceTime,
+        escapeHTML = _ref3.escapeHTML,
+        extraParameters = _ref3.extraParameters,
+        _ref3$templates = _ref3.templates,
+        templates = _ref3$templates === void 0 ? defaultTemplates$g : _ref3$templates,
+        _ref3$cssClasses = _ref3.cssClasses,
+        userCssClasses = _ref3$cssClasses === void 0 ? {} : _ref3$cssClasses;
+
+    if (!container) {
+      throw new Error(withUsage$R('The `container` option is required.'));
+    }
+
+    var containerNode = getContainerNode(container);
+    var cssClasses = {
+      root: classnames(suit$s(), userCssClasses.root),
+      emptyRoot: classnames(suit$s({
+        modifierName: 'empty'
+      }), userCssClasses.emptyRoot),
+      header: classnames(suit$s({
+        descendantName: 'header'
+      }), userCssClasses.header),
+      loader: classnames(suit$s({
+        descendantName: 'loader'
+      }), userCssClasses.loader),
+      list: classnames(suit$s({
+        descendantName: 'list'
+      }), userCssClasses.list),
+      item: classnames(suit$s({
+        descendantName: 'item'
+      }), userCssClasses.item)
+    };
+    var specializedRenderer = renderer$o({
+      containerNode: containerNode,
+      cssClasses: cssClasses,
+      templates: templates,
+      renderState: {}
+    });
+    var makeWidget = connectAnswers(specializedRenderer, function () {
+      return I(null, containerNode);
+    });
+    return _objectSpread2(_objectSpread2({}, makeWidget({
+      attributesForPrediction: attributesForPrediction,
+      queryLanguages: queryLanguages,
+      nbHits: nbHits,
+      searchDebounceTime: searchDebounceTime,
+      renderDebounceTime: renderDebounceTime,
+      escapeHTML: escapeHTML,
+      extraParameters: extraParameters
+    })), {}, {
+      $$widgetType: 'ais.answers'
+    });
+  };
+
+  /** @jsx h */
+
+  var RelevantSort = function RelevantSort(_ref) {
+    var cssClasses = _ref.cssClasses,
+        templates = _ref.templates,
+        isRelevantSorted = _ref.isRelevantSorted,
+        isVirtualReplica = _ref.isVirtualReplica,
+        refine = _ref.refine;
+    return isVirtualReplica ? h("div", {
+      className: cssClasses.root
+    }, h(Template, {
+      templateKey: "text",
+      templates: templates,
+      rootProps: {
+        className: cssClasses.text
+      },
+      data: {
+        isRelevantSorted: isRelevantSorted
+      }
+    }), h("button", {
+      type: "button",
+      className: cssClasses.button,
+      onClick: function onClick() {
+        if (isRelevantSorted) {
+          refine(0);
+        } else {
+          refine(undefined);
+        }
+      }
+    }, h(Template, {
+      rootTagName: "span",
+      templateKey: "button",
+      templates: templates,
+      data: {
+        isRelevantSorted: isRelevantSorted
+      }
+    }))) : null;
+  };
+
+  var defaultTemplates$h = {
+    text: '',
+    button: function button(_ref) {
+      var isRelevantSorted = _ref.isRelevantSorted;
+      return isRelevantSorted ? 'See all results' : 'See relevant results';
+    }
+  };
+
+  var withUsage$S = createDocumentationMessageGenerator({
+    name: 'relevant-sort'
+  });
+  var suit$t = component('RelevantSort');
+
+  var renderer$p = function renderer(_ref) {
+    var isRelevantSorted = _ref.isRelevantSorted,
+        isVirtualReplica = _ref.isVirtualReplica,
+        refine = _ref.refine,
+        widgetParams = _ref.widgetParams;
+    var container = widgetParams.container,
+        cssClasses = widgetParams.cssClasses,
+        templates = widgetParams.templates;
+    I(h(RelevantSort, {
+      cssClasses: cssClasses,
+      templates: templates,
+      isRelevantSorted: isRelevantSorted,
+      isVirtualReplica: isVirtualReplica,
+      refine: refine
+    }), container);
+  };
+
+  var relevantSort = function relevantSort(widgetParams) {
+    var container = widgetParams.container,
+        _widgetParams$templat = widgetParams.templates,
+        userTemplates = _widgetParams$templat === void 0 ? {} : _widgetParams$templat,
+        _widgetParams$cssClas = widgetParams.cssClasses,
+        userCssClasses = _widgetParams$cssClas === void 0 ? {} : _widgetParams$cssClas;
+
+    if (!container) {
+      throw new Error(withUsage$S('The `container` option is required.'));
+    }
+
+    var cssClasses = {
+      root: classnames(suit$t(), userCssClasses.root),
+      text: classnames(suit$t({
+        descendantName: 'text'
+      }), userCssClasses.text),
+      button: classnames(suit$t({
+        descendantName: 'button'
+      }), userCssClasses.button)
+    };
+
+    var templates = _objectSpread2(_objectSpread2({}, defaultTemplates$h), userTemplates);
+
+    var containerNode = getContainerNode(container);
+    var makeWidget = connectRelevantSort(renderer$p, function () {
+      I(null, containerNode);
+    });
+    return _objectSpread2(_objectSpread2({}, makeWidget({
+      container: containerNode,
+      cssClasses: cssClasses,
+      templates: templates
+    })), {}, {
+      $$widgetType: 'ais.relevantSort'
+    });
+  };
+
 
 
   var widgets = /*#__PURE__*/Object.freeze({
@@ -21555,7 +21941,9 @@
     queryRuleCustomData: queryRuleCustomData,
     queryRuleContext: queryRuleContext,
     index: index,
-    places: placesWidget
+    places: placesWidget,
+    EXPERIMENTAL_answers: answersWidget,
+    relevantSort: relevantSort
   });
 
   var createInsightsMiddleware = function createInsightsMiddleware(props) {

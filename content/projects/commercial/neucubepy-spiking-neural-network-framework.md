@@ -8,4 +8,6 @@ description: "A Python implementation of NeuCube framework"
 images: ["img/projects/commercial/neucube_logo.png"]
 url: ""
 noindex: true
+_build:
+    render: never
 ---
