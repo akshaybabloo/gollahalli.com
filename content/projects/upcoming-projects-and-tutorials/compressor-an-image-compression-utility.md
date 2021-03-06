@@ -7,4 +7,6 @@ tags: ["Utility", "Qt5", "C++"]
 description: "An open source cross platform image compression tool."
 images: []
 url: ""
+_build:
+    render: never
 ---

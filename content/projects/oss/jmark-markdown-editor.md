@@ -7,4 +7,6 @@ tags: ["Java"]
 description: "A Minimalistic Markdown Editor"
 images: []
 ExternalUrl: "https://github.com/akshaybabloo/JMark"
+_build:
+    render: never
 ---

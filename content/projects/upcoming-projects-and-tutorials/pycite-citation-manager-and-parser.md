@@ -7,4 +7,6 @@ tags: ["Software", "Python 3"]
 description: "A citation parser and manager with Sqlite that supports EndNote, RIS and BibTex."
 images: []
 url: ""
+_build:
+    render: never
 ---

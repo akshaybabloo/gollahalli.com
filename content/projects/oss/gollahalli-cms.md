@@ -7,4 +7,6 @@ tags: ["Python", "Django"]
 description: "An opensource content management system for researchers."
 images: []
 externalUrl: "https://github.com/akshaybabloo/gollahalli-cms"
+_build:
+    render: never
 ---

@@ -7,4 +7,6 @@ tags: ["Artificial Intelligence"]
 description: "An Artificial Intelligence website."
 images: []
 externalUrl: "https://www.neucube.io"
+_build:
+    render: never
 ---

@@ -7,4 +7,6 @@ tags: ["Java"]
 description: "Mortgage calculator based on Java"
 images: []
 externalUrl: "https://github.com/akshaybabloo/JCal"
+_build:
+    render: never
 ---

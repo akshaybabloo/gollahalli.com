@@ -7,4 +7,6 @@ tags: ["AI", "UnrealEngine", "C++", "Machine Learning"]
 description: "A Machine Learning based VR game for Neurorehabilitation."
 images: []
 externalUrl: "https://github.com/akshaybabloo/NeuroRehab"
+_build:
+    render: never
 ---

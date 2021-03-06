@@ -7,4 +7,6 @@ tags: ["Python 3", "CLI"]
 description: "Create a CHANGELOG.md or rst or json files based on the release description of GitHub or GitLab."
 images: []
 externalUrl: "https://github.com/akshaybabloo/release-exporter"
+_build:
+    render: never
 ---
