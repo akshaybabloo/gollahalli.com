@@ -117,8 +117,16 @@
       "company": "AUT Ventures Limited.",
       "where": "Auckland, New Zealand",
       "from": "2020-07-06",
-      "to": "Present",
+      "to": "2021-01-30",
       "description": "Machine learning models deployment in cloud on-demand."
+    },
+    {
+      "title": "Teaching Assistant",
+      "company": "Computer and Mathematical Sciences, AUT University.",
+      "where": "Auckland, New Zealand",
+      "from": "2020-02-01",
+      "to": "Present",
+      "description": "C Programming"
     }
   ]
 }
