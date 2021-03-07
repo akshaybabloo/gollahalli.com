@@ -7,7 +7,7 @@
         <div class="uk-section uk-section-default">
             <div class="uk-container uk-text-justify uk-text-break">
                 {{ range (.Paginate (.Pages.GroupByPublishDate "2006")).PageGroups }}
-                    {{ range .Pages }}
+                    {{ range $index, $element := .Pages }}
                         <article class="uk-article gol-links uk-margin-large">
                             <p class="uk-article-meta">
                                 <time datetime="{{.PublishDate}}" itemprop="datePublished" class="uk-text-left">{{.PublishDate.Format "02 Jan 2006"}}</time> - {{ range .Params.tags }}<span class="uk-label">#{{.}}</span> {{end}}<br>
@@ -19,6 +19,14 @@
                             <p>{{.Description}}</p>
                         </article>
                         <hr class="uk-divider-icon">
+                            {{if not (modBool $index 2)}}
+                                <ins class="adsbygoogle"
+                                     style="display:block"
+                                     data-ad-client="ca-pub-7450383714878520"
+                                     data-ad-slot="1601009013"
+                                     data-ad-format="auto"
+                                     data-full-width-responsive="true"></ins>
+                            {{end}}
                     {{ end }}
                 {{end}}
                 {{ partial "pagination.html" . }}
