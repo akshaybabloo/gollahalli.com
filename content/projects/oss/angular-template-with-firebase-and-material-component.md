@@ -6,7 +6,7 @@ projectCategory: "Open-Source Software"
 tags: ["Angular", "Template", "Cookiecutter"]
 description: "A generic Cookiecutter template for Angular framework with support for Firebase and Material component"
 images: []
-# externalUrl: ""
+externalUrl: "https://github.com/akshaybabloo/angular-firebase-material-template"
 _build:
     render: never
 ---
