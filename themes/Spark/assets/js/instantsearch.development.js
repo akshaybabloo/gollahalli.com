@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.16.1 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.18.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -5633,7 +5633,9 @@
       config.useCustomCompileOptions[key] = isCustomTemplate;
       return config;
     }, {
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       templates: {},
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       useCustomCompileOptions: {}
     });
   }
@@ -7480,7 +7482,8 @@
               eventName: eventName,
               index: helper.getIndex(),
               filters: ["".concat(attribute, ":").concat(facetValue)]
-            }
+            },
+            attribute: attribute
           });
         }
       } else {
@@ -7489,6 +7492,13 @@
     };
 
     return sendEventForFacet;
+  }
+
+  function serializePayload(payload) {
+    return btoa(encodeURIComponent(JSON.stringify(payload)));
+  }
+  function deserializePayload(payload) {
+    return JSON.parse(decodeURIComponent(atob(payload)));
   }
 
   var buildPayload = function buildPayload(_ref) {
@@ -7517,7 +7527,7 @@
       }
     }
 
-    var hitsArray = Array.isArray(hits) ? hits : [hits];
+    var hitsArray = Array.isArray(hits) ? removeEscapedFromHits(hits) : [hits];
 
     if (hitsArray.length === 0) {
       return null;
@@ -7540,7 +7550,8 @@
           eventName: eventName || 'Hits Viewed',
           index: index,
           objectIDs: objectIDs
-        }
+        },
+        hits: hitsArray
       };
     } else if (eventType === 'click') {
       return {
@@ -7553,7 +7564,8 @@
           queryID: queryID,
           objectIDs: objectIDs,
           positions: positions
-        }
+        },
+        hits: hitsArray
       };
     } else if (eventType === 'conversion') {
       return {
@@ -7565,12 +7577,21 @@
           index: index,
           queryID: queryID,
           objectIDs: objectIDs
-        }
+        },
+        hits: hitsArray
       };
     } else {
       throw new Error("eventType(\"".concat(eventType, "\") is not supported.\n    If you want to send a custom payload, you can pass one object: ").concat(methodName, "(customPayload);\n    "));
     }
   };
+
+  function removeEscapedFromHits(hits) {
+    // this returns without `hits.__escaped`
+    // and this way it doesn't mutate the original `hits`
+    return hits.map(function (hit) {
+      return hit;
+    });
+  }
 
   function createSendEventForHits(_ref2) {
     var instantSearchInstance = _ref2.instantSearchInstance,
@@ -7611,7 +7632,7 @@
         methodName: 'bindEvent',
         args: args
       });
-      return payload ? "data-insights-event=".concat(btoa(JSON.stringify(payload))) : '';
+      return payload ? "data-insights-event=".concat(serializePayload(payload)) : '';
     };
 
     return bindEventForHits;
@@ -8121,8 +8142,7 @@
         // https://github.com/algolia/instantsearch.js/pull/994/commits/4a672ae3fd78809e213de0368549ef12e9dc9454
 
         helper.on('change', function (event) {
-          var state = event.state; // @ts-ignore _uiState comes from privateHelperSetState and thus isn't typed on the helper event
-
+          var state = event.state;
           var _uiState = event._uiState;
           localUiState = getLocalWidgetsUiState(localWidgets, {
             searchParameters: state,
@@ -8247,7 +8267,7 @@
     instantSearchInstance.renderState = _objectSpread2(_objectSpread2({}, instantSearchInstance.renderState), {}, _defineProperty({}, parentIndexName, _objectSpread2(_objectSpread2({}, instantSearchInstance.renderState[parentIndexName]), renderState)));
   }
 
-  var version$1 = '4.16.1';
+  var version$1 = '4.18.0';
 
   var NAMESPACE = 'ais';
   var component = function component(componentName) {
@@ -8353,7 +8373,7 @@
     }
 
     try {
-      var payload = JSON.parse(atob(serializedPayload));
+      var payload = deserializePayload(serializedPayload);
       return {
         method: method,
         payload: payload
@@ -8376,7 +8396,7 @@
     var serializedPayload;
 
     try {
-      serializedPayload = btoa(JSON.stringify(payload));
+      serializedPayload = serializePayload(payload);
     } catch (error) {
       throw new Error("Could not JSON serialize the payload object.");
     }
@@ -9585,15 +9605,15 @@
         subscribe: function subscribe() {
           // using setTimeout here to delay extraction until widgets have been added in a tick (e.g. Vue)
           setTimeout(function () {
+            var client = instantSearchInstance.client;
+            payload.ua = client.transporter && client.transporter.userAgent ? client.transporter.userAgent.value : client._ua;
             extractPayload(instantSearchInstance.mainIndex.getWidgets(), instantSearchInstance, payload);
             payloadContainer.content = JSON.stringify(payload);
             refNode.appendChild(payloadContainer);
           }, 0);
         },
         unsubscribe: function unsubscribe() {
-          var _payloadContainer$par;
-
-          (_payloadContainer$par = payloadContainer.parentNode) === null || _payloadContainer$par === void 0 ? void 0 : _payloadContainer$par.removeChild(payloadContainer);
+          payloadContainer.remove();
         }
       };
     };
@@ -10570,7 +10590,7 @@
 
           // Bind createURL to this specific attribute
           function _createURL(facetValue) {
-            return createURL(state.toggleRefinement(hierarchicalFacetName, facetValue));
+            return createURL(state.resetPage().toggleFacetRefinement(hierarchicalFacetName, facetValue));
           }
 
           if (!sendEvent) {
@@ -10585,7 +10605,7 @@
           if (!this._refine) {
             this._refine = function (facetValue) {
               sendEvent('click', facetValue);
-              helper.toggleRefinement(hierarchicalFacetName, facetValue).search();
+              helper.toggleFacetRefinement(hierarchicalFacetName, facetValue).search();
             };
           }
 
@@ -10926,7 +10946,7 @@
     }
 
     try {
-      return JSON.parse(atob(serializedPayload));
+      return deserializePayload(serializedPayload);
     } catch (error) {
       throw new Error('The insights middleware was unable to parse `data-insights-event`.');
     }
@@ -10987,12 +11007,11 @@
         return items;
       } : _ref$transformItems;
 
-      var items = userItems;
-
-      if (!Array.isArray(items)) {
+      if (!Array.isArray(userItems)) {
         throw new Error(withUsage$6('The `items` option expects an array of objects.'));
       }
 
+      var items = userItems;
       var defaultItems = items.filter(function (item) {
         return item.default === true;
       });
@@ -11026,7 +11045,7 @@
           var state = _ref3.state,
               createURL = _ref3.createURL;
           return function (value) {
-            return createURL(state.setQueryParameter('hitsPerPage', !value && value !== 0 ? undefined : value));
+            return createURL(state.resetPage().setQueryParameter('hitsPerPage', !value && value !== 0 ? undefined : value));
           };
         }
       };
@@ -11451,7 +11470,7 @@
 
           if (!_createURL) {
             _createURL = function _createURL(facetValue) {
-              return createURL(helper.state.toggleFacetRefinement(attribute, facetValue));
+              return createURL(helper.state.resetPage().toggleFacetRefinement(attribute, facetValue));
             };
           }
 
@@ -11582,7 +11601,8 @@
             eventName: eventName,
             index: helper.getIndex(),
             filters: filters
-          }
+          },
+          attribute: attribute
         });
       }
     };
@@ -12053,7 +12073,8 @@
     checkRendering(renderFn, withUsage$b());
     return function (widgetParams) {
       var _ref2 = widgetParams || {},
-          attribute = _ref2.attribute,
+          _ref2$attribute = _ref2.attribute,
+          attribute = _ref2$attribute === void 0 ? '' : _ref2$attribute,
           minBound = _ref2.min,
           maxBound = _ref2.max,
           _ref2$precision = _ref2.precision,
@@ -12163,7 +12184,8 @@
               eventName: eventName,
               index: helper.getIndex(),
               filters: filters
-            }
+            },
+            attribute: attribute
           });
         }
       };
@@ -12380,128 +12402,41 @@
     name: 'refinement-list',
     connector: true
   });
-  /**
-   * @typedef {Object} RefinementListItem
-   * @property {string} value The value of the refinement list item.
-   * @property {string} label Human-readable value of the refinement list item.
-   * @property {number} count Number of matched results after refinement is applied.
-   * @property {boolean} isRefined Indicates if the list item is refined.
-   */
 
   /**
-   * @typedef {Object} CustomRefinementListWidgetParams
-   * @property {string} attribute The name of the attribute in the records.
-   * @property {"and"|"or"} [operator = 'or'] How the filters are combined together.
-   * @property {number} [limit = 10] The max number of items to display when
-   * `showMoreLimit` is not set or if the widget is showing less value.
-   * @property {boolean} [showMore = false] Whether to display a button that expands the number of items.
-   * @property {number} [showMoreLimit = 20] The max number of items to display if the widget
-   * is showing more items.
-   * @property {string[]|function} [sortBy = ['isRefined', 'count:desc', 'name:asc']] How to sort refinements. Possible values: `count|isRefined|name:asc|name:desc`.
-   * @property {boolean} [escapeFacetValues = true] Escapes the content of the facet values.
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
+   * **RefinementList** connector provides the logic to build a custom widget that
+   * will let the user filter the results based on the values of a specific facet.
+   *
+   * **Requirement:** the attribute passed as `attribute` must be present in
+   * attributesForFaceting of the searched index.
+   *
+   * This connector provides:
+   * - a `refine()` function to select an item.
+   * - a `toggleShowMore()` function to display more or less items
+   * - a `searchForItems()` function to search within the items.
    */
-
-  /**
-   * @typedef {Object} RefinementListRenderingOptions
-   * @property {RefinementListItem[]} items The list of filtering values returned from Algolia API.
-   * @property {function(item.value): string} createURL Creates the next state url for a selected refinement.
-   * @property {function(item.value)} refine Action to apply selected refinements.
-   * @property {function} searchForItems Searches for values inside the list.
-   * @property {boolean} isFromSearch `true` if the values are from an index search.
-   * @property {boolean} canRefine `true` if a refinement can be applied.
-   * @property {boolean} canToggleShowMore `true` if the toggleShowMore button can be activated (enough items to display more or
-   * already displaying more than `limit` items)
-   * @property {Object} widgetParams All original `CustomRefinementListWidgetParams` forwarded to the `renderFn`.
-   * @property {boolean} isShowingMore True if the menu is displaying all the menu items.
-   * @property {function} toggleShowMore Toggles the number of values displayed between `limit` and `showMoreLimit`.
-   */
-
-  /**
-   * **RefinementList** connector provides the logic to build a custom widget that will let the
-   * user filter the results based on the values of a specific facet.
-   *
-   * This connector provides a `toggleShowMore()` function to display more or less items and a `refine()`
-   * function to select an item.
-   * @type {Connector}
-   * @param {function(RefinementListRenderingOptions, boolean)} renderFn Rendering function for the custom **RefinementList** widget.
-   * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomRefinementListWidgetParams)} Re-usable widget factory for a custom **RefinementList** widget.
-   * @example
-   * // custom `renderFn` to render the custom RefinementList widget
-   * function renderFn(RefinementListRenderingOptions, isFirstRendering) {
-   *   if (isFirstRendering) {
-   *     RefinementListRenderingOptions.widgetParams.containerNode
-   *       .html('<ul></ul>')
-   *   }
-   *
-   *     RefinementListRenderingOptions.widgetParams.containerNode
-   *       .find('li[data-refine-value]')
-   *       .each(function() { $(this).off('click'); });
-   *
-   *   if (RefinementListRenderingOptions.canRefine) {
-   *     var list = RefinementListRenderingOptions.items.map(function(item) {
-   *       return `
-   *         <li data-refine-value="${item.value}">
-   *           <input type="checkbox" value="${item.value}" ${item.isRefined ? 'checked' : ''} />
-   *           <a href="${RefinementListRenderingOptions.createURL(item.value)}">
-   *             ${item.label} (${item.count})
-   *           </a>
-   *         </li>
-   *       `;
-   *     });
-   *
-   *     RefinementListRenderingOptions.widgetParams.containerNode.find('ul').html(list);
-   *     RefinementListRenderingOptions.widgetParams.containerNode
-   *       .find('li[data-refine-value]')
-   *       .each(function() {
-   *         $(this).on('click', function(event) {
-   *           event.stopPropagation();
-   *           event.preventDefault();
-   *
-   *           RefinementListRenderingOptions.refine($(this).data('refine-value'));
-   *         });
-   *       });
-   *   } else {
-   *     RefinementListRenderingOptions.widgetParams.containerNode.find('ul').html('');
-   *   }
-   * }
-   *
-   * // connect `renderFn` to RefinementList logic
-   * var customRefinementList = instantsearch.connectors.connectRefinementList(renderFn);
-   *
-   * // mount widget on the page
-   * search.addWidgets([
-   *   customRefinementList({
-   *     containerNode: $('#custom-refinement-list-container'),
-   *     attribute: 'categories',
-   *     limit: 10,
-   *   })
-   * ]);
-   */
-
-  function connectRefinementList(renderFn) {
+  var connectRefinementList = function connectRefinementList(renderFn) {
     var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
     checkRendering(renderFn, withUsage$c());
-    return function () {
-      var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var attribute = widgetParams.attribute,
-          _widgetParams$operato = widgetParams.operator,
-          operator = _widgetParams$operato === void 0 ? 'or' : _widgetParams$operato,
-          _widgetParams$limit = widgetParams.limit,
-          limit = _widgetParams$limit === void 0 ? 10 : _widgetParams$limit,
-          _widgetParams$showMor = widgetParams.showMore,
-          showMore = _widgetParams$showMor === void 0 ? false : _widgetParams$showMor,
-          _widgetParams$showMor2 = widgetParams.showMoreLimit,
-          showMoreLimit = _widgetParams$showMor2 === void 0 ? 20 : _widgetParams$showMor2,
-          _widgetParams$sortBy = widgetParams.sortBy,
-          sortBy = _widgetParams$sortBy === void 0 ? ['isRefined', 'count:desc', 'name:asc'] : _widgetParams$sortBy,
-          _widgetParams$escapeF = widgetParams.escapeFacetValues,
-          escapeFacetValues = _widgetParams$escapeF === void 0 ? true : _widgetParams$escapeF,
-          _widgetParams$transfo = widgetParams.transformItems,
-          transformItems = _widgetParams$transfo === void 0 ? function (items) {
+    return function (widgetParams) {
+      var _ref = widgetParams || {},
+          attribute = _ref.attribute,
+          _ref$operator = _ref.operator,
+          operator = _ref$operator === void 0 ? 'or' : _ref$operator,
+          _ref$limit = _ref.limit,
+          limit = _ref$limit === void 0 ? 10 : _ref$limit,
+          _ref$showMore = _ref.showMore,
+          showMore = _ref$showMore === void 0 ? false : _ref$showMore,
+          _ref$showMoreLimit = _ref.showMoreLimit,
+          showMoreLimit = _ref$showMoreLimit === void 0 ? 20 : _ref$showMoreLimit,
+          _ref$sortBy = _ref.sortBy,
+          sortBy = _ref$sortBy === void 0 ? ['isRefined', 'count:desc', 'name:asc'] : _ref$sortBy,
+          _ref$escapeFacetValue = _ref.escapeFacetValues,
+          escapeFacetValues = _ref$escapeFacetValue === void 0 ? true : _ref$escapeFacetValue,
+          _ref$transformItems = _ref.transformItems,
+          transformItems = _ref$transformItems === void 0 ? function (items) {
         return items;
-      } : _widgetParams$transfo;
+      } : _ref$transformItems;
 
       if (!attribute) {
         throw new Error(withUsage$c('The `attribute` option is required.'));
@@ -12515,9 +12450,9 @@
         throw new Error(withUsage$c('`showMoreLimit` should be greater than `limit`.'));
       }
 
-      var formatItems = function formatItems(_ref) {
-        var label = _ref.name,
-            item = _objectWithoutProperties(_ref, ["name"]);
+      var formatItems = function formatItems(_ref2) {
+        var label = _ref2.name,
+            item = _objectWithoutProperties(_ref2, ["name"]);
 
         return _objectSpread2(_objectSpread2({}, item), {}, {
           label: label,
@@ -12526,33 +12461,47 @@
         });
       };
 
-      var _getLimit = function getLimit(isShowingMore) {
-        return isShowingMore ? showMoreLimit : limit;
-      };
-
       var lastResultsFromMainSearch;
       var lastItemsFromMainSearch = [];
       var hasExhaustiveItems = true;
-      var searchForFacetValues;
       var triggerRefine;
       var sendEvent;
-      var toggleShowMore;
-      /* eslint-disable max-params */
+      var isShowingMore = false; // Provide the same function to the `renderFn` so that way the user
+      // has to only bind it once when `isFirstRendering` for instance
 
-      var createSearchForFacetValues = function createSearchForFacetValues(helper) {
-        var _this = this;
+      var toggleShowMore = function toggleShowMore() {};
 
+      function cachedToggleShowMore() {
+        toggleShowMore();
+      }
+
+      function createToggleShowMore(renderOptions, widget) {
+        return function () {
+          isShowingMore = !isShowingMore;
+          widget.render(renderOptions);
+        };
+      }
+
+      function getLimit() {
+        return isShowingMore ? showMoreLimit : limit;
+      }
+
+      var searchForFacetValues = function searchForFacetValues() {
+        return function () {};
+      };
+
+      var createSearchForFacetValues = function createSearchForFacetValues(helper, widget) {
         return function (renderOptions) {
           return function (query) {
             var instantSearchInstance = renderOptions.instantSearchInstance;
 
             if (query === '' && lastItemsFromMainSearch) {
               // render with previous data from the helper.
-              renderFn(_objectSpread2(_objectSpread2({}, _this.getWidgetRenderState(_objectSpread2(_objectSpread2({}, renderOptions), {}, {
+              renderFn(_objectSpread2(_objectSpread2({}, widget.getWidgetRenderState(_objectSpread2(_objectSpread2({}, renderOptions), {}, {
                 results: lastResultsFromMainSearch
               }))), {}, {
                 instantSearchInstance: instantSearchInstance
-              }));
+              }), false);
             } else {
               var tags = {
                 highlightPreTag: escapeFacetValues ? TAG_PLACEHOLDER.highlightPreTag : TAG_REPLACEMENT.highlightPreTag,
@@ -12561,19 +12510,19 @@
               helper.searchForFacetValues(attribute, query, // We cap the `maxFacetHits` value to 100 because the Algolia API
               // doesn't support a greater number.
               // See https://www.algolia.com/doc/api-reference/api-parameters/maxFacetHits/
-              Math.min(_getLimit(_this.isShowingMore), 100), tags).then(function (results) {
+              Math.min(getLimit(), 100), tags).then(function (results) {
                 var facetValues = escapeFacetValues ? escapeFacets(results.facetHits) : results.facetHits;
-                var normalizedFacetValues = transformItems(facetValues.map(function (_ref2) {
-                  var value = _ref2.value,
-                      item = _objectWithoutProperties(_ref2, ["value"]);
+                var normalizedFacetValues = transformItems(facetValues.map(function (_ref3) {
+                  var value = _ref3.value,
+                      item = _objectWithoutProperties(_ref3, ["value"]);
 
                   return _objectSpread2(_objectSpread2({}, item), {}, {
                     value: value,
                     label: value
                   });
                 }));
-                var canToggleShowMore = _this.isShowingMore && lastItemsFromMainSearch.length > limit;
-                renderFn(_objectSpread2(_objectSpread2({}, _this.getWidgetRenderState(_objectSpread2(_objectSpread2({}, renderOptions), {}, {
+                var canToggleShowMore = isShowingMore && lastItemsFromMainSearch.length > limit;
+                renderFn(_objectSpread2(_objectSpread2({}, widget.getWidgetRenderState(_objectSpread2(_objectSpread2({}, renderOptions), {}, {
                   results: lastResultsFromMainSearch
                 }))), {}, {
                   items: normalizedFacetValues,
@@ -12581,36 +12530,15 @@
                   canRefine: true,
                   instantSearchInstance: instantSearchInstance,
                   isFromSearch: true
-                }));
+                }), false);
               });
             }
           };
         };
       };
-      /* eslint-enable max-params */
-
 
       return {
         $$type: 'ais.refinementList',
-        isShowingMore: false,
-        // Provide the same function to the `renderFn` so that way the user
-        // has to only bind it once when `isFirstRendering` for instance
-        toggleShowMore: function toggleShowMore() {},
-        cachedToggleShowMore: function cachedToggleShowMore() {
-          toggleShowMore();
-        },
-        createToggleShowMore: function createToggleShowMore(renderOptions) {
-          var _this2 = this;
-
-          return function () {
-            _this2.isShowingMore = !_this2.isShowingMore;
-
-            _this2.render(renderOptions);
-          };
-        },
-        getLimit: function getLimit() {
-          return _getLimit(this.isShowingMore);
-        },
         init: function init(initOptions) {
           renderFn(_objectSpread2(_objectSpread2({}, this.getWidgetRenderState(initOptions)), {}, {
             instantSearchInstance: initOptions.instantSearchInstance
@@ -12629,13 +12557,13 @@
         getWidgetRenderState: function getWidgetRenderState(renderOptions) {
           var results = renderOptions.results,
               state = renderOptions.state,
-              createURL = renderOptions.createURL,
+              _createURL = renderOptions.createURL,
               instantSearchInstance = renderOptions.instantSearchInstance,
               _renderOptions$isFrom = renderOptions.isFromSearch,
               isFromSearch = _renderOptions$isFrom === void 0 ? false : _renderOptions$isFrom,
               helper = renderOptions.helper;
           var items = [];
-          var facetValues;
+          var facetValues = [];
 
           if (!sendEvent || !triggerRefine || !searchForFacetValues) {
             sendEvent = createSendEventForFacet({
@@ -12647,23 +12575,24 @@
 
             triggerRefine = function triggerRefine(facetValue) {
               sendEvent('click', facetValue);
-              helper.toggleRefinement(attribute, facetValue).search();
+              helper.toggleFacetRefinement(attribute, facetValue).search();
             };
 
-            searchForFacetValues = createSearchForFacetValues.call(this, helper);
+            searchForFacetValues = createSearchForFacetValues(helper, this);
           }
 
           if (results) {
             if (!isFromSearch) {
-              facetValues = results.getFacetValues(attribute, {
+              var values = results.getFacetValues(attribute, {
                 sortBy: sortBy
-              }) || [];
-              items = transformItems(facetValues.slice(0, this.getLimit()).map(formatItems));
+              });
+              facetValues = values && Array.isArray(values) ? values : [];
+              items = transformItems(facetValues.slice(0, getLimit()).map(formatItems));
             } else {
               facetValues = escapeFacetValues ? escapeFacets(results.facetHits) : results.facetHits;
-              items = transformItems(facetValues.map(function (_ref3) {
-                var value = _ref3.value,
-                    item = _objectWithoutProperties(_ref3, ["value"]);
+              items = transformItems(facetValues.map(function (_ref4) {
+                var value = _ref4.value,
+                    item = _objectWithoutProperties(_ref4, ["value"]);
 
                 return _objectSpread2(_objectSpread2({}, item), {}, {
                   value: value,
@@ -12673,7 +12602,7 @@
             }
 
             var maxValuesPerFacetConfig = state.maxValuesPerFacet;
-            var currentLimit = this.getLimit(); // If the limit is the max number of facet retrieved it is impossible to know
+            var currentLimit = getLimit(); // If the limit is the max number of facet retrieved it is impossible to know
             // if the facets are exhaustive. The only moment we are sure it is exhaustive
             // is when it is strictly under the number requested unless we know that another
             // widget has requested more values (maxValuesPerFacet > getLimit()).
@@ -12683,37 +12612,37 @@
             hasExhaustiveItems = maxValuesPerFacetConfig > currentLimit ? facetValues.length <= currentLimit : facetValues.length < currentLimit;
             lastResultsFromMainSearch = results;
             lastItemsFromMainSearch = items;
-            toggleShowMore = this.createToggleShowMore(renderOptions);
-          } // Compute a specific createURL method able to link to any facet value state change
 
-
-          var _createURL = function _createURL(facetValue) {
-            return createURL(state.toggleRefinement(attribute, facetValue));
-          }; // Do not mistake searchForFacetValues and searchFacetValues which is the actual search
+            if (renderOptions.results) {
+              toggleShowMore = createToggleShowMore(renderOptions, this);
+            }
+          } // Do not mistake searchForFacetValues and searchFacetValues which is the actual search
           // function
 
 
           var searchFacetValues = searchForFacetValues && searchForFacetValues(renderOptions);
-          var canShowLess = this.isShowingMore && lastItemsFromMainSearch.length > limit;
+          var canShowLess = isShowingMore && lastItemsFromMainSearch.length > limit;
           var canShowMore = showMore && !isFromSearch && !hasExhaustiveItems;
           var canToggleShowMore = canShowLess || canShowMore;
           return {
-            createURL: _createURL,
+            createURL: function createURL(facetValue) {
+              return _createURL(state.resetPage().toggleFacetRefinement(attribute, facetValue));
+            },
             items: items,
             refine: triggerRefine,
             searchForItems: searchFacetValues,
             isFromSearch: isFromSearch,
             canRefine: isFromSearch || items.length > 0,
             widgetParams: widgetParams,
-            isShowingMore: this.isShowingMore,
+            isShowingMore: isShowingMore,
             canToggleShowMore: canToggleShowMore,
-            toggleShowMore: this.cachedToggleShowMore,
+            toggleShowMore: cachedToggleShowMore,
             sendEvent: sendEvent,
             hasExhaustiveItems: hasExhaustiveItems
           };
         },
-        dispose: function dispose(_ref4) {
-          var state = _ref4.state;
+        dispose: function dispose(_ref5) {
+          var state = _ref5.state;
           unmountFn();
           var withoutMaxValuesPerFacet = state.setQueryParameter('maxValuesPerFacet', undefined);
 
@@ -12723,8 +12652,8 @@
 
           return withoutMaxValuesPerFacet.removeDisjunctiveFacet(attribute);
         },
-        getWidgetUiState: function getWidgetUiState(uiState, _ref5) {
-          var searchParameters = _ref5.searchParameters;
+        getWidgetUiState: function getWidgetUiState(uiState, _ref6) {
+          var searchParameters = _ref6.searchParameters;
           var values = operator === 'or' ? searchParameters.getDisjunctiveRefinements(attribute) : searchParameters.getConjunctiveRefinements(attribute);
 
           if (!values.length) {
@@ -12735,8 +12664,8 @@
             refinementList: _objectSpread2(_objectSpread2({}, uiState.refinementList), {}, _defineProperty({}, attribute, values))
           });
         },
-        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref6) {
-          var uiState = _ref6.uiState;
+        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref7) {
+          var uiState = _ref7.uiState;
           var isDisjunctive = operator === 'or';
           var values = uiState.refinementList && uiState.refinementList[attribute];
           var withoutRefinements = searchParameters.clearRefinements(attribute);
@@ -12756,7 +12685,7 @@
         }
       };
     };
-  }
+  };
 
   var withUsage$d = createDocumentationMessageGenerator({
     name: 'search-box',
@@ -13125,7 +13054,8 @@
             eventName: eventName,
             index: helper.getIndex(),
             filters: ["".concat(attribute, ">=").concat(facetValue)]
-          }
+          },
+          attribute: attribute
         });
       }
     };
@@ -13278,16 +13208,20 @@
         return "The ".concat(attribute, " attribute can have ").concat(maxFacets, " different values (0 to ").concat(max, " with a maximum of ").concat(maxDecimalPlaces, " decimals = ").concat(maxFacets, ") but you retrieved only ").concat(maxValuesPerFacet, " facet values. Therefore the number of results that match the refinements can be incorrect.\n").concat(solutions.length ? "To resolve this problem you can:\n".concat(solutions.join('\n')) : "");
       };
 
-      var toggleRefinement = function toggleRefinement(helper, facetValue) {
-        sendEvent('click', facetValue);
-        var isRefined = _getRefinedStar(helper.state) === Number(facetValue);
-        helper.removeNumericRefinement(attribute);
+      function getRefinedState(state, facetValue) {
+        var isRefined = _getRefinedStar(state) === Number(facetValue);
+        var emptyState = state.resetPage().removeNumericRefinement(attribute);
 
         if (!isRefined) {
-          helper.addNumericRefinement(attribute, '<=', max).addNumericRefinement(attribute, '>=', facetValue);
+          return emptyState.addNumericRefinement(attribute, '<=', max).addNumericRefinement(attribute, '>=', facetValue);
         }
 
-        helper.search();
+        return emptyState;
+      }
+
+      var toggleRefinement = function toggleRefinement(helper, facetValue) {
+        sendEvent('click', facetValue);
+        helper.setState(getRefinedState(helper.state, facetValue)).search();
       };
 
       var connectorState = {
@@ -13298,7 +13232,7 @@
           var state = _ref3.state,
               createURL = _ref3.createURL;
           return function (value) {
-            return createURL(state.removeNumericRefinement(attribute).addNumericRefinement(attribute, '<=', max).addNumericRefinement(attribute, '>=', value));
+            return createURL(getRefinedState(state, value));
           };
         }
       };
@@ -13443,53 +13377,14 @@
     connector: true
   });
   /**
-   * @typedef {Object} StatsRenderingOptions
-   * @property {number} hitsPerPage The maximum number of hits per page returned by Algolia.
-   * @property {number} nbHits The number of hits in the result set.
-   * @property {number} nbPages The number of pages computed for the result set.
-   * @property {number} page The current page.
-   * @property {number} processingTimeMS The time taken to compute the results inside the Algolia engine.
-   * @property {string} query The query used for the current search.
-   * @property {object} widgetParams All original `CustomStatsWidgetParams` forwarded to the `renderFn`.
-   */
-
-  /**
-   * @typedef {Object} CustomStatsWidgetParams
-   */
-
-  /**
    * **Stats** connector provides the logic to build a custom widget that will displays
    * search statistics (hits number and processing time).
-   *
-   * @type {Connector}
-   * @param {function(StatsRenderingOptions, boolean)} renderFn Rendering function for the custom **Stats** widget.
-   * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomStatsWidgetParams)} Re-usable widget factory for a custom **Stats** widget.
-   * @example
-   * // custom `renderFn` to render the custom Stats widget
-   * function renderFn(StatsRenderingOptions, isFirstRendering) {
-   *   if (isFirstRendering) return;
-   *
-   *   StatsRenderingOptions.widgetParams.containerNode
-   *     .html(StatsRenderingOptions.nbHits + ' results found in ' + StatsRenderingOptions.processingTimeMS);
-   * }
-   *
-   * // connect `renderFn` to Stats logic
-   * var customStatsWidget = instantsearch.connectors.connectStats(renderFn);
-   *
-   * // mount widget on the page
-   * search.addWidgets([
-   *   customStatsWidget({
-   *     containerNode: $('#custom-stats-container'),
-   *   })
-   * ]);
    */
 
-  function connectStats(renderFn) {
+  var connectStats = function connectStats(renderFn) {
     var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
     checkRendering(renderFn, withUsage$g());
-    return function () {
-      var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    return function (widgetParams) {
       return {
         $$type: 'ais.stats',
         init: function init(initOptions) {
@@ -13544,7 +13439,7 @@
         }
       };
     };
-  }
+  };
 
   var withUsage$h = createDocumentationMessageGenerator({
     name: 'toggle-refinement',
@@ -13588,7 +13483,8 @@
             filters: on.map(function (value) {
               return "".concat(attribute, ":").concat(value);
             })
-          }
+          },
+          attribute: attribute
         });
       }
     };
@@ -13730,11 +13626,12 @@
           var state = _ref3.state,
               createURL = _ref3.createURL;
           return function () {
+            state = state.resetPage();
             var valuesToRemove = isRefined ? on : off;
 
             if (valuesToRemove) {
               valuesToRemove.forEach(function (v) {
-                state.removeDisjunctiveFacetRefinement(attribute, v);
+                state = state.removeDisjunctiveFacetRefinement(attribute, v);
               });
             }
 
@@ -13742,7 +13639,7 @@
 
             if (valuesToAdd) {
               valuesToAdd.forEach(function (v) {
-                state.addDisjunctiveFacetRefinement(attribute, v);
+                state = state.addDisjunctiveFacetRefinement(attribute, v);
               });
             }
 
@@ -13947,6 +13844,18 @@
       var _attributes = _slicedToArray(attributes, 1),
           hierarchicalFacetName = _attributes[0];
 
+      function getRefinedState(state, facetValue) {
+        if (!facetValue) {
+          var breadcrumb = state.getHierarchicalFacetBreadcrumb(hierarchicalFacetName);
+
+          if (breadcrumb.length > 0) {
+            return state.resetPage().toggleFacetRefinement(hierarchicalFacetName, breadcrumb[0]);
+          }
+        }
+
+        return state.resetPage().toggleFacetRefinement(hierarchicalFacetName, facetValue);
+      }
+
       return {
         $$type: 'ais.breadcrumb',
         init: function init(initOptions) {
@@ -13991,29 +13900,13 @@
 
           if (!connectorState.createURL) {
             connectorState.createURL = function (facetValue) {
-              if (!facetValue) {
-                var breadcrumb = helper.getHierarchicalFacetBreadcrumb(hierarchicalFacetName);
-
-                if (breadcrumb.length > 0) {
-                  return createURL(helper.state.toggleFacetRefinement(hierarchicalFacetName, breadcrumb[0]));
-                }
-              }
-
-              return createURL(helper.state.toggleFacetRefinement(hierarchicalFacetName, facetValue));
+              return createURL(getRefinedState(helper.state, facetValue));
             };
           }
 
           if (!connectorState.refine) {
             connectorState.refine = function (facetValue) {
-              if (!facetValue) {
-                var breadcrumb = helper.getHierarchicalFacetBreadcrumb(hierarchicalFacetName);
-
-                if (breadcrumb.length > 0) {
-                  helper.toggleRefinement(hierarchicalFacetName, breadcrumb[0]).search();
-                }
-              } else {
-                helper.toggleRefinement(hierarchicalFacetName, facetValue).search();
-              }
+              helper.setState(getRefinedState(helper.state, facetValue)).search();
             };
           }
 
@@ -14716,9 +14609,7 @@
         sharedHelperState = _ref.sharedHelperState,
         trackedFilters = _ref.trackedFilters;
     var ruleContexts = Object.keys(trackedFilters).reduce(function (facets, facetName) {
-      var facetRefinements = getRefinements( // An empty object is technically not a `SearchResults` but `getRefinements`
-      // only accesses properties, meaning it will not throw with an empty object.
-      helper.lastResults || {}, sharedHelperState, true).filter(function (refinement) {
+      var facetRefinements = getRefinements(helper.lastResults || {}, sharedHelperState, true).filter(function (refinement) {
         return refinement.attribute === facetName;
       }).map(function (refinement) {
         return refinement.numericValue || refinement.name;
@@ -14858,6 +14749,7 @@
     };
   };
 
+  /* global SpeechRecognition SpeechRecognitionEvent */
   var createVoiceSearchHelper = function createVoiceSearchHelper(_ref) {
     var searchAsYouSpeak = _ref.searchAsYouSpeak,
         language = _ref.language,
@@ -16004,7 +15896,7 @@
     redo: 'Redo search here'
   };
 
-  // eslint-disable-next-line no-undef
+  /* global google EventListener */
   var createHTMLMarker = function createHTMLMarker(googleReference) {
     var HTMLMarker = /*#__PURE__*/function (_googleReference$maps) {
       _inherits(HTMLMarker, _googleReference$maps);
@@ -16091,8 +15983,11 @@
             this.element.parentNode.removeChild(this.element);
             Object.keys(this.listeners).forEach(function (eventName) {
               _this2.element.removeEventListener(eventName, _this2.listeners[eventName]);
-            });
-            delete this.element;
+            }); // after onRemove the class is no longer used, thus it can be deleted
+            // @ts-expect-error
+
+            delete this.element; // @ts-expect-error
+
             delete this.listeners;
           }
         }
@@ -16772,6 +16667,7 @@
           }
         }));
         var shouldDisableSearchBox = this.props.searchIsAlwaysActive !== true && !(this.props.isFromSearch || !this.props.hasExhaustiveItems);
+        var templates = this.props.searchBoxTemplateProps ? this.props.searchBoxTemplateProps.templates : {};
         var searchBox = this.props.searchFacetValues && h("div", {
           className: this.props.cssClasses.searchBox
         }, h(SearchBox, {
@@ -16781,7 +16677,7 @@
           placeholder: this.props.searchPlaceholder,
           disabled: shouldDisableSearchBox,
           cssClasses: this.props.cssClasses.searchable,
-          templates: this.props.templateProps.templates,
+          templates: templates,
           onChange: function onChange(event) {
             return _this2.props.searchFacetValues(event.target.value);
           },
@@ -17473,7 +17369,6 @@
     });
   };
 
-  /* eslint-disable max-len */
   var defaultTemplates$5 = {
     item: '<a class="{{cssClasses.link}}" href="{{url}}">' + '<span class="{{cssClasses.label}}">{{label}}</span>' + '<span class="{{cssClasses.count}}">{{#helpers.formatNumber}}{{count}}{{/helpers.formatNumber}}</span>' + '</a>',
     showMoreText: "\n    {{#isShowingMore}}\n      Show less\n    {{/isShowingMore}}\n    {{^isShowingMore}}\n      Show more\n    {{/isShowingMore}}\n  "
@@ -17607,48 +17502,22 @@
     loadingIndicator: "\n<svg class=\"{{cssClasses.loadingIcon}}\" width=\"16\" height=\"16\" viewBox=\"0 0 38 38\" xmlns=\"http://www.w3.org/2000/svg\" stroke=\"#444\">\n  <g fill=\"none\" fillRule=\"evenodd\">\n    <g transform=\"translate(1 1)\" strokeWidth=\"2\">\n      <circle strokeOpacity=\".5\" cx=\"18\" cy=\"18\" r=\"18\" />\n      <path d=\"M36 18c0-9.94-8.06-18-18-18\">\n        <animateTransform\n          attributeName=\"transform\"\n          type=\"rotate\"\n          from=\"0 18 18\"\n          to=\"360 18 18\"\n          dur=\"1s\"\n          repeatCount=\"indefinite\"\n        />\n      </path>\n    </g>\n  </g>\n</svg>\n  "
   };
 
-  var defaultTemplates$7 = {
-    item: "<label class=\"{{cssClasses.label}}\">\n  <input type=\"checkbox\"\n         class=\"{{cssClasses.checkbox}}\"\n         value=\"{{value}}\"\n         {{#isRefined}}checked{{/isRefined}} />\n  <span class=\"{{cssClasses.labelText}}\">{{#isFromSearch}}{{{highlighted}}}{{/isFromSearch}}{{^isFromSearch}}{{highlighted}}{{/isFromSearch}}</span>\n  <span class=\"{{cssClasses.count}}\">{{#helpers.formatNumber}}{{count}}{{/helpers.formatNumber}}</span>\n</label>",
-    showMoreText: "\n    {{#isShowingMore}}\n      Show less\n    {{/isShowingMore}}\n    {{^isShowingMore}}\n      Show more\n    {{/isShowingMore}}\n    ",
-    searchableNoResults: 'No results',
-    searchableReset: defaultTemplates$6.reset,
-    searchableSubmit: defaultTemplates$6.submit,
-    searchableLoadingIndicator: defaultTemplates$6.loadingIndicator
-  };
-
   var withUsage$z = createDocumentationMessageGenerator({
     name: 'refinement-list'
   });
   var suit$c = component('RefinementList');
   var searchBoxSuit = component('SearchBox');
-  /**
-   * Transforms the searchable templates by removing the `searchable` prefix.
-   *
-   * This makes them usable in the `SearchBox` component.
-   *
-   * @param {object} templates The widget templates
-   * @returns {object} the formatted templates
-   */
-
-  function transformTemplates(templates) {
-    var allTemplates = _objectSpread2(_objectSpread2({}, templates), {}, {
-      submit: templates.searchableSubmit,
-      reset: templates.searchableReset,
-      loadingIndicator: templates.searchableLoadingIndicator
-    });
-
-    var searchableReset = allTemplates.searchableReset,
-        searchableSubmit = allTemplates.searchableSubmit,
-        searchableLoadingIndicator = allTemplates.searchableLoadingIndicator,
-        transformedTemplates = _objectWithoutProperties(allTemplates, ["searchableReset", "searchableSubmit", "searchableLoadingIndicator"]);
-
-    return transformedTemplates;
-  }
+  var defaultTemplates$7 = {
+    item: "<label class=\"{{cssClasses.label}}\">\n  <input type=\"checkbox\"\n         class=\"{{cssClasses.checkbox}}\"\n         value=\"{{value}}\"\n         {{#isRefined}}checked{{/isRefined}} />\n  <span class=\"{{cssClasses.labelText}}\">{{#isFromSearch}}{{{highlighted}}}{{/isFromSearch}}{{^isFromSearch}}{{highlighted}}{{/isFromSearch}}</span>\n  <span class=\"{{cssClasses.count}}\">{{#helpers.formatNumber}}{{count}}{{/helpers.formatNumber}}</span>\n</label>",
+    showMoreText: "\n    {{#isShowingMore}}\n      Show less\n    {{/isShowingMore}}\n    {{^isShowingMore}}\n      Show more\n    {{/isShowingMore}}\n    ",
+    searchableNoResults: 'No results'
+  };
 
   var renderer$8 = function renderer(_ref) {
     var containerNode = _ref.containerNode,
         cssClasses = _ref.cssClasses,
         templates = _ref.templates,
+        searchBoxTemplates = _ref.searchBoxTemplates,
         renderState = _ref.renderState,
         showMore = _ref.showMore,
         searchable = _ref.searchable,
@@ -17668,8 +17537,14 @@
 
       if (isFirstRendering) {
         renderState.templateProps = prepareTemplateProps({
+          defaultTemplates: defaultTemplates$7,
           templatesConfig: instantSearchInstance.templatesConfig,
           templates: templates
+        });
+        renderState.searchBoxTemplateProps = prepareTemplateProps({
+          defaultTemplates: defaultTemplates$6,
+          templatesConfig: instantSearchInstance.templatesConfig,
+          templates: searchBoxTemplates
         });
         return;
       }
@@ -17679,6 +17554,7 @@
         cssClasses: cssClasses,
         facetValues: items,
         templateProps: renderState.templateProps,
+        searchBoxTemplateProps: renderState.searchBoxTemplateProps,
         toggleRefinement: refine,
         searchFacetValues: searchable ? searchForItems : undefined,
         searchPlaceholder: searchablePlaceholder,
@@ -17692,61 +17568,6 @@
       }), containerNode);
     };
   };
-  /**
-   * @typedef {Object} RefinementListTemplates
-   * @property  {string|function(RefinementListItemData):string} [item] Item template, provided with `label`, `highlighted`, `value`, `count`, `isRefined`, `url` data properties.
-   * @property {string|function} [searchableNoResults] Templates to use for search for facet values.
-   * @property {string|function} [showMoreText] Template used for the show more text, provided with `isShowingMore` data property.
-   */
-
-  /**
-   * @typedef {Object} RefinementListItemData
-   * @property {number} count The number of occurrences of the facet in the result set.
-   * @property {boolean} isRefined True if the value is selected.
-   * @property {string} label The label to display.
-   * @property {string} value The value used for refining.
-   * @property {string} highlighted The label highlighted (when using search for facet values). This value is displayed in the default template.
-   * @property {string} url The url with this refinement selected.
-   * @property {object} cssClasses Object containing all the classes computed for the item.
-   */
-
-  /**
-   * @typedef {Object} RefinementListCSSClasses
-   * @property {string|string[]} [root] CSS class to add to the root element.
-   * @property {string|string[]} [noRefinementRoot] CSS class to add to the root element when no refinements.
-   * @property {string|string[]} [noResults] CSS class to add to the root element with no results.
-   * @property {string|string[]} [list] CSS class to add to the list element.
-   * @property {string|string[]} [item] CSS class to add to each item element.
-   * @property {string|string[]} [selectedItem] CSS class to add to each selected element.
-   * @property {string|string[]} [label] CSS class to add to each label element (when using the default template).
-   * @property {string|string[]} [checkbox] CSS class to add to each checkbox element (when using the default template).
-   * @property {string|string[]} [labelText] CSS class to add to each label text element.
-   * @property {string|string[]} [showMore] CSS class to add to the show more element
-   * @property {string|string[]} [disabledShowMore] CSS class to add to the disabledshow more element
-   * @property {string|string[]} [count] CSS class to add to each count element (when using the default template).
-   */
-
-  /**
-   * @typedef {Object} RefinementListWidgetParams
-   * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
-   * @property {string} attribute Name of the attribute for faceting.
-   * @property {"and"|"or"} [operator="or"] How to apply refinements. Possible values: `or`, `and`
-   * @property {string[]|function} [sortBy=["isRefined", "count:desc", "name:asc"]] How to sort refinements. Possible values: `count:asc` `count:desc` `name:asc` `name:desc` `isRefined`.
-   *
-   * You can also use a sort function that behaves like the standard Javascript [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Syntax).
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
-   * @property {boolean} [searchable=false] Add a search input to let the user search for more facet values. In order to make this feature work, you need to make the attribute searchable [using the API](https://www.algolia.com/doc/guides/searching/faceting/?language=js#declaring-a-searchable-attribute-for-faceting) or [the dashboard](https://www.algolia.com/explorer/display/).
-   * @property {number} [limit = 10] The minimum number of facet values to retrieve.
-   * @property {boolean} [showMore = false] Whether to display a button that expands the number of items.
-   * @property {number} [showMoreLimit = 20] The max number of items to display if the widget
-   * @property {string} [searchablePlaceholder] Value of the search field placeholder.
-   * @property {boolean} [searchableIsAlwaysActive=true] When `false` the search field will become disabled if
-   * there are less items to display than the `options.limit`, otherwise the search field is always usable.
-   * @property {boolean} [searchableEscapeFacetValues=true] When activated, it will escape the facet values that are returned
-   * from Algolia. In this case, the surrounding tags will always be `<mark></mark>`.
-   * @property {RefinementListTemplates} [templates] Templates to use for the widget.
-   * @property {RefinementListCSSClasses} [cssClasses] CSS classes to add to the wrapping elements.
-   */
 
   /**
    * The refinement list widget is one of the most common widget that you can find
@@ -17766,25 +17587,8 @@
    * in your Algolia settings.
    *
    * If you also want to use search for facet values on this attribute, you need to make it searchable using the [dashboard](https://www.algolia.com/explorer/display/) or using the [API](https://www.algolia.com/doc/guides/searching/faceting/#search-for-facet-values).
-   *
-   * @type {WidgetFactory}
-   * @devNovel RefinementList
-   * @category filter
-   * @param {RefinementListWidgetParams} widgetParams The RefinementList widget options that you use to customize the widget.
-   * @return {Widget} Creates a new instance of the RefinementList widget.
-   * @example
-   * search.addWidgets([
-   *   instantsearch.widgets.refinementList({
-   *     container: '#brands',
-   *     attribute: 'brand',
-   *     operator: 'or',
-   *     limit: 10,
-   *   })
-   * ]);
    */
-
-
-  function refinementList(widgetParams) {
+  var refinementList = function refinementList(widgetParams) {
     var _ref3 = widgetParams || {},
         container = _ref3.container,
         attribute = _ref3.attribute,
@@ -17813,7 +17617,6 @@
 
     var escapeFacetValues = searchable ? Boolean(searchableEscapeFacetValues) : false;
     var containerNode = getContainerNode(container);
-    var templates = transformTemplates(_objectSpread2(_objectSpread2({}, defaultTemplates$7), userTemplates));
     var cssClasses = {
       root: classnames(suit$c(), userCssClasses.root),
       noRefinementRoot: classnames(suit$c({
@@ -17885,7 +17688,12 @@
     var specializedRenderer = renderer$8({
       containerNode: containerNode,
       cssClasses: cssClasses,
-      templates: templates,
+      templates: userTemplates,
+      searchBoxTemplates: {
+        submit: userTemplates.searchableSubmit,
+        reset: userTemplates.searchableReset,
+        loadingIndicator: userTemplates.searchableLoadingIndicator
+      },
       renderState: {},
       searchable: searchable,
       searchablePlaceholder: searchablePlaceholder,
@@ -17907,9 +17715,8 @@
     })), {}, {
       $$widgetType: 'ais.refinementList'
     });
-  }
+  };
 
-  /* eslint-disable max-len */
   var defaultTemplates$8 = {
     item: "<label class=\"{{cssClasses.label}}\">\n  <input type=\"radio\" class=\"{{cssClasses.radio}}\" name=\"{{attribute}}\"{{#isRefined}} checked{{/isRefined}} />\n  <span class=\"{{cssClasses.labelText}}\">{{label}}</span>\n</label>"
   };
@@ -20182,55 +19989,44 @@
   var Stats = function Stats(_ref) {
     var nbHits = _ref.nbHits,
         nbSortedHits = _ref.nbSortedHits,
-        areHitsSorted = _ref.areHitsSorted,
-        hitsPerPage = _ref.hitsPerPage,
-        nbPages = _ref.nbPages,
-        page = _ref.page,
-        processingTimeMS = _ref.processingTimeMS,
-        query = _ref.query,
+        cssClasses = _ref.cssClasses,
         templateProps = _ref.templateProps,
-        cssClasses = _ref.cssClasses;
+        rest = _objectWithoutProperties(_ref, ["nbHits", "nbSortedHits", "cssClasses", "templateProps"]);
+
     return h("div", {
-      className: cssClasses.root
+      className: classnames(cssClasses.root)
     }, h(Template, _extends({}, templateProps, {
       templateKey: "text",
       rootTagName: "span",
       rootProps: {
         className: cssClasses.text
       },
-      data: {
-        hasManySortedResults: nbSortedHits > 1,
+      data: _objectSpread2({
+        hasManySortedResults: nbSortedHits && nbSortedHits > 1,
         hasNoSortedResults: nbSortedHits === 0,
         hasOneSortedResults: nbSortedHits === 1,
         hasManyResults: nbHits > 1,
         hasNoResults: nbHits === 0,
         hasOneResult: nbHits === 1,
-        areHitsSorted: areHitsSorted,
-        hitsPerPage: hitsPerPage,
         nbHits: nbHits,
         nbSortedHits: nbSortedHits,
-        nbPages: nbPages,
-        page: page,
-        processingTimeMS: processingTimeMS,
-        query: query,
         cssClasses: cssClasses
-      }
+      }, rest)
     })));
-  };
-
-  var defaultTemplates$b = {
-    text: "\n    {{#areHitsSorted}}\n      {{#hasNoSortedResults}}No relevant results{{/hasNoSortedResults}}\n      {{#hasOneSortedResults}}1 relevant result{{/hasOneSortedResults}}\n      {{#hasManySortedResults}}{{#helpers.formatNumber}}{{nbSortedHits}}{{/helpers.formatNumber}} relevant results{{/hasManySortedResults}}\n      sorted out of {{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}}\n    {{/areHitsSorted}}\n    {{^areHitsSorted}}\n      {{#hasNoResults}}No results{{/hasNoResults}}\n      {{#hasOneResult}}1 result{{/hasOneResult}}\n      {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}}\n    {{/areHitsSorted}}\n    found in {{processingTimeMS}}ms"
   };
 
   var withUsage$H = createDocumentationMessageGenerator({
     name: 'stats'
   });
   var suit$k = component('Stats');
+  var defaultTemplates$b = {
+    text: "\n    {{#areHitsSorted}}\n      {{#hasNoSortedResults}}No relevant results{{/hasNoSortedResults}}\n      {{#hasOneSortedResults}}1 relevant result{{/hasOneSortedResults}}\n      {{#hasManySortedResults}}{{#helpers.formatNumber}}{{nbSortedHits}}{{/helpers.formatNumber}} relevant results{{/hasManySortedResults}}\n      sorted out of {{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}}\n    {{/areHitsSorted}}\n    {{^areHitsSorted}}\n      {{#hasNoResults}}No results{{/hasNoResults}}\n      {{#hasOneResult}}1 result{{/hasOneResult}}\n      {{#hasManyResults}}{{#helpers.formatNumber}}{{nbHits}}{{/helpers.formatNumber}} results{{/hasManyResults}}\n    {{/areHitsSorted}}\n    found in {{processingTimeMS}}ms"
+  };
 
   var renderer$g = function renderer(_ref) {
-    var containerNode = _ref.containerNode,
+    var renderState = _ref.renderState,
         cssClasses = _ref.cssClasses,
-        renderState = _ref.renderState,
+        containerNode = _ref.containerNode,
         templates = _ref.templates;
     return function (_ref2, isFirstRendering) {
       var hitsPerPage = _ref2.hitsPerPage,
@@ -20267,58 +20063,14 @@
     };
   };
   /**
-   * @typedef {Object} StatsWidgetTemplates
-   * @property {string|function} [text] Text template, provided with `hasManyResults`,
-   * `hasNoResults`, `hasOneResult`, `hitsPerPage`, `nbHits`, `nbSortedHits`, `nbPages`, `page`, `processingTimeMS`, `query`.
-   */
-
-  /**
-   * @typedef {Object} StatsWidgetCssClasses
-   * @property {string|string[]} [root] CSS class to add to the root element.
-   * @property {string|string[]} [text] CSS class to add to the text span element.
-   */
-
-  /**
-   * @typedef {Object} StatsTextData
-   * @property {boolean} hasManyResults True if the result set has more than one result.
-   * @property {boolean} hasNoResults True if the result set has no result.
-   * @property {boolean} hasOneResult True if the result set has exactly one result.
-   * @property {number} hitsPerPage Number of hits per page.
-   * @property {number} nbHits Number of hit in the result set.
-   * @property {number} nbSortedHits Subset of hits selected when relevancyStrictness is applied
-   * @property {number} nbPages Number of pages in the result set with regard to the hitsPerPage and number of hits.
-   * @property {number} page Number of the current page. First page is 0.
-   * @property {number} processingTimeMS Time taken to compute the results inside the engine.
-   * @property {string} query Text query currently used.
-   */
-
-  /**
-   * @typedef {Object} StatsWidgetParams
-   * @property {string|HTMLElement} container Place where to insert the widget in your webpage.
-   * @property {StatsWidgetTemplates} [templates] Templates to use for the widget.
-   * @property {StatsWidgetCssClasses} [cssClasses] CSS classes to add.
-   */
-
-  /**
    * The `stats` widget is used to display useful insights about the current results.
    *
    * By default, it will display the **number of hits** and the time taken to compute the
    * results inside the engine.
-   * @type {WidgetFactory}
-   * @devNovel Stats
-   * @category metadata
-   * @param {StatsWidgetParams} widgetParams Stats widget options. Some keys are mandatory: `container`,
-   * @return {Widget} A new stats widget instance
-   * @example
-   * search.addWidgets([
-   *   instantsearch.widgets.stats({
-   *     container: '#stats-container'
-   *   })
-   * ]);
    */
 
 
-  function stats(widgetParams) {
+  var stats = function stats(widgetParams) {
     var _ref3 = widgetParams || {},
         container = _ref3.container,
         _ref3$cssClasses = _ref3.cssClasses,
@@ -20340,16 +20092,16 @@
     var specializedRenderer = renderer$g({
       containerNode: containerNode,
       cssClasses: cssClasses,
-      renderState: {},
-      templates: templates
+      templates: templates,
+      renderState: {}
     });
     var makeWidget = connectStats(specializedRenderer, function () {
       return I(null, containerNode);
     });
-    return _objectSpread2(_objectSpread2({}, makeWidget()), {}, {
+    return _objectSpread2(_objectSpread2({}, makeWidget({})), {}, {
       $$widgetType: 'ais.stats'
     });
-  }
+  };
 
   var ToggleRefinement = function ToggleRefinement(_ref) {
     var currentRefinement = _ref.currentRefinement,
@@ -21340,7 +21092,10 @@
         templates = _ref.templates;
 
     var handleClick = function handleClick(event) {
-      event.currentTarget.blur();
+      if (event.currentTarget instanceof HTMLElement) {
+        event.currentTarget.blur();
+      }
+
       toggleListening();
     };
 
@@ -21563,6 +21318,9 @@
       $$widgetType: 'ais.queryRuleContext'
     });
   };
+
+  /** @ts-ignore */
+  // using the type like this requires only one ts-ignore
 
   /**
    * This widget sets the geolocation value for the search based on the selected
@@ -22127,7 +21885,7 @@
         }
 
         try {
-          var cache = JSON.parse( // @ts-ignore JSON.parse() requires a string, but it actually accepts null, too.
+          var cache = JSON.parse( // @ts-expect-error JSON.parse() requires a string, but it actually accepts null, too.
           window.sessionStorage.getItem(KEY));
           return cache && isEqual(cache.state, getStateWithoutPage$1(state)) ? cache.hits : null;
         } catch (error) {
