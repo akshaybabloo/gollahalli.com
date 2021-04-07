@@ -1,4 +1,4 @@
-/*! InstantSearch.js 4.18.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
+/*! InstantSearch.js 4.20.0 | © Algolia, Inc. and contributors; MIT License | https://github.com/algolia/instantsearch.js */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -8267,7 +8267,7 @@
     instantSearchInstance.renderState = _objectSpread2(_objectSpread2({}, instantSearchInstance.renderState), {}, _defineProperty({}, parentIndexName, _objectSpread2(_objectSpread2({}, instantSearchInstance.renderState[parentIndexName]), renderState)));
   }
 
-  var version$1 = '4.18.0';
+  var version$1 = '4.20.0';
 
   var NAMESPACE = 'ais';
   var component = function component(componentName) {
@@ -9706,15 +9706,16 @@
         _this.emit('render');
       }));
 
-      _defineProperty(_assertThisInitialized(_this), "onInternalStateChange", function () {
+      _defineProperty(_assertThisInitialized(_this), "onInternalStateChange", defer(function () {
         var nextUiState = _this.mainIndex.getWidgetUiState({});
 
-        _this.middleware.forEach(function (m) {
-          m.onStateChange({
+        _this.middleware.forEach(function (_ref) {
+          var instance = _ref.instance;
+          instance.onStateChange({
             uiState: nextUiState
           });
         });
-      });
+      }));
 
       var _options$indexName = options.indexName,
           indexName = _options$indexName === void 0 ? null : _options$indexName,
@@ -9800,9 +9801,6 @@
     }
     /**
      * Hooks a middleware into the InstantSearch lifecycle.
-     *
-     * This method is considered as experimental and is subject to change in
-     * minor versions.
      */
 
 
@@ -9820,7 +9818,10 @@
             instantSearchInstance: _this2
           });
 
-          _this2.middleware.push(newMiddleware);
+          _this2.middleware.push({
+            creator: fn,
+            instance: newMiddleware
+          });
 
           return newMiddleware;
         }); // If the instance has already started, we directly subscribe the
@@ -9832,6 +9833,27 @@
           });
         }
 
+        return this;
+      }
+      /**
+       * Removes a middleware from the InstantSearch lifecycle.
+       */
+
+    }, {
+      key: "unuse",
+      value: function unuse() {
+        for (var _len2 = arguments.length, middlewareToUnuse = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          middlewareToUnuse[_key2] = arguments[_key2];
+        }
+
+        this.middleware.filter(function (m) {
+          return middlewareToUnuse.includes(m.creator);
+        }).forEach(function (m) {
+          return m.instance.unsubscribe();
+        });
+        this.middleware = this.middleware.filter(function (m) {
+          return !middlewareToUnuse.includes(m.creator);
+        });
         return this;
       } // @major we shipped with EXPERIMENTAL_use, but have changed that to just `use` now
 
@@ -9957,15 +9979,15 @@
             var mainIndexHelper = _this3.mainIndex.getHelper();
 
             var searchFunctionHelper = algoliasearchHelper_1(fakeClient, mainIndexHelper.state.index, mainIndexHelper.state);
-            searchFunctionHelper.once('search', function (_ref) {
-              var state = _ref.state;
+            searchFunctionHelper.once('search', function (_ref2) {
+              var state = _ref2.state;
               mainIndexHelper.overrideStateWithoutTriggeringChangeEvent(state);
 
               _this3._mainHelperSearch();
             }); // Forward state changes from `searchFunctionHelper` to `mainIndexHelper`
 
-            searchFunctionHelper.on('change', function (_ref2) {
-              var state = _ref2.state;
+            searchFunctionHelper.on('change', function (_ref3) {
+              var state = _ref3.state;
               mainIndexHelper.setState(state);
             });
 
@@ -9977,8 +9999,8 @@
         // and `results` that are also emitted on the derived one.
 
 
-        mainHelper.on('error', function (_ref3) {
-          var error = _ref3.error;
+        mainHelper.on('error', function (_ref4) {
+          var error = _ref4.error;
 
           _this3.emit('error', {
             error: error
@@ -9990,8 +10012,9 @@
           parent: null,
           uiState: this._initialUiState
         });
-        this.middleware.forEach(function (m) {
-          m.subscribe();
+        this.middleware.forEach(function (_ref5) {
+          var instance = _ref5.instance;
+          instance.subscribe();
         });
         mainHelper.search(); // Keep the previous reference for legacy purpose, some pattern use
         // the direct Helper access `search.helper` (e.g multi-index).
@@ -10026,8 +10049,9 @@
         this.mainHelper.removeAllListeners();
         this.mainHelper = null;
         this.helper = null;
-        this.middleware.forEach(function (m) {
-          m.unsubscribe();
+        this.middleware.forEach(function (_ref6) {
+          var instance = _ref6.instance;
+          instance.unsubscribe();
         });
       }
     }, {
@@ -10063,7 +10087,7 @@
             });
           }
 
-          indexWidget.getHelper().overrideStateWithoutTriggeringChangeEvent(indexWidget.getWidgetSearchParameters(indexWidget.getHelper().state, {
+          indexWidget.getHelper().setState(indexWidget.getWidgetSearchParameters(indexWidget.getHelper().state, {
             uiState: nextUiState[indexWidget.getIndexId()]
           }));
           indexWidget.getWidgets().filter(isIndexWidget).forEach(setIndexHelperState);
@@ -10071,7 +10095,6 @@
 
         setIndexHelperState(this.mainIndex);
         this.scheduleSearch();
-        this.onInternalStateChange();
       }
     }, {
       key: "createURL",
@@ -10193,10 +10216,12 @@
             }))));
           };
 
+          var canRefine = connectorState.attributesToClear.some(function (attributeToClear) {
+            return attributeToClear.items.length > 0;
+          });
           return {
-            hasRefinements: connectorState.attributesToClear.some(function (attributeToClear) {
-              return attributeToClear.items.length > 0;
-            }),
+            canRefine: canRefine,
+            hasRefinements: canRefine,
             refine: cachedRefine,
             createURL: cachedCreateURL,
             widgetParams: widgetParams
@@ -10300,8 +10325,10 @@
             }, []);
           }
 
+          var items = getItems();
           return {
-            items: getItems(),
+            items: items,
+            canRefine: items.length > 0,
             refine: function refine(refinement) {
               return clearRefinement(helper, refinement);
             },
@@ -10633,6 +10660,7 @@
           return {
             items: items,
             refine: this._refine,
+            canRefine: items.length > 0,
             createURL: _createURL,
             sendEvent: sendEvent,
             widgetParams: widgetParams,
@@ -12022,6 +12050,7 @@
           return {
             createURL: connectorState.createURL(state),
             refine: connectorState.refine,
+            canRefine: nbPages > 1,
             currentRefinement: page,
             nbHits: (results === null || results === void 0 ? void 0 : results.nbHits) || 0,
             nbPages: nbPages,
@@ -12326,6 +12355,7 @@
 
           return {
             refine: refine,
+            canRefine: currentRange.min !== currentRange.max,
             format: rangeFormatter,
             range: currentRange,
             sendEvent: createSendEvent(instantSearchInstance, helper, currentRange),
@@ -12845,93 +12875,22 @@
     connector: true
   });
   /**
-   * @typedef {Object} SortByItem
-   * @property {string} value The name of the index to target.
-   * @property {string} label The label of the index to display.
-   */
-
-  /**
-   * @typedef {Object} CustomSortByWidgetParams
-   * @property {SortByItem[]} items Array of objects defining the different indices to choose from.
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
-   */
-
-  /**
-   * @typedef {Object} SortByRenderingOptions
-   * @property {string} currentRefinement The currently selected index.
-   * @property {SortByItem[]} options All the available indices
-   * @property {function(string)} refine Switches indices and triggers a new search.
-   * @property {boolean} hasNoResults `true` if the last search contains no result.
-   * @property {Object} widgetParams All original `CustomSortByWidgetParams` forwarded to the `renderFn`.
-   */
-
-  /**
    * The **SortBy** connector provides the logic to build a custom widget that will display a
    * list of indices. With Algolia, this is most commonly used for changing ranking strategy. This allows
    * a user to change how the hits are being sorted.
-   *
-   * This connector provides the `refine` function that allows to switch indices.
-   * The connector provides to the rendering: `refine()` to switch the current index and
-   * `options` that are the values that can be selected. `refine` should be used
-   * with `options.value`.
-   * @type {Connector}
-   * @param {function(SortByRenderingOptions, boolean)} renderFn Rendering function for the custom **SortBy** widget.
-   * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomSortByWidgetParams)} Re-usable widget factory for a custom **SortBy** widget.
-   * @example
-   * // custom `renderFn` to render the custom SortBy widget
-   * function renderFn(SortByRenderingOptions, isFirstRendering) {
-   *   if (isFirstRendering) {
-   *     SortByRenderingOptions.widgetParams.containerNode.html('<select></select>');
-   *     SortByRenderingOptions.widgetParams.containerNode
-   *       .find('select')
-   *       .on('change', function(event) {
-   *         SortByRenderingOptions.refine(event.target.value);
-   *       });
-   *   }
-   *
-   *   var optionsHTML = SortByRenderingOptions.options.map(function(option) {
-   *     return `
-   *       <option
-   *         value="${option.value}"
-   *         ${SortByRenderingOptions.currentRefinement === option.value ? 'selected' : ''}
-   *       >
-   *         ${option.label}
-   *       </option>
-   *     `;
-   *   });
-   *
-   *   SortByRenderingOptions.widgetParams.containerNode
-   *     .find('select')
-   *     .html(optionsHTML);
-   * }
-   *
-   * // connect `renderFn` to SortBy logic
-   * var customSortBy = instantsearch.connectors.connectSortBy(renderFn);
-   *
-   * // mount widget on the page
-   * search.addWidgets([
-   *   customSortBy({
-   *     containerNode: $('#custom-sort-by-container'),
-   *     items: [
-   *       { value: 'instant_search', label: 'Most relevant' },
-   *       { value: 'instant_search_price_asc', label: 'Lowest price' },
-   *       { value: 'instant_search_price_desc', label: 'Highest price' },
-   *     ],
-   *   })
-   * ]);
    */
 
-  function connectSortBy(renderFn) {
+  var connectSortBy = function connectSortBy(renderFn) {
     var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
     checkRendering(renderFn, withUsage$e());
-    return function () {
-      var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var items = widgetParams.items,
-          _widgetParams$transfo = widgetParams.transformItems,
-          transformItems = _widgetParams$transfo === void 0 ? function (x) {
+    var connectorState = {};
+    return function (widgetParams) {
+      var _ref = widgetParams || {},
+          items = _ref.items,
+          _ref$transformItems = _ref.transformItems,
+          transformItems = _ref$transformItems === void 0 ? function (x) {
         return x;
-      } : _widgetParams$transfo;
+      } : _ref$transformItems;
 
       if (!Array.isArray(items)) {
         throw new Error(withUsage$e('The `items` option expects an array of objects.'));
@@ -12946,7 +12905,7 @@
           var isCurrentIndexInItems = find$1(items, function (item) {
             return item.value === currentIndex;
           });
-           _warning(isCurrentIndexInItems, "The index named \"".concat(currentIndex, "\" is not listed in the `items` of `sortBy`.")) ;
+           _warning(isCurrentIndexInItems !== undefined, "The index named \"".concat(currentIndex, "\" is not listed in the `items` of `sortBy`.")) ;
           renderFn(_objectSpread2(_objectSpread2({}, widgetRenderState), {}, {
             instantSearchInstance: instantSearchInstance
           }), true);
@@ -12957,27 +12916,27 @@
             instantSearchInstance: instantSearchInstance
           }), false);
         },
-        dispose: function dispose(_ref) {
-          var state = _ref.state;
+        dispose: function dispose(_ref2) {
+          var state = _ref2.state;
           unmountFn();
-          return state.setIndex(this.initialIndex);
+          return connectorState.initialIndex ? state.setIndex(connectorState.initialIndex) : state;
         },
         getRenderState: function getRenderState(renderState, renderOptions) {
           return _objectSpread2(_objectSpread2({}, renderState), {}, {
             sortBy: this.getWidgetRenderState(renderOptions)
           });
         },
-        getWidgetRenderState: function getWidgetRenderState(_ref2) {
-          var results = _ref2.results,
-              helper = _ref2.helper,
-              parent = _ref2.parent;
+        getWidgetRenderState: function getWidgetRenderState(_ref3) {
+          var results = _ref3.results,
+              helper = _ref3.helper,
+              parent = _ref3.parent;
 
-          if (!this.initialIndex) {
-            this.initialIndex = parent.getIndexName();
+          if (!connectorState.initialIndex && parent) {
+            connectorState.initialIndex = parent.getIndexName();
           }
 
-          if (!this.setIndex) {
-            this.setIndex = function (indexName) {
+          if (!connectorState.setIndex) {
+            connectorState.setIndex = function (indexName) {
               helper.setIndex(indexName).search();
             };
           }
@@ -12985,17 +12944,16 @@
           return {
             currentRefinement: helper.state.index,
             options: transformItems(items),
-            refine: this.setIndex,
+            refine: connectorState.setIndex,
             hasNoResults: results ? results.nbHits === 0 : true,
             widgetParams: widgetParams
           };
         },
-        getWidgetUiState: function getWidgetUiState(uiState, _ref3) {
-          var searchParameters = _ref3.searchParameters;
+        getWidgetUiState: function getWidgetUiState(uiState, _ref4) {
+          var searchParameters = _ref4.searchParameters;
           var currentIndex = searchParameters.index;
-          var isInitialIndex = currentIndex === this.initialIndex;
 
-          if (isInitialIndex) {
+          if (currentIndex === connectorState.initialIndex) {
             return uiState;
           }
 
@@ -13003,13 +12961,13 @@
             sortBy: currentIndex
           });
         },
-        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref4) {
-          var uiState = _ref4.uiState;
-          return searchParameters.setQueryParameter('index', uiState.sortBy || this.initialIndex || searchParameters.index);
+        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref5) {
+          var uiState = _ref5.uiState;
+          return searchParameters.setQueryParameter('index', uiState.sortBy || connectorState.initialIndex || searchParameters.index);
         }
       };
     };
-  }
+  };
 
   var withUsage$f = createDocumentationMessageGenerator({
     name: 'rating-menu',
@@ -13060,31 +13018,6 @@
       }
     };
   };
-  /**
-   * @typedef {Object} StarRatingItems
-   * @property {string} name Name corresponding to the number of stars.
-   * @property {string} value Number of stars as string.
-   * @property {number} count Count of matched results corresponding to the number of stars.
-   * @property {boolean[]} stars Array of length of maximum rating value with stars to display or not.
-   * @property {boolean} isRefined Indicates if star rating refinement is applied.
-   */
-
-  /**
-   * @typedef {Object} CustomStarRatingWidgetParams
-   * @property {string} attribute Name of the attribute for faceting (eg. "free_shipping").
-   * @property {number} [max = 5] The maximum rating value.
-   */
-
-  /**
-   * @typedef {Object} StarRatingRenderingOptions
-   * @property {StarRatingItems[]} items Possible star ratings the user can apply.
-   * @property {function(string): string} createURL Creates an URL for the next
-   * state (takes the item value as parameter). Takes the value of an item as parameter.
-   * @property {function(string)} refine Selects a rating to filter the results
-   * (takes the filter value as parameter). Takes the value of an item as parameter.
-   * @property {boolean} hasNoResults `true` if the last search contains no result.
-   * @property {Object} widgetParams All original `CustomStarRatingWidgetParams` forwarded to the `renderFn`.
-   */
 
   /**
    * **StarRating** connector provides the logic to build a custom widget that will let
@@ -13093,69 +13026,16 @@
    * The connector provides to the rendering: `refine()` to select a value and
    * `items` that are the values that can be selected. `refine` should be used
    * with `items.value`.
-   * @type {Connector}
-   * @param {function(StarRatingRenderingOptions, boolean)} renderFn Rendering function for the custom **StarRating** widget.
-   * @param {function} unmountFn Unmount function called when the widget is disposed.
-   * @return {function(CustomStarRatingWidgetParams)} Re-usable widget factory for a custom **StarRating** widget.
-   * @example
-   * // custom `renderFn` to render the custom StarRating widget
-   * function renderFn(StarRatingRenderingOptions, isFirstRendering) {
-   *   if (isFirstRendering) {
-   *     StarRatingRenderingOptions.widgetParams.containerNode.html('<ul></ul>');
-   *   }
-   *
-   *   StarRatingRenderingOptions.widgetParams.containerNode
-   *     .find('li[data-refine-value]')
-   *     .each(function() { $(this).off('click'); });
-   *
-   *   var listHTML = StarRatingRenderingOptions.items.map(function(item) {
-   *     return '<li data-refine-value="' + item.value + '">' +
-   *       '<a href="' + StarRatingRenderingOptions.createURL(item.value) + '">' +
-   *       item.stars.map(function(star) { return star === false ? '☆' : '★'; }).join(' ') +
-   *       '& up (' + item.count + ')' +
-   *       '</a></li>';
-   *   });
-   *
-   *   StarRatingRenderingOptions.widgetParams.containerNode
-   *     .find('ul')
-   *     .html(listHTML);
-   *
-   *   StarRatingRenderingOptions.widgetParams.containerNode
-   *     .find('li[data-refine-value]')
-   *     .each(function() {
-   *       $(this).on('click', function(event) {
-   *         event.preventDefault();
-   *         event.stopPropagation();
-   *
-   *         StarRatingRenderingOptions.refine($(this).data('refine-value'));
-   *       });
-   *     });
-   * }
-   *
-   * // connect `renderFn` to StarRating logic
-   * var customStarRating = instantsearch.connectors.connectRatingMenu(renderFn);
-   *
-   * // mount widget on the page
-   * search.addWidgets([
-   *   customStarRating({
-   *     containerNode: $('#custom-rating-menu-container'),
-   *     attribute: 'rating',
-   *     max: 5,
-   *   })
-   * ]);
    */
-
-
-  function connectRatingMenu(renderFn) {
-    var _this = this;
-
+  var connectRatingMenu = function connectRatingMenu(renderFn) {
     var unmountFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
     checkRendering(renderFn, withUsage$f());
-    return function () {
-      var widgetParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var attribute = widgetParams.attribute,
-          _widgetParams$max = widgetParams.max,
-          max = _widgetParams$max === void 0 ? 5 : _widgetParams$max;
+    return function (widgetParams) {
+      var _ref2 = widgetParams || {},
+          attribute = _ref2.attribute,
+          _ref2$max = _ref2.max,
+          max = _ref2$max === void 0 ? 5 : _ref2$max;
+
       var sendEvent;
 
       if (!attribute) {
@@ -13187,10 +13067,10 @@
         return maxDecimalPlaces;
       };
 
-      var getFacetValuesWarningMessage = function getFacetValuesWarningMessage(_ref2) {
-        var maxDecimalPlaces = _ref2.maxDecimalPlaces,
-            maxFacets = _ref2.maxFacets,
-            maxValuesPerFacet = _ref2.maxValuesPerFacet;
+      var getFacetValuesWarningMessage = function getFacetValuesWarningMessage(_ref3) {
+        var maxDecimalPlaces = _ref3.maxDecimalPlaces,
+            maxFacets = _ref3.maxFacets,
+            maxValuesPerFacet = _ref3.maxValuesPerFacet;
         var maxDecimalPlacesInRange = Math.max(0, Math.floor(Math.log10(MAX_VALUES_PER_FACET_API_LIMIT / max)));
         var maxFacetsInRange = Math.min(MAX_VALUES_PER_FACET_API_LIMIT, Math.pow(10, maxDecimalPlacesInRange) * max);
         var solutions = [];
@@ -13205,7 +13085,7 @@
           }), " and the \"maxValuesPerFacet\" parameter https://www.algolia.com/doc/api-reference/api-parameters/maxValuesPerFacet/"));
         }
 
-        return "The ".concat(attribute, " attribute can have ").concat(maxFacets, " different values (0 to ").concat(max, " with a maximum of ").concat(maxDecimalPlaces, " decimals = ").concat(maxFacets, ") but you retrieved only ").concat(maxValuesPerFacet, " facet values. Therefore the number of results that match the refinements can be incorrect.\n").concat(solutions.length ? "To resolve this problem you can:\n".concat(solutions.join('\n')) : "");
+        return "The ".concat(attribute, " attribute can have ").concat(maxFacets, " different values (0 to ").concat(max, " with a maximum of ").concat(maxDecimalPlaces, " decimals = ").concat(maxFacets, ") but you retrieved only ").concat(maxValuesPerFacet, " facet values. Therefore the number of results that match the refinements can be incorrect.\n    ").concat(solutions.length ? "To resolve this problem you can:\n".concat(solutions.join('\n')) : "");
       };
 
       function getRefinedState(state, facetValue) {
@@ -13213,7 +13093,7 @@
         var emptyState = state.resetPage().removeNumericRefinement(attribute);
 
         if (!isRefined) {
-          return emptyState.addNumericRefinement(attribute, '<=', max).addNumericRefinement(attribute, '>=', facetValue);
+          return emptyState.addNumericRefinement(attribute, '<=', max).addNumericRefinement(attribute, '>=', Number(facetValue));
         }
 
         return emptyState;
@@ -13226,11 +13106,11 @@
 
       var connectorState = {
         toggleRefinementFactory: function toggleRefinementFactory(helper) {
-          return toggleRefinement.bind(_this, helper);
+          return toggleRefinement.bind(null, helper);
         },
-        createURLFactory: function createURLFactory(_ref3) {
-          var state = _ref3.state,
-              createURL = _ref3.createURL;
+        createURLFactory: function createURLFactory(_ref4) {
+          var state = _ref4.state,
+              createURL = _ref4.createURL;
           return function (value) {
             return createURL(getRefinedState(state, value));
           };
@@ -13255,12 +13135,12 @@
             ratingMenu: _objectSpread2(_objectSpread2({}, renderState.ratingMenu), {}, _defineProperty({}, attribute, this.getWidgetRenderState(renderOptions)))
           });
         },
-        getWidgetRenderState: function getWidgetRenderState(_ref4) {
-          var helper = _ref4.helper,
-              results = _ref4.results,
-              state = _ref4.state,
-              instantSearchInstance = _ref4.instantSearchInstance,
-              createURL = _ref4.createURL;
+        getWidgetRenderState: function getWidgetRenderState(_ref5) {
+          var helper = _ref5.helper,
+              results = _ref5.results,
+              state = _ref5.state,
+              instantSearchInstance = _ref5.instantSearchInstance,
+              createURL = _ref5.createURL;
           var facetValues = [];
 
           if (!sendEvent) {
@@ -13275,7 +13155,7 @@
           }
 
           if (results) {
-            var facetResults = results.getFacetValues(attribute);
+            var facetResults = results.getFacetValues(attribute, {});
             var maxValuesPerFacet = facetResults.length;
             var maxDecimalPlaces = getFacetsMaxDecimalPlaces(facetResults);
             var maxFacets = Math.pow(10, maxDecimalPlaces) * max;
@@ -13303,13 +13183,14 @@
                 return "continue";
               }
 
-              var stars = _toConsumableArray(new Array(Math.floor(max / STEP))).map(function (v, i) {
+              var stars = _toConsumableArray(new Array(Math.floor(max / STEP))).map(function (_v, i) {
                 return i * STEP < star;
               });
 
               facetValues.push({
                 stars: stars,
                 name: String(star),
+                label: String(star),
                 value: String(star),
                 count: count,
                 isRefined: isRefined
@@ -13327,6 +13208,7 @@
           return {
             items: facetValues,
             hasNoResults: results ? results.nbHits === 0 : true,
+            canRefine: facetValues.length > 0,
             refine: connectorState.toggleRefinementFactory(helper),
             sendEvent: sendEvent,
             createURL: connectorState.createURLFactory({
@@ -13336,13 +13218,13 @@
             widgetParams: widgetParams
           };
         },
-        dispose: function dispose(_ref5) {
-          var state = _ref5.state;
+        dispose: function dispose(_ref6) {
+          var state = _ref6.state;
           unmountFn();
           return state.removeNumericRefinement(attribute);
         },
-        getWidgetUiState: function getWidgetUiState(uiState, _ref6) {
-          var searchParameters = _ref6.searchParameters;
+        getWidgetUiState: function getWidgetUiState(uiState, _ref7) {
+          var searchParameters = _ref7.searchParameters;
 
           var value = _getRefinedStar(searchParameters);
 
@@ -13354,15 +13236,15 @@
             ratingMenu: _objectSpread2(_objectSpread2({}, uiState.ratingMenu), {}, _defineProperty({}, attribute, value))
           });
         },
-        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref7) {
-          var uiState = _ref7.uiState;
+        getWidgetSearchParameters: function getWidgetSearchParameters(searchParameters, _ref8) {
+          var uiState = _ref8.uiState;
           var value = uiState.ratingMenu && uiState.ratingMenu[attribute];
           var withoutRefinements = searchParameters.clearRefinements(attribute);
           var withDisjunctiveFacet = withoutRefinements.addDisjunctiveFacet(attribute);
 
           if (!value) {
             return withDisjunctiveFacet.setQueryParameters({
-              numericRefinements: _objectSpread2(_objectSpread2({}, withDisjunctiveFacet.numericRefinements), {}, _defineProperty({}, attribute, []))
+              numericRefinements: _objectSpread2(_objectSpread2({}, withDisjunctiveFacet.numericRefinements), {}, _defineProperty({}, attribute, {}))
             });
           }
 
@@ -13370,7 +13252,7 @@
         }
       };
     };
-  }
+  };
 
   var withUsage$g = createDocumentationMessageGenerator({
     name: 'stats',
@@ -13508,6 +13390,7 @@
    * @typedef {Object} ToggleRenderingOptions
    * @property {ToggleValue} value The current toggle value.
    * @property {function():string} createURL Creates an URL for the next state.
+   * @property {boolean} canRefine Indicates if search state can be refined.
    * @property {function(value)} refine Updates to the next state by applying the toggle refinement.
    * @property {Object} widgetParams All original `CustomToggleWidgetParams` forwarded to the `renderFn`.
    */
@@ -13763,6 +13646,7 @@
               createURL: createURL
             }),
             sendEvent: sendEvent,
+            canRefine: Boolean(results ? nextRefinement.count : null),
             refine: toggleRefinementFactory(helper),
             widgetParams: widgetParams
           };
@@ -15199,9 +15083,11 @@
           var _ref3 = results || {},
               appliedRelevancyStrictness = _ref3.appliedRelevancyStrictness;
 
+          var isVirtualReplica = appliedRelevancyStrictness !== undefined;
           return {
             isRelevantSorted: typeof appliedRelevancyStrictness !== 'undefined' && appliedRelevancyStrictness > 0,
-            isVirtualReplica: appliedRelevancyStrictness !== undefined,
+            isVirtualReplica: isVirtualReplica,
+            canRefine: isVirtualReplica,
             refine: connectorState.refine,
             widgetParams: widgetParams
           };
@@ -15307,6 +15193,15 @@
   }());
   });
 
+  var defaultProps = {
+    data: {},
+    rootTagName: 'div',
+    useCustomCompileOptions: {},
+    templates: {},
+    templatesConfig: {}
+  };
+
+  // @TODO: Template should be a generic and receive TData to pass to Templates (to avoid TTemplateData to be set as `any`)
   var Template = /*#__PURE__*/function (_Component) {
     _inherits(Template, _Component);
 
@@ -15355,13 +15250,7 @@
     return Template;
   }(m);
 
-  Template.defaultProps = {
-    data: {},
-    rootTagName: 'div',
-    useCustomCompileOptions: {},
-    templates: {},
-    templatesConfig: {}
-  };
+  _defineProperty(Template, "defaultProps", defaultProps);
 
   var ClearRefinements = function ClearRefinements(_ref) {
     var hasRefinements = _ref.hasRefinements,
@@ -19715,51 +19604,12 @@
     };
   };
   /**
-   * @typedef {Object} SortByWidgetCssClasses
-   * @property {string|string[]} [root] CSS classes added to the outer `<div>`.
-   * @property {string|string[]} [select] CSS classes added to the parent `<select>`.
-   * @property {string|string[]} [option] CSS classes added to each `<option>`.
-   */
-
-  /**
-   * @typedef {Object} SortByIndexDefinition
-   * @property {string} value The name of the index to target.
-   * @property {string} label The label of the index to display.
-   */
-
-  /**
-   * @typedef {Object} SortByWidgetParams
-   * @property {string|HTMLElement} container CSS Selector or HTMLElement to insert the widget.
-   * @property {SortByIndexDefinition[]} items Array of objects defining the different indices to choose from.
-   * @property {SortByWidgetCssClasses} [cssClasses] CSS classes to be added.
-   * @property {function(object[]):object[]} [transformItems] Function to transform the items passed to the templates.
-   */
-
-  /**
    * Sort by selector is a widget used for letting the user choose between different
    * indices that contains the same data with a different order / ranking formula.
-   *
-   * For the users it is like they are selecting a new sort order.
-   * @type {WidgetFactory}
-   * @devNovel SortBy
-   * @category sort
-   * @param {SortByWidgetParams} widgetParams Options for the SortBy widget
-   * @return {Widget} Creates a new instance of the SortBy widget.
-   * @example
-   * search.addWidgets([
-   *   instantsearch.widgets.sortBy({
-   *     container: '#sort-by-container',
-   *     items: [
-   *       {value: 'instant_search', label: 'Most relevant'},
-   *       {value: 'instant_search_price_asc', label: 'Lowest price'},
-   *       {value: 'instant_search_price_desc', label: 'Highest price'}
-   *     ]
-   *   })
-   * ]);
    */
 
 
-  function sortBy(widgetParams) {
+  var sortBy = function sortBy(widgetParams) {
     var _ref3 = widgetParams || {},
         container = _ref3.container,
         items = _ref3.items,
@@ -19789,12 +19639,13 @@
       return I(null, containerNode);
     });
     return _objectSpread2(_objectSpread2({}, makeWidget({
+      container: containerNode,
       items: items,
       transformItems: transformItems
     })), {}, {
       $$widgetType: 'ais.sortBy'
     });
-  }
+  };
 
   var defaultTemplates$a = {
     item: "{{#count}}<a class=\"{{cssClasses.link}}\" aria-label=\"{{value}} & up\" href=\"{{href}}\">{{/count}}{{^count}}<div class=\"{{cssClasses.link}}\" aria-label=\"{{value}} & up\" disabled>{{/count}}\n  {{#stars}}<svg class=\"{{cssClasses.starIcon}} {{#.}}{{cssClasses.fullStarIcon}}{{/.}}{{^.}}{{cssClasses.emptyStarIcon}}{{/.}}\" aria-hidden=\"true\" width=\"24\" height=\"24\">\n    {{#.}}<use xlink:href=\"#ais-RatingMenu-starSymbol\"></use>{{/.}}{{^.}}<use xlink:href=\"#ais-RatingMenu-starEmptySymbol\"></use>{{/.}}\n  </svg>{{/stars}}\n  <span class=\"{{cssClasses.label}}\">& Up</span>\n  {{#count}}<span class=\"{{cssClasses.count}}\">{{#helpers.formatNumber}}{{count}}{{/helpers.formatNumber}}</span>{{/count}}\n{{#count}}</a>{{/count}}{{^count}}</div>{{/count}}"
@@ -19856,36 +19707,6 @@
     };
   };
   /**
-   * @typedef {Object} RatingMenuWidgetTemplates
-   * @property  {string|function} [item] Item template, provided with `name`, `count`, `isRefined`, `url` data properties.
-   */
-
-  /**
-   * @typedef {Object} RatingMenuWidgetCssClasses
-   * @property  {string|string[]} [root] CSS class to add to the root element.
-   * @property  {string|string[]} [noRefinementRoot] CSS class to add to the root element when there's no refinements.
-   * @property  {string|string[]} [list] CSS class to add to the list element.
-   * @property  {string|string[]} [item] CSS class to add to each item element.
-   * @property  {string|string[]} [selectedItem] CSS class to add the selected item element.
-   * @property  {string|string[]} [disabledItem] CSS class to add a disabled item element.
-   * @property  {string|string[]} [link] CSS class to add to each link element.
-   * @property  {string|string[]} [starIcon] CSS class to add to each star element (when using the default template).
-   * @property  {string|string[]} [fullStarIcon] CSS class to add to each full star element (when using the default template).
-   * @property  {string|string[]} [emptyStarIcon] CSS class to add to each empty star element (when using the default template).
-   * @property  {string|string[]} [label] CSS class to add to each label.
-   * @property  {string|string[]} [count] CSS class to add to each counter.
-   */
-
-  /**
-   * @typedef {Object} RatingMenuWidgetParams
-   * @property {string|HTMLElement} container Place where to insert the widget in your webpage.
-   * @property {string} attribute Name of the attribute in your records that contains the ratings.
-   * @property {number} [max = 5] The maximum rating value.
-   * @property {RatingMenuWidgetTemplates} [templates] Templates to use for the widget.
-   * @property {RatingMenuWidgetCssClasses} [cssClasses] CSS classes to add.
-   */
-
-  /**
    * Rating menu is used for displaying grade like filters. The values are normalized within boundaries.
    *
    * The maximum value can be set (with `max`), the minimum is always 0.
@@ -19913,7 +19734,7 @@
    */
 
 
-  function ratingMenu(widgetParams) {
+  var ratingMenu = function ratingMenu(widgetParams) {
     var _ref5 = widgetParams || {},
         container = _ref5.container,
         attribute = _ref5.attribute,
@@ -19984,7 +19805,7 @@
     })), {}, {
       $$widgetType: 'ais.ratingMenu'
     });
-  }
+  };
 
   var Stats = function Stats(_ref) {
     var nbHits = _ref.nbHits,
