@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "Akshay Raj Gollahalli"
 theme = "Spark"
 
-googleAnalytics = "UA-74123356-1" # Optional
+googleAnalytics = "G-7WDESHJKMH" # Optional
 disqusShortname = "gollahalli-com" # Optional
 pygmentsCodeFences = true
 enableRobotsTXT = true

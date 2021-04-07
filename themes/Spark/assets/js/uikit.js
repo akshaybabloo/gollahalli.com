@@ -1,4 +1,4 @@
-/*! UIkit 3.6.17 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
+/*! UIkit 3.6.19 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -15,17 +15,17 @@
 
     var hyphenateRe = /\B([A-Z])/g;
 
-    var hyphenate = cacheFunction(function (str) { return str
+    var hyphenate = memoize(function (str) { return str
         .replace(hyphenateRe, '-$1')
         .toLowerCase(); }
     );
 
     var camelizeRe = /-(\w)/g;
 
-    var camelize = cacheFunction(function (str) { return str.replace(camelizeRe, toUpper); }
+    var camelize = memoize(function (str) { return str.replace(camelizeRe, toUpper); }
     );
 
-    var ucfirst = cacheFunction(function (str) { return str.length ? toUpper(null, str.charAt(0)) + str.slice(1) : ''; }
+    var ucfirst = memoize(function (str) { return str.length ? toUpper(null, str.charAt(0)) + str.slice(1) : ''; }
     );
 
     function toUpper(_, c) {
@@ -360,7 +360,7 @@
         return i < 0 ? i + length : i;
     }
 
-    function cacheFunction(fn) {
+    function memoize(fn) {
         var cache = Object.create(null);
         return function (key) { return cache[key] || (cache[key] = fn(key)); };
     }
@@ -619,11 +619,11 @@
     var contextSelectorRe = /(^|[^\\],)\s*[!>+~-]/;
     var contextSanitizeRe = /([!>+~-])(?=\s+[!>+~-]|\s*$)/g;
 
-    var isContextSelector = cacheFunction(function (selector) { return selector.match(contextSelectorRe); });
+    var isContextSelector = memoize(function (selector) { return selector.match(contextSelectorRe); });
 
     var selectorRe = /.*?[^\\](?:,|$)/g;
 
-    var splitSelector = cacheFunction(function (selector) { return selector.match(selectorRe).map(function (selector) { return selector.replace(/,$/, '').trim(); }
+    var splitSelector = memoize(function (selector) { return selector.match(selectorRe).map(function (selector) { return selector.replace(/,$/, '').trim(); }
         ); }
     );
 
@@ -1417,7 +1417,7 @@
         return getStyles(element, pseudoElt)[property];
     }
 
-    var parseCssVar = cacheFunction(function (name) {
+    var parseCssVar = memoize(function (name) {
         /* usage in css: .uk-name:before { content:"xyz" } */
 
         var element = append(document.documentElement, document.createElement('div'));
@@ -1438,7 +1438,7 @@
     }
 
     // https://drafts.csswg.org/cssom/#dom-cssstyledeclaration-setproperty
-    var propName = cacheFunction(function (name) { return vendorPropName(name); });
+    var propName = memoize(function (name) { return vendorPropName(name); });
 
     var cssPrefixes = ['webkit', 'moz', 'ms'];
 
@@ -2631,7 +2631,7 @@
         pointInRect: pointInRect,
         Dimensions: Dimensions,
         getIndex: getIndex,
-        cacheFunction: cacheFunction,
+        memoize: memoize,
         MouseTracker: MouseTracker,
         mergeOptions: mergeOptions,
         parseOptions: parseOptions,
@@ -3314,7 +3314,7 @@
 
         UIkit.prototype.$getComponent = UIkit.getComponent;
 
-        var componentName = cacheFunction(function (name) { return UIkit.prefix + hyphenate(name); });
+        var componentName = memoize(function (name) { return UIkit.prefix + hyphenate(name); });
         Object.defineProperties(UIkit.prototype, {
 
             $container: Object.getOwnPropertyDescriptor(UIkit, 'container'),
@@ -3428,7 +3428,7 @@
 
     }
 
-    var getComponentName = cacheFunction(function (attribute) {
+    var getComponentName = memoize(function (attribute) {
         return startsWith(attribute, 'uk-') || startsWith(attribute, 'data-uk-')
             ? camelize(attribute.replace('data-uk-', '').replace('uk-', ''))
             : false;
@@ -3442,7 +3442,7 @@
     UIkit.data = '__uikit__';
     UIkit.prefix = 'uk-';
     UIkit.options = {};
-    UIkit.version = '3.6.17';
+    UIkit.version = '3.6.19';
 
     globalAPI(UIkit);
     hooksAPI(UIkit);
@@ -5412,7 +5412,7 @@
 
     };
 
-    var loadSVG = cacheFunction(function (src) { return new Promise(function (resolve, reject) {
+    var loadSVG = memoize(function (src) { return new Promise(function (resolve, reject) {
 
             if (!src) {
                 reject();
@@ -6242,7 +6242,9 @@
                     var this$1 = this;
 
 
-                    if (width(window) - width(document) && this.overlay) {
+                    var docEl = document.documentElement;
+
+                    if (width(window) > docEl.clientWidth && this.overlay) {
                         css(document.body, 'overflowY', 'scroll');
                     }
 
@@ -6250,7 +6252,7 @@
                         css(this.$el, 'zIndex', toFloat(css(this.$el, 'zIndex')) + active$1.length);
                     }
 
-                    addClass(document.documentElement, this.clsPage);
+                    addClass(docEl, this.clsPage);
 
                     if (this.bgClose) {
                         once(this.$el, 'hide', on(document, pointerDown, function (ref) {
@@ -7257,13 +7259,17 @@
 
             {
 
-                read: function(ref) {
+                read: function(data$1) {
                     var this$1 = this;
-                    var update = ref.update;
 
 
-                    if (!update) {
-                        return;
+                    // Let child components be applied at least once first
+                    if (!data$1.update) {
+                        Promise.resolve().then(function () {
+                            this$1.$emit();
+                            data$1.update = true;
+                        });
+                        return false;
                     }
 
                     this.elements.forEach(function (el) {
@@ -7281,12 +7287,6 @@
                 write: function(data) {
                     var this$1 = this;
 
-
-                    // Let child components be applied at least once first
-                    if (!data.update) {
-                        this.$emit();
-                        return data.update = true;
-                    }
 
                     this.elements.forEach(function (el) {
 
@@ -8624,7 +8624,7 @@
 
         props: {
             duration: Number,
-            animation: String
+            animation: Boolean
         },
 
         data: {
@@ -8654,6 +8654,7 @@
                 return animationFn(action, target, this.duration)
                     .then(function () { return this$1.$update(target, 'resize'); }, noop);
             }
+
         }
     };
 
@@ -8712,10 +8713,13 @@
                 },
 
                 watch: function(list, old) {
-                    if (!isEqualList(list, old)) {
+                    if (old && !isEqualList(list, old)) {
                         this.updateState();
                     }
-                }
+                },
+
+                immediate: true
+
             }
 
         },
@@ -10853,7 +10857,6 @@
 
                 this.translate(percent);
 
-                prev && this.updateTranslates();
                 percent = prev ? percent : clamp(percent, 0, 1);
                 triggerUpdate$1(this.getItemIn(), 'itemin', {percent: percent, duration: duration, timing: timing, dir: dir});
                 prev && triggerUpdate$1(this.getItemIn(true), 'itemout', {percent: 1 - percent, duration: duration, timing: timing, dir: dir});
@@ -10891,13 +10894,29 @@
                     dimensions(list).width
                 ) * (isRtl ? -1 : 1), 'px'));
 
-                this.updateTranslates();
+                var actives = this.getActives();
+                var itemIn = this.getItemIn();
+                var itemOut = this.getItemIn(true);
 
-                if (prev) {
-                    percent = clamp(percent, -1, 1);
-                    triggerUpdate$1(this.getItemIn(), 'itemtranslatein', {percent: percent, dir: dir});
-                    triggerUpdate$1(this.getItemIn(true), 'itemtranslateout', {percent: 1 - percent, dir: dir});
-                }
+                percent = prev ? clamp(percent, -1, 1) : 0;
+
+                children(list).forEach(function (slide, i) {
+                    var isActive = includes(actives, slide);
+                    var isIn = slide === itemIn;
+                    var isOut = slide === itemOut;
+                    var translateIn = isIn || !isOut && (isActive || dir * (isRtl ? -1 : 1) === -1 ^ getElLeft(slide, list) > getElLeft(prev || next));
+
+                    triggerUpdate$1(slide, ("itemtranslate" + (translateIn ? 'in' : 'out')), {
+                        dir: dir,
+                        percent: isOut
+                            ? 1 - percent
+                            : isIn
+                                ? percent
+                                : isActive
+                                    ? 1
+                                    : 0
+                    });
+                });
 
             },
 
@@ -10913,33 +10932,21 @@
                 if ( out === void 0 ) out = false;
 
 
-                var actives = sortBy(this.getActives(), 'offsetLeft');
-                var all = sortBy(children(list), 'offsetLeft');
-                var i = index(all, actives[dir * (out ? -1 : 1) > 0 ? actives.length - 1 : 0]);
+                var actives = this.getActives();
+                var nextActives = inView(list, getLeft(next || prev, list, center));
 
-                return ~i && all[i + (prev && !out ? dir : 0)];
+                if (out) {
+                    var temp = actives;
+                    actives = nextActives;
+                    nextActives = temp;
+                }
+
+                return nextActives[findIndex(nextActives, function (el) { return !includes(actives, el); })];
 
             },
 
             getActives: function() {
-                return [prev || next].concat(children(list).filter(function (slide) {
-                    var slideLeft = getElLeft(slide, list);
-                    return slideLeft > from && slideLeft + dimensions(slide).width <= dimensions(list).width + from;
-                }));
-            },
-
-            updateTranslates: function() {
-
-                var actives = this.getActives();
-
-                children(list).forEach(function (slide) {
-                    var isActive = includes(actives, slide);
-
-                    triggerUpdate$1(slide, ("itemtranslate" + (isActive ? 'in' : 'out')), {
-                        percent: isActive ? 1 : 0,
-                        dir: slide.offsetLeft <= next.offsetLeft ? 1 : -1
-                    });
-                });
+                return inView(list, getLeft(prev || next, list, center));
             }
 
         };
@@ -10970,6 +10977,19 @@
 
     function getElLeft(el, list) {
         return el && (position(el).left + (isRtl ? dimensions(el).width - dimensions(list).width : 0)) * (isRtl ? -1 : 1) || 0;
+    }
+
+    function inView(list, listLeft) {
+
+        listLeft -= 1;
+        var listRight = listLeft + dimensions(list).width + 2;
+
+        return children(list).filter(function (slide) {
+            var slideLeft = getElLeft(slide, list);
+            var slideRight = slideLeft + dimensions(slide).width;
+
+            return slideLeft >= listLeft && slideRight <= listRight;
+        });
     }
 
     function triggerUpdate$1(el, type, data) {
@@ -12012,7 +12032,7 @@
                 var this$1 = this;
 
 
-                if (this.isToggled(this.tooltip) || !this.title) {
+                if (this.isToggled(this.tooltip || null) || !this.title) {
                     return;
                 }
 
@@ -12035,7 +12055,7 @@
 
                 clearTimeout(this.showTimer);
 
-                if (!this.isToggled(this.tooltip)) {
+                if (!this.isToggled(this.tooltip || null)) {
                     return;
                 }
 
