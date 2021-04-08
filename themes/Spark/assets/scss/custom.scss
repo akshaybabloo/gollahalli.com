@@ -103,6 +103,11 @@ a {
       background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
     }
   }
+
+  .uk-label {
+    background: $background-color !important;
+    color: $text-color !important;
+  }
 }
 
 .uk-link-text {
