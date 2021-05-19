@@ -1,7 +1,5 @@
 # Gollahalli.com Website
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/4e56e83d-387a-4e11-b2e6-654cedbc34bb/deploy-status)](https://app.netlify.com/sites/gollahalli/deploys)
-
 Contents for [gollahalli.com](https://www.gollahalli.com).
 
 Based on Hugo 0.56+
