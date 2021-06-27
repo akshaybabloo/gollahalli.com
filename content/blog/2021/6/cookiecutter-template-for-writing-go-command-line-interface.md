@@ -25,7 +25,7 @@ siteMapImages:
     imageCaption: "Cookiecutter Template for Writing Go Command Line Interface"
 ---
 
-I have been writing a lot of Go language based CLIs and most of them have similar structure. And every time I start a new project I tend to rewrite the same structure. So, instead of doing that I copied the required code and turned in into a cookiecutter template :sunglasses:.
+I have been developing a lot of Go language based CLIs and most of them have similar structure. And every time I start a new project I tend to rewrite the same structure. So, instead of doing that I copied the required code and turned in into a cookiecutter template :sunglasses:.
 
 The repository is available at - [github.com/akshaybabloo/go-cli-template](https://github.com/akshaybabloo/go-cli-template).
 
