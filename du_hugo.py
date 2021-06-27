@@ -24,6 +24,10 @@ HUGO_BINARY_LOCATION = os.path.join(str(Path.home()), 'bin')
 OS_TYPE = platform.system()
 TEMP_FOLDER_PATH = tempfile.gettempdir()
 
+CLOUDFLARE_PAGES_PROJECT_NAME = "gollahalli-com"
+CLOUDFLARE_API_KEY = os.environ("CLOUDFLARE_API_KEY", None)
+CLOUDFLARE_AUTH_EMAIL = os.environ.get("CLOUDFLARE_AUTH_EMAIL", None)
+
 
 def get_local_hugo_version() -> Optional[str]:
     """
@@ -182,6 +186,16 @@ def confirm_update():
         sys.exit(1)
 
     print("All done!")
+
+def update_pages_env():
+    """
+    Updates the environment variable of ``HUGO_VERSION``
+    """
+
+    if CLOUDFLARE_API_KEY is None and CLOUDFLARE_AUTH_EMAIL is None:
+        raise KeyError("Make sure CLOUDFLARE_API_KEY or CLOUDFLARE_AUTH_EMAIL is set")
+    
+    
 
 
 # --------------------------------------------------------------
