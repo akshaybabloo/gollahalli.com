@@ -106,10 +106,10 @@
     "@algolia/logger-common" "4.10.2"
     "@algolia/requester-common" "4.10.2"
 
-"@types/googlemaps@^3.39.6":
-  version "3.40.4"
-  resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.40.4.tgz#3fe3d9d8eeb2b318679fabf0f540cab963c27dda"
-  integrity sha512-8dtcijQrU1vkvBHAfmtJZKfut2WXwLJH5EBRJfSISlv4xWptnCsiE9cVbw4FZWMRbweMMPxE6PzDV55NWiNlQQ==
+"@types/google.maps@^3.45.3":
+  version "3.45.4"
+  resolved "https://registry.yarnpkg.com/@types/google.maps/-/google.maps-3.45.4.tgz#1b246e3bde97c541fd0cad4eeca9b0000f1d0ead"
+  integrity sha512-P7j+UsLXkDmPs4DkcSJlkkPBO+WDyFObnyfrIeoC8nTpGwskYcmBAiHK9qdwOoJCubKHdfgW4W6Qoart0HqQ9A==
 
 "@types/hogan.js@^3.0.0":
   version "3.0.0"
@@ -1097,12 +1097,12 @@ ini@^1.3.4:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.6.tgz#f1c46a2a93a253e7b3905115e74d527cd23061a1"
   integrity sha512-IZUoxEjNjubzrmvzZU4lKP7OnYmX72XRl3sqkfJhBKweKi5rnGi5+IUdlj/H1M+Ip5JQ1WzaDMOBRY90Ajc5jg==
 
-instantsearch.js@^4.24.1:
-  version "4.24.1"
-  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.24.1.tgz#c20b5f42ff03a1bc6b5ff0493a89af91d687027f"
-  integrity sha512-Qv7juO2Y/ypBfCaZLBFCjQr+hMnsjVAjstfaUsaC5ZpGygjkW63ckKojXM6iXiB+bkQHjRzOl9gpnaq+vgH0Mw==
+instantsearch.js@^4.24.2:
+  version "4.24.2"
+  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.24.2.tgz#44da291595940b46dda94941a6a5f2f16585e231"
+  integrity sha512-mrAuBooLE8sQR3SlLHPF6Y9d7as+8R+aQvZmtEpz257bIr6HuanIdtYI0oQ7LSyHGYj2aiOmxiUSWdZZi6mblA==
   dependencies:
-    "@types/googlemaps" "^3.39.6"
+    "@types/google.maps" "^3.45.3"
     "@types/hogan.js" "^3.0.0"
     algoliasearch-helper "^3.4.5"
     classnames "^2.2.5"
@@ -2209,10 +2209,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-uikit@^3.6.22:
-  version "3.6.22"
-  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.6.22.tgz#bbf3d64f9715ec09b3dead80845f2784447d7048"
-  integrity sha512-c8jz0lzvGPrPbOG4K5HvOCgUe7i9A6blZmMq2M/EYqoY7FT9dBayGFZYbBeio2s9WCpADIcCAj2QX/5L3EByOQ==
+uikit@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.7.0.tgz#1ec777ac547010d980f0c430249289080fa5371c"
+  integrity sha512-N0xluQ380EHey26toMmNA4H2YLtvVRHMaYksG31qDxW2VaAAf9i0Q0aT82zeMdrK2Tx9sqnHz6GaOMTIYYM0ZQ==
 
 unc-path-regex@^0.1.2:
   version "0.1.2"
