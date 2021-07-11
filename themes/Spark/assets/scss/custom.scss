@@ -197,7 +197,11 @@ h1 {
 }
 
 blockquote {
-  color: $sub-text-color !important;
+  color: $primary !important;
+  background-color: rgba(42, 187, 155, 0.4) !important;
+  padding: 15px 29px 15px 15px !important;
+  border-radius: 5px !important;
+  font-size: inherit;
 }
 
 time {
