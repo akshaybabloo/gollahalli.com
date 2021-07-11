@@ -189,6 +189,13 @@ h1 {
   color: $headers !important;
 }
 
+:not(pre) {
+  &>code, &>kbd, &>samp {
+    background: #282a36 !important;
+    border-radius: 2px !important
+  }
+}
+
 blockquote {
   color: $sub-text-color !important;
 }
