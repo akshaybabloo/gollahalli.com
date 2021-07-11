@@ -1,7 +1,0 @@
-{
-    "node_modules/instantsearch.js/dist/instantsearch.development.js": "sha512-d71f0cf0b5138d86dd32096bd1f4b449f3e70ace6c207757859f1165559b82e47c95a527b075153b4cf89450eb5369b8c73afd4013e6336e195f79fde2d0bca2",
-    "node_modules/algoliasearch/dist/algoliasearchLite.js": "sha512-46f0bf9176c6b455dc110c724d36c97e0f64908d799f49ee9e1a1a6be1cbeea1420f0a4c0eb14d6c14e1ce104b32b3e180dd7e73d8e2f3b88e2cca78719282a5",
-    "node_modules/uikit/dist/css/uikit.css": "sha512-8ccbd969edf2f7c2f5ac83478ac1cf8f1301b67763cf753cac1410ccf981fe86e81fab1b3932a48ed0a452609a26677145bb757da6ff97fdc57bbe401c0f7676",
-    "node_modules/uikit/dist/js/uikit.js": "sha512-3030cad1447be8b2109f429e0f794926318eb6f8498e67579e24008929d962e503c468e1a65acc2df8e662b5f7ff1babad1e0a6a0fd9a15139b428aba25c6c5c",
-    "node_modules/uikit/dist/js/uikit-core.js": "sha512-e401a92277e46882fe78fde4cd333e94cab13c84d1d9a3fcc7471dde666d39a5df6751a1bcdfd6aa7de2877e84c456e7bda40da93eb065490fd5866cc87edcdb"
-}

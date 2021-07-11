@@ -1,7 +1,6 @@
 """
 Utility for deploying https://www.gollahalli.com
 """
-import hashlib
 import json
 import os
 from urllib.parse import urlencode
@@ -23,98 +22,6 @@ try:
     import toml
 except ImportError:
     raise ImportError("PY> TOML package does not exist - pip install toml")
-
-# ------------------ Start Hashing Files ------------------
-
-HERE = os.path.abspath(os.path.dirname(__file__)) + os.sep
-
-BUF_SIZE = 65563
-
-DEPENDENCIES = {
-    "node_modules": {
-        "instantsearch.js": [
-            os.path.join('dist', 'instantsearch.development.js')
-        ],
-        "algoliasearch": [
-            os.path.join('dist', 'algoliasearchLite.js')
-        ],
-        "uikit": [
-            os.path.join('dist', 'css', 'uikit.css'),
-            os.path.join('dist', 'js', 'uikit.js'),
-            os.path.join('dist', 'js', 'uikit-icons.js')
-        ]
-    }
-}
-
-COPY_FILE_TO = {
-    'instantsearch.development.js': os.path.join(HERE, 'themes', 'Spark', 'assets', 'js'),
-    'algoliasearchLite.js': os.path.join(HERE, 'themes', 'Spark', 'assets', 'js'),
-    'uikit.css': os.path.join(HERE, 'themes', 'Spark', 'assets', 'css'),
-    'uikit.js': os.path.join(HERE, 'themes', 'Spark', 'assets', 'js'),
-    'uikit-icons.js': os.path.join(HERE, 'themes', 'Spark', 'assets', 'js'),
-}
-
-
-def get_lock_dict(dependency: dict) -> dict:
-    """
-    Creates a hash for every file path.
-
-    :param dependency: Dictionary of file location
-    :rtype: dict
-    :return: A dictionary of file path and it's SHA512 hash
-
-    >>> dependencies = {
-            "node_modules": {
-                "instantsearch.js": [
-                    os.path.join('dist', 'instantsearch.development.js')
-                ]
-            }
-    >>> get_lock_dict(DEPENDENCIES)
-    {
-        "node_modules/instantsearch.js/dist/instantsearch.development.js": "sha512-d71f0cf0b5138d86dd32096bd1f4b449f3e70ace6c207757859f1165559b82e47c95a527b075153b4cf89450eb5369b8c73afd4013e6336e195f79fde2d0bca2"
-    }
-    """
-    lock_dict = {}
-    sha256 = hashlib.sha512()
-
-    for root_folder, sub_folder in dependency.items():
-        for sub_sub_folder, files_list in sub_folder.items():
-            for file in files_list:
-                _file_path = os.path.join(root_folder, sub_sub_folder, file)
-                with open(_file_path, 'rb') as byte_file:
-                    data = byte_file.read()
-                    sha256.update(data)
-                    lock_dict.update({'{}'.format(_file_path): 'sha512-{}'.format(sha256.hexdigest())})
-
-    return lock_dict
-
-
-def compare_hash(lock_dict: dict, dependency_lock: dict):
-    """
-    Compares two dictionaries and gives out a list of files that's not true.
-
-    :param lock_dict: Dictionary of ``gollahalli.lock``.
-    :type lock_dict: dict
-    :param dependency_lock: Dictionary of dependencies with hashes.
-    :type dependency_lock: dict
-    :return: A list of files that does not match the hashes.
-    :rtype: list
-    """
-    for _path, _hash in lock_dict.items():
-        for _dpath, _dhash in dependency_lock.items():
-            if _path == _dpath or _path not in _dpath:
-                if not _hash == _dhash:
-                    print(_path)
-
-
-# if Path(os.path.join(here, 'gollahalli.lock')).is_file():
-#     lock_file = json.load(open('gollahalli.lock'))
-#
-#     compare_hash(lock_file, get_lock_dict(dependencies))
-# else:
-#     hash_dict = get_lock_dict(dependencies)
-#     with open('gollahalli.lock', 'w') as hashed:
-#         json.dump(hash_dict, hashed, indent=4)
 
 
 # ------------------ End Hashing Files ------------------
