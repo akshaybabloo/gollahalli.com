@@ -9,6 +9,13 @@ pygmentsCodeFences = true
 enableRobotsTXT = true
 enableEmoji = true
 
+[uhugo]
+  name = "cloudflare"
+  project_name = "gollahalli-com"
+  email_address = "env"
+  account_id = "env"
+  api_key = "env"
+
 [markup]
   [markup.highlight]
     style = "dracula"

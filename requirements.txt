@@ -1,5 +1,4 @@
 algoliasearch==2.5.0
 toml==0.10.2
 colorama==0.4.4
-tqdm==4.61.1
-packaging
+uhugo
