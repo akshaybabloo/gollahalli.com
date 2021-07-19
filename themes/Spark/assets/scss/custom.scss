@@ -15,10 +15,6 @@ html {
   font-family: $global-font-family;
 }
 
-code {
-  font-family: $global-font-family;
-}
-
 body {
   color: $text-color !important;
   background-color: $background-color !important;
@@ -237,7 +233,7 @@ time {
   font-style: normal;
 }
 
-pre code {
+pre, code {
   font-family: "Fira Code", monospace !important;
   font-variant-ligatures: common-ligatures;
 }
