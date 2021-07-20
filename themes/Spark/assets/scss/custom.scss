@@ -346,3 +346,16 @@ pre, code {
   }
 
 }
+
+// subnav
+
+/* Hover + Focus */
+.uk-subnav-pill > * > a:hover,
+.uk-subnav-pill > * > a:focus {
+  color: $text-color-dark !important;
+}
+
+/* Active */
+.uk-subnav-pill > .uk-active > a {
+  color: white !important;
+}
