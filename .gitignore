@@ -18,3 +18,10 @@ secrets\.ps1
 
 dist/
 temp.py
+
+themes/Spark/assets/css/
+
+themes/Spark/assets/js/
+!themes/Spark/assets/js/custom.js
+
+themes/Spark/static/font/
