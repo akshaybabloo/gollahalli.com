@@ -1,10 +1,10 @@
 ---
-title: "NeuCube Cloud: An Artificial Intelligence website"
+title: "NeuCube Cloud: An SNN based PaaS"
 date: 2018-12-03T10:30:37+05:30
 draft: false
 projectCategory: "Commercial"
-tags: ["Artificial Intelligence"]
-description: "An Artificial Intelligence website."
+tags: ["python", "django", "vujs", "GraphQL", "docker", "Azure", "Java", "JavaScript"]
+description: "An on-demand platform as a service to train/test spatio-temporal data with Spiking Neural Network (SNN)."
 images: []
 externalUrl: "https://www.neucube.io"
 _build:

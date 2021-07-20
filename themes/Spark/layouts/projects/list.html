@@ -3,16 +3,14 @@
     <h1 hidden>{{ .Title }}</h1>
 
     <div class="uk-section uk-section-default" uk-height-viewport="offset-bottom: 32">
-        <div class="uk-container">
+        <div class="uk-container uk-container-expand">
 
             {{ range .Data.Pages.GroupByParam "projectcategory" }}
                 <h2>{{.Key}}</h2>
-                <div class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
+                <div class="uk-child-width-1-4@m uk-grid-small uk-grid-match" uk-grid>
                     {{ range .Pages }}
                         <div>
-                            <div>
-                                {{- partial "projectCard.html" . -}}
-                            </div>
+                            {{- partial "projectCard.html" . -}}
                         </div>
                     {{ end }}
                 </div>
