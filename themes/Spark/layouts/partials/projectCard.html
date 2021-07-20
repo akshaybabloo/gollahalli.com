@@ -3,5 +3,5 @@
                                                                                       src="{{ `/img/external-link.svg` | relURL }}"
                                                                                       uk-svg alt="New window icon">{{end}}</h4>
     <p>{{ .Params.description }}</p>
-    <p>{{ range .Params.tags }}<span class="uk-label"># {{ . }}</span> {{ end }}</p>
+    <p>Built with: {{ range .Params.tags }}<span class="uk-label">{{ . }}</span> {{ end }}</p>
 </a>
