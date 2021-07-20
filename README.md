@@ -6,7 +6,28 @@ Based on Hugo 0.56+
 
 ## 1. Run the Website
 
-```md
+Download load and install the latest NodeJS.
+
+Then install Yarn
+```sh
+npm i -g yarn
+```
+
+Change directory to `gollahalli.com` (if not already there) and install the dependencies
+
+```sh
+yarn install
+```
+
+Copy the files using `gulp`
+
+```sh
+npx gulp
+```
+
+Run the server
+
+```sh
 hugo serve
 ```
 
