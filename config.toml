@@ -11,7 +11,7 @@ enableEmoji = true
 
 [uhugo]
   name = "cloudflare"
-  project_name = "gollahalli-com"
+  project = "gollahalli-com"
   email_address = "env"
   account_id = "env"
   api_key = "env"
