@@ -73,3 +73,13 @@ if (document.getElementById("hits-sidenav") != null) {
 
 
 search.start();
+
+
+var getOutboundLink = function(category, label) {
+    gtag('event', 'click', {
+        'event_category': category,
+        'event_label': label,
+        'transport_type': 'beacon',
+        'event_callback': function(){document.location = url;}
+    });
+}
