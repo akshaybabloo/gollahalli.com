@@ -359,3 +359,9 @@ pre, code {
 .uk-subnav-pill > .uk-active > a {
   color: white !important;
 }
+
+.name-highlight {
+  code {
+    font-style: italic;
+  }
+}
