@@ -364,3 +364,15 @@ pre, code {
     font-style: italic;
   }
 }
+
+.news-letter {
+  background: greenyellow !important;
+  color: black !important;
+  &:hover {
+    background: green !important;
+  }
+}
+
+.gol-dark-bg {
+  background: $background-color !important;
+}

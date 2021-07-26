@@ -16,6 +16,7 @@
                     {{ if .Site.Params.sponsor.enable }}
                     <li><a href="{{ .Site.Params.sponsor.link }}" class="uk-button uk-button-danger sponsor" onclick="getOutboundLink('outbound', {{ .Site.Params.sponsor.link }})"><span class="uk-icon uk-margin-small-right" uk-icon="icon: heart"></span> Sponsor</a></li>
                     {{ end }}
+                    <li><a href="#model-sendgrid" class="uk-button uk-button-secondary news-letter" uk-toggle><span class="uk-icon uk-margin-small-right" uk-icon="icon: mail"></span> News Letter</a></li>
                 </ul>
 
             </div>

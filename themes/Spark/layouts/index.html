@@ -62,6 +62,7 @@
                    onclick="getOutboundLink('outbound', {{ .Site.Params.email }})"
                    uk-icon="icon: mail; ratio: 1.5"></a>
             {{end}}
+            <a href="#model-sendgrid" class="uk-button uk-button-secondary news-letter" uk-toggle><span class="uk-margin-small-right" uk-icon="icon: mail"></span> News Letter</a>
             {{ if .Site.Params.sponsor.enable }}
                 <a href="{{ .Site.Params.sponsor.link }}" class="uk-button uk-button-danger sponsor" onclick="getOutboundLink('outbound', {{ .Site.Params.sponsor.link }})"><span class="uk-margin-small-right uk-icon" uk-icon="icon: heart"></span> Sponsor</a>
             {{ end }}
@@ -69,6 +70,7 @@
     </div>
 </div>
 
+{{partial "sendgrid.html" . }}
 
 <!--search console-->
 <div class="uk-position-medium uk-position-top-right uk-visible@m">
