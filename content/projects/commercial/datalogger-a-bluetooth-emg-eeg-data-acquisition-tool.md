@@ -6,7 +6,7 @@ projectCategory: "Commercial"
 tags: ["C++", "Qt", "Bluetooth"]
 description: "A Qt based data acquisition and UDP broadcast tool for bluetooth devices"
 images: []
-# externalUrl: ""
+externalUrl: "https://github.com/akshaybabloo/DataLogger"
 _build:
     render: never
 ---
