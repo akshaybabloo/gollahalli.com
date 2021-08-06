@@ -374,3 +374,12 @@ pre, code {
 .gol-dark-bg {
   background: $background-color !important;
 }
+
+
+article {
+    h2 {
+    &::before{
+      content: "" !important;
+    }
+  }
+}
