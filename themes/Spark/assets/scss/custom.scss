@@ -11,10 +11,13 @@ $headers: {{ .Site.Params.scss.headers }};
 
 @font-face {
   font-family: 'Fira Code';
-  src: url('/font/FiraCode-Regular.woff2') format('woff2'),
-  url("/font/FiraCode-Regular.woff") format("woff");
+  src: url('/font/FiraCode-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
+}
+
+html {
+  font-family: 'Fira Code', monospace !important;
 }
 
 body {
