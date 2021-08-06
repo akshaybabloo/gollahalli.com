@@ -16,9 +16,8 @@ const jsFilesToMove = ['./node_modules/uikit/dist/js/uikit.js',
     './node_modules/instantsearch.js/dist/instantsearch.production.min.js',
     './node_modules/algoliasearch/dist/algoliasearch.umd.js'];
 const fontFilesToMove = [
-    './node_modules/firacode/distr/woff2/FiraCode-Regular.woff2',
-    './node_modules/@fontsource/open-sans/files/open-sans-latin-400-normal.woff2',
-    './node_modules/@fontsource/libre-baskerville/files/libre-baskerville-latin-400-normal.woff2'
+    './node_modules/firacode/distr/woff/FiraCode-Regular.woff',
+    './node_modules/firacode/distr/woff2/FiraCode-Regular.woff2'
 ];
 
 // Moves CSS files to their appropriate location

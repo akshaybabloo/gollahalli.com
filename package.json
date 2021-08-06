@@ -15,8 +15,6 @@
     "gulp-cli": "^2.3.0"
   },
   "dependencies": {
-    "@fontsource/libre-baskerville": "^4.5.0",
-    "@fontsource/open-sans": "^4.5.0",
     "algoliasearch": "^4.10.3",
     "firacode": "^5.2.0",
     "instantsearch.js": "^4.25.3",

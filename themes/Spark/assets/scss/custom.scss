@@ -9,26 +9,10 @@ $label-background-color: {{ .Site.Params.scss.labelBackgroundColor }};
 $label-text-color: {{ .Site.Params.scss.labelTextColor }};
 $headers: {{ .Site.Params.scss.headers }};
 
-// font-family: 'Fira Code', monospace;
 @font-face {
   font-family: 'Fira Code';
-  src: url('/font/FiraCode-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-}
-
-// font-family: 'Libre Baskerville', serif;
-@font-face {
-  font-family: 'Libre Baskerville';
-  src: url('/font/libre-baskerville-latin-400-normal.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-}
-
-// font-family: 'Open Sans', sans-serif;
-@font-face {
-  font-family: 'Open Sans';
-  src: url('/font/open-sans-latin-400-normal.woff2') format('woff2');
+  src: url('/font/FiraCode-Regular.woff2') format('woff2'),
+  url("/font/FiraCode-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
 }
