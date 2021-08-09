@@ -5,21 +5,19 @@ $background-color-light: {{ .Site.Params.scss.backgroundColorLight }};
 $text-color: {{ .Site.Params.scss.textColor }};
 $text-color-dark: black;
 $sub-text-color: {{ .Site.Params.scss.subTextColor }};
-$global-font-family: {{ .Site.Params.scss.globalFontFamily }} !important;
 $label-background-color: {{ .Site.Params.scss.labelBackgroundColor }};
 $label-text-color: {{ .Site.Params.scss.labelTextColor }};
 $headers: {{ .Site.Params.scss.headers }};
 
 @font-face {
   font-family: 'Fira Code';
-  src: url('/font/FiraCode-Regular.woff2') format('woff2'),
-  url("/font/FiraCode-Regular.woff") format("woff");
+  src: url('/font/FiraCode-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
 }
 
 html {
-  font-family: $global-font-family;
+  font-family: 'Fira Code', monospace !important;
 }
 
 body {
@@ -375,4 +373,13 @@ pre, code {
 
 .gol-dark-bg {
   background: $background-color !important;
+}
+
+
+article {
+    h2 {
+    &::before{
+      content: "" !important;
+    }
+  }
 }

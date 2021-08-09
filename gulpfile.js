@@ -16,7 +16,6 @@ const jsFilesToMove = ['./node_modules/uikit/dist/js/uikit.js',
     './node_modules/instantsearch.js/dist/instantsearch.production.min.js',
     './node_modules/algoliasearch/dist/algoliasearch.umd.js'];
 const fontFilesToMove = [
-    './node_modules/firacode/distr/woff/FiraCode-Regular.woff',
     './node_modules/firacode/distr/woff2/FiraCode-Regular.woff2'
 ];
 
