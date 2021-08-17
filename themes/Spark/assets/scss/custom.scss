@@ -193,7 +193,8 @@ h1 {
 :not(pre) {
   &>code, &>kbd, &>samp {
     background: #282a36 !important;
-    border-radius: 2px !important
+    border-radius: 2px !important;
+    color: #f190a2 !important;
   }
 }
 
