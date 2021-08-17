@@ -24,6 +24,13 @@
 
     {{partial "sendgrid.html" . }}
     {{- partial "footer.html" . -}}
+
+    {{ if .Params.video }}
+        {{ $videoCss := resources.Get "css/video-js.min.css" }}
+        <link href="{{ $videoCss.Permalink }}" rel="stylesheet">
+        {{ $videoJs := resources.Get "js/video.min.js" }}
+        <script src="{{$videoJs.Permalink}}"></script>
+    {{ end }}
 </body>
 
 </html>

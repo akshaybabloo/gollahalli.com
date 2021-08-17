@@ -7,6 +7,7 @@ tags: []
 description: ""
 images: []
 ads: true
+video: false
 # htmlScripts: []
 author:
   prefix: "Mr."
