@@ -15,7 +15,7 @@
     {{- partial "nav.html" . -}}
 
     {{ if .Site.Params.alert.body }}
-        <div class="uk-container">
+        <div class="uk-container uk-padding uk-padding-remove-bottom">
             {{- partial "alert.html" . -}}
         </div>
     {{ end }}
