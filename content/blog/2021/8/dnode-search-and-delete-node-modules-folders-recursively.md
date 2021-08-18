@@ -76,7 +76,7 @@ There are two commands - `list` and `delete`.
  
  Example:
 
-{{< video src="/videos/blog/dnode-delete-node-modules-folders-recursively/dnode-list.mp4" >}}
+{{< video src="/videos/blog/dnode-delete-node-modules-folders-recursively/dnode-list" >}}
 
 ### Delete
 
@@ -84,7 +84,7 @@ There are two commands - `list` and `delete`.
 
  Example:
 
-{{< video src="/videos/blog/dnode-delete-node-modules-folders-recursively/dnode-delete.mp4" >}}
+{{< video src="/videos/blog/dnode-delete-node-modules-folders-recursively/dnode-delete" >}}
 
 ## Final Thoughts
 
