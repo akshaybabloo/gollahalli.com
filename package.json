@@ -15,7 +15,7 @@
     "gulp-cli": "^2.3.0"
   },
   "dependencies": {
-    "algoliasearch": "^4.10.3",
+    "algoliasearch": "^4.10.4",
     "firacode": "^5.2.0",
     "instantsearch.js": "^4.27.2",
     "uikit": "^3.7.2",
