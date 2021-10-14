@@ -21,6 +21,10 @@ sitemap:
 
 2017 - Ravi V. Sengupta N. **`Gollahalli A. R.`** Khansama, R. and N. Kasabov. A combined adaptive neural network and nonlinear model predictive control for multirate networked industrial process control. IEEE Transactions on Neural Networks and Learning Systems, 2017.
 
+## Book or Book Chapter
+
+2021 - Khansama, R. R., Ravi, V., **`Gollahalli, A. R.`**, Sengupta, N., Kasabov, N. K., & Bilbao-Quintana, I. (2021). Stock market movement prediction using evolving spiking neural networks. In R. Vadlamani & A. K. Cherukuri (Eds.), Handbook of Big Data Analytics : Applications in ICT, Security and Business Analytics (pp. 285-310): Institution of Engineering & Technology.
+
 ## Poster
 
 2015 - **`Gollahalli, A. R.`**, & Kasabov, N. (2015). EEGRotor: A virtual Quad-Copter based on Brain Computer Interface. presented at the meeting of the 13th International Conference on Neuro-Computing and Evolving Intelligence 2015 (NCEI ‘15) Auckland.
