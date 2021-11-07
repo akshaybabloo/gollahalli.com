@@ -48,7 +48,7 @@ Logging is essential when developing a software to keep a track on what is happe
 
 ## 1. Requirements
 
-This example assumes that you are familiar using Maven dependency manager. All the dependencies are listed in [pom.xml](https://github.com/akshaybabloo/Using-Log4J-SLF4J/blob/pom.xml#L32-L67)
+This example assumes that you are familiar using Maven dependency manager. All the dependencies are listed in [pom.xml](https://github.com/akshaybabloo/Using-Log4J-SLF4J/blob/master/pom.xml#L32-L67)
 
 ## 2. What is logging?
 
