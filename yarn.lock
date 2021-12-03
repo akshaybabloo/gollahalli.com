@@ -876,10 +876,10 @@ fined@^1.0.1:
     object.pick "^1.2.0"
     parse-filepath "^1.0.1"
 
-firacode@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/firacode/-/firacode-5.2.0.tgz#2eab5b4f59e3197d5e84f15a25485a88f0cd3180"
-  integrity sha512-Q1SO7vibzYcT+KaohGK0ypGS58zLtO2o2UuiLvngTEhBbHQoZmZ4DAiugj0MNNpeM4jG9gM9NyusVDM3MxYP7A==
+firacode@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/firacode/-/firacode-6.1.0.tgz#c472770e67dde3c3ee78d4c621e26b4431cc8e9a"
+  integrity sha512-nwT6/cQyZG80CD3LsJXHrsERf4rPTe4vjlzEB5s+V3bFdMJN25bGe+wyg3YGGo/LXpLtQhEpZ4Lz/89ktsRbHg==
 
 flagged-respawn@^1.0.0:
   version "1.0.1"
@@ -2335,10 +2335,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-uikit@^3.9.2:
-  version "3.9.2"
-  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.9.2.tgz#aa58dab96b3b43dd0d3480961127c0fec65ea7f1"
-  integrity sha512-5JEg+RzL/GRKbLgNCK/itZR66VfQRDWIBUSTBYqXiBPO8+f85VjKB6i+DxZD0ai5s+ElEQjWpQQ+Qv1AuYDRZg==
+uikit@^3.9.4:
+  version "3.9.4"
+  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.9.4.tgz#2565a5c0239f49d3a75bfa89c519d40c006e3c46"
+  integrity sha512-mrOr/k3a/6/VBXgnqmQFg0l2ipZyoTpULZZgJ0RVHZz97HNrc28KQsb24pl8wxtw+BGpD39nfMhSmOznyOZuHw==
 
 unc-path-regex@^0.1.2:
   version "0.1.2"
