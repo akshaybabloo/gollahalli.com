@@ -17,7 +17,7 @@
   "dependencies": {
     "algoliasearch": "^4.11.0",
     "firacode": "^6.2.0",
-    "instantsearch.js": "^4.33.2",
+    "instantsearch.js": "^4.34.0",
     "uikit": "^3.9.4",
     "video.js": "^7.17.0"
   }
