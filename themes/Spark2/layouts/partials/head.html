@@ -53,25 +53,8 @@
 
 <link href="{{ .Site.Params.scss.globalFontFamilyURL | safeHTMLAttr }}" rel="stylesheet">
 
-{{ if .Site.Params.convertAssetsToInline }}
-    {{ $uikitCss := resources.Get "css/uikit.css" }}
-    <style>
-        {{ $uikitCss.Content | safeCSS }}
-    </style>
-
-    {{ $sassTemplate := resources.Get "scss/custom.scss" }}
-    {{ $style := $sassTemplate | resources.ExecuteAsTemplate "main.scss" . | resources.ToCSS }}
-    <style>
-        {{ $style.Content | safeCSS }}
-    </style>
+{{ if eq (getenv "HUGO_ENV") "production" }}
+<link rel="stylesheet" href="css/main.min.css">
 {{ else }}
-    {{ $uikitCss := resources.Get "css/uikit.min.css" }}
-    <link rel="stylesheet" href="{{ $uikitCss.Permalink }}">
-
-    {{ $sassTemplate := resources.Get "scss/custom.scss" }}
-    {{ $style := $sassTemplate | resources.ExecuteAsTemplate "main.scss" . | resources.ToCSS | resources.Minify }}
-    <link rel="stylesheet" href="{{ $style.Permalink }}">
+<link rel="stylesheet" href="css/main.css">
 {{ end }}
-
-
-
