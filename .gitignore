@@ -25,3 +25,5 @@ themes/Spark/assets/js/
 !themes/Spark/assets/js/custom.js
 
 themes/Spark/static/font/
+
+.hugo_build.lock
