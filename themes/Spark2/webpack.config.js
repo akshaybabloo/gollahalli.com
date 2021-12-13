@@ -2,16 +2,18 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = {
-    entry: './app.ts',
+module.exports = (env, argv) => {
+    return {
+        entry: './app.ts',
     plugins: [
         new MiniCssExtractPlugin({
-            filename: "./static/css/[name].css"
+            filename: argv.mode !== "production" ? "./static/css/[name].css" : "./static/css/[name].min.css"
         })
     ],
     output: {
-        filename: "./static/js/[name].js",
+        filename: argv.mode !== "production" ? "./static/js/[name].js" : "./static/js/[name].min.js",
         path: path.resolve(__dirname, '.')
     },
     module: {
@@ -51,7 +53,9 @@ module.exports = {
     optimization: {
         minimizer: [
             new CssMinimizerPlugin(),
-            new ForkTsCheckerWebpackPlugin()
+            new ForkTsCheckerWebpackPlugin(),
+            new TerserPlugin()
         ],
     },
+}
 }
