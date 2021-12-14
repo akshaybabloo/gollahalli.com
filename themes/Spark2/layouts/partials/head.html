@@ -51,8 +51,6 @@
 {{ template "_internal/schema.html" . }}
 {{ template "_internal/twitter_cards.html" . }}
 
-<link href="{{ .Site.Params.scss.globalFontFamilyURL | safeHTMLAttr }}" rel="stylesheet">
-
 {{ if eq (getenv "HUGO_ENV") "production" }}
 <link rel="stylesheet" href="css/main.min.css">
 {{ else }}

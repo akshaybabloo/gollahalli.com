@@ -49,6 +49,9 @@ module.exports = (env, argv) => {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js'
+        },
     },
     optimization: {
         minimizer: [
