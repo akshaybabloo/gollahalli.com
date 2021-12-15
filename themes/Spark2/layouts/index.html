@@ -6,10 +6,10 @@
 <body class="font-sans text-white leading-normal tracking-wider shadow-xl">
 
 
-<div class="max-w-4xl flex items-center h-auto lg:h-screen flex-wrap mx-auto my-32 lg:my-0">
+<div id="profile" class="max-w-4xl flex items-center h-auto lg:h-screen flex-wrap mx-auto my-32 lg:my-0">
 
     <!--Main Col-->
-    <div id="profile" class="w-full rounded-lg shadow-2xl bg-gray-800 opacity-75 mx-6 ring-gray-800/5">
+    <div class="sm:relative w-full rounded-lg shadow-2xl bg-gray-800 opacity-75 mx-6 ring-gray-800/5">
 
 
         <div class="p-4 md:p-12 text-center">
@@ -72,6 +72,13 @@
                 <!-- Use https://simpleicons.org/ to find the svg for your preferred product -->
 
             </div>
+
+            <!-- Pin to top right corner -->
+            <div class="absolute top-0 right-0 h-12 w-18 p-4">
+                <button class="focus:outline-none"><i v-html="search" class="hover:text-gray-300"></i></button>
+            </div>
+
+
 
         </div>
 
