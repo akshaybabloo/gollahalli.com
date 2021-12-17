@@ -35,6 +35,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@tailwindcss/forms": "^0.4.0",
     "alpinejs": "^3.7.0",
     "vue": "^2.6.14"
   }

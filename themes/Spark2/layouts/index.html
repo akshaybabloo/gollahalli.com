@@ -24,9 +24,9 @@
                     <div class="flex items-center flex-shrink text-white mr-6">
                         <img src="{{.Site.Params.namedLogo}}" class="sm:w-48 w-40" alt="{{.Title}}">
                     </div>
-                    
+
                     <div class="block lg:hidden">
-                        <button v-on:click="showMenuToggle"
+                        <button v-on:click="showMenuToggle()"
                                 class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
                             <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <title>Menu</title>
@@ -75,18 +75,26 @@
 
             <!-- Pin to top right corner -->
             <div class="absolute top-0 right-0 h-12 w-18 p-4">
-                <button class="focus:outline-none"><i v-html="search" class="hover:text-gray-300"></i></button>
+                <button class="focus:outline-none" v-on:click="showSearchToggle()"><i v-html="search" class="hover:text-gray-300"></i></button>
             </div>
 
-
-
         </div>
 
 
-        <!-- Pin to top right corner -->
+    <!-- search model -->
+    <div class="absolute inset-0 backdrop-blur-lg">
+        <div class="relative max-w-4xl flex items-center h-auto lg:h-screen flex-wrap mx-auto my-32 lg:my-0">
+            <div class="w-full rounded-lg shadow-2xl bg-gray-800 opacity-75 mx-6 ring-gray-800 p-4 ">
+                <div class="absolute h-10 mt-1 left-0 top-0 flex items-center pl-10">
+                    <i v-html="search"></i>
+                </div>
+                <input type="text" name="searchBox" id="searchBox" class="block w-full focus:outline-none focus:bg-white focus:shadow text-gray-700 font-bold rounded-lg pl-12 pr-4 py-3">
+                </div>
+        </div>
         <div class="absolute top-0 right-0 h-12 w-18 p-4">
-            <button class="js-change-theme focus:outline-none">🌙</button>
+            <button class="focus:outline-none" v-on:click="showSearchToggle()"><i v-html="times" class="hover:text-gray-300"></i></button>
         </div>
+    </div>
 
 </div>
 {{ partial "scripts.html" . }}
