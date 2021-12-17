@@ -35,7 +35,8 @@
                         </button>
                     </div>
 
-                    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto" v-bind:class="{hidden: showMenu}">
+                    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto"
+                         v-bind:class="{hidden: showMenu}">
                         <div class="text-xl lg:flex-grow">
                             {{ range.Site.Menus.main }}
                             <a href="{{.URL}}"
@@ -54,31 +55,33 @@
 
             <div class="py-4 text-lg">{{ .Content }}</div>
 
-                <div class="mt-6 pb-16 lg:pb-0 w-4/6 mx-auto flex flex-wrap items-center justify-between">
-                    <a class="link" href="#">
-                        <i v-html="linkedin" class="hover:text-gray-300"></i>
-                    </a>
-                    <a class="link" href="#">
-                        <i v-html="twitter" class="hover:text-gray-300"></i>
-                    </a>
-                    <a class="link" href="#">
-                        <i v-html="github" class="hover:text-gray-300"></i>
-                    </a>
-                    <a class="link" href="#">
-                        <i v-html="linkedin" class="hover:text-gray-300"></i>
-                    </a>
-                </div>
-
-                <!-- Use https://simpleicons.org/ to find the svg for your preferred product -->
-
+            <div class="mt-6 pb-16 lg:pb-0 w-4/6 mx-auto flex flex-wrap items-center justify-between">
+                <a class="link" href="#">
+                    <i v-html="linkedin" class="hover:text-gray-300"></i>
+                </a>
+                <a class="link" href="#">
+                    <i v-html="twitter" class="hover:text-gray-300"></i>
+                </a>
+                <a class="link" href="#">
+                    <i v-html="github" class="hover:text-gray-300"></i>
+                </a>
+                <a class="link" href="#">
+                    <i v-html="linkedin" class="hover:text-gray-300"></i>
+                </a>
             </div>
 
-            <!-- Pin to top right corner -->
-            <div class="absolute top-0 right-0 h-12 w-18 p-4">
-                <button class="focus:outline-none" v-on:click="showSearchToggle()"><i v-html="search" class="hover:text-gray-300"></i></button>
-            </div>
+            <!-- Use https://simpleicons.org/ to find the svg for your preferred product -->
 
         </div>
+
+        <!-- Pin to top right corner -->
+        <div class="absolute top-0 right-0 h-12 w-18 p-4">
+            <button class="focus:outline-none" v-on:click="showSearchToggle()"><i v-html="search"
+                                                                                  class="hover:text-gray-300"></i>
+            </button>
+        </div>
+
+    </div>
 
 
     <!-- search model -->
@@ -88,11 +91,14 @@
                 <div class="absolute h-10 mt-1 left-0 top-0 flex items-center pl-10">
                     <i v-html="search"></i>
                 </div>
-                <input type="text" name="searchBox" id="searchBox" class="block w-full focus:outline-none focus:bg-white focus:shadow text-gray-700 font-bold rounded-lg pl-12 pr-4 py-3">
-                </div>
+                <input type="text" name="searchBox" id="searchBox"
+                       class="block w-full focus:outline-none focus:bg-white focus:shadow text-gray-700 font-bold rounded-lg pl-12 pr-4 py-3">
+            </div>
         </div>
         <div class="absolute top-0 right-0 h-12 w-18 p-4">
-            <button class="focus:outline-none" v-on:click="showSearchToggle()"><i v-html="times" class="hover:text-gray-300"></i></button>
+            <button class="focus:outline-none" v-on:click="showSearchToggle()"><i v-html="times"
+                                                                                  class="hover:text-gray-300"></i>
+            </button>
         </div>
     </div>
 
