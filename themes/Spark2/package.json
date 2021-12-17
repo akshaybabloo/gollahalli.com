@@ -36,7 +36,10 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@tailwindcss/forms": "^0.4.0",
+    "@types/lodash": "^4.14.178",
+    "algoliasearch": "^4.11.0",
     "alpinejs": "^3.7.0",
+    "lodash": "^4.17.21",
     "vue": "^2.6.14"
   }
 }
