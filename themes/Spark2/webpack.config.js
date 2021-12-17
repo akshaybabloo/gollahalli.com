@@ -6,7 +6,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
     return {
-        entry: './app.ts',
+        entry: './src/app.ts',
     plugins: [
         new MiniCssExtractPlugin({
             filename: argv.mode !== "production" ? "./static/css/[name].css" : "./static/css/[name].min.css"
