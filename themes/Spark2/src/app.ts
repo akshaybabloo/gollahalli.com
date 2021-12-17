@@ -1,17 +1,7 @@
 import './main.css';
-import {icon, library, } from '@fortawesome/fontawesome-svg-core'
-import {faGithub, faLinkedin, faTwitter} from '@fortawesome/free-brands-svg-icons';
-import {faSearch, faTimes} from '@fortawesome/free-solid-svg-icons';
 import Vue from "vue";
+import {search, linkedin, times, twitter, github} from "./icons";
 
-
-library.add(faGithub, faTwitter, faLinkedin, faSearch, faTimes);
-
-const linkedin = icon({prefix: 'fab', iconName: 'linkedin'}, {transform: {size: 30}});
-const github = icon({prefix: 'fab', iconName: 'github'}, {transform: {size: 30}});
-const twitter = icon({prefix: 'fab', iconName: 'twitter'}, {transform: {size: 30}});
-const search = icon({prefix: 'fas', iconName: 'search'}, {transform: {size: 20}});
-const times = icon({prefix: 'fas', iconName: 'times'}, {transform: {size: 20}});
 
 new Vue({
     el: '#profile',
