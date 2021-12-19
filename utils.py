@@ -7,12 +7,6 @@ from urllib.parse import urlencode
 from urllib.request import urlopen
 from colorama import init, Fore, Style
 
-
-try:
-    from pathlib import Path
-except ImportError:
-    raise ImportError("PY> Works on Python 3.5 and above only")
-
 try:
     from algoliasearch.search_client import SearchClient
 except ImportError:
