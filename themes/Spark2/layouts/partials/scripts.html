@@ -5,9 +5,9 @@
 </script>
 
 {{ if eq (getenv "HUGO_ENV") "production" }}
-<script src="js/main.min.js"></script>
+<script src="/js/main.min.js"></script>
 {{ else }}
-<script src="js/main.js"></script>
+<script src="/js/main.js"></script>
 {{ end }}
 
 {{ range .Params.htmlScripts }}
