@@ -1,8 +1,8 @@
-<table class="uk-table uk-table-responsive">
+<table class="table-auto prose-p:leading-3">
     <tbody>
         {{ range sort . "from" "desc" }}
             <tr>
-                <td>{{.from}} - {{.to}}</td>
+                <td class="!pl-2">{{.from}} - {{.to}}</td>
                 <td>
                     {{.title}}
                     <p>{{if .company }}{{.company}},{{end}} {{.where}}</p>

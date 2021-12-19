@@ -20,7 +20,7 @@ author:
   addressCountry: "New Zealand"
 ---
 
-## About Me
+# About Me
 
 My name is Akshay Raj Gollahalli (Akshay for short). I survive mostly on coffee. I am a designer, developer, software engineer, animal lover and a [Ph.D. student](https://kedri.aut.ac.nz/staff/staff-profiles/akshay-raj-gollahalli).
 

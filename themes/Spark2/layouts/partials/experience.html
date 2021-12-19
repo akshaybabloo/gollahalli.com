@@ -1,9 +1,9 @@
-<table class="uk-table uk-table-responsive">
+<table class="table-auto prose-p:leading-3">
     <tbody>
     {{ $present := where . "to" "Present" }}
     {{ range sort $present "from" "desc" }}
-        <tr class="gol-tr-bgcolor">
-            <td>{{ dateFormat "January, 2006" .from }} - {{ .to }}</td>
+        <tr class="bg-gray-600">
+            <td class="!pl-2">{{ dateFormat "January, 2006" .from }} - {{ .to }}</td>
             <td>
                 {{ .title }}
                 <p>{{ if .company }}{{ .company }},{{ end }} {{ .where }}</p>
@@ -15,7 +15,7 @@
     {{ $noPresent := where . "to" "!=" "Present" }}
     {{ range sort $noPresent "from" "desc" }}
         <tr>
-            <td>{{ dateFormat "January, 2006" .from }} - {{ dateFormat "January, 2006" .to }}</td>
+            <td class="!pl-2">{{ dateFormat "January, 2006" .from }} - {{ dateFormat "January, 2006" .to }}</td>
             <td>
                 {{ .title }}
                 <p>{{ if .company }}{{ .company }},{{ end }} {{ .where }}</p>
