@@ -105,11 +105,10 @@
                         <input type="search" placeholder="Enter search term" v-model="searchText" @input="searchAlgolia"
                                class="block w-full bg-brand-white focus:outline-none focus:bg-white focus:shadow text-gray-700 font-bold rounded-lg pl-12 pr-4 py-3">
                     </div>
-
                 </div>
                 <div class="mx-auto lg:mx-0 pt-3 border-b-2 border-gray-500 opacity-25"></div>
 
-                <div class="p-2 mx-auto overflow-y-auto">
+                <div class="p-2 mx-auto">
                     <img src="/img/lazy-panda.svg" alt="Lazy panda" class="object-contain h-48 mx-auto"
                          v-if="numberOfHits === 0">
                     <div v-for="(contents, section) in hits">
