@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        {{- partial "head.html" . -}}
-    </head>
-    <body>
-        {{- partial "header.html" . -}}
-        <div id="profile">
-        {{- block "main" . }}{{- end }}
+<head>
+    {{- partial "head.html" . -}}
+</head>
+<body class="flex flex-col h-screen justify-between">
+<div id="profile">
+    {{- partial "nav.html" . -}}
+    <div class="mb-auto w-auto px-6 py-12 bg-gray-800 shadow-xl shadow-slate-700/10 ring-1 ring-gray-900/5 lg:max-w-6xl md:mx-auto">
+        <div class="mt-8 prose prose-invert prose-yellow mx-auto lg:prose-lg max-w-none prose-li:leading-4 h-fit">
+            {{- block "main" . }}{{- end }}
         </div>
-        {{- partial "footer.html" . -}}
-    </body>
+    </div>
+</div>
+{{- partial "footer.html" . -}}
+</body>
 </html>
