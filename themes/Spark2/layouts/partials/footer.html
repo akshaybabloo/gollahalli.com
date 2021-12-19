@@ -1,8 +1,8 @@
-<div class="uk-navbar-container uk-navbar-transparent" uk-navbar>
-    <div class="uk-navbar-center">
-        <div class="uk-navbar-item">
-            Copyright &copy; {{ if .Site.Params.namedLogo }}<img src="{{ .Site.Params.namedLogo | relURL }}" class="uk-margin-left uk-margin-right" alt="Akshay Raj Gollahalli's logo" width="150" height="36" uk-svg>{{ else }} {{ .Site.Title }} {{end}} {{.Site.Params.year}}
-            {{if .Site.Params.acknowledge }} | Theme by <a class="uk-link-text uk-margin-small-left" href="https://github.com/akshaybabloo/spark-hugo-theme">Akshay Raj Gollahalli</a>, generated using <a class="uk-link-text uk-margin-small-left" href="http://hugo.io">Hugo</a>
+<div class="flex justify-center text-center flex-wrap bg-gray-800 p-1 border-t-2 border-gray-600 mt-6">
+    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+        <div class="lg:flex-grow mx-auto">
+            Copyright &copy; {{ .Site.Title }} {{.Site.Params.year}}
+            {{if .Site.Params.acknowledge }} | Theme by <a href="https://github.com/akshaybabloo/spark-hugo-theme">Akshay Raj Gollahalli</a>, generated using <a class="uk-link-text uk-margin-small-left" href="http://hugo.io">Hugo</a>
             {{ end }}
         </div>
     </div>
