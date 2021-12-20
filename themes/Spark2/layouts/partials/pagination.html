@@ -1,64 +1,110 @@
 {{ $pag := $.Paginator }}
 {{ if gt $pag.TotalPages 1 }}
-    <ul class="uk-pagination uk-flex-center" uk-margin>
-        {{ with $pag.First }}
-            <li>
-                <a href="{{ .URL }}"
-                   class="page-link" aria-label="First"><span aria-hidden="true">&laquo;&laquo; first</span></a>
-            </li>
-        {{ end }}
+<div class="flex justify-center prose-a:no-underline">
+    {{ with $pag.First }}
+    <a href="{{ .URL }}"
+       class="px-4 py-2 mx-1 text-gray-500 capitalize bg-white rounded-md dark:bg-gray-900 dark:text-gray-600">
+        <div class="flex items-center -mx-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mx-1" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+            </svg>
 
-        {{ if $pag.HasPrev }}
-            <li>
-                <a href="{{ $pag.Prev.URL }}"
-                   aria-label="Previous"><span aria-hidden="true">&laquo; prev</span></a>
-            </li>
-        {{ else }}
-            <li class="uk-disabled">
-                <span aria-hidden="true">&laquo; prev</span>
-            </li>
-        {{ end }}
+            <span class="mx-1">
+                        First
+                    </span>
+        </div>
+    </a>
+    {{ end }}
 
-        {{ $.Scratch.Set "__paginator.ellipsed" false }}
-        {{ range $pag.Pagers }}
-            {{ $right := sub .TotalPages .PageNumber }}
-            {{ $showNumber := or (le .PageNumber 3) (eq $right 0) }}
-            {{ $showNumber := or $showNumber (and (gt .PageNumber (sub $pag.PageNumber 2)) (lt .PageNumber (add $pag.PageNumber 2)))  }}
-            {{ if $showNumber }}
-                {{ $.Scratch.Set "__paginator.ellipsed" false }}
-                {{ $.Scratch.Set "__paginator.shouldEllipse" false }}
-            {{ else }}
-                {{ $.Scratch.Set "__paginator.shouldEllipse" (not ($.Scratch.Get "__paginator.ellipsed") ) }}
-                {{ $.Scratch.Set "__paginator.ellipsed" true }}
-            {{ end }}
-            {{ if $showNumber }}
-                {{ if eq . $pag }}
-                    <li class="uk-active"><span style="text-decoration: underline">{{ .PageNumber }}</span></li>
-                {{ else }}
-                    <li><a href="{{ .URL }}"><span>{{ .PageNumber }}</span></a></li>
-                {{ end }}
-            {{ else if ($.Scratch.Get "__paginator.shouldEllipse") }}
-                <li class="uk-disabled"><span aria-hidden="true">&nbsp;&hellip;&nbsp;</span></li>
-            {{ end }}
-        {{ end }}
+    {{ if $pag.HasPrev }}
+    <a href="{{ $pag.Prev.URL }}"
+       class="flex items-center justify-center px-4 py-2 mx-1 text-gray-500 capitalize bg-white rounded-md dark:bg-gray-900 dark:text-gray-600"
+       aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clip-rule="evenodd"/>
+        </svg>
+    </a>
+    {{ else }}
+    <span class="flex items-center justify-center px-4 py-2 mx-1 text-gray-500 capitalize bg-white rounded-md cursor-not-allowed dark:bg-gray-900 dark:text-gray-600"
+          aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd"/>
+            </svg>
+        </span>
+
+    {{ end }}
+
+    {{ $.Scratch.Set "__paginator.ellipsed" false }}
+    {{ range $pag.Pagers }}
+    {{ $right := sub .TotalPages .PageNumber }}
+    {{ $showNumber := or (le .PageNumber 3) (eq $right 0) }}
+    {{ $showNumber := or $showNumber (and (gt .PageNumber (sub $pag.PageNumber 2)) (lt .PageNumber (add $pag.PageNumber 2)))  }}
+    {{ if $showNumber }}
+    {{ $.Scratch.Set "__paginator.ellipsed" false }}
+    {{ $.Scratch.Set "__paginator.shouldEllipse" false }}
+    {{ else }}
+    {{ $.Scratch.Set "__paginator.shouldEllipse" (not ($.Scratch.Get "__paginator.ellipsed") ) }}
+    {{ $.Scratch.Set "__paginator.ellipsed" true }}
+    {{ end }}
+    {{ if $showNumber }}
+    {{ if eq . $pag }}
+    <span class="hidden px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 transform bg-white rounded-md sm:inline dark:bg-gray-900 dark:text-gray-200 hover:bg-blue-500 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200">
+                        {{ .PageNumber }}
+                    </span>
+    {{ else }}
+    <a href="{{ .URL }}"
+       class="hidden px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 transform bg-white rounded-md sm:inline dark:bg-gray-900 dark:text-gray-200 hover:bg-blue-500 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200">
+        {{ .PageNumber }}
+    </a>
+    {{ end }}
+    {{ else if ($.Scratch.Get "__paginator.shouldEllipse") }}
+    <span class="hidden px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 transform bg-white rounded-md sm:inline dark:bg-gray-900 dark:text-gray-200 hover:bg-blue-500 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200">
+                    &nbsp;&hellip;&nbsp;
+                </span>
+    {{ end }}
+    {{ end }}
 
 
-        {{ if $pag.HasNext }}
-            <li>
-                <a href="{{ $pag.Next.URL }}"
-                   aria-label="Next"><span aria-hidden="true">next &raquo;</span></a>
-            </li>
-        {{ else }}
-            <li class="uk-disabled">
-                <span aria-hidden="true">next &raquo;</span>
-            </li>
-        {{ end }}
+    {{ if $pag.HasNext }}
+    <a href="{{ $pag.Next.URL }}"
+       class="flex items-center justify-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 transform bg-white rounded-md dark:bg-gray-900 dark:text-gray-200 hover:bg-blue-500 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"/>
+        </svg>
+    </a>
+    {{ else }}
+    <span class="flex items-center justify-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 cursor-not-allowed transform bg-white rounded-md dark:bg-gray-900 dark:text-gray-200 hover:bg-blue-500 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"/>
+            </svg>
+        </span>
+    {{ end }}
 
-        {{ with $pag.Last }}
-            <li>
-                <a href="{{ .URL }}"
-                   aria-label="Last"><span aria-hidden="true">last &raquo;&raquo;</span></a>
-            </li>
+    {{ with $pag.Last }}
+
+    <a href="{{ .URL }}"
+       class="px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 transform bg-white rounded-md dark:bg-gray-900 dark:text-gray-200 hover:bg-blue-500 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200">
+        <div class="flex items-center -mx-1">
+                    <span class="mx-1">
+                        Last
+                    </span>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mx-1" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+        </div>
+    </a>
+
+    {{ end }}
+</div>
         {{ end }}
-    </ul>
-{{ end }}
