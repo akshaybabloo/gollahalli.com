@@ -45,7 +45,6 @@ new Vue({
                 this.numberOfHits = value.nbHits;
                 // @ts-ignore
                 this.hits = groupBy(value.hits, "section");
-                console.log(this.hits);
             }).catch(reason => {
                 console.error(reason);
             })
