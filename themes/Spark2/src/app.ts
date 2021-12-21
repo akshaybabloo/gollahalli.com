@@ -1,6 +1,6 @@
 import './main.css';
 import Vue from "vue";
-import {search, linkedin, times, twitter, github, hashTag} from "./icons";
+import {search, linkedin, times, twitter, github, hashTag, pinterest, facebook} from "./icons";
 import algoliasearch from "algoliasearch/lite";
 import {groupBy} from "lodash";
 
@@ -20,6 +20,8 @@ new Vue({
         search: search.html.pop(),
         times: times.html.pop(),
         hashTag: hashTag.html.pop(),
+        facebook: facebook.html.pop(),
+        pinterest: pinterest.html.pop(),
 
         searchText: "",
         hits: [],
