@@ -1,6 +1,6 @@
 import './main.css';
 import Vue from "vue";
-import {search, linkedin, times, twitter, github} from "./icons";
+import {search, linkedin, times, twitter, github, hashTag} from "./icons";
 import algoliasearch from "algoliasearch/lite";
 import {groupBy} from "lodash";
 
@@ -13,11 +13,14 @@ const index = client.initIndex(algoliaIndexName);
 new Vue({
     el: '#profile',
     data: {
+        // icons
         linkedin: linkedin.html.pop(),
         github: github.html.pop(),
         twitter: twitter.html.pop(),
         search: search.html.pop(),
         times: times.html.pop(),
+        hashTag: hashTag.html.pop(),
+
         searchText: "",
         hits: [],
         numberOfHits: 0,
