@@ -6,3 +6,8 @@ body {
     @apply bg-gray-900;
     @apply text-white;
 }
+
+.highlight pre {
+    @apply mt-0;
+    @apply mb-0;
+}
