@@ -14,7 +14,7 @@ import {
     externalLink
 } from "./icons";
 import algoliasearch from "algoliasearch/lite";
-import {groupBy} from "lodash";
+import {groupBy, includes} from "lodash";
 
 
 // @ts-ignore
@@ -43,14 +43,18 @@ new Vue({
         numberOfHits: 0,
 
         showMenu: true,
-        showSearch: true
     },
     methods: {
         showMenuToggle: function () {
             this.showMenu = !this.showMenu;
         },
         showSearchToggle: function () {
-            this.showSearch = !this.showSearch;
+            const searchModel = this.$refs.searchModel as HTMLDivElement;
+            if (includes(searchModel.classList, "hidden")){
+                searchModel.classList.remove("hidden");
+            } else {
+                searchModel.classList.add("hidden");
+            }
         },
         searchAlgolia: function (event: HTMLInputElement) {
             if (this.searchText === "") {
