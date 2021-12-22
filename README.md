@@ -38,9 +38,9 @@ Run the server
 hugo serve
 ```
 
-## 2. Theme
+<!-- ## 2. Theme
 
-For theme see - [https://github.com/akshaybabloo/spark-2-hugo-theme](https://github.com/akshaybabloo/spark-2-hugo-theme).
+For theme see - [https://github.com/akshaybabloo/spark-2-hugo-theme](https://github.com/akshaybabloo/spark-2-hugo-theme). -->
 
 ## 3. Contributions
 
