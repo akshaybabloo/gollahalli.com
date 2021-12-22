@@ -6,7 +6,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
     return {
-        mode: env.WEBPACK_ENV,
         entry: './src/app.ts',
     plugins: [
         new MiniCssExtractPlugin({
