@@ -141,7 +141,7 @@ Let's create a simple `MainWindow` class without a status bar and with all its m
 
 This should look similar to the image below on macOS with dark mode enabled.
 
-{{< figure src="/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/mainwindow.png" title="Main window with empty QListWidget." alt="Main window with empty QListWidget." class="uk-align-center" >}}
+{{< figure src="/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/mainwindow.png" title="Main window with empty QListWidget." alt="Main window with empty QListWidget." >}}
 
 ## Custom Widget
 
@@ -206,7 +206,7 @@ Create a new widget UI with class `CustomWidget`. Add a button and a label to it
 
 This should look similar to the image below on macOS with dark mode enabled.
 
-{{< figure src="/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/customwidget.png" title="Widget with button, label, and a horizontal spacer." alt="Widget with button, label, and a horizontal spacer." class="uk-align-center" >}}
+{{< figure src="/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/customwidget.png" title="Widget with button, label, and a horizontal spacer." alt="Widget with button, label, and a horizontal spacer."  >}}
 
 ## Let's Code
 
@@ -333,7 +333,7 @@ What we are saying here is - _connect current class (CustomWidget) whose object 
 
 Once you run the application you should be able to delete any item from the list:
 
-{{< figure src="/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/application-demo.gif" title="Application demo." alt="Application demo." class="uk-align-center" >}}
+{{< figure src="/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/application-demo.gif" title="Application demo." alt="Application demo."  >}}
 
 ## Conclusion
 

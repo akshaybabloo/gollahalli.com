@@ -57,7 +57,7 @@ Installing a fresh Hugo binary is simple as:
 > uhugo install
 ```
 
-{{< figure src="/img/blog/uhugo-a-cli-tool-for-hugo-static-site-generator/uhugo-install.gif" title="uHugo instillation process" alt="uHugo instillation process" class="uk-align-center" width="800" >}}
+{{< figure src="/img/blog/uhugo-a-cli-tool-for-hugo-static-site-generator/uhugo-install.gif" title="uHugo instillation process" alt="uHugo instillation process" width="800" >}}
 
 It does some basic steps:
 
@@ -84,7 +84,7 @@ Updating to the latest version of Hugo is simple as:
 > uhugo update
 ```
 
-{{< figure src="/img/blog/uhugo-a-cli-tool-for-hugo-static-site-generator/uhugo-update.gif" title="uHugo updating process" alt="uHugo updating process" class="uk-align-center" width="800" >}}
+{{< figure src="/img/blog/uhugo-a-cli-tool-for-hugo-static-site-generator/uhugo-update.gif" title="uHugo updating process" alt="uHugo updating process"  width="800" >}}
 
 It takes the following steps to make you happy:
 
