@@ -8,6 +8,5 @@ body {
 }
 
 .highlight pre {
-    @apply mt-0;
-    @apply mb-0;
+    @apply my-2
 }

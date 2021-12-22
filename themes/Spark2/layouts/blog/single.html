@@ -34,7 +34,11 @@
     {{.Content}}
 </article>
 
-<hr>
+<hr class="!my-0">
+
+{{ partial "sendgrid.html" }}
+
+<hr class="!my-0">
 
 <div class="w-full">
     {{ template "_internal/disqus.html" . }}
