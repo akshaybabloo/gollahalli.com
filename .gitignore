@@ -25,3 +25,13 @@ themes/Spark/assets/js/
 !themes/Spark/assets/js/custom.js
 
 themes/Spark/static/font/
+
+.hugo_build.lock
+/themes/Spark2/static/js/main.js
+/themes/Spark2/static/css/main.css
+/themes/Spark2/static/js/main.min.js.LICENSE.txt
+/themes/Spark2/static/js/main.js.LICENSE.txt
+
+themes/Spark2/static/css/video-js.min.css
+
+themes/Spark2/static/js/video.min.js

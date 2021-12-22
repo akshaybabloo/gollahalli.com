@@ -1,7 +1,7 @@
 baseURL = "https://www.gollahalli.com/"
 languageCode = "en-us"
 title = "Akshay Raj Gollahalli"
-theme = "Spark"
+theme = "Spark2"
 
 googleAnalytics = "G-7WDESHJKMH" # Optional
 disqusShortname = "gollahalli-com" # Optional
@@ -18,7 +18,7 @@ enableEmoji = true
 
 [markup]
   [markup.highlight]
-    style = "dracula"
+    style = "rrt"
 
 [outputFormats]
   [outputFormats.searchindex]

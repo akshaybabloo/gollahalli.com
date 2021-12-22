@@ -1,0 +1,46 @@
+{{ define "head"}}
+    {{ with .OutputFormats.Get "amp" }}
+        <link rel="amphtml" href="{{ .Permalink }}">
+    {{ end }}
+    {{- partial "articleSchemaSEO.html" . -}}
+{{ end }}
+
+{{define "main"}}
+<article>
+    <h1>{{.Title}}</h1>
+
+    <p>{{.PublishDate.Format "January 2, 2006"}} &bullet; {{ range .Params.tags }} <a href="{{ `/tags/` | relLangURL }}{{ . | urlize }}">{{ . }}</a> {{ end }}
+        &bullet; {{ .ReadingTime }} minutes to read</p>
+
+    <div class="inline-flex rounded-md shadow-sm">
+        <p class="!my-0 pr-1 hidden md:block">Share on</p>
+        <a href="https://www.facebook.com/sharer.php?u={{ .Permalink }}" class="py-2 px-4 text-sm font-medium rounded-l-lg border focus:z-10 focus:ring-2 bg-gray-700 border-gray-600 text-white hover:text-white hover:bg-gray-600 focus:ring-blue-500 focus:text-white"><i v-html="facebook"></i></a>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ .Permalink }}" class="py-2 px-4 text-sm font-medium border-t border-b border-r focus:z-10 focus:ring-2 bg-gray-700 border-gray-600 text-white hover:text-white hover:bg-gray-600 focus:ring-blue-500 focus:text-white"><i v-html="linkedin"></i></a>
+        <a href="https://www.reddit.com/submit?url={{ .Permalink }}&title={{.Title|htmlEscape }}" class="py-2 px-4 text-sm font-medium border-t border-b border-r focus:z-10 focus:ring-2 bg-gray-700 border-gray-600 text-white hover:text-white hover:bg-gray-600 focus:ring-blue-500 focus:text-white"><i v-html="reddit"></i></a>
+        <a href="https://twitter.com/intent/tweet?url={{ .Permalink }}" class="py-2 px-4 text-sm font-medium border-t border-b focus:z-10 focus:ring-2 bg-gray-700 border-gray-600 text-white hover:text-white hover:bg-gray-600 focus:ring-blue-500 focus:text-white"><i v-html="twitter"></i></a>
+        <a href="https://pinterest.com/pin/create/link/?url={{ .Permalink }}" class="py-2 px-4 text-sm font-medium rounded-r-md border focus:z-10 focus:ring-2 bg-gray-700 border-gray-600 text-white hover:text-white hover:bg-gray-600 focus:ring-blue-500 focus:text-white"><i v-html="pinterest"></i></a>
+    </div>
+
+    {{ if (isset .Params "sitemapimages" )}}
+        {{ range $index, $element := .Params.siteMapImages }}
+            {{if eq $index 0 }}
+            <figure>
+                <img class="mx-auto rounded-lg object-contain" width="600" src="{{ .imageLoc | absURL }}" alt="{{ .imageCaption }}">
+            </figure>
+            {{end}}
+        {{end}}
+    {{ end }}
+
+    {{.Content}}
+</article>
+
+<hr class="!my-0">
+
+{{ partial "sendgrid.html" }}
+
+<hr class="!my-0">
+
+<div class="w-full">
+    {{ template "_internal/disqus.html" . }}
+</div>
+{{end}}

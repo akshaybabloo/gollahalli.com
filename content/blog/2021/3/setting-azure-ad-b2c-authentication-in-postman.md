@@ -64,13 +64,13 @@ For web applications you need client security code because as far as I have test
 2. Under `Owned applications` tab, select your application.
 3. From the left menu, under `Manage` section, select `Authentication`
 4. Under - Platform configurations - click on `Add a platform`. This should open a drawer from right.
-    {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/add-platform.png" title="Add a new platform" alt="Add a new platform" class="uk-align-center" >}}
+    {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/add-platform.png" title="Add a new platform" alt="Add a new platform" >}}
     select the - Mobile and desktop applications.
 5. According to their [documentation](https://learning.postman.com/docs/sending-requests/authorization/#requesting-an-oauth-20-token), the callback URL should be - `https://oauth.pstmn.io/v1/browser-callback`, add that and click `Configure`.
-    {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/callback-url.png" title="Adding callback URL" alt="Adding callback URL" class="uk-align-center" >}}
+    {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/callback-url.png" title="Adding callback URL" alt="Adding callback URL"  >}}
     This will create the appropriate platform.
 6. Also, in the same page, under `Implicit grant and hybrid flows`, make sure `Access tokens` and `ID tokens` are ticked.
-    {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/grants.png" title="Enable grants" alt="Enable grants" class="uk-align-center" >}}
+    {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/grants.png" title="Enable grants" alt="Enable grants"  >}}
 
 ## Setup Postman
 
@@ -112,7 +112,7 @@ Go to collection setting, click on `Authorization` tab, and do the following:
 
 #### Screenshot
 
-{{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/postman.png" title="Screenshot of Postman authentication setup" alt="Screenshot of Postman authentication setup" class="uk-align-center" width="600" >}}
+{{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/postman.png" title="Screenshot of Postman authentication setup" alt="Screenshot of Postman authentication setup"  width="600" >}}
 
 ## Conclusion
 
