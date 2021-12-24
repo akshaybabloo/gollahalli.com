@@ -56,13 +56,13 @@ BING_PING_URL = "https://www.bing.com/ping?sitemap"
 
 CONFIG = toml.load("./config.toml")
 
-PARAMS = urlencode({'sitemap': CONFIG["baseURL"] + "sitemap.xml"})
-print(colour_me("PY> Pinging Google..."), end='')
-urlopen('%s?%s' % (GOOGLE_PING_URL, PARAMS))
-print(colour_me("Done"))
-print(colour_me("PY> Pinging Bing..."), end='')
-urlopen('%s?%s' % (BING_PING_URL, PARAMS))
-print(colour_me("Done"))
+# PARAMS = urlencode({'sitemap': CONFIG["baseURL"] + "sitemap.xml"})
+# print(colour_me("PY> Pinging Google..."), end='')
+# urlopen('%s?%s' % (GOOGLE_PING_URL, PARAMS))
+# print(colour_me("Done"))
+# print(colour_me("PY> Pinging Bing..."), end='')
+# urlopen('%s?%s' % (BING_PING_URL, PARAMS))
+# print(colour_me("Done"))
 
 print(colour_me("PY> Content deployed at"), colour_me(CONFIG["baseURL"]))
 
