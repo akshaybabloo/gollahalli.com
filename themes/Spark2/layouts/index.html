@@ -57,13 +57,13 @@
                 <div class="py-4 text-lg">{{ .Content }}</div>
 
                 <div class="mt-6 pb-16 lg:pb-0 w-4/6 mx-auto flex flex-wrap items-center justify-between">
-                    <a class="link" href="#">
+                    <a class="link" href="{{ .Site.Params.linkedin }}">
                         <i v-html="linkedin" class="hover:text-gray-300"></i>
                     </a>
-                    <a class="link" href="#">
+                    <a class="link" href="{{ .Site.Params.twitter }}">
                         <i v-html="twitter" class="hover:text-gray-300"></i>
                     </a>
-                    <a class="link" href="#">
+                    <a class="link" href="{{ .Site.Params.github }}">
                         <i v-html="github" class="hover:text-gray-300"></i>
                     </a>
                     <a class="link" href="mailto:{{ .Site.Params.email }}">
