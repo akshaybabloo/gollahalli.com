@@ -1,10 +1,12 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
-draft: true
-categories: []
+draft: false
+projectCategory: "Open-Source Software"
 tags: []
 description: ""
 images: []
-ads: false
+# externalUrl: ""
+_build:
+    render: never
 ---
