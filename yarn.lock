@@ -2340,10 +2340,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-uikit@^3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.10.0.tgz#d469692a79781315f3729fd8c666c101d2c62c7d"
-  integrity sha512-4yhzUltc80JmGl/xcTs2Bjtf9/Qa5a8XnHYoWTMDTkKx/WqeMDwFm850E+RnH7iV/X4sUjI+3zsgmgic5/reJw==
+uikit@^3.10.1:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.10.1.tgz#8862555d8e2e4faf9d4de834d37cab1c41ffe2a4"
+  integrity sha512-aUSO+NIb9EVLoWWWYRDlthB0om6jLTWJ/Qhx3mbXKCW2TKGtWGsrdZdlQKAWRHsz/eeog9Eg89DOPtg5ZuMwoA==
 
 unc-path-regex@^0.1.2:
   version "0.1.2"
