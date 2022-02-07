@@ -21,7 +21,7 @@
       "company": "Knowledge Engineering and Discovery Research Institute (KEDRI), AUT University.",
       "where": "Auckland, New Zealand",
       "from": "2015-02-01",
-      "to": "Present",
+      "to": "2020-12-30",
       "description": ""
     },
     {
@@ -125,8 +125,32 @@
       "company": "Computer and Mathematical Sciences, AUT University.",
       "where": "Auckland, New Zealand",
       "from": "2020-02-01",
-      "to": "Present",
+      "to": "2022-01-01",
       "description": "C Programming"
+    },
+    {
+      "title": "Research Assistant",
+      "company": "Auckland University of Technology University.",
+      "where": "Auckland, New Zealand",
+      "from": "2021-09-01",
+      "to": "2022-01-30",
+      "description": "Develop software for Disaster Management Systems. \n\n Technologies: Java, Neo4J"
+    },
+    {
+      "title": "Lecturer",
+      "company": "Auckland Institute of Studies (AIS).",
+      "where": "Auckland, New Zealand",
+      "from": "2021-08-01",
+      "to": "Present",
+      "description": "Teaching Fundamentals of Information Systems and Technology (COMP510) and Fundamentals of Computer Programming (COMP513)"
+    },
+    {
+      "title": "Software Engineer (C++)",
+      "company": "Fisher and Paykel Appliances.",
+      "where": "Auckland, New Zealand",
+      "from": "2022-01-10",
+      "to": "Present",
+      "description": "Machine learning models deployment in cloud on-demand."
     }
   ]
 }
