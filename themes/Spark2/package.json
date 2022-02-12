@@ -38,7 +38,7 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^6.0.0",
     "@tailwindcss/forms": "^0.4.0",
     "@types/lodash": "^4.14.178",
     "algoliasearch": "^4.12.1",
