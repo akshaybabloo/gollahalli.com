@@ -1,17 +1,17 @@
 import './main.css';
-import Vue from "vue";
+import {createApp} from "vue";
 import {
-    search,
-    linkedin,
-    times,
-    twitter,
+    externalLink,
+    facebook,
     github,
     hashTag,
-    pinterest,
-    facebook,
-    reddit,
+    linkedin,
     mail,
-    externalLink
+    pinterest,
+    reddit,
+    search,
+    times,
+    twitter
 } from "./icons";
 import algoliasearch from "algoliasearch/lite";
 import {groupBy, includes} from "lodash";
@@ -22,27 +22,28 @@ const client = algoliasearch(algoliaAppId, algoliaApiKey);
 // @ts-ignore
 const index = client.initIndex(algoliaIndexName);
 
-new Vue({
-    el: '#profile',
-    data: {
-        // icons
-        linkedin: linkedin.html.pop(),
-        github: github.html.pop(),
-        twitter: twitter.html.pop(),
-        search: search.html.pop(),
-        times: times.html.pop(),
-        hashTag: hashTag.html.pop(),
-        facebook: facebook.html.pop(),
-        pinterest: pinterest.html.pop(),
-        reddit: reddit.html.pop(),
-        mail: mail.html.pop(),
-        externalLink: externalLink.html.pop(),
+createApp({
+    data() {
+        return {
+            // icons
+            linkedin: linkedin.html.pop(),
+            github: github.html.pop(),
+            twitter: twitter.html.pop(),
+            search: search.html.pop(),
+            times: times.html.pop(),
+            hashTag: hashTag.html.pop(),
+            facebook: facebook.html.pop(),
+            pinterest: pinterest.html.pop(),
+            reddit: reddit.html.pop(),
+            mail: mail.html.pop(),
+            externalLink: externalLink.html.pop(),
 
-        searchText: "",
-        hits: [],
-        numberOfHits: 0,
+            searchText: "",
+            hits: [],
+            numberOfHits: 0,
 
-        showMenu: true,
+            showMenu: true,
+        }
     },
     methods: {
         showMenuToggle: function () {
@@ -50,7 +51,7 @@ new Vue({
         },
         showSearchToggle: function () {
             const searchModel = this.$refs.searchModel as HTMLDivElement;
-            if (includes(searchModel.classList, "hidden")){
+            if (includes(searchModel.classList, "hidden")) {
                 searchModel.classList.remove("hidden");
             } else {
                 searchModel.classList.add("hidden");
@@ -71,5 +72,5 @@ new Vue({
             })
         }
     }
-});
+}).mount("#profile");
 
