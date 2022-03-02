@@ -31,7 +31,3 @@ Run the server
 ```sh
 hugo serve
 ```
-
-<!-- ## 2. Theme
-
-For theme see - [https://github.com/akshaybabloo/spark-2-hugo-theme](https://github.com/akshaybabloo/spark-2-hugo-theme). -->
