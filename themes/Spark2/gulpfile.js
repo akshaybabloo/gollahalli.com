@@ -6,10 +6,10 @@ const jsFolderPath = './static/js/';
 
 // Following are the files that will be moved to their locations
 const cssFilesToMove = [
-    './node_modules/video.js/dist/video-js.min.css'
+    '../../node_modules/video.js/dist/video-js.min.css'
 ];
 const jsFilesToMove = [
-    './node_modules/video.js/dist/video.min.js'
+    '../../node_modules/video.js/dist/video.min.js'
 ];
 
 // Moves CSS files to their appropriate location
