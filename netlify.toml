@@ -13,7 +13,7 @@ publish = "public"
 command = "npm install --workspace=\"themes/Spark2\" --silent && npm run prod --workspace=\"themes/Spark2\" --silent && npm run static --workspace=\"themes/Spark2\" --silent && hugo --gc --minify && python utils.py"
 
 [context.deploy-preview]
-command = "npm install --workspace=\"themes/Spark2\" --silent && npm run prod --workspace=\"themes/Spark2\" --silent && npm run static --workspace=\"themes/Spark2\" --silent && && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
+command = "npm install --workspace=\"themes/Spark2\" --silent && npm run prod --workspace=\"themes/Spark2\" --silent && npm run static --workspace=\"themes/Spark2\" --silent && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.deploy-preview.environment]
 HUGO_VERSION = "0.93.0"
