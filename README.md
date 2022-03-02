@@ -8,28 +8,22 @@ Based on Hugo 0.56+
 
 Download load and install the latest NodeJS.
 
-Then install Yarn
-
-```sh
-npm i -g yarn
-```
-
 Change directory to `gollahalli.com` (if not already there) and install the dependencies
 
 ```sh
-yarn --cwd ./theme/Spark2 install
+npm install --workspace="themes/Spark2"
 ```
 
 Generate the JS and CSS files
 
 ```sh
-yarn --cwd ./theme/Spark2 prod
+npm run prod --workspace="themes/Spark2"
 ```
 
 Copy the files using `gulp`
 
 ```sh
-yarn --cwd ./theme/Spark2 gulp
+npm run static --workspace="themes/Spark2"
 ```
 
 Run the server
@@ -37,11 +31,3 @@ Run the server
 ```sh
 hugo serve
 ```
-
-<!-- ## 2. Theme
-
-For theme see - [https://github.com/akshaybabloo/spark-2-hugo-theme](https://github.com/akshaybabloo/spark-2-hugo-theme). -->
-
-## 3. Contributions
-
-All contributions are welcome.
