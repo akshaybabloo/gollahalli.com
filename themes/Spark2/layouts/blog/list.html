@@ -10,9 +10,6 @@
         <article class="grid py-8 sm:grid-cols-3">
             <div class="mb-4 sm:mb-0">
                 <div class="space-y-1 text-xs font-semibold tracking-wide uppercase">
-                    {{/*                    <a href="/"*/}}
-                    {{/*                       class="transition-colors duration-200 text-deep-purple-accent-400 hover:text-deep-purple-800"*/}}
-                    {{/*                       aria-label="Category">Books</a>*/}}
                     <p>
                         {{ range .Params.tags }}
                         <span class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded mr-2 bg-gray-700 text-gray-300 md:mt-1 sm:mt-1">
@@ -35,11 +32,13 @@
                     </h2>
 
                 </div>
+
                 <p class="text-gray-300">
                     {{.Description}}
                 </p>
             </div>
         </article>
+        <ins class="adsbgyoogle"></ins>
         {{end}}
         {{end}}
 
