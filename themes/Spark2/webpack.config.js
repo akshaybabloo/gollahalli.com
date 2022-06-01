@@ -6,6 +6,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
     return {
+        mode: argv.mode,
         entry: './src/app.ts',
         plugins: [
             new MiniCssExtractPlugin({
@@ -50,7 +51,7 @@ module.exports = (env, argv) => {
         resolve: {
             extensions: ['.tsx', '.ts', '.js'],
             alias: {
-                'vue$': 'vue/dist/vue.esm-browser.js'
+                'vue$': argv.mode !== "production" ? 'vue/dist/vue.esm-browser.js' : 'vue/dist/vue.esm-browser.prod.js'
             },
         },
         optimization: {
