@@ -7,35 +7,45 @@
 
         {{ range (.Paginate (.Pages.GroupByPublishDate "2006")).PageGroups }}
         {{ range $index, $element := .Pages }}
-        <article class="grid py-8 sm:grid-cols-3">
-            <div class="mb-4 sm:mb-0">
-                <div class="space-y-1 text-xs font-semibold tracking-wide uppercase">
-                    <p>
-                        {{ range .Params.tags }}
-                        <span class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded mr-2 bg-gray-700 text-gray-300 md:mt-1 sm:mt-1">
+        <article>
+            {{ if .Params.images }}
+            <a href="{{.Permalink}}"><img class="p-1 rounded-md md:object-scale-down mx-auto w-8/12"
+                                          src="{{ index .Params.images 0 }}" alt="{{ .Title }}"></a>
+            {{ end }}
+
+            <div class="grid sm:grid-cols-3">
+                <div class="mb-4 sm:mb-0">
+                    <div class="space-y-1 text-xs font-semibold tracking-wide uppercase">
+
+                        <p>
+                            {{ range .Params.tags }}
+                            <span class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded mr-2 bg-gray-700 text-gray-300 md:mt-1 sm:mt-1">
                             <i v-html="hashTag" class="mr-1"></i>
                           {{.}}
                         </span>
-                        {{end}}
-                    </p>
-                    <p class="text-gray-400">
-                        <time datetime="{{.PublishDate}}" itemprop="datePublished">{{.PublishDate.Format "02 Jan 2006"}}</time>
+                            {{end}}
+                        </p>
+
+                        <p class="text-gray-400">
+                            <time datetime="{{.PublishDate}}"
+                                  itemprop="datePublished">{{.PublishDate.Format "02 Jan 2006"}}</time>
+                        </p>
+                    </div>
+                </div>
+                <div class="sm:col-span-3 lg:col-span-2">
+                    <div class="mb-3">
+
+                        <h2 class="!my-0 inline-block text-white transition-colors duration-200 hover:text-deep-purple-accent-700">
+                            <a href="{{.Permalink}}" aria-label="Article"
+                               class="text-3xl font-extrabold leading-none sm:text-4xl xl:text-4xl !no-underline"> {{.Title}}</a>
+                        </h2>
+
+                    </div>
+
+                    <p class="text-gray-300">
+                        {{.Description}}
                     </p>
                 </div>
-            </div>
-            <div class="sm:col-span-3 lg:col-span-2">
-                <div class="mb-3">
-
-                    <h2 class="!my-0 inline-block text-white transition-colors duration-200 hover:text-deep-purple-accent-700">
-                        <a href="{{.Permalink}}" aria-label="Article"
-                           class="text-3xl font-extrabold leading-none sm:text-4xl xl:text-4xl !no-underline"> {{.Title}}</a>
-                    </h2>
-
-                </div>
-
-                <p class="text-gray-300">
-                    {{.Description}}
-                </p>
             </div>
         </article>
         <ins class="adsbgyoogle"></ins>
