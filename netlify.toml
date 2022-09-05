@@ -10,17 +10,17 @@ status = 301
 
 [build]
 publish = "public"
-command = "npm install --workspace=\"themes/Spark2\" --silent && npm run prod --workspace=\"themes/Spark2\" --silent && npm run static --workspace=\"themes/Spark2\" --silent && hugo --gc --minify && python utils.py"
+command = "yarn install && yarn workspace spark2 prod && yarn workspace spark2 static && hugo --gc --minify && python utils.py"
 
 [context.deploy-preview]
-command = "npm install --workspace=\"themes/Spark2\" --silent && npm run prod --workspace=\"themes/Spark2\" --silent && npm run static --workspace=\"themes/Spark2\" --silent && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
+command = "yarn install && yarn workspace spark2 prod && yarn workspace spark2 static && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.deploy-preview.environment]
-HUGO_VERSION = "0.93.0"
-NODE_VERSION = "16.14.0"
+HUGO_VERSION = "0.102.3"
+NODE_VERSION = "16.17.0"
 
 [context.production.environment]
-HUGO_VERSION = "0.93.0"
+HUGO_VERSION = "0.102.3"
 HUGO_ENV = "production"
 HUGO_ENABLEGITINFO = "true"
-NODE_VERSION = "16.14.0"
+NODE_VERSION = "16.17.0"

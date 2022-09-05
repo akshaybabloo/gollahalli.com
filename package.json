@@ -2,6 +2,7 @@
   "name": "gollahalli.com",
   "version": "1.0.0",
   "description": "Gollahalli.com website",
+  "private": true,
   "workspaces": [
     "themes/Spark2"
   ],

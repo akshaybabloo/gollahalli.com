@@ -11,19 +11,19 @@ Download load and install the latest NodeJS.
 Change directory to `gollahalli.com` (if not already there) and install the dependencies
 
 ```sh
-npm install --workspace="themes/Spark2"
+yarn install
 ```
 
-Generate the JS and CSS files
+Generate the JS and CSS files for production
 
 ```sh
-npm run prod --workspace="themes/Spark2"
+yarn workspace spark2 prod
 ```
 
 Copy the files using `gulp`
 
 ```sh
-npm run static --workspace="themes/Spark2"
+yarn workspace spark2 static"
 ```
 
 Run the server
