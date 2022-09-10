@@ -5,6 +5,7 @@
         "publisher": {
             "@type": "Organization",
             "name": "{{ .Site.Title }}",
+            "url": {{ .Site.BaseURL | jsonify | safeJS }},
             "logo": {
                 "@type": "ImageObject",
                 "url": {{ .Site.Params.logoPhoto | absURL | jsonify | safeJS }},
@@ -45,7 +46,7 @@
             "width": 2600,
             "height": 1430
         },
-        "keywords": "New",
+        "keywords": "{{ delimit .Params.tags ", " }}",
         "description": "{{ .Description | safeHTML }}",
         "mainEntityOfPage": {
             "@type": "WebPage",
