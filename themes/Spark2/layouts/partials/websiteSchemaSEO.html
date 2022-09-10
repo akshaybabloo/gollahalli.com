@@ -5,6 +5,7 @@
         "publisher": {
             "@type": "Organization",
             "name": "{{ .Site.Title }}",
+            "url": {{ .Site.BaseURL | jsonify | safeJS }},
             "logo": {
                 "@type": "ImageObject",
                 "url": {{ .Site.Params.logoPhoto | absURL | jsonify | safeJS }},
@@ -17,6 +18,6 @@
             "@type": "WebPage",
             "@id": {{ .Site.BaseURL | jsonify | safeJS }}
         },
-        "description": "{{ .Description }}"
+        "description": {{ .Description | jsonify | safeJS }}
     }
 </script>

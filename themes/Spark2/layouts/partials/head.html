@@ -20,7 +20,7 @@
 <meta name="description" content="{{ .Params.description }}"/>
 <meta itemprop="description" content="{{ .Params.description }}"/>
 
-{{- partial "schemaSEO.html" . -}}
+{{- partial "websiteSchemaSEO.html" . -}}
 
 {{ if (isset .Params "images") }}
   <meta itemprop="thumbnailUrl" content="{{ (index .Params.images 0) | absURL }}"/>
