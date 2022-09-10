@@ -60,6 +60,17 @@ module.exports = (env, argv) => {
                 new ForkTsCheckerWebpackPlugin(),
                 new TerserPlugin()
             ],
+            minimize: argv.mode === "production",
+            runtimeChunk: 'single',
+            splitChunks: {
+                cacheGroups: {
+                    vendor: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: 'vendors',
+                        chunks: 'all'
+                    }
+                }
+            }
         },
     }
 }
