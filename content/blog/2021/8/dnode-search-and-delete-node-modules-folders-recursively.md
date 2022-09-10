@@ -8,6 +8,7 @@ description: "A CLI utility to recursively delete node_modules folder in a given
 images: ["/img/blog/dnode-delete-node-modules-folders-recursively/dnode.png"]
 ads: true
 video: true
+videos: ["/videos/blog/dnode-delete-node-modules-folders-recursively/dnode-list.mp4", "/videos/blog/dnode-delete-node-modules-folders-recursively/dnode-delete.mp4"]
 # htmlScripts: []
 author:
   prefix: "Mr."
