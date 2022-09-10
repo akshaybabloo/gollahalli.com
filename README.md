@@ -23,7 +23,7 @@ yarn workspace spark2 prod
 Copy the files using `gulp`
 
 ```sh
-yarn workspace spark2 static"
+yarn workspace spark2 static
 ```
 
 Run the server
