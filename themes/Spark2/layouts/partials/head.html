@@ -20,7 +20,9 @@
 <meta name="description" content="{{ .Params.description }}"/>
 <meta itemprop="description" content="{{ .Params.description }}"/>
 
-{{- partial "websiteSchemaSEO.html" . -}}
+{{ if not (eq .Type "blog") }}
+  {{- partial "websiteSchemaSEO.html" . -}}
+{{ end }}
 
 {{ if (isset .Params "images") }}
   <meta itemprop="thumbnailUrl" content="{{ (index .Params.images 0) | absURL }}"/>
