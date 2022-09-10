@@ -1,4 +1,5 @@
 <meta charset="UTF-8">
+<meta name="HandheldFriendly" content="True" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -8,6 +9,7 @@
 {{ if (isset .Params "externalurl") }}
 <meta http-equiv="refresh" content="2;url={{ .Params.externalurl }}" />
 {{ end -}}
+<meta name="referrer" content="no-referrer-when-downgrade" />
 
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="/img/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon-180-precomposed.png">
