@@ -40,7 +40,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.0.0",
     "@fortawesome/free-solid-svg-icons": "^6.0.0",
     "@tailwindcss/forms": "^0.5.0",
-    "@types/lodash": "^4.14.185",
+    "@types/lodash": "^4.14.186",
     "algoliasearch": "^4.12.1",
     "lodash": "^4.17.21",
     "video.js": "^7.20.3",
