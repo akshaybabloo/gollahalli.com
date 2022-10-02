@@ -13,9 +13,3 @@ min_version = "0.80.0"
 [author]
   name = "Akshay Raj Gollahalli"
   homepage = "https://www.gollahalli.com"
-
-# If porting an existing theme
-[original]
-  name = "Spark"
-  homepage = ""
-  repo = "https://github.com/akshaybabloo/gollahalli.com/tree/dev/themes/Spark"
