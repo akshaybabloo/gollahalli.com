@@ -4,6 +4,22 @@
 
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+{{ if eq (getenv "HUGO_ENV") "production" }}
+<link rel="preload" href="/css/main.min.css" as="style">
+{{ else }}
+<link rel="preload" href="/css/main.css" as="style">
+{{ end }}
+
+{{ if eq (getenv "HUGO_ENV") "production" }}
+<link rel="preload" href="/js/runtime.min.js" as="script">
+<link rel="preload" href="/js/vendors.min.js" as="script">
+<link rel="preload" href="/js/main.min.js" as="script">
+{{ else }}
+<link rel="preload" href="/js/runtime.js" as="script">
+<link rel="preload" href="/js/vendors.js" as="script">
+<link rel="preload" href="/js/main.js" as="script">
+{{ end }}
+
 <title>{{ if ne .Site.Title .Title }}{{.Title}} &mdash; {{ end }}{{.Site.Title}}</title>
 
 {{ if (isset .Params "externalurl") }}
