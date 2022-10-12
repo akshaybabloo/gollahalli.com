@@ -1,4 +1,11 @@
 {{ define "head"}}
+
+    {{ if .Params.images }}
+        {{ range .Params.images }}
+            <link rel="preload" href="{{ . }}" as="image">
+        {{ end }}
+    {{ end }}
+
     {{ with .OutputFormats.Get "amp" }}
         <link rel="amphtml" href="{{ .Permalink }}">
     {{ end }}
