@@ -6,6 +6,10 @@
   "workspaces": [
     "themes/Spark2"
   ],
+  "scripts": {
+    "dev": "yarn workspace spark2 dev",
+    "static": "yarn workspace spark2 static"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/akshaybabloo/gollahalli.com.git"
