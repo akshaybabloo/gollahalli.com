@@ -1,5 +1,15 @@
 {{ define "head"}}
+
+    {{ range (.Paginate (.Pages.GroupByPublishDate "2006")).PageGroups }}
+        {{ range $index, $element := .Pages }}
+            {{ if .Params.images }}
+            <link rel="preload" href="{{ index .Params.images 0 }}" as="image">
+            {{ end }}
+        {{ end }}
+    {{ end }}
+
     {{- partial "websiteSchemaSEO.html" . -}}
+
 {{ end }}
 
 {{define "main"}}
