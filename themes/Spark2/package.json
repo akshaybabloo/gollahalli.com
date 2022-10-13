@@ -20,7 +20,7 @@
     "autoprefixer": "^10.4.12",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.6.0",
-    "css-minimizer-webpack-plugin": "^4.2.1",
+    "css-minimizer-webpack-plugin": "^4.2.2",
     "fork-ts-checker-webpack-plugin": "^7.2.1",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
