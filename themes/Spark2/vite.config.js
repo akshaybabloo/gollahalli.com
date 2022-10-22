@@ -1,13 +1,13 @@
 import {resolve} from 'path'
-import {defineConfig, loadEnv, splitVendorChunkPlugin} from 'vite'
+import {defineConfig} from 'vite'
 import commonjs from '@rollup/plugin-commonjs';
-import { babel } from '@rollup/plugin-babel';
+import {babel} from '@rollup/plugin-babel';
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig(({mode}) => {
     return {
         // mode: 'development',
-        plugins: [vue(), babel({ babelHelpers: 'bundled' })],
+        plugins: [vue(), commonjs(), babel({babelHelpers: 'bundled'})],
         define: {
             'process.env.NODE_ENV': JSON.stringify(mode),
         },
