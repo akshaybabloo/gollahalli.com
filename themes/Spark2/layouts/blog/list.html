@@ -3,7 +3,7 @@
     {{ range (.Paginate (.Pages.GroupByPublishDate "2006")).PageGroups }}
         {{ range $index, $element := .Pages }}
             {{ if .Params.images }}
-            <link rel="preload" href="{{ index .Params.images 0 }}" as="image">
+            <link rel="preload" href="{{ index .Params.images 0 }}" as="image" crossorigin="anonymous">
             {{ end }}
         {{ end }}
     {{ end }}
@@ -24,7 +24,7 @@
         <article>
             {{ if .Params.images }}
             <a href="{{.Permalink}}"><img class="p-1 rounded-md md:object-scale-down mx-auto w-8/12"
-                                          src="{{ index .Params.images 0 }}" alt="{{ .Title }}"></a>
+                                          src="{{ index .Params.images 0 }}" alt="{{ .Title }}" crossorigin="anonymous"></a>
             {{ end }}
 
             <div class="grid sm:grid-cols-3">

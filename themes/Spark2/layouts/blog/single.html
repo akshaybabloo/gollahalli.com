@@ -2,7 +2,7 @@
 
     {{ if .Params.images }}
         {{ range .Params.images }}
-            <link rel="preload" href="{{ . }}" as="image">
+            <link rel="preload" href="{{ . }}" as="image" crossorigin="anonymous">
         {{ end }}
     {{ end }}
 
