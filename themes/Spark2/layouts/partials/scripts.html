@@ -5,8 +5,8 @@
 </script>
 
 {{ if eq (getenv "HUGO_ENV") "production" }}
-<script src="/js/vendors.min.js"></script>
-<script src="/js/main.min.js"></script>
+<script src="/js/vendors.min.js" type="module"></script>
+<script src="/js/main.min.js" type="module"></script>
 {{ else }}
 <script src="/js/vendors.js" type="module"></script>
 <script src="/js/main.js" type="module"></script>
