@@ -5,11 +5,11 @@
 </script>
 
 {{ if eq (getenv "HUGO_ENV") "production" }}
-<script src="/js/vendors.min.js" type="module"></script>
-<script src="/js/main.min.js" type="module"></script>
+<script src="/js/vendors.min.js" type="module" crossorigin="anonymous"></script>
+<script src="/js/main.min.js" type="module" crossorigin="anonymous"></script>
 {{ else }}
-<script src="/js/vendors.js" type="module"></script>
-<script src="/js/main.js" type="module"></script>
+<script src="/js/vendors.js" type="module" crossorigin="anonymous"></script>
+<script src="/js/main.js" type="module" crossorigin="anonymous"></script>
 {{ end }}
 
 {{ range .Params.htmlScripts }}
