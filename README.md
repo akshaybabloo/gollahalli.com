@@ -17,13 +17,13 @@ yarn install
 Generate the JS and CSS files for production
 
 ```sh
-yarn workspace spark2 prod
+yarn build-prod
 ```
 
 Copy the files using `gulp`
 
 ```sh
-yarn workspace spark2 static
+yarn static
 ```
 
 Run the server
