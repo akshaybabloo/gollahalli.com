@@ -6,8 +6,8 @@
   "private": true,
   "scripts": {
     "static": "npx gulp",
-    "build-prod": "webpack --mode production",
-    "build-dev": "webpack --mode development",
+    "build-prod": "vite build",
+    "build-dev": "vite build --mode dev",
     "watch": "webpack --mode development --watch"
   },
   "devDependencies": {
@@ -16,9 +16,12 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.19.4",
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-typescript": "^7.16.7",
+    "@rollup/plugin-babel": "^6.0.0",
+    "@rollup/plugin-commonjs": "^23.0.0",
     "@tailwindcss/typography": "^0.5.2",
     "autoprefixer": "^10.4.13",
     "babel-loader": "^9.0.0",
+    "@vitejs/plugin-vue": "^3.1.2",
     "css-loader": "^6.6.0",
     "css-minimizer-webpack-plugin": "^4.2.2",
     "fork-ts-checker-webpack-plugin": "^7.2.1",
@@ -31,6 +34,7 @@
     "terser-webpack-plugin": "^5.3.1",
     "ts-loader": "^9.4.1",
     "typescript": "^4.8.4",
+    "vite": "^3.1.8",
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2"
   },

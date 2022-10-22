@@ -28,6 +28,7 @@ themes/Spark/static/font/
 
 .hugo_build.lock
 /themes/Spark2/static/css/main.*
+/themes/Spark2/static/css/style.*
 /themes/Spark2/static/css/video*
 themes/Spark2/static/js/video*
 themes/Spark2/static/js/main*
