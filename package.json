@@ -7,8 +7,9 @@
     "themes/Spark2"
   ],
   "scripts": {
-    "dev": "yarn workspace spark2 dev",
-    "static": "yarn workspace spark2 static"
+    "build-dev": "yarn workspace spark2 build-dev",
+    "static": "yarn workspace spark2 static",
+    "build-prod": "yarn workspace spark2 build-prod"
   },
   "repository": {
     "type": "git",
