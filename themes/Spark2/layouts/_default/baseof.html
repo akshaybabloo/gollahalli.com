@@ -20,8 +20,8 @@
 {{- partial "scripts.html" . -}}
 
 {{ if .Params.video }}
-<link href="/css/video-js.min.css" rel="stylesheet">
-<script src="/js/video.min.js"></script>
+<link href="/css/video-js.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="/js/video.min.js" crossorigin="anonymous"></script>
 {{ end }}
 </body>
 </html>
