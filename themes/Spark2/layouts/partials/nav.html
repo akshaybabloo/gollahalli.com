@@ -18,9 +18,10 @@
     <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto"
          v-bind:class="{hidden: showMenu}">
         <div class="text-xl lg:flex-grow">
+            {{ $currentPage := . }}
             {{ range.Site.Menus.main }}
             <a href="{{.URL}}"
-               class="block mt-4 lg:inline-block lg:mt-0 hover:text-white mr-4">
+               class="block mt-4 lg:inline-block lg:mt-0 hover:text-white mr-4 {{if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}underline decoration-wavy underline-offset-8 decoration-sky-500 font-bold decoration-2{{end}}">
                 {{ .Name }}
             </a>
             {{ end }}
