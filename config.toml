@@ -45,7 +45,7 @@ section = ["HTML", "RSS", "AMP"]
 [params]
 googleAds = "7450383714878520" # Optional, ignore "ca-pub-"
 amp = true
-year = 2021
+year = 2022
 github = "https://github.com/akshaybabloo" # Optional
 linkedin = "https://linkedin.com/in/gollahalli" # Optional
 twitter = "http://twitter.com/akshaybabloo" # Optional
