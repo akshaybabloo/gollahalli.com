@@ -42,6 +42,8 @@ With the new update of Postman (version 8+), it's easy to set OAuth 2.0 based au
 
 So, let's set it up.
 
+<!--adsense-->
+
 ## Setup Azure AD B2C
 
 > Note: This article assumes that you have basic knowledge about OAuth 2.0 and Azure AD B2C
@@ -90,6 +92,8 @@ Go to collection setting, click on `Authorization` tab, and do the following:
 | Add auth data to | Request Header | Once an `access_token` is received, where do you want it to be placed|
 {{</ table>}}
 
+<!--adsense-->
+
 ### Configure New Token
 
 {{< table "uk-table uk-table-small uk-table-expand" >}}
@@ -113,6 +117,8 @@ Go to collection setting, click on `Authorization` tab, and do the following:
 #### Screenshot
 
 {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/postman.png" title="Screenshot of Postman authentication setup" alt="Screenshot of Postman authentication setup"  width="600" >}}
+
+<!--adsense-->
 
 ## Conclusion
 

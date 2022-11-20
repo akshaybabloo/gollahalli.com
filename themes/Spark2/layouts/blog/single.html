@@ -53,8 +53,21 @@
         {{end}}
     {{ end }}
 
-    {{.Content}}
+    <ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-7450383714878520"
+     data-ad-slot="3767566685"></ins>
+
+     {{ replace .Content "<!--adsense-->" (partial "ads/article-ads.html" .) | safeHTML }}
 </article>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-7450383714878520"
+     data-ad-slot="8761158473"></ins>
 
 <hr class="!my-0">
 

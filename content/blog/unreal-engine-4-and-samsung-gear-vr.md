@@ -52,27 +52,29 @@ A simple game using Unreal Engine 4.10.\* and 4.11.2 for GearVR
 
 **Table of content**
 
-- [1 Introduction](#1introduction)
-- [2 Requirements](#2requirements)
-  - [2.1 General](#21general)
-  - [2.2 Mac](#22mac)
-  - [2.3 Windows](#23windows)
-- [3 Instillation](#3instillation)
-  - [3.1 Mac](#31mac)
-    - [3.1.1 Android Studio](#311androidstudio)
-  - [3.2 Enabling Android Developer Options](#32enablingandroiddeveloperoptions)
-  - [3.3 Getting device ID](#33gettingdeviceid)
-  - [3.4 Downloading `Oculus Signature File (osig)` and placing it in UE](#34downloadingoculussignaturefileosigandplacingitinue)
-  - [3.4 Installing `CodeWorks for Android`](#34installingcodeworksforandroid)
-- [4 Developing a game](#4developingagame)
-- [5 Packing it up for Android](#5packingitupforandroid)
-  - [5.1 Package Configuration](#51packageconfiguration)
-  - [5.2 Packing](#52packing)
-- [6 Installing it on Android](#6installingitonandroid)
+- [1 Introduction](#1-introduction)
+- [2 Requirements](#2-requirements)
+  - [2.1 General](#21-general)
+  - [2.2 Mac](#22-mac)
+  - [2.3 Windows](#23-windows)
+- [3 Instillation](#3-instillation)
+  - [3.1 Mac](#31-mac)
+    - [3.1.1 Android Studio](#311-android-studio)
+  - [3.2 Enabling Android Developer Options](#32-enabling-android-developer-options)
+  - [3.3 Getting device ID](#33-getting-device-id)
+  - [3.4 Downloading `Oculus Signature File (osig)` and placing it in UE](#34-downloading-oculus-signature-file-osig-and-placing-it-in-ue)
+  - [3.4 Installing `CodeWorks for Android`](#34-installing-codeworks-for-android)
+- [4 Developing a game](#4-developing-a-game)
+- [5 Packing it up for Android](#5-packing-it-up-for-android)
+  - [5.1 Package Configuration](#51-package-configuration)
+  - [5.2 Packing](#52-packing)
+- [6 Installing it on Android](#6-installing-it-on-android)
 
 **License**
 
 The code is provided under [MIT License](https://github.com/akshaybabloo/JavaScript-Tutorial/blob/master/LICENSE), and the tutorial is provided under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+<!--adsense-->
 
 ## 1 Introduction
 
@@ -98,6 +100,8 @@ In this tutorial, I will be going to develop a simple environment where the firs
 
 1. A 2015 Samsung Galaxy phone i.e. S6, S6 edge, S6 edge+ or Note 5.
 2. Samsung Gear VR.
+
+<!--adsense-->
 
 ### 2.3 Windows
 
@@ -158,6 +162,8 @@ In this tutorial, I will be going to develop a simple environment where the firs
 </div>
 
 4. Once you connect your phone to the system, it will ask you to confirm the connected computers RSA KEY. Click `Ok` to continue.
+
+<!--adsense-->
 
 ### 3.3 Getting device ID
 
@@ -249,6 +255,8 @@ And then this:
 <div align="center">
   {{< figure src="/img/blog/AndroidPlatformSDK.png" title="Android Platform SDK" alt="Android Platform SDK" >}}
 </div>
+
+<!--adsense-->
 
 ### 5.2 Packing
 

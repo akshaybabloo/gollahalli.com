@@ -24,6 +24,8 @@ There are different ways to retrieve user repositories; one such is using Python
 
 For example, to retrieve my public libraries I would use https://api.github.com/users/akshaybabloo/repos, this returns a JSON array; we just have to use the Python's **json** standard library to get the desired key-value pairs (in Python's terminology - Dictionary).
 
+<!--adsense-->
+
 ## Code
 
 Lets build a custom iterator for the class **GitHubRepo**.
@@ -55,6 +57,8 @@ class GitHubRepo:
         return self.data[self.index]
 ```
 
+<!--adsense-->
+
 [iter](https://docs.python.org/3.5/library/stdtypes.html#iterator.__iter__) and [next](https://docs.python.org/3.5/library/stdtypes.html#iterator.__next__) are the built-in iterator types.
 
 You are essentially making the **GitHubRepo** object loopable, for example, let us consider the following snippet:
@@ -85,6 +89,8 @@ for y in x:
 # 2
 # 3
 ```
+
+<!--adsense-->
 
 GitHub JSON structure
 The next thing you should know is the structure of the JSON Objects that is requested from GitHub.
@@ -180,6 +186,8 @@ The next thing you should know is the structure of the JSON Objects that is requ
   },
 ...
 ```
+
+<!--adsense-->
 
 Once you know what information you want from the JSON Object, just call by its key, for example, using the same **GitHubRepo** class we could do the following:
 

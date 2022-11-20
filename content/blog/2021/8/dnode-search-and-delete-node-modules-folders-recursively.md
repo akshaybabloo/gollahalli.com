@@ -67,6 +67,8 @@ go build -o dnode
 ./dnode --help
 ```
 
+<!--adsense-->
+
 ## Usage
 
 There are two commands - `list` and `delete`.

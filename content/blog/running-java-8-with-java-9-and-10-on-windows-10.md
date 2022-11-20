@@ -33,6 +33,8 @@ Oracle has decided that from Java 9 there will be a new java version every six m
 
 Not all libraries have upgraded them self to the latest Java releases, for example at the time of writing this Scala 2.12.5 doesn't fully support Java 9, so I still had to use Java 8. For some reason, if you want to experiment with the newer releases of Java and for the same reason, if you install Java 9 or 10, you just cannot run Scala (or other libraries that run Java 8) that's because Java 9/10 changes your path. Even though you add a **JAVA_HOME** variable, you still find Java 9/10 being used in command line.
 
+<!--adsense-->
+
 ## How did this happen?
 
 When you installed Java 9 or 10 via the **exe** file, a default path variable was registered in the windows registry:
@@ -61,6 +63,8 @@ Java(TM) SE Runtime Environment 18.3 (build 10+46)
 Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10+46, mixed mode)
 Even though you have JAVA_HOME environment variable, you will see the newer ones, as I said earlier, defaults paths are loaded first.
 ```
+
+<!--adsense-->
 
 You can test this by typing `where java` and your output will be something like this:
 
@@ -102,6 +106,8 @@ This will update your user environment variables.
 
 Again, there are two ways:
 
+<!--adsense-->
+
 ### WAY 1
 
 You can change the JAVA_HOME path to Java 9 or Java 10 from your command prompt:
@@ -117,6 +123,8 @@ For Java 10:
 ```md
 > setx JAVA_HOME "C:\Program Files\Java\jdk-10"
 ```
+
+<!--adsense-->
 
 ### WAY 2
 

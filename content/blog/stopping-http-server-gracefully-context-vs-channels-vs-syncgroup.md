@@ -37,6 +37,8 @@ Before we go into the details, there are few common functions between these thre
 2. The server always starts in a goroutine.
 3. The program doesn't exit until some kind of wait request is completed.
 
+<!--adsense-->
+
 ## Using with Channels
 
 Channels are like pathways; it joins goroutines to send and receive messages. For example:
@@ -65,6 +67,8 @@ func main() {
 	// Hello World!
 }
 ```
+
+<!--adsense-->
 
 In the above example, we created a channel called `message`, then an anonymous goroutine that prints a text to console runs, and finally, a string is sent to the `message` channel. The channel doesn't let the program end unless a message is received to `receivedMessage`. Once a message is received, the text is assigned to `receivedMessage`, then prints it out and eventually exits the program.
 
@@ -136,6 +140,8 @@ func StartServer() {
 }
 ```
 
+<!--adsense-->
+
 In the above example, we have a global channel - `stopHTTPServerChan` (line 13) of type `bool`. In the `main()` function, let's a make a channel that has a data type of `bool` and assign it to our global variable `stopHTTPServerChan` (line 34). When the server starts it won't end abruptly, because of `<-stopHTTPServerChan` (line 58), the program waits here till a boolean signal is received. Under `ExitHandler()` send a message, a boolean signal as `stopHTTPServerChan <- true` (line 30, this could also be `false`), so whenever you go to `http://127.0.0.1:8000/exit`, a signal is sent to `stopHTTPServerChan`, once the boolean value is received, the wait is over then it proceeds to the next line.
 
 ## Using with Context
@@ -171,6 +177,8 @@ func main() {
 ```
 
 Above example works exactly like channels example, only that you don't have to make a channel and looks pretty.
+
+<!--adsense-->
 
 ```go {linenos=table,hl_lines=["13-15",32,"36-37","61-62"]}
 package main
@@ -242,6 +250,8 @@ func main() {
 ```
 
 From the above example, let's create a `httpServerHelper` structure with `cancelFunc` of type `context.CancelFunc` (line 13-15). The `context.WithCancel()`, returns a context and a cancel function, let's assign it to `stopHTTPServerCtx` and `cancel` (line 36), assign the `cancel()` function to `httpServerHelper` structure's `cancelFunc` and call it `serverHelper` (line 37). When you go to `http://127.0.0.1:8000/exit`, `cancel()` function is invoked which sends a `Done()` signal at line `61`. When there is no error and all the channels are executed, `context.Canceled` returns a string else an Error.
+
+<!--adsense-->
 
 ## Using with WaitGroup
 
@@ -349,6 +359,8 @@ func main() {
 ```
 
 In the above program, let's create a global variable `wg` of type `sync.WaitGroup` (line 14). In the `main()` function add `wg.Add(1)` (line 37). In the `ExitHandler` add `defer wg.Done()` (line 26), the `defer` keyword executes at the end of the function. `wg.Wait()` checks the counter has decremented to zero or not, in this case, it would when you visit `http://127.0.0.1:8000/exit`, this then continues to the next line.
+
+<!--adsense-->
 
 ## Conclusion
 

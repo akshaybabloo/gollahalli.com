@@ -35,6 +35,8 @@ Previously, I have used PostgreSQL, yes you can't compare RDBMS to NoSQL, but I 
 
 I have also tried to make the API a bit easier to use, instead of using seven lines of code, you can use two lines to do the same work.
 
+<!--adsense-->
+
 ## How to use it?
 
 You can install the package using Go modules
@@ -76,6 +78,8 @@ func main() {
 	fmt.Println("The ID is:", done.InsertedID)
 }
 ```
+
+<!--adsense-->
 
 ### Delete a document
 
@@ -130,6 +134,8 @@ func main() {
 	fmt.Println("Modified items:", updated.ModifiedCount)
 }
 ```
+
+<!--adsense-->
 
 ### Get a document
 

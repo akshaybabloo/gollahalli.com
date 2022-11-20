@@ -63,6 +63,8 @@ Logger      Formatter      Handler
                           (Appender)
 ```
 
+<!--adsense-->
+
 ### 2.1. Logger
 
 Logger is an object, which is called when you want to log a message. Logger has two main objects in it:
@@ -77,6 +79,8 @@ It is the class name of the application. For example `com.gollahalli.UsingLog4JS
 ```java
 logger.getName();
 ```
+
+<!--adsense-->
 
 #### 2.1.2. Levels
 
@@ -109,6 +113,8 @@ In this example, there are three types of appenders
 - Console
 - File with Pattern (Async)
 - JSON File (Async)
+
+<!--adsense-->
 
 #### 2.3.1. Console Appender
 
@@ -148,6 +154,8 @@ Apache can do everything that `java.util.logging` and more. Log4J can be used to
 ## 4. What is SLF4J?
 
 Simple Logging Facade for Java (SLF4J) acts as an abstract layer for different types of logging libraries; this includes Log4J.
+
+<!--adsense-->
 
 ### 4.1. Why use SLF4J when Log4J has different types of log levels?
 

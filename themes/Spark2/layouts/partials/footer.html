@@ -7,16 +7,15 @@
         {{ end }}</p>
 
     <div class="flex mx-2">
-        <a href="#" class="mx-2 text-gray-300 hover:text-gray-300" aria-label="LinkedIn">
+        <a href="{{ .Site.Params.linkedin }}" class="mx-2 text-gray-300 hover:text-gray-300" aria-label="LinkedIn">
             <i v-html="linkedin"></i>
         </a>
 
-        <a href="#" class="mx-3 text-gray-300 hover:text-gray-300"
-           aria-label="GitHub">
+        <a href="{{ .Site.Params.github }}" class="mx-3 text-gray-300 hover:text-gray-300" aria-label="GitHub">
             <i v-html="github"></i>
         </a>
 
-        <a href="#" class="mx-3 text-gray-300 hover:text-gray-300" aria-label="Twitter">
+        <a href="{{ .Site.Params.twitter }}" class="mx-3 text-gray-300 hover:text-gray-300" aria-label="Twitter">
             <i v-html="twitter"></i>
         </a>
     </div>

@@ -25,6 +25,8 @@ A few months ago I was trying to setup up WiFi on my Raspberry Pi. That time I d
 
 I don't want others to have the same problem. Follow these steps to setup up your office/university WiFi.
 
+<!--adsense-->
+
 ## Step 1: Requirements
 
 Make sure you have your username, password, proxy IP and WiFi SSID. For the sake of this tutorial let's consider a username, password, proxy IP and WiFi SSID.
@@ -56,6 +58,8 @@ Acquire::https:Proxy "https://user:123456@123.456.789.012:1234"
 ```
 
 - Save it by doing <kbd class="uk-label">ctrl</kbd>+<kbd class="uk-label">X</kbd>, <kbd class="uk-label">return</kbd> and <kbd class="uk-label">return</kbd>.
+
+<!--adsense-->
 
 ## Step 3: Setting up WPA Supplicant (WiFi Manager)
 

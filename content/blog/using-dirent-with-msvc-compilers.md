@@ -30,6 +30,8 @@ Linux has a fantastic library called `dirent.h`, I use it for listing the direct
 
 To use this, do the following:
 
+<!--adsense-->
+
 1. If you are using the MSVC toolset, you would have to clone the repository from [https://github.com/tronkko/dirent](https://github.com/tronkko/dirent).
 2. Copy the `dirent.h` from the `include` folder and paste it in `C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC\14.12.25827\include` - `14.12.25827` is the build number of the tools that I have installed, yours could be different.
 

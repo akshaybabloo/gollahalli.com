@@ -36,6 +36,8 @@ In this part of Car-ND, we will look at how to mask and colour the region.
   - [2.2 Output][4]
 - [3 What's Next?][5]
 
+<!--adsense-->
+
 ## 1 Basic Math
 
 Before I show you the code, let's understand some (very) basic mathematics that are necessary to understand for this part
@@ -58,6 +60,8 @@ A polynomial equation looks something like this (lets call it equation 1):
     <mn>1</mn>
 </mrow>
 </math>
+
+<!--adsense-->
 
 ## 2 Let's Code
 
@@ -100,6 +104,8 @@ Let's initialize threshold values and a triangle coordinates.
     apex = [460, 310]  # [475, 320]
 ```
 
+<!--adsense-->
+
 Let's get the threshold color image by taking RBG arrays of the image and getting all the values less then the predefined threshold values.
 
 ```python
@@ -139,6 +145,8 @@ Before plotting the images, the final thing to do is
     line_image[~color_thresholds & region_thresholds] = [255, 0, 0]
 ```
 
+<!--adsense-->
+
 And finally, plot them
 
 ```python
@@ -170,6 +178,8 @@ And finally, plot them
 
     plt.show()
 ```
+
+<!--adsense-->
 
 ### 2.1 Complete Code
 
@@ -247,6 +257,8 @@ And finally, plot them
 
     plt.show()
 ```
+
+<!--adsense-->
 
 ### 2.2 Output
 

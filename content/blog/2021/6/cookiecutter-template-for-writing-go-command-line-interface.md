@@ -31,6 +31,8 @@ The repository is available at - [github.com/akshaybabloo/go-cli-template](https
 
 > This template is highly inspired by [GitHub's CLI](https://github.com/cli/cli).
 
+<!--adsense-->
+
 ## Requirements
 
 1. Python 3.6+
@@ -59,6 +61,8 @@ Once done, you will have to refactor the module path in `go.mod` to suit your pr
 6. Uses custom color that's available via factory - uses [color](https://github.com/fatih/color)
 7. Default global configuration location - `<user folder>/<project name>/config.yaml`
    1. Disable colour usage globally
+
+<!--adsense-->
 
 ## Packages Used
 

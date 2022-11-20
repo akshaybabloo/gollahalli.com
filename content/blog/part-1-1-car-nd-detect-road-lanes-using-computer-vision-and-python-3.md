@@ -31,6 +31,8 @@ This blog is few part series in the field of Computer Vision and Deep Learning. 
 3. What are the languages out there that do Computer Vision?
 4. A simple example of image manipulation.
 
+<!--adsense-->
+
 ## 1. What is Computer Vision?
 
 According to Wikipedia
@@ -44,6 +46,8 @@ Face Recognition
 Image Restoration
 Medical Image Analysis
 Autonomous Vehicles
+
+<!--adsense-->
 
 ## 2. Why use Computer Vision?
 
@@ -79,6 +83,8 @@ Most popular Computer Vision library is the OpenCV, written in C++ it also has a
     <td class="tg-031e"></td>
   </tr>
 </table></div>
+
+<!--adsense-->
 
 ## 4. A simple example of image manipulation
 
@@ -125,6 +131,8 @@ plt.show()
 ```
 
 Output for the example Python code.
+
+<!--adsense-->
 
 ## What's next?
 

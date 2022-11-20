@@ -34,6 +34,8 @@ I have borrowed the idea from `docker-machine env` CLI command, that spits out s
 
 This package can also be used as a module in your current code if you don't want to use it as a CLI.
 
+<!--adsense-->
+
 ## Instillation
 
 The CLI is written in Python 3 and is available in PyPi at [https://pypi.org/project/azsecrets/](https://pypi.org/project/azsecrets/). To install it open your CMD/Terminal/Powershell and type in
@@ -65,6 +67,8 @@ secrets env --shell bash
 # export VAR-2=secret2
 ```
 
+<!--adsense-->
+
 or via CLI
 
 ```bash
@@ -90,6 +94,8 @@ Options:
 Commands:
   env  Environment configuration: [powershell, cmd or bash].
 ```
+
+<!--adsense-->
 
 ### As a Package
 

@@ -31,6 +31,8 @@ The process of updating environment variables can be automated via a CI/CD provi
 
 Also, did I mention it is cross-platform CLI utility? :thinking:
 
+<!--adsense-->
+
 ## How Should I Install It?
 
 All you need is Python 3.6+ and its package manager - PIP. Open your terminal and type in:
@@ -76,6 +78,8 @@ There might be a time where you might want to reinstall the binary for this, you
 
 > Note: `--force` flag will only work when `<user folder>/bin` is in the `$PATH`
 
+<!--adsense-->
+
 ### Update Command
 
 Updating to the latest version of Hugo is simple as:
@@ -116,6 +120,8 @@ api_key = "env"
 `env` is a special name in uHugo, the value `env` for `email_address` is telling uHugo to check for environment variable `email_address` and use that value instead.
 
 Whenever uHugo detects these configurations, it updates the value for `HUGO_VERSION` in production and preview environment variables.
+
+<!--adsense-->
 
 ## Support for Cloud Providers
 

@@ -43,6 +43,8 @@ Spark has been developed for researchers and PhD students by a researcher, it is
 - Custom sitemap with images support and a custom stylesheet
 - Structured data for website and articles
 
+<!--adsense-->
+
 This website uses Spark theme and you can use it as an example to build yours, the code for this website can be found at [github.com/akshaybabloo/gollahalli.com](https://github.com/akshaybabloo/gollahalli.com) and the Spark theme can be found at [github.com/akshaybabloo/spark-hugo-theme](https://github.com/akshaybabloo/spark-hugo-theme).
 
 Happy coding!

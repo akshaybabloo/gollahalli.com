@@ -61,6 +61,7 @@ In `appsettings.json` add:
   "AllowedHosts": "*"
 }
 ```
+<!--adsense-->
 
 ### Adding DB Context
 
@@ -105,6 +106,8 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
   //...
 }
 ```
+
+<!--adsense-->
 
 ### Adding the Controllers and Views
 

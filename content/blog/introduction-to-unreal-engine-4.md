@@ -70,43 +70,45 @@ UnrealEngine 4 using Blueprint visual scripting system.
 
 <p align="center">{{< figure src="/img/blog/demo.gif" title="Demo" alt="Demo" >}}</p>
 
+<!--adsense-->
+
 **Table of Constant**
 
-- [1 Requirements](#1requirements)
-  - [1.1 Software:](#11software)
-  - [1.2 Hardware:](#12hardware)
-  - [1.3 Bump Maps (or Normal Maps) generator](#13bumpmapsornormalmapsgenerator)
-- [2 Creating project](#2creatingproject)
-- [3 UnrealEngine overview](#3unrealengineoverview)
-- [4 Blueprint editor](#4blueprinteditor)
-- [5 Let's get started](#5letsgetstarted)
-  - [5.1 Editing the environment](#51editingtheenvironment)
-  - [5.2 Blueprint editing](#52blueprintediting)
-  - [5.3 Deleting unwanted meshes](#53deletingunwantedmeshes)
-  - [5.4 Creating Maya models](#54creatingmayamodels)
-  - [5.5 Importing `fbx` file](#55importingfbxfile)
-  - [5.6 Adding collusions](#56addingcollusions)
-  - [5.7 Creating Blueprints](#57creatingblueprints)
-  - [5.8 Add models to the Viewport](#58addmodelstotheviewport)
-- [6 Material](#6material)
-  - [6.1 Editing materials](#61editingmaterials)
-  - [6.2 Shine to `lambert7` texture](#62shinetolambert7texture)
-  - [6.3 Creating glass](#63creatingglass)
-  - [6.4 Adding reflections](#64addingreflections)
-- [7 Lighting](#7lighting)
-  - [7.1 Adding lights](#71addinglights)
-  - [7.2 IES Profiling](#72iesprofiling)
-- [8 Adding animations and interactions](#8addinganimationsandinteractions)
-  - [8.1 Adding sockets](#81addingsockets)
-  - [8.2 Adding triggers](#82addingtriggers)
-  - [8.3 Adding animations](#83addinganimations)
-- [9 Landscaping](#9landscaping)
-  - [9.1 Creating grass material](#91creatinggrassmaterial)
-  - [9.2 Adding terrains](#92addingterrains)
-  - [9.3 Foliage](#93foliage)
-- [10 Polishing environment](#10polishingenvironment)
-  - [10.1 Global Post Processing](#101globalpostprocessing)
-- [11 Publishing](#11publishing)
+- [1 Requirements](#1-requirements)
+  - [1.1 Software:](#11-software)
+  - [1.2 Hardware](#12-hardware)
+- [1.3 Bump Maps (or Normal Maps) generator](#13-bump-maps-or-normal-maps-generator)
+- [2 Creating project](#2-creating-project)
+- [3 UnrealEngine overview](#3-unrealengine-overview)
+- [4 Blueprint editor](#4-blueprint-editor)
+- [5 Let's get started](#5-lets-get-started)
+  - [5.1 Editing the environment](#51-editing-the-environment)
+  - [5.2 Blueprint editing](#52-blueprint-editing)
+  - [5.3 Deleting unwanted meshes](#53-deleting-unwanted-meshes)
+  - [5.4 Creating Maya models](#54-creating-maya-models)
+  - [5.5 Importing `fbx` file](#55-importing-fbx-file)
+  - [5.6 Adding collusions](#56-adding-collusions)
+  - [5.7 Creating Blueprints](#57-creating-blueprints)
+  - [5.8 Add models to the Viewport](#58-add-models-to-the-viewport)
+- [6 Material](#6-material)
+  - [6.1 Editing materials](#61-editing-materials)
+  - [6.2 Shine to `lambert7` texture](#62-shine-to-lambert7-texture)
+  - [6.3 Creating glass](#63-creating-glass)
+  - [6.4 Adding reflections](#64-adding-reflections)
+- [7 Lighting](#7-lighting)
+  - [7.1 Adding lights](#71-adding-lights)
+  - [7.2 IES Profiling](#72-ies-profiling)
+- [8 Adding animations and interactions](#8-adding-animations-and-interactions)
+  - [8.1 Adding sockets](#81-adding-sockets)
+  - [8.2 Adding triggers](#82-adding-triggers)
+  - [8.3 Adding animations](#83-adding-animations)
+- [9 Landscaping](#9-landscaping)
+  - [9.1 Creating grass material](#91-creating-grass-material)
+  - [9.2 Adding terrains](#92-adding-terrains)
+  - [9.3 Foliage](#93-foliage)
+- [10 Polishing environment](#10-polishing-environment)
+  - [10.1 Global Post Processing](#101-global-post-processing)
+- [11 Publishing](#11-publishing)
 
 ## 1 Requirements
 
@@ -141,6 +143,8 @@ According to [UnrealEngine documentation](https://docs.unrealengine.com/latest/I
 - A good graphic card.
 - Quad-core Intel, 2.5 GHz or faster
 - 8 GB RAM or above
+
+<!--adsense-->
 
 ## 1.3 Bump Maps (or Normal Maps) generator
 
@@ -186,6 +190,8 @@ UnrealEngine (for me or maybe for everyone) is divided into seven parts:
 6.  _Search_ - This is where you can search for help regarding an object.
 7.  _Viewport_ - Your design area or the Editor.
 
+<!--adsense-->
+
 ## 4 Blueprint editor
 
 <p align="center">{{< figure src="/img/blog/UnrealEngineEditor.png" title="Unreal Engine Editor" alt="Unreal Engine Editor" >}}</p>
@@ -206,6 +212,8 @@ Blueprint is divided into six parts:
 
 ## 5 Let's get started
 
+<!--adsense-->
+
 ### 5.1 Editing the environment
 
 From the `World Outliner` let's remove `Cubes`, `Arena` and `Templatelabel`. We don't need them.
@@ -223,6 +231,8 @@ Under `Content browser` Click on {{< figure src="/img/blog/SourcePanel.png" alt=
 ### 5.4 Creating Maya models
 
 A Maya 2016 model is developed and is available in [UnrealEngine_4_Maya](https://github.com/akshaybabloo/UnrealEngine_4_Notes/tree/master/UnrealEngine_4_Maya) folder and `fbx` file is located in [Import](https://github.com/akshaybabloo/UnrealEngine_4_Notes/tree/master/Import) folder.
+
+<!--adsense-->
 
 ### 5.5 Importing `fbx` file
 
@@ -273,6 +283,8 @@ We will be using Blueprint for the doors but for the rest of the building, we wi
 
 > **Note 4:** Adding Mesh collisions will be expensive. That means the rendering time would take more time, and the system will use more frames per second depending on the number of mesh collisions. But for this example, I have just created mesh collision to make it simple.
 
+<!--adsense-->
+
 ### 5.7 Creating Blueprints
 
 All my Blueprints are place in `FIrstPersonBP/Blueprints/`. To create a blueprint right click on the `Content Browser` and click on `Blueprint Classes`, this will pop-up a window which will ask you to select a parent class that should look something like this
@@ -288,6 +300,8 @@ Goto meshes folder and drag all the meshes and drop it in the viewport. If the m
 Now from the Blueprints folder drag and drop `DoubleDoor` blueprint into the viewport, once this is done, place this in the exact place where the door should be. Save the scene.
 
 ## 6 Material
+
+<!--adsense-->
 
 ### 6.1 Editing materials
 
@@ -327,6 +341,8 @@ Let try to give a shine to one of the materials which are used in as texture to 
 7.  Create a constant and connect it to `Roughness`. Change the value to `0.2`.
 8.  Save and close.
 
+<!--adsense-->
+
 ### 6.3 Creating glass
 
 1.  Double click on `Glass` material.
@@ -353,6 +369,8 @@ If any changes are made, do not forget to click on `Update Captures`.
 In `Modes` tab, click on `Lights`, I will add a `Spot Light` on top of my table by dragging it into the Viewport. You can change the `Perspective` to `Top` to make it easy to move the spotlight.
 
 Once you have placed your lights click on the small arrow beside `Build` button in the Toolbar and click on `Build Lights Only`. At this point if you have a multiple number of light on a surface you will get a small red mark on the lights, and you might get an error while building the lights.
+
+<!--adsense-->
 
 ### 7.2 IES Profiling
 
@@ -390,6 +408,8 @@ Next right click on the grid and search for `Lerp` under Float tab. Right click 
 
 <p align="center">{{< figure src="/img/blog/Door1.png" title="Door 1" alt="Door 1" >}}</p>
 
+<!--adsense-->
+
 ### 8.3 Adding animations
 
 Double click on `DoorOpen` node to open the timeline, this would be empty. Click on `f+` to add float timeline, name it as `DoorOpenAnimation`. Right click and add a key at `Time 0.0` and `Value 0.0`. Add another key at `Time 1.5` and `Value 1.0`. Select both keys, right-click on it and select `Auto` this will generate a curve. Go back to the event graph and connect `DoorOpenAnimation` to `Lerp`'s `Alpha`.
@@ -419,6 +439,8 @@ Once create just start painting on it. See other tools for more fine detailing t
 ### 9.3 Foliage
 
 Foliage can be found in the Modes. You can drag and drop any meshes like tree or grass into this and start putting on the ground.
+
+<!--adsense-->
 
 ## 10 Polishing environment
 

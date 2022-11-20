@@ -27,6 +27,8 @@ Gist can be found at [https://gist.github.com/akshaybabloo/2a1df455e7643926739e9
 
 The problem with this package is that you cannot retrieve all the records at a time so a quick and dirty alternative is to put them in `for` loop. Few record names in this list (`ids`) raise an exception, for example `ANY`, this is because there is no DNS record called `ANY`.
 
+<!--adsense-->
+
 ## Things to know
 
 1.  List of [DNS records](https://en.wikipedia.org/wiki/List_of_DNS_record_types)

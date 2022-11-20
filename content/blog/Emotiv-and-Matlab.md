@@ -32,17 +32,19 @@ There are two ways to get the data from your Emotiv EPOC device
 
 **Table of Contents**
 
-- [1 Structure](#1structure)
-- [2 Requirements](#2requirements)
-- [3 Installing `mex` compiler](#3installingmexcompiler)
-- [4 Using `.m` files](#4usingmfiles)
-    - [4.1 Using `one` (EEG Logger)](#41usingoneeeglogger)
-    - [4.2 Using `two` (Emotiv EEG)](#42usingtwoemotiveeg)
-- [5 Troubleshooting](#5troubleshooting)
+- [1 Structure](#1-structure)
+- [2 Requirements](#2-requirements)
+- [3 Installing `mex` compiler](#3-installing-mex-compiler)
+- [4 Using `.m` files](#4-using-m-files)
+  - [4.1 Using `one` (EEG Logger)](#41-using-one-eeg-logger)
+  - [4.2 Using `two` (Emotiv EEG)](#42-using-two-emotiv-eeg)
+- [5 Troubleshooting](#5-troubleshooting)
 
 **License**
 
 The code is provided under their respective licenses and the tutorial is provided under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+<!--adsense-->
 
 ## 1 Structure
 
@@ -78,6 +80,8 @@ Emotiv SDk has the following files in `c:/ProgramFiles/Emotiv../doc/examples_Mat
 > Note 2: To run these codes you would have to make sure `Emotiv Control Panel` is open and connected to Emotiv EPOC.
 
 Go to [Emotiv](http://www.emotiv.com) website for more information.
+
+<!--adsense-->
 
 ## 3 Installing `mex` compiler
 
@@ -179,6 +183,8 @@ Done . . .
 
 - This means you have installed the compiler for Matlab.
 
+<!--adsense-->
+
 ## 4 Using `.m` files
 
 The `*.m` files are available in [one](https://github.com/akshaybabloo/Emotiv-Matlab/tree/master/one) and [Two](https://github.com/akshaybabloo/Emotiv-Matlab/tree/master/two).
@@ -229,6 +235,8 @@ ans =
 
      0
 ```
+
+<!--adsense-->
 
 ### 4.2 Using `two` (Emotiv EEG)
 
@@ -339,6 +347,8 @@ Successfully disconnected from Emotiv Systems-5
 ```
 
 - you can also see that a plot is updated dynamically.
+
+<!--adsense-->
 
 ## 5 Troubleshooting
 

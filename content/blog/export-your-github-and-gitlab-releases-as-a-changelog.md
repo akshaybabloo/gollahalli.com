@@ -32,6 +32,8 @@ So why do we need changelog you ask? I would recommend reading [this](https://so
 
 Now the problem is that I do not want to waste time by copying individual release notes to a markdown file for all the repositories I have. Enter [Release Exporter](https://github.com/akshaybabloo/release-exporter). Release exporter makes it easy for you to generate a changelog in the form of markdown or a JSON file and it supports GitHub and GitLab releases. I tried my best to develop the application that follows the format of [keep a changelog v1](http://keepachangelog.com/en/1.0.0/) and [Markdown lint](https://github.com/markdownlint/markdownlint).
 
+<!--adsense-->
+
 ## How to use it then?
 
 It is a command line application, that means no coding required (hooray!!!), so you need three things
@@ -53,6 +55,8 @@ Once installed, there are three ways to use it. The simplest way is to change yo
 ```
 
 The **markdown** creates a **CHANGELOG.md** file in the same folder.
+
+<!--adsense-->
 
 ### BUT HOW!?
 
@@ -86,6 +90,8 @@ Commands:
 5. **--help** - Shows helpful information about the CLI application.
 
 If you change the **markdown** with **json**, a **CHANGELOG.json** file is created see [here](https://github.com/akshaybabloo/release-exporter/blob/master/CHANGELOG.json) for example.
+
+<!--adsense-->
 
 ### WHY USE THE TOKEN?
 

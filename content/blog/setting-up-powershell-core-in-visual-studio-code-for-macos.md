@@ -34,6 +34,8 @@ Things we need:
 
 If you are NOT a newbie, jump to [Step 4](#4-setting-up-vscode-to-use-powershell).
 
+<!--adsense-->
+
 ## 1. Installing Homebrew
 
 Open `Terminal` and copy the link from the [Homebrew](https://brew.sh) website, this will install all the necessary packages and everything nice. Easy as.
@@ -49,6 +51,8 @@ Open `Terminal` and type in
 ```md
 brew cask install powershell
 ```
+
+<!--adsense-->
 
 this should install the latest PowerShell Core, you can test it by typing in `pwsh` in your Terminal.
 

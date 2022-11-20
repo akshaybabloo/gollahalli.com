@@ -38,6 +38,8 @@ I have been working on a few projects that use Django 2+ and deploying them to A
 └── .dockerignore
 ```
 
+<!--adsense-->
+
 ## `.dockerignore` file
 
 While building a container, the CLI looks for `.dockerignore` file, which contains the file or file pattern to be ignored before sending the information to the Docker daemon. We can compare this to `.gitignore`, that ignores any file mentioned in this before committing into the version control.
@@ -63,6 +65,8 @@ except ImportError:
 if live:
     from .production import *
 ```
+
+<!--adsense-->
 
 ## `base.py` file
 
@@ -104,6 +108,8 @@ EMAIL_HOST_USER = ******
 EMAIL_HOST_PASSWORD = ******
 ```
 
+<!--adsense-->
+
 ## `local.py` file
 
 I always separate my database, and I also make sure that they are the same type of database, in my case it's PostgreSQL. Also, it contains the location for the static file and where the user can upload their files.
@@ -131,6 +137,8 @@ STATICFILES_DIRS = (
 # User uploads
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static', 'media')
 ```
+
+<!--adsense-->
 
 ## `production.py` file
 
@@ -164,6 +172,8 @@ MEDIAFILES_LOCATION = 'media'
 DEFAULT_FILE_STORAGE = '******'
 MEDIA_URL = "https://%s/%s/" % (AZURE_BLOB_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 ```
+
+<!--adsense-->
 
 ## Finally
 

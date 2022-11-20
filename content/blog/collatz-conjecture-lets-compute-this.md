@@ -28,6 +28,8 @@ Collatz conjecture also called as $3n+1$ problem, $3x+1$ mapping, Hasse's algori
 
 Basically, the problem states that all positive whole numbers should eventually compute to $1$, which is based on the following condition:
 
+<!--adsense-->
+
 $$
 a\_{n} =
 \begin{cases}

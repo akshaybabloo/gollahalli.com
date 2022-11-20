@@ -40,6 +40,8 @@ The repository can be found at [https://github.com/akshaybabloo/dot-net-core-uni
 pip install dot-net-core-uninstaller
 ```
 
+<!--adsense-->
+
 ## Usage
 
 There are to ways to use this:
@@ -73,6 +75,8 @@ To remove a version of .Net Core SDK or Runtimes:
 dotnetcore remove --sdk 1.0.0
 dotnetcore remove --runtime 1.0.0
 ```
+
+<!--adsense-->
 
 #### Using with Windows systems
 

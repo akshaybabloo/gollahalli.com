@@ -37,6 +37,8 @@ I have been trying to create an app that uses [QListWidget](https://doc.qt.io/qt
 
 > The code can be found at [https://github.com/akshaybabloo/qlistwidget-custom-widget](https://github.com/akshaybabloo/qlistwidget-custom-widget)
 
+<!--adsense-->
+
 ## Some Basics
 
 Let's look at some basics before we dive into the project. If you are OK with the basics, move to the [fun part](#project-structure).
@@ -50,6 +52,8 @@ Let's look at some basics before we dive into the project. If you are OK with th
 Although Qt can be used by anyone, the company does have a stricter licencing program. If you are using the open-source version of Qt, you need to adhere to [LGPL](http://www.gnu.org/licenses/lgpl-3.0.html)/[GPL](http://www.gnu.org/licenses/gpl-3.0.html) restrictions. Which basically means your source code should be open for others to view.
 
 So, when choosing Qt as your next UI framework, make sure you know the licencing restriction.
+
+<!--adsense-->
 
 ### What are Signals and Slots?
 
@@ -74,6 +78,8 @@ qlistwidget-custom-widget
 ├── mainwindow.h
 └── mainwindow.ui
 ```
+
+<!--adsense-->
 
 ## Main Windows
 
@@ -136,6 +142,8 @@ Let's create a simple `MainWindow` class without a status bar and with all its m
  <connections/>
 </ui>
 ```
+
+<!--adsense-->
 
 ### Screenshot
 
@@ -202,6 +210,8 @@ Create a new widget UI with class `CustomWidget`. Add a button and a label to it
 </ui>
 ```
 
+<!--adsense-->
+
 ### Screenshot
 
 This should look similar to the image below on macOS with dark mode enabled.
@@ -227,6 +237,8 @@ void CustomWidget::setText(const QString &text) {
     ui->label->setText(text);
 }
 ```
+
+<!--adsense-->
 
 #### QString getText()
 
@@ -254,6 +266,8 @@ void CustomWidget::on_toolButton_clicked()
 ```
 
 > We will come back to this method once we write the remaining methods in `mainwindow.h`
+
+<!--adsense-->
 
 ### mainwindow.cpp and mainwindow.h
 
@@ -310,6 +324,8 @@ void MainWindow::removeItem(const QString &text) {
 
 The above code matches the text and deletes the item from the `listWidget`.
 
+<!--adsense-->
+
 ### Connecting CustomWidget to MainWindow
 
 Remember we spoke about [Slots & Signals](#what-is-signals-and-slots), this is where we use that concept to connect `CustomWidget` object to `MainWindow` object.
@@ -334,6 +350,8 @@ What we are saying here is - _connect current class (CustomWidget) whose object 
 Once you run the application you should be able to delete any item from the list:
 
 {{< figure src="/img/blog/creating-custom-widget-for-qlistwidget-in-qt-6/application-demo.gif" title="Application demo." alt="Application demo."  >}}
+
+<!--adsense-->
 
 ## Conclusion
 
