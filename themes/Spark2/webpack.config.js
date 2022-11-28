@@ -20,7 +20,7 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.css$/,
+                    test: /\.s[ac]ss$/i,
                     exclude: /node_modules/,
                     use: [
                         {
@@ -31,6 +31,9 @@ module.exports = (env, argv) => {
                             options: {
                                 importLoaders: 1,
                             }
+                        },
+                        {
+                            loader: 'sass-loader'
                         },
                         {
                             loader: 'postcss-loader'

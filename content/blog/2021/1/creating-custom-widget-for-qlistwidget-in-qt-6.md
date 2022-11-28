@@ -1,6 +1,7 @@
 ---
 title: "Creating Custom Widget for QListWidget in Qt 6"
 date: 2021-01-02T16:44:41+13:00
+lastmod: 2022-11-28T16:44:41+13:00
 draft: false
 categories: ["Tutorial"]
 tags: ["C++", "Qt6"]
@@ -197,7 +198,7 @@ Create a new widget UI with class `CustomWidget`. Add a button and a label to it
     </spacer>
    </item>
    <item>
-    <widget class="QToolButton" name="toolButton">
+    <widget class="QToolButton" name="closeButton">
      <property name="text">
       <string>x</string>
      </property>
@@ -259,7 +260,7 @@ This method is a signal that is used to `emit` a signal to an objects Slot.
 This is a slot method that reacts to the button - `x` - click on the UI. When the button is clicked, we can use `emit` to send the text to the required method.
 
 ```cpp
-void CustomWidget::on_toolButton_clicked()
+void CustomWidget::closeButtonClicked()
 {
     emit sendRemoveItem(ui->label->text());
 }
@@ -282,7 +283,7 @@ First import the custom widget - `#include "customwidget.h"`
 In the `MainWindow` constructor add in the following code:
 
 ```cpp
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -300,7 +301,6 @@ MainWindow::MainWindow(QWidget *parent)
         ui->listWidget->addItem(item);
         ui->listWidget->setItemWidget(item, widget);
     }
-
 }
 ```
 
@@ -309,13 +309,13 @@ MainWindow::MainWindow(QWidget *parent)
 The `&text` is the QLabel text assigned to each instance of the widget while creating it. When the `x` button is clicked, the text is emitted to this method.
 
 ```cpp
-void MainWindow::removeItem(const QString &text) {
-
+void MainWindow::removeItem(const QString& text)
+{
     for (int i = 0; i < ui->listWidget->count(); ++i) {
         auto item = ui->listWidget->item(i);
-        auto itemWidget = dynamic_cast<CustomWidget*>(ui->listWidget->itemWidget(item));
-        if (itemWidget->getText() == text){
-            delete item;
+        auto itemWidget = qobject_cast<CustomWidget*>(ui->listWidget->itemWidget(item));
+        if (itemWidget->getText() == text) {
+            delete ui->listWidget->takeItem(i);
             break;
         }
     }
@@ -333,17 +333,21 @@ Remember we spoke about [Slots & Signals](#what-is-signals-and-slots), this is w
 In the constructor of `CustomWidget` write in the following code:
 
 ```cpp
-CustomWidget::CustomWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::CustomWidget)
+CustomWidget::CustomWidget(QWidget* parent)
+    : QWidget(parent)
+    , ui(new Ui::CustomWidget)
 {
     ui->setupUi(this);
 
-    connect(this, SIGNAL(sendRemoveItem(const QString &)), parent, SLOT(removeItem(const QString &)));
+    // Send the label text to MainWindow's removeItem method
+    connect(this, &CustomWidget::sendRemoveItem, qobject_cast<MainWindow*>(parent), &MainWindow::removeItem);
+
+    // Connect close button clicked to closeButtonClicked method
+    connect(ui->closeButton, &QPushButton::clicked, this, &CustomWidget::closeButtonClicked);
 }
 ```
 
-What we are saying here is - _connect current class (CustomWidget) whose object is sendRemoveItem to the parent (MainWindow) whose object is removeItem()_
+What we are saying here is - _connect current class (CustomWidget) whose object is sendRemoveItem to the parent (MainWindow) whose object is removeItem()_ and the second connect describes the same thing for the close button.
 
 ## Run the Application (GIF)
 
