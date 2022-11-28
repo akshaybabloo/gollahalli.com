@@ -60,7 +60,7 @@
      data-ad-client="ca-pub-7450383714878520"
      data-ad-slot="3767566685"></ins>
 
-     {{ replace .Content "<!--adsense-->" (partial "ads/article-ads.html" .) | safeHTML }}
+     {{ replace .Content "<!--adsense-->" (partial "ads/article-ads.html" .) | safeHTML | replaceRE "(<h[1-6]\\sid=\"([^\"]+)\"\\s?>)(.+)(</h[1-6]+>)" "${1}${3}<a class=\"anchor-link\" v-html=\"link\" href=\"#${2}\"></a>${4}" | safeHTML }}
 </article>
 
 <ins class="adsbygoogle"

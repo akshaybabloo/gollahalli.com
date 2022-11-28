@@ -1,6 +1,6 @@
 import {icon, library,} from '@fortawesome/fontawesome-svg-core'
 import {faFacebook, faGithub, faLinkedin, faPinterest, faReddit, faTwitter} from '@fortawesome/free-brands-svg-icons';
-import {faEnvelope, faExternalLinkAlt, faHashtag, faSearch, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faEnvelope, faExternalLinkAlt, faHashtag, faSearch, faTimes, faLink} from '@fortawesome/free-solid-svg-icons';
 
 library.add(
     faGithub,
@@ -13,7 +13,8 @@ library.add(
     faPinterest,
     faReddit,
     faEnvelope,
-    faExternalLinkAlt
+    faExternalLinkAlt,
+    faLink
 );
 
 export const linkedin = icon({prefix: 'fab', iconName: 'linkedin'}, {transform: {size: 30}});
@@ -28,3 +29,4 @@ export const times = icon({prefix: 'fas', iconName: 'times'}, {transform: {size:
 export const hashTag = icon({prefix: 'fas', iconName: 'hashtag'});
 export const externalLink = icon({prefix: 'fas', iconName: 'external-link-alt'});
 export const mail = icon({prefix: 'fas', iconName: 'envelope'}, {transform: {size: 30}});
+export const link = icon({prefix: 'fas', iconName: 'link'}, {transform: {size: 10}});

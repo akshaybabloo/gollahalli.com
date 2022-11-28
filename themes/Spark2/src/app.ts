@@ -5,6 +5,7 @@ import {
     facebook,
     github,
     hashTag,
+    link,
     linkedin,
     mail,
     pinterest,
@@ -37,6 +38,7 @@ createApp({
             reddit: reddit.html.pop(),
             mail: mail.html.pop(),
             externalLink: externalLink.html.pop(),
+            link: link.html.pop(),
 
             searchText: "",
             hits: [],

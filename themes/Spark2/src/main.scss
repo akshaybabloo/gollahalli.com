@@ -11,13 +11,23 @@ body {
     @apply my-2
 }
 
-h2, h3,
-h4, h5, h6 {
+h2,
+h3,
+h4,
+h5,
+h6 {
     @extend %headings !optional;
 }
 
-article %headings:hover::before {
-    content: "# ";
-    margin-left: -21.5px;
-    padding: 0;
+article {
+    %headings {
+        .anchor-link {
+            display: none;
+        }
+        &:hover {
+            .anchor-link {
+                display: inline;
+            }
+        }
+    }
 }
