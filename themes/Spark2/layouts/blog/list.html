@@ -40,10 +40,14 @@
                             {{end}}
                         </p>
 
-                        <p class="text-gray-400">
-                            <time datetime="{{.PublishDate}}"
-                                  itemprop="datePublished">{{.PublishDate.Format "02 Jan 2006"}}</time>
+                        <p class="text-gray-400">                        
+                            <time datetime="{{.PublishDate}}" itemprop="datePublished">{{.PublishDate.Format "02 Jan 2006"}}</time>
                         </p>
+                        {{ if not (eq .Lastmod .Date) }}
+                        <p class="text-gray-400">
+                            <time datetime="{{.Lastmod}}" itemprop="dateModified">(Modified on {{.Lastmod.Format "02 Jan 2006"}})</time>
+                        </p>
+                        {{ end }}
                     </div>
                 </div>
                 <div class="sm:col-span-3 lg:col-span-2">

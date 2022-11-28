@@ -42,6 +42,9 @@
                 <section class="post-meta">
                     {{/*                <p class="author">by <a href=""></a></p>*/}}
                     <time class="post-date" datetime="{{ .PublishDate }}">{{.PublishDate.Format "January 2, 2006"}}</time>
+                    {{ if not (eq .Lastmod .Date) }}
+                    <time class="post-date" datetime="{{ .Lastmod }}">(Modified on {{.Lastmod.Format "January 2, 2006"}})</time>
+                    {{ end }}
                 </section>
             </header>
             {{ if (isset .Params "images") }}

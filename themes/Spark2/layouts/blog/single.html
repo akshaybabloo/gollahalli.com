@@ -16,7 +16,7 @@
 <article>
     <h1>{{.Title}}</h1>
 
-    <p>{{.PublishDate.Format "January 2, 2006"}} &bullet; {{ range .Params.tags }} <a href="{{ `/tags/` | relLangURL }}{{ . | urlize }}">{{ . }}</a> {{ end }}
+    <p>{{.PublishDate.Format "January 2, 2006"}} {{ if not (eq .Lastmod .Date) }}(Modified on {{ .Lastmod.Format "January 2, 2006" }}){{ end }} &bullet; {{ range .Params.tags }} <a href="{{ `/tags/` | relLangURL }}{{ . | urlize }}">{{ . }}</a> {{ end }}
         &bullet; {{ .ReadingTime }} minutes to read</p>
 
     <div class="inline-flex rounded-md shadow-sm">
