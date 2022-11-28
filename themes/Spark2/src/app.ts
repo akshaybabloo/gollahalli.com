@@ -1,10 +1,11 @@
-import './main.css';
+import './main.scss';
 import {createApp} from "vue";
 import {
     externalLink,
     facebook,
     github,
     hashTag,
+    link,
     linkedin,
     mail,
     pinterest,
@@ -37,6 +38,7 @@ createApp({
             reddit: reddit.html.pop(),
             mail: mail.html.pop(),
             externalLink: externalLink.html.pop(),
+            link: link.html.pop(),
 
             searchText: "",
             hits: [],
