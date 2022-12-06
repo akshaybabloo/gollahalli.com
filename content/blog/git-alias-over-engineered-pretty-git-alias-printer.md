@@ -5,7 +5,7 @@ draft: false
 categories: ["CLI"]
 tags: ["Golang", "CLI Utility", "Git"]
 description: ""
-images: ["/img/blog/git-alias/git-alias-cover.png", "/img/blog/git-alias/git-alias.png"]
+images: ["/img/blog/git-alias/git-alias-cover.gif", "/img/blog/git-alias/git-alias.png", "/img/blog/git-alias/git-alias-cover.png"]
 ads: true
 video: false
 # htmlScripts: []
@@ -22,6 +22,8 @@ sitemap:
   priority: 0.8
   changeFreq: monthly
 siteMapImages:
+  - imageLoc: "/img/blog/git-alias/git-alias-cover.gif"
+    imageCaption: "Git Alias cover image"
   - imageLoc: "/img/blog/git-alias/git-alias-cover.png"
     imageCaption: "Git Alias cover image"
   - imageLoc: "/img/blog/git-alias/git-alias.png"
@@ -35,6 +37,8 @@ Now there are different ways to list all the aliases in git. One of the ways is 
 ```bash
 alias.la !git-alias
 ```
+
+<!--adsense-->
 
 But is it pretty, though? No. So, I decided to use Go languge to make it pretty :heart_eyes:.
 
@@ -65,6 +69,8 @@ for _, key := range section.Keys() {
 
 ```
 
+<!--adsense-->
+
 The above code is used to list all the aliases. It is listed in a table format. The table is generated using the [github.com/jedib0t/go-pretty](https://github.com/jedib0t/go-pretty) package.
 
 ## The Binary File
@@ -78,6 +84,8 @@ All you need to do is to download the binary file and place it in your `PATH` va
 ```bash
 $ git-alias
 ```
+
+<!--adsense-->
 
 This would list all the aliases in the following format:
 
@@ -99,6 +107,8 @@ $ git-alias -s la
 This would list all the aliases which contains the string `alias` in the following format:
 
 {{< figure src="/img/blog/git-alias/git-alias.png" title="Git Alias" alt="Git Alias" >}}
+
+<!--adsense-->
 
 ## Conclusion
 
