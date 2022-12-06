@@ -1,11 +1,11 @@
 ---
-title: "Over Engineered Pretty Git Alias Printer"
-date: 2022-11-05T23:02:37+13:00
+title: "git-alias: Over Engineered Pretty Git Alias Printer"
+date: 2022-12-06T23:02:37+13:00
 draft: false
-categories: []
-tags: []
+categories: ["CLI"]
+tags: ["Golang", "CLI Utility", "Git"]
 description: ""
-images: ["/img/blog/git-alias/git-alias.png"]
+images: ["/img/blog/git-alias/git-alias-cover.png", "/img/blog/git-alias/git-alias.png"]
 ads: true
 video: false
 # htmlScripts: []
@@ -22,6 +22,8 @@ sitemap:
   priority: 0.8
   changeFreq: monthly
 siteMapImages:
+  - imageLoc: "/img/blog/git-alias/git-alias-cover.png"
+    imageCaption: "Git Alias cover image"
   - imageLoc: "/img/blog/git-alias/git-alias.png"
     imageCaption: "Git Alias"
 ---
