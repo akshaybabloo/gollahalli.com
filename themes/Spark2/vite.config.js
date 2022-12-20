@@ -2,12 +2,14 @@ import {resolve} from 'path'
 import {defineConfig} from 'vite'
 import commonjs from '@rollup/plugin-commonjs';
 import {babel} from '@rollup/plugin-babel';
+import terser from '@rollup/plugin-terser';
 import vue from '@vitejs/plugin-vue'
+import { splitVendorChunkPlugin } from 'vite'
 
 export default defineConfig(({mode}) => {
     return {
         // mode: 'development',
-        plugins: [vue(), commonjs(), babel({babelHelpers: 'bundled'})],
+        plugins: [vue(), commonjs(), babel({babelHelpers: 'bundled'}), mode === "dev" ? "" : terser(), splitVendorChunkPlugin()],
         define: {
             'process.env.NODE_ENV': JSON.stringify(mode),
         },
@@ -21,7 +23,7 @@ export default defineConfig(({mode}) => {
             minify: mode === "dev" ? false : 'terser',
             target: 'es2015',
             lib: {
-                formats: ['es'],
+                formats: ['iife'],
                 name: 'Spark2',
                 entry: resolve(__dirname, 'src/app.ts'),
             },
@@ -31,16 +33,23 @@ export default defineConfig(({mode}) => {
             outDir: './static',
             rollupOptions: {
 
+                // external: ['vue'],
+
                 output: {
-                    manualChunks: (id) => {
-                        if (id.includes('node_modules')) {
-                            return 'vendors';
-                        }
-                    },
+                    // inlineDynamicImports: false,
+                    // manualChunks: (id) => {
+                    //     if (id.includes('node_modules')) {
+                    //         return 'vendors';
+                    //     }
+                    // },
+
+                    // globals: {
+                    //     vue: 'Vue',
+                    // },
                     entryFileNames: mode === "dev" ? 'js/main.js' : 'js/main.min.js',
                     chunkFileNames: mode === "dev" ? 'js/[name].js' : 'js/[name].min.js',
                     assetFileNames: mode === "dev" ? '[ext]/[name].[ext]' : '[ext]/[name].min.[ext]',
-                },
+                }
             }
         }
     }
