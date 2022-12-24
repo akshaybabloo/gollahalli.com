@@ -4,12 +4,14 @@
   "description": "Gollahalli.com website",
   "private": true,
   "workspaces": [
-    "themes/Spark2"
+    "themes/Spark2",
+    "scripts"
   ],
   "scripts": {
     "build-dev": "yarn workspace spark2 build-dev",
     "static": "yarn workspace spark2 static",
-    "build-prod": "yarn workspace spark2 build-prod"
+    "build-prod": "yarn workspace spark2 build-prod",
+    "run-script": "yarn workspace scripts build:start"
   },
   "repository": {
     "type": "git",
