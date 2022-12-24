@@ -19,7 +19,7 @@
     "@tailwindcss/typography": "^0.5.8",
     "autoprefixer": "^10.4.13",
     "babel-loader": "^9.1.0",
-    "css-loader": "^6.6.0",
+    "css-loader": "^6.7.3",
     "css-minimizer-webpack-plugin": "^4.2.2",
     "fork-ts-checker-webpack-plugin": "^7.2.1",
     "gulp": "^4.0.2",
