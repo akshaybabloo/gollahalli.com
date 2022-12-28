@@ -39,6 +39,5 @@ This website showcases my personal work, publications and tutorials. While you a
 - Brain Computer Interface
 - Robotics
 - Neuromorphic Systems
-- Serious Games
 - Self-Driving Cars
 - Computer Vision
