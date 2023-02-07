@@ -5554,10 +5554,10 @@ value-or-function@^3.0.0:
   resolved "https://registry.yarnpkg.com/value-or-function/-/value-or-function-3.0.0.tgz#1c243a50b595c1be54a754bfece8563b9ff8d813"
   integrity sha512-jdBB2FrWvQC/pnPtIqcLsMaQgjhdb6B7tk1MMyTKapox+tQZbdRP4uLxu/JY0t7fbfDCUMnuelzEYv5GsxHhdg==
 
-"video.js@^7 || ^8", video.js@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/video.js/-/video.js-8.0.3.tgz#748c0e657e4e742ac372976660578651c37fc20f"
-  integrity sha512-Q+YHB2l13dOzJdPBjP1bZ6m3ybIbVbbQnErhlOggf0yz65My8KqS1Njh5YaKZO2/c8mU1HzzkZMSRjyN5/9tGA==
+"video.js@^7 || ^8", video.js@^8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/video.js/-/video.js-8.0.4.tgz#d95a30c40aa5045769e4c9937ced0ed250518a1f"
+  integrity sha512-fvvWauPanrKDps1HQGGL+9CIAK8G0YVwlNme0hvY0k3moXQryaRcJSLHIlPKV2j9ZFTHl32VbN43jL3TaUllfg==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@videojs/http-streaming" "3.0.0"
