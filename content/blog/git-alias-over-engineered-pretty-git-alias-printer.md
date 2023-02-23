@@ -4,7 +4,7 @@ date: 2022-12-06T23:02:37+13:00
 draft: false
 categories: ["CLI"]
 tags: ["Golang", "CLI Utility", "Git"]
-description: ""
+description: "A simple CLI utility to list all the aliases in a pretty format."
 images: ["/img/blog/git-alias/git-alias-cover.gif", "/img/blog/git-alias/git-alias.png", "/img/blog/git-alias/git-alias-cover.png"]
 ads: true
 video: false
