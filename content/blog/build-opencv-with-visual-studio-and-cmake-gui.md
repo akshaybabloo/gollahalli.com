@@ -64,8 +64,6 @@ Before you start, you need to have the following installed on your computer:
 
 > Note: Though, CMake is installed with Visual Studio, I would recommend installing it separately as well. This will make it easier to use CMake with other IDEs. Also, we will be using cmake-gui to build OpenCV.
 
--DBUILD_opencv_world:BOOL="1" -DCMAKE_INSTALL_PREFIX:PATH="C:/Users/gollaha/Downloads/opencv-4.7.0/build/install" 
-
 ## Part 1: Generating OpenCV build files using CMake GUI
 
 Fun part! Let's build OpenCV.
