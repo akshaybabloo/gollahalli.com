@@ -1,10 +1,10 @@
 ---
-title: "Helpful Powershell Cmdlets"
+title: "Helpful Powershell Cmdlets/Functions"
 date: 2023-02-26T12:02:06+13:00
 draft: false
 categories: ["PowerShell"]
 tags: ["PowerShell"]
-description: "A list of helpful PowerShell cmdlets that I have found useful."
+description: "A list of helpful PowerShell cmdlets/Functions that I have found useful."
 images: []
 ads: true
 video: false
