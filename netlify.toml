@@ -10,10 +10,10 @@ status = 301
 
 [build]
 publish = "public"
-command = "yarn install && yarn workspace spark2 build-prod && yarn workspace spark2 static && hugo --gc --minify && yarn run-script"
+command = "yarn install && yarn static && yarn build-prod && hugo --gc --minify && yarn run-script"
 
 [context.deploy-preview]
-command = "yarn install && yarn workspace spark2 build-prod && yarn workspace spark2 static && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
+command = "yarn install && yarn static && yarn build-dev && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.deploy-preview.environment]
 HUGO_VERSION = "0.102.3"
