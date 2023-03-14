@@ -9,5 +9,5 @@
       "YARN_VERSION": "1.22.19"
     }
   },
-  "buildCommand": "yarn install && yarn build-prod && yarn static && hugo --gc --minify && yarn run-script"
+  "buildCommand": "yarn install && yarn static && yarn build-prod && hugo --gc --minify && yarn run-script"
 }
