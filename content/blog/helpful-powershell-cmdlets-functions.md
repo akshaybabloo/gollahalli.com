@@ -1,6 +1,7 @@
 ---
 title: "Helpful Powershell Cmdlets/Functions"
 date: 2023-02-26T12:02:06+13:00
+lastmod: 2023-03-17T16:20:34+13:00
 draft: false
 categories: ["PowerShell"]
 tags: ["PowerShell"]
@@ -41,6 +42,7 @@ Don't forget to restart PowerShell after adding the cmdlets to your profile.
 
 - [List all USB devices](#list-all-usb-devices)
 - [Get the size of a folder](#get-the-size-of-a-folder)
+- [List PATH environment variable](#list-path-environment-variable)
 
 ## List all USB devices
 
@@ -65,5 +67,23 @@ function Get-Size {
   )
 
   "{0:N2} mb" -f ((Get-ChildItem -Recurse -Force $path | Measure-Object -Property Length -sum).Sum / 1Mb)
+}
+```
+
+## List PATH environment variable
+
+Print the PATH environment variable with newlines.
+
+```powershell
+function Get-Path {
+  $env:Path -split ';' | Out-String
+}
+```
+
+or
+
+```powershell
+function Get-Path {
+  $Env:Path | % {$_.replace(";", "`n")}
 }
 ```
