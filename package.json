@@ -4,7 +4,7 @@
   "description": "Gollahalli.com website",
   "private": true,
   "workspaces": [
-    "themes/Spark2",
+    "themes/spark2",
     "scripts"
   ],
   "scripts": {
