@@ -1,7 +1,7 @@
 ---
 title: "Helpful Powershell Cmdlets/Functions"
 date: 2023-02-26T12:02:06+13:00
-lastmod: 2023-03-17T16:20:34+13:00
+lastmod: 2023-03-24T16:20:34+13:00
 draft: false
 categories: ["PowerShell"]
 tags: ["PowerShell"]
@@ -43,6 +43,7 @@ Don't forget to restart PowerShell after adding the cmdlets to your profile.
 - [List all USB devices](#list-all-usb-devices)
 - [Get the size of a folder](#get-the-size-of-a-folder)
 - [List PATH environment variable](#list-path-environment-variable)
+- [Print environment variables](#print-environment-variables)
 
 ## List all USB devices
 
@@ -86,4 +87,15 @@ or
 function Get-Path {
   $Env:Path | % {$_.replace(";", "`n")}
 }
+```
+
+## Print environment variables
+
+Print all environment variables sorted by name with an alias `printenv`.
+
+```powershell
+function Get-Env {
+  Get-ChildItem Env: | Sort-Object Name | Format-Table -AutoSize
+}
+New-Alias printenv Get-Env
 ```
