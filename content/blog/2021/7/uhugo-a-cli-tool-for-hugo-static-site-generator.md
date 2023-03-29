@@ -1,6 +1,7 @@
 ---
 title: "uHugo: A CLI Tool for Hugo Static Site Generator"
 date: 2021-07-10T21:25:21+12:00
+lastmod: 2023-03-29T21:25:21+12:00
 draft: false
 categories: ["CLI"]
 tags: ["Python", "CLI Utility", "Hugo"]
@@ -106,18 +107,20 @@ Update command can also be used to update any cloud provider's settings, though 
 3. Give an API key, if needed
 4. Files to check or details regarding the provider
 
+> Note: Above steps are only for Cloudflare Pages. For Netlify and Vercel, uHugo searches for `netlify.toml` and `vercel.json` respectively.
+
 For example, I deploy my website on Cloudflare, so let's take an example of it. In my `config.toml`, I have the following settings:
 
 ```toml
 [uhugo]
 name = "cloudflare"
 project = "gollahalli-com"
-email_address = "env"
-account_id = "env"
-api_key = "env"
+email_address = "env:email-address"
+account_id = "env:account-id"
+api_key = "env:api-key"
 ```
 
-`env` is a special name in uHugo, the value `env` for `email_address` is telling uHugo to check for environment variable `email_address` and use that value instead.
+`env:email-account` is a special name in uHugo, this tells uHugo to replace the value `email-account` from the environment variable and use that value instead.
 
 Whenever uHugo detects these configurations, it updates the value for `HUGO_VERSION` in production and preview environment variables.
 
@@ -128,15 +131,12 @@ Whenever uHugo detects these configurations, it updates the value for `HUGO_VERS
 uHugo currently supports following cloud providers:
 
 1. [Cloudflare](https://akshaybabloo.github.io/uHugo/providers/cloudflare.html)
-
-and support for these are coming soon:
-
-1. Netlify
-2. Vercel
+2. [Netlify](https://akshaybabloo.github.io/uHugo/providers/netlify.html)
+3. [Vercel](https://akshaybabloo.github.io/uHugo/providers/vercel.html)
 
 ## Final Thoughts
 
-uHugo was purely built out of frustration for downloading the latest binary file and changing the variable names on Cloudflare (`login` > `use the correct account` > `Pages` > `select projects` > `settings tabs` > `environment variables tab` > `edit variables for production and preview` > `don't forget to save it` :tired_face:) and Netlify (update the Hugo version in the config file).
+uHugo was purely built out of frustration for downloading the latest binary file and changing the variable names on Cloudflare (`login` > `use the correct account` > `Pages` > `select projects` > `settings tabs` > `environment variables tab` > `edit variables for production and preview` > `don't forget to save it` :tired_face:), Netlify (update the Hugo version in the config file) and Vercel.
 
 I hope this CLI utility helps you in making your deployment a bit more productive.
 
