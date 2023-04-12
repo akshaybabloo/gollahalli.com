@@ -52,6 +52,7 @@ twitter = "akshaybabloo"
 
 [params]
 googleAds = "7450383714878520" # Optional, ignore "ca-pub-"
+repo = "https://github.com/akshaybabloo/gollahalli.com"
 amp = true
 year = 2022
 # TODO: Move these three to social
