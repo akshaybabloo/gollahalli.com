@@ -1,10 +1,11 @@
 ---
 title: "dnode: Search and Delete Node Modules Folders Recursively"
 date: 2021-08-17T12:41:03+12:00
+lastmod: 2023-05-04T14:33:10+12:00
 draft: false
 categories: ["CLI"]
 tags: ["Golang", "CLI Utility"]
-description: "A CLI utility to recursively delete node_modules folder in a given directory tree"
+description: "Explore the power of dnode, a handy tool designed to help you efficiently search and delete Node Modules folders recursively. Save valuable disk space and declutter your development environment by mastering this essential utility for Node.js developers."
 images: ["/img/blog/dnode-delete-node-modules-folders-recursively/dnode.png"]
 ads: true
 video: true

@@ -4,7 +4,7 @@ date: 2020-02-02T13:01:03+13:00
 draft: false
 categories: ["Tutorial"]
 tags: ["Go"]
-description: "Shutting down HTTP server from different handles made easy."
+description: "Master the art of gracefully shutting down your HTTP server with this in-depth comparison of three popular methods: Context, Channels, and SyncGroup. Evaluate their strengths and weaknesses, and choose the best approach to ensure safe termination while preserving system resources and user experience."
 images: ["/img/blog/stop-http-server.jpg"]
 ads: true
 # htmlScripts: []
