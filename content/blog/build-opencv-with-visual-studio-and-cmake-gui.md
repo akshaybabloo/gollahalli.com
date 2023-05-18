@@ -48,7 +48,7 @@ siteMapImages:
 
 If you have ever used OpenCV, you would know that it is a very powerful library for image processing. This is owing to ease in usage and availability of multiple functions which can be utilised to perform a variety of image processing tasks. In this post, we will explore the steps on how to build OpenCV with Visual Studio and Cmake GUI.
 
-There are two parts to this blog:
+There are two sections to this blog:
 
 1. Generating OpenCV build files using CMake GUI
 2. Building OpenCV using Visual Studio 2022 Community
@@ -56,14 +56,14 @@ There are two parts to this blog:
 **Table of Contents**
 
 - [Prerequisites](#prerequisites)
-- [Part 1: Generating OpenCV build files using CMake GUI](#part-1-generating-opencv-build-files-using-cmake-gui)
+- [Section 1: Generating OpenCV build files using CMake GUI](#section-1-generating-opencv-build-files-using-cmake-gui)
   - [Step 1: Know where to find the files](#step-1-know-where-to-find-the-files)
   - [Step 2: Download OpenCV](#step-2-download-opencv)
   - [Step 3: Open CMake GUI](#step-3-open-cmake-gui)
   - [Step 4: Set the source and build directories](#step-4-set-the-source-and-build-directories)
   - [Step 5: Configure build and compiler settings](#step-5-configure-build-and-compiler-settings)
   - [Step 6: Set install location and generate build files](#step-6-set-install-location-and-generate-build-files)
-- [Part 2: Building OpenCV using Visual Studio 2022 Community](#part-2-building-opencv-using-visual-studio-2022-community)
+- [Section 2: Building OpenCV using Visual Studio 2022 Community](#section-2-building-opencv-using-visual-studio-2022-community)
 - [Few tips and tricks](#few-tips-and-tricks)
   - [CMake for Visual Studio](#cmake-for-visual-studio)
   - [An alternate way to set compiler location](#an-alternate-way-to-set-compiler-location)
@@ -83,7 +83,7 @@ Before we begin, you need to have the following on your computer:
 
 > Note: Though, CMake is installed with Visual Studio, I would also recommend installing it separately. This will make it easier to use CMake with other IDEs.
 
-## Part 1: Generating OpenCV build files using CMake GUI
+## Section 1: Generating OpenCV build files using CMake GUI
 
 Fun part! Let's build OpenCV.
 
@@ -148,7 +148,7 @@ In the search field, search for `CMAKE_INSTALL_PREFIX`. Edit `CMAKE_INSTALL_PREF
 
 Once you have setup the install path, click on `Generate`. This should generate Visual Studio solution files.
 
-## Part 2: Building OpenCV using Visual Studio 2022 Community
+## Section 2: Building OpenCV using Visual Studio 2022 Community
 
 > Warning: This will take a lot of time. So, go grab a cup of coffee (or even tea).
 
