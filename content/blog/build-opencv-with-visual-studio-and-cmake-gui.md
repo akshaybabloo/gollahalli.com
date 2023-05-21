@@ -46,6 +46,8 @@ siteMapImages:
 
 <!--adsense-->
 
+> If you want to use the command line approach, check out my other blog - [Build OpenCV With Visual Studio and CMake CLI]({{< ref "build-opencv-with-visual-studio-and-cmake-cli.md" >}}).
+
 If you have ever used OpenCV, you would know that it is a very powerful library for image processing. This is owing to ease in usage and availability of multiple functions which can be utilised to perform a variety of image processing tasks. In this post, we will explore the steps on how to build OpenCV with Visual Studio and Cmake GUI.
 
 There are two sections to this blog:
@@ -208,3 +210,8 @@ By default, CMake will build individual libraries for each module. If you want t
 So now, we have seen how to build OpenCV using Visual Studio 2022 Community and CMake GUI. We have also seen how to set up the environment variables for CMake to use the compiler. I hope you found this article useful. If you have any questions, feel free to ask them in the comments section below.
 
 Until next time, happy coding!
+
+**Update**
+
+1. Added link to [Build OpenCV With Visual Studio and CMake CLI]({{< ref "build-opencv-with-visual-studio-and-cmake-cli.md" >}}).
+2. Changed "Part 1" to "Section 1" and "Part 2" to "Section 2".
