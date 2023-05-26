@@ -16,7 +16,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "algoliasearch": "^4.17.0",
+    "algoliasearch": "^4.17.1",
     "toml": "^3.0.0"
   }
 }
