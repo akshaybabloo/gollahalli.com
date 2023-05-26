@@ -12,7 +12,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "@types/node": "^20.2.3",
+    "@types/node": "^20.2.4",
     "typescript": "^5.0.4"
   },
   "dependencies": {
