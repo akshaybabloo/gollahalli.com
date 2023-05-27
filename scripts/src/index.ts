@@ -25,6 +25,7 @@ try {
     process.exit(1);
 }
 const data = JSON.parse(fs.readFileSync(FILE_PATH, 'utf8'));
+console.log(`Found ${data.length} search entries`);
 console.log("Clearing previous search entries");
 index.clearObjects();
 console.log("Adding new search entries");

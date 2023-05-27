@@ -10,7 +10,7 @@ status = 301
 
 [build]
 publish = "public"
-command = "yarn install && yarn static && yarn build-prod && hugo --gc --minify && yarn run-script"
+command = "yarn install && yarn static && yarn build-prod && hugo --gc --minify"
 
 [context.deploy-preview]
 command = "yarn install && yarn static && yarn build-dev && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
