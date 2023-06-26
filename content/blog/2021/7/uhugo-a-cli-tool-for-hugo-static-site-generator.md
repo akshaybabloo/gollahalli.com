@@ -1,7 +1,7 @@
 ---
 title: "uHugo: A CLI Tool for Hugo Static Site Generator"
 date: 2021-07-10T21:25:21+12:00
-lastmod: 2023-03-29T21:25:21+12:00
+lastmod: 2023-06-26T21:25:21+12:00
 draft: false
 categories: ["CLI"]
 tags: ["Python", "CLI Utility", "Hugo"]
@@ -130,9 +130,9 @@ Whenever uHugo detects these configurations, it updates the value for `HUGO_VERS
 
 uHugo currently supports following cloud providers:
 
-1. [Cloudflare](https://akshaybabloo.github.io/uHugo/providers/cloudflare.html)
-2. [Netlify](https://akshaybabloo.github.io/uHugo/providers/netlify.html)
-3. [Vercel](https://akshaybabloo.github.io/uHugo/providers/vercel.html)
+1. [Cloudflare](https://akshaybabloo.github.io/uHugo/providers/cloudflare.html) - API based
+2. [Netlify](https://akshaybabloo.github.io/uHugo/providers/netlify.html) - File based, looks for `netlify.toml`
+3. [Vercel](https://akshaybabloo.github.io/uHugo/providers/vercel.html) - File based, looks for `vercel.json`
 
 ## Final Thoughts
 
