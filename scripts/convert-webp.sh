@@ -1,8 +1,5 @@
 #!/bin/bash -x
 
-apt update
-apt install -y wget
-
 webp_version="1.3.1"
 
 if ! command -v cwebp &>/dev/null; then
