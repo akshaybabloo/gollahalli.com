@@ -2,15 +2,16 @@
 
 webp_version="1.3.1"
 
-if ! command -v cwebp &>/dev/null; then
+if [ -n "$CI" ] || ! command -v cwebp &>/dev/null; then
+    echo "Installing cwebp and gif2webp (forced installation in CI environment)."
+
     user_bin="$HOME/bin"
-
     mkdir -p "$user_bin"
-    wget https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${webp_version}-linux-x86-64.tar.gz -O /tmp/libwebp.tar.gz
+    curl -L https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${webp_version}-linux-x86-64.tar.gz -o /tmp/libwebp.tar.gz
     tar -xzf /tmp/libwebp.tar.gz -C /tmp
-    mv /tmp/libwebp-${webp_version}-linux-x86-64/bin/cwebp "$user_bin"
+    mv /tmp/libwebp-${webp_version}-linux-x86-64/bin/* "$user_bin"
 
-    chmod +x "$user_bin/cwebp"
+    chmod +x "$user_bin"/*
 
     rm -rf /tmp/libwebp-${webp_version}-linux-x86-64 /tmp/libwebp.tar.gz
 
@@ -19,16 +20,22 @@ if ! command -v cwebp &>/dev/null; then
         source "$HOME/.bashrc"
     fi
 
-    echo "cwebp has been installed to $user_bin"
+    echo -e "cwebp has been installed to $user_bin\n"
+    cwebp_path="$user_bin/cwebp"
+    gif2webp_path="$user_bin/gif2webp"
 else
-    echo "cwebp is already installed."
+    echo -e "cwebp is already installed.\n"
+    cwebp_path="cwebp"
+    gif2webp_path="gif2webp"
 fi
 
-cwebp_path="$user_bin/cwebp"
+echo -e "cwebp version: $($cwebp_path -version)\n"
+echo -e "gif2webp version: $($gif2webp_path -version)\n"
+
 scriptLocation="$(dirname "$(readlink -f "$0")")"
 parentDirectory="$(dirname "$scriptLocation")"
 
-imageExtensions=("*.jpg" "*.png")
+imageExtensions=("*.jpg" "*.png" "*.gif")
 echo "Converting images to .webp format in $parentDirectory"
 
 for extension in "${imageExtensions[@]}"; do
@@ -44,8 +51,14 @@ for extension in "${imageExtensions[@]}"; do
             originalSize=$(awk -v bytes="$originalSizeBytes" 'BEGIN {printf "%.2f KB", bytes/1024}')
         fi
 
-        # Convert the image to .webp format with quality 75 and capture the error message if any
-        conversionError=$("$cwebp_path" -mt -q 75 "$imageFile" -o "$newFileName" 2>&1)
+        conversionError=""
+        if [[ "$extension" == "*.gif" ]]; then
+            # Convert the GIF image to .webp format with quality 75 and capture the error message if any
+            conversionError=$("$gif2webp_path" -mt -lossy -q 75 "$imageFile" -o "$newFileName" 2>&1)
+        else
+            # Convert the image to .webp format with quality 75 and capture the error message if any
+            conversionError=$("$cwebp_path" -mt -q 75 "$imageFile" -o "$newFileName" 2>&1)
+        fi
 
         # Check if the command succeeded
         if [[ $? -eq 0 ]]; then
