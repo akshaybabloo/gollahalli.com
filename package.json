@@ -11,7 +11,8 @@
     "build-dev": "yarn workspace spark2 build-dev",
     "static": "yarn workspace spark2 static",
     "build-prod": "yarn workspace spark2 build-prod",
-    "run-script": "yarn workspace scripts build:start"
+    "run-script": "yarn workspace scripts build:start",
+    "bash-script": "bash ./scripts/convert-webp.sh"
   },
   "repository": {
     "type": "git",
