@@ -45,7 +45,7 @@ for extension in "${imageExtensions[@]}"; do
         fi
 
         # Convert the image to .webp format with quality 75 and capture the error message if any
-        conversionError=$("$cwebp_path" -q 75 "$imageFile" -o "$newFileName" 2>&1)
+        conversionError=$("$cwebp_path" -mt -q 75 "$imageFile" -o "$newFileName" 2>&1)
 
         # Check if the command succeeded
         if [[ $? -eq 0 ]]; then
