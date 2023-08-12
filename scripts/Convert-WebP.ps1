@@ -1,3 +1,36 @@
+$webp_version = "1.3.1"
+$user_bin = "$env:USERPROFILE\bin"
+
+if ($env:CI -or !(Get-Command "cwebp" -ErrorAction SilentlyContinue)) {
+    Write-Host "Installing cwebp and gif2webp (forced installation in CI environment)."
+
+    if (!(Test-Path $user_bin)) {
+        New-Item -Path $user_bin -ItemType Directory | Out-Null
+    }
+
+    $zipPath = "$env:TEMP\libwebp.zip"
+    Invoke-WebRequest -Uri "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-$webp_version-windows-x64.zip" -OutFile $zipPath
+    Expand-Archive -Path $zipPath -DestinationPath $env:TEMP -Force
+    Move-Item "$env:TEMP\libwebp-$webp_version-windows-x64\bin\*" $user_bin -Force
+
+    Remove-Item -Recurse -Force "$env:TEMP\libwebp-$webp_version-windows-x64"
+    Remove-Item -Force $zipPath
+
+    $env:PATH += ";$user_bin"
+
+    Write-Host "`ncwebp has been installed to $user_bin`n"
+    $cwebp_path = "$user_bin\cwebp.exe"
+    $gif2webp_path = "$user_bin\gif2webp.exe"
+}
+else {
+    Write-Host "`ncwebp is already installed.`n"
+    $cwebp_path = "cwebp.exe"
+    $gif2webp_path = "gif2webp.exe"
+}
+
+Invoke-Expression "$cwebp_path -version"
+Invoke-Expression "$gif2webp_path -version"
+
 $scriptLocation = Split-Path $MyInvocation.MyCommand.Path
 $parentDirectory = Split-Path $scriptLocation -Parent
 
@@ -11,17 +44,22 @@ foreach ($extension in $imageExtensions) {
     $imageFiles = Get-ChildItem -Path $parentDirectory -Filter $extension -File -Recurse
 
     $imageFiles | ForEach-Object -Parallel {
+        $cwebp_path = $using:cwebp_path
+        $gif2webp_path = $using:gif2webp_path
+
         $newFileName = [IO.Path]::ChangeExtension($_.Name, ".webp")
 
         $originalSize = if ($_.Length -ge 1MB) { "{0:N2} MB" -f ($_.Length / 1MB) } else { "{0:N2} KB" -f ($_.Length / 1KB) }
 
-        $conversionError = $null
         if ($extension -eq '*.gif') {
-            $conversionError = & 'gif2webp' -mt -lossy -q 75 $_.FullName -o (Join-Path $_.Directory.FullName $newFileName) 2>&1
+            $command = "$gif2webp_path -mt -lossy -q 75 $($_.FullName) -o $(Join-Path $_.Directory.FullName $newFileName)"
         }
         else {
-            $conversionError = & 'cwebp' -mt -q 75 $_.FullName -o (Join-Path $_.Directory.FullName $newFileName) 2>&1
+            $command = "$cwebp_path -mt -q 75 $($_.FullName) -o $(Join-Path $_.Directory.FullName $newFileName)"
         }
+
+        $conversionError = $null
+        $output = Invoke-Expression $command 2>&1
 
         if ($LASTEXITCODE -eq 0) {
             $newSize = (Get-Item (Join-Path $_.Directory.FullName $newFileName)).Length
@@ -39,6 +77,7 @@ foreach ($extension in $imageExtensions) {
             }
         }
         else {
+            $conversionError = $output | Out-String
             Write-Output "Failed to convert $($_.Name) ($originalSize) to $newFileName. Error: $conversionError"
             [PSCustomObject]@{
                 'OriginalFile' = $originalFileName
