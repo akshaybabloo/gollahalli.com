@@ -68,7 +68,7 @@ For web applications you need client security code because as far as I have test
 4. Under - Platform configurations - click on `Add a platform`. This should open a drawer from right.
     {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/add-platform.png" title="Add a new platform" alt="Add a new platform" >}}
     select the - Mobile and desktop applications.
-5. According to their [documentation](https://learning.postman.com/docs/sending-requests/authorization/#requesting-an-oauth-20-token), the callback URL should be - `https://oauth.pstmn.io/v1/browser-callback`, add that and click `Configure`.
+5. According to their [documentation](https://learning.postman.com/docs/sending-requests/authorization/oauth-20/), the callback URL should be - `https://oauth.pstmn.io/v1/callback`, add that and click `Configure`.
     {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/callback-url.png" title="Adding callback URL" alt="Adding callback URL"  >}}
     This will create the appropriate platform.
 6. Also, in the same page, under `Implicit grant and hybrid flows`, make sure `Access tokens` and `ID tokens` are ticked.
@@ -101,7 +101,7 @@ Go to collection setting, click on `Authorization` tab, and do the following:
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | Type Name               | Azure AD B2C Authentication                                                                                                                               | This is up to you                                                     |
 | Grant Type              | Authorization Code (With PKCE)                                                                                                                            |                                                                       |
-| Callback URL            | https://oauth.pstmn.io/v1/browser-callback                                                                                                                   | This cannot be edited                                                 |
+| Callback URL            | https://oauth.pstmn.io/v1/callback                                                                                                                   | This cannot be edited                                                 |
 | Authorize using browser | Tick                                                                                                                                                      |                                                                       |
 | Auth URL                | https://gollahalliauth.b2clogin.com/gollahalliauth.onmicrosoft.com/B2C_1_SignUpSignInFlow/oauth2/v2.0/authorize?nonce=<span v-pre>{{$randomUUID}}</span>&response_mode=query | `$randomUUID` generate a UUID V4 and the response should be URL query |
 | Access Token URL        | https://gollahalliauth.b2clogin.com/gollahalliauth.onmicrosoft.com/B2C_1_SignUpSignInFlow/oauth2/v2.0/token                                               |                                                                       |
@@ -127,3 +127,4 @@ These steps should be similar to other OAuth providers. Do give it a try and let
 _Updates_
 
 - New callback URL added
+- 25/08/2023 - Updated the article to reflect the change in authentication flow
