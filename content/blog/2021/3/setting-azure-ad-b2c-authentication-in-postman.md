@@ -85,7 +85,7 @@ Let's setup OAuth 2.0:
 
 Go to collection setting, click on `Authorization` tab, and do the following:
 
-{{< table "uk-table uk-table-small uk-table-responsive" >}}
+{{< table >}}
 | Type             | Entry          | Description |
 | ---------------- | -------------- | ----------- |
 | Type             | OAuth 2.0      | Type of authentication |
@@ -96,7 +96,7 @@ Go to collection setting, click on `Authorization` tab, and do the following:
 
 ### Configure New Token
 
-{{< table "uk-table uk-table-small uk-table-expand" >}}
+{{< table >}}
 | Type                    | Entry                                                                                                                                                     | Description                                                           |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | Type Name               | Azure AD B2C Authentication                                                                                                                               | This is up to you                                                     |
