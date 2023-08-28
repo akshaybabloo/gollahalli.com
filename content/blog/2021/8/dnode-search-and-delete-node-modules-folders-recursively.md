@@ -26,6 +26,11 @@ sitemap:
 siteMapImages:
   - imageLoc: "/img/blog/dnode-delete-node-modules-folders-recursively/dnode.png"
     imageCaption: "dnode: Search and Delete Node Modules Folders Recursively"
+siteMapVideos:
+  - videoLoc: "/videos/blog/dnode-delete-node-modules-folders-recursively/dnode-list.mp4"
+    videoDescription: "dnode list all folders"
+  - videoLoc: "/videos/blog/dnode-delete-node-modules-folders-recursively/dnode-delete.mp4"
+    videoDescription: "dnode delete all folders"
 ---
 
 Source: [github.com/akshaybabloo/dnode](https://github.com/akshaybabloo/dnode)
