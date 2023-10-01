@@ -1,7 +1,7 @@
 ---
 title: "Setting Azure AD B2C Authentication in Postman"
 date: 2021-03-04T16:20:34+13:00
-lastmod: 2021-04-13T16:20:34+13:00
+lastmod: 2023-10-01T16:20:34+13:00
 draft: false
 categories: ["Azure"]
 tags: ["OAuth2", "Azure AD B2C", "postman"]
@@ -114,6 +114,10 @@ Go to collection setting, click on `Authorization` tab, and do the following:
 | Client Authentication   | Send client credentials in body                                                                                                                           |                                                                       |
 {{</ table>}}
 
+{{<alert>}}
+`<custom scope>` is the scope you have defined in your Azure AD B2C application. For example, I have defined two scopes - `user.read` and `user.write`, because these are custom you need to add them as a URL, in my case it is - `https://gollahalliauth.onmicrosoft.com/api/user.read https://gollahalliauth.onmicrosoft.com/api/user.write`. Custom scopes are defined in the `API Permissions` section of your Azure AD B2C application.
+{{</ alert>}}
+
 #### Screenshot
 
 {{< figure src="/img/blog/setting-azure-ad-b2c-authentication-in-postman/postman.png" title="Screenshot of Postman authentication setup" alt="Screenshot of Postman authentication setup"  width="600" >}}
@@ -124,7 +128,8 @@ Go to collection setting, click on `Authorization` tab, and do the following:
 
 These steps should be similar to other OAuth providers. Do give it a try and let me know if there is a space for improvements. I hope this article helps you in your development.
 
-_Updates_
+**Updates**
 
-- New callback URL added
+- 01/10/2023 - Added additional information about custom scopes
 - 25/08/2023 - Updated the article to reflect the change in authentication flow
+- New callback URL added
