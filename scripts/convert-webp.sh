@@ -42,6 +42,12 @@ for extension in "${imageExtensions[@]}"; do
     find "$parentDirectory" -type f -name "$extension" | while read -r imageFile; do
         newFileName="${imageFile%.*}.webp"
 
+        # Skip if the webp version of the file already exists
+        if [[ -z "$CI" && -e "$newFileName" ]]; then
+            echo "Skipped conversion for $(basename "$imageFile"): .webp file already exists."
+            continue
+        fi
+
         originalSizeBytes=$(stat -c%s "$imageFile")
         originalSize=""
 
