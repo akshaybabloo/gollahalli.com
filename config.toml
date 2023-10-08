@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "Akshay Raj Gollahalli"
 theme = "spark2"
 
-googleAnalytics = "G-7WDESHJKMH" # Optional
+googleAnalytics = "G-7WDESHJKMH"   # Optional
 disqusShortname = "gollahalli-com" # Optional
 pygmentsCodeFences = true
 enableRobotsTXT = true
@@ -18,7 +18,7 @@ api_key = "env:cloudflare_key"
 
 [markup]
 [markup.highlight]
-style = "rrt"
+style = "github-dark"
 [markup.goldmark.renderer]
 unsafe = true
 [markup.goldmark.extensions]
@@ -51,26 +51,26 @@ section = ["HTML", "RSS", "AMP"]
 twitter = "akshaybabloo"
 
 [params]
-googleAds = "7450383714878520" # Optional, ignore "ca-pub-"
+googleAds = "7450383714878520"                          # Optional, ignore "ca-pub-"
 repo = "https://github.com/akshaybabloo/gollahalli.com"
 amp = true
 year = 2023
 # TODO: Move these three to social
-github = "https://github.com/akshaybabloo" # Optional
+github = "https://github.com/akshaybabloo"      # Optional
 linkedin = "https://linkedin.com/in/gollahalli" # Optional
-twitter = "http://twitter.com/akshaybabloo" # Optional
-email = "akshay@gollahalli.com" # Optional
+twitter = "http://twitter.com/akshaybabloo"     # Optional
+email = "akshay@gollahalli.com"                 # Optional
 #    pgp = "3570 2F7C E0CF 2579 BF7D 05DD A603 9E24 179E E13D" # Optional
 # logoSVG = "img/logo.svg" # # Use logoSVG or logo. Optional
 # logo = "" # Use logoSVG or logo. Optional
 namedLogo = "/img/logo.svg"
-logoPhoto = "/img/akshay.jpg" # Use logoSVG or logo or logoPhoto. Optional
+logoPhoto = "/img/akshay.jpg"                          # Use logoSVG or logo or logoPhoto. Optional
 algoliaAppId = "UT1XVMZE1Q"
 algoliaApiKey = "fadcde84f1cdaf165d51c20a50336188"
 algoliaIndexName = "gollahalli-website"
 thumbnailUrl = "/img/akshay.jpg"
 acknowledge = false
-convertAssetsToInline = false  # Converts external assets into minified inline assets
+convertAssetsToInline = false                          # Converts external assets into minified inline assets
 cloudflareInsight = "83b998816e3e4417be0a7582d7645cd3"
 clarity = "im383wjll4"
 

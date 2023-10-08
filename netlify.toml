@@ -16,11 +16,11 @@ command = "yarn install && yarn static && yarn bash-script && yarn build-prod &&
 command = "yarn install && yarn static && yarn bash-script && yarn build-dev && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.deploy-preview.environment]
-HUGO_VERSION = "0.111.3"
+HUGO_VERSION = "0.119.0"
 NODE_VERSION = "18.16.0"
 
 [context.production.environment]
-HUGO_VERSION = "0.111.3"
+HUGO_VERSION = "0.119.0"
 HUGO_ENV = "production"
 HUGO_ENABLEGITINFO = "true"
 NODE_VERSION = "18.16.0"

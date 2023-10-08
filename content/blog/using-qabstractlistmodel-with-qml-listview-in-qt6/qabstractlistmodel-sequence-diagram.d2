@@ -1,0 +1,18 @@
+direction: right
+C++ to QML {
+    shape: sequence_diagram
+    maincpp: main.cpp
+    qml: QML
+    qabstractitemmodel: QAbstractItemModel
+    printservice: PrintService
+    
+    # Adding and deleting data
+    maincpp -> qml: setContextProperty (QAbstractItemModel)
+    qabstractitemmodel -> qml: QAbstractItemModel (view data)
+    qml -> qabstractitemmodel: QAbstractItemModel (add/delete data signal)
+    qabstractitemmodel -> qml: QAbstractItemModel (view data)
+    
+    # Printing
+    qml -> printservice: print() to console
+    qml -> qabstractitemmodel: print() to console
+}
