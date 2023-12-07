@@ -193,6 +193,17 @@ files = [
 ]
 
 [[package]]
+name = "packaging"
+version = "23.2"
+description = "Core utilities for Python packages"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "packaging-23.2-py3-none-any.whl", hash = "sha256:8c491190033a9af7e1d931d0b5dacc2ef47509b34dd0de67ed209b5203fc88c7"},
+    {file = "packaging-23.2.tar.gz", hash = "sha256:048fb0e9405036518eaaf48a55953c750c11e1a1b68e0dd1a9d62ed0c092cfc5"},
+]
+
+[[package]]
 name = "psutil"
 version = "5.9.6"
 description = "Cross-platform lib for process and system monitoring in Python."
@@ -493,17 +504,18 @@ files = [
 
 [[package]]
 name = "uhugo"
-version = "1.3.1"
+version = "1.3.2"
 description = "uHugo is a CLI tool to install and update Hugo binary as well as updating any cloud providers"
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "uhugo-1.3.1-py3-none-any.whl", hash = "sha256:b9defd4fd9ce7aa364bcbb6d6f00ef9572048e4cc74ab7cb3a1d323de1cc1387"},
-    {file = "uhugo-1.3.1.tar.gz", hash = "sha256:3f20fdf7af0c57e41461925a3ddc0afea166833a7a0dffbd4cf5772ba7a60975"},
+    {file = "uhugo-1.3.2-py3-none-any.whl", hash = "sha256:0063c0d715816ed63c59591442c274d8e7c2fa827a0ab6bfba064b99a8ebc88f"},
+    {file = "uhugo-1.3.2.tar.gz", hash = "sha256:b1d72ed11e6dedf52c73d8af3ce5a479349bc3a4c6db2ab357a6c3e4114aaafe"},
 ]
 
 [package.dependencies]
 click = ">=8.1.7,<9.0.0"
+packaging = ">=23.2,<24.0"
 psutil = ">=5.9.6,<6.0.0"
 pydantic = ">=2.5.2,<3.0.0"
 pyyaml = ">=6.0.1,<7.0.0"
