@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "gollahalli-com"
+version = "1.0.0"
+description = ""
+authors = ["Akshay Raj Gollahalli <akshay@gollahalli.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "gollahalli"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+uhugo = "^1.3.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
