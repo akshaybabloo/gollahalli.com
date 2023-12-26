@@ -127,7 +127,7 @@ private:
 
 Next, we'll define `AnimalAbstractListModel`, which inherits from `QAbstractListModel`. This class will be responsible for managing the list of `AnimalModel` objects.
 
-{{< github-source src="https://github.com/akshaybabloo/qabstractlistmodel-with-qml-listview/blob/main/animalabstractlistmodel.cpp" label="AnimalAbstractListModel.h" >}}
+{{< github-source src="https://github.com/akshaybabloo/qabstractlistmodel-with-qml-listview/blob/main/animalabstractlistmodel.cpp" label="AnimalAbstractListModel.cpp" >}}
 {{< github-source src="https://github.com/akshaybabloo/qabstractlistmodel-with-qml-listview/blob/main/animalabstractlistmodel.h" label="AnimalAbstractListModel.h" >}}
 
 In this there are three overriden methods:
