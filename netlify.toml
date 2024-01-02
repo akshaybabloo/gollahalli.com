@@ -10,10 +10,10 @@ status = 301
 
 [build]
 publish = "public"
-command = "yarn install && yarn static && yarn bash-script && yarn build-prod && hugo --gc --minify"
+command = "npm install && npm run static && npm run script:bash && npm run build:prod && hugo --gc --minify"
 
 [context.deploy-preview]
-command = "yarn install && yarn static && yarn bash-script && yarn build-dev && hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
+command = "npm install && npm run static && npm run script:bash && npm run build:dev&& hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.deploy-preview.environment]
 HUGO_VERSION = "0.121.1"
