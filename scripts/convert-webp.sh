@@ -32,55 +32,10 @@ fi
 echo -e "cwebp version: $($cwebp_path -version)\n"
 echo -e "gif2webp version: $($gif2webp_path -version)\n"
 
-scriptLocation="$(dirname "$(readlink -f "$0")")"
-parentDirectory="$(dirname "$scriptLocation")"
+# Install poetry
+curl -sSL https://install.python-poetry.org | python3 -
+export PATH="$HOME/.local/bin:$PATH"
 
-imageExtensions=("*.jpg" "*.png" "*.gif")
-echo "Converting images to .webp format in $parentDirectory"
-
-for extension in "${imageExtensions[@]}"; do
-    find "$parentDirectory" -type f -name "$extension" | while read -r imageFile; do
-        newFileName="${imageFile%.*}.webp"
-
-        # Skip if the webp version of the file already exists
-        if [[ -z "$CI" && -e "$newFileName" ]]; then
-            echo "Skipped conversion for $(basename "$imageFile"): .webp file already exists."
-            continue
-        fi
-
-        originalSizeBytes=$(stat -c%s "$imageFile")
-        originalSize=""
-
-        if [[ originalSizeBytes -ge 1048576 ]]; then
-            originalSize=$(awk -v bytes="$originalSizeBytes" 'BEGIN {printf "%.2f MB", bytes/1048576}')
-        else
-            originalSize=$(awk -v bytes="$originalSizeBytes" 'BEGIN {printf "%.2f KB", bytes/1024}')
-        fi
-
-        conversionError=""
-        if [[ "$extension" == "*.gif" ]]; then
-            # Convert the GIF image to .webp format with quality 75 and capture the error message if any
-            conversionError=$("$gif2webp_path" -mt -lossy -q 75 "$imageFile" -o "$newFileName" 2>&1)
-        else
-            # Convert the image to .webp format with quality 75 and capture the error message if any
-            conversionError=$("$cwebp_path" -mt -q 75 "$imageFile" -o "$newFileName" 2>&1)
-        fi
-
-        # Check if the command succeeded
-        if [[ $? -eq 0 ]]; then
-            newSizeBytes=$(stat -c%s "$newFileName")
-            newSize=""
-
-            if [[ newSizeBytes -ge 1048576 ]]; then
-                newSize=$(awk -v bytes="$newSizeBytes" 'BEGIN {printf "%.2f MB", bytes/1048576}')
-            else
-                newSize=$(awk -v bytes="$newSizeBytes" 'BEGIN {printf "%.2f KB", bytes/1024}')
-            fi
-
-            echo "Converted $(basename "$imageFile") ($originalSize) to $(basename "$newFileName") ($newSize) - ✅"
-        else
-            echo "Failed to convert $(basename "$imageFile") ($originalSize) to $(basename "$newFileName") - ❌"
-            echo "Error: $conversionError"
-        fi
-    done
-done
+# Install dependencies
+"$HOME/.local/bin/poetry" install
+"$HOME/.local/bin/poetry" run python scripts/convert-webp.py
