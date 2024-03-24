@@ -1,7 +1,7 @@
 {
     "build": {
         "env": {
-            "HUGO_VERSION": "0.123.8",
+            "HUGO_VERSION": "0.124.1",
             "NODE_VERSION": "18.16.0",
             "ALGOLIA_KEY": "aa40f89ca55474b8fc9ce34a597b9e54",
             "HUGO_ENV": "production",
