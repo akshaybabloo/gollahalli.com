@@ -13,10 +13,10 @@
   "private": true,
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "algoliasearch": "^4.22.0",
+    "algoliasearch": "^4.23.3",
     "toml": "^3.0.0"
   }
 }
