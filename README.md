@@ -11,22 +11,22 @@ Download load and install the latest NodeJS.
 Change directory to `gollahalli.com` (if not already there) and install the dependencies
 
 ```sh
-yarn install
+npm install
+```
+
+Copy required static files
+
+```sh
+npm run static
 ```
 
 Generate the JS and CSS files for production
 
 ```sh
-yarn workspace spark2 prod
+npm run build:prod
 ```
 
-Copy the files using `gulp`
-
-```sh
-yarn workspace spark2 static
-```
-
-Run the server
+Run Hugo server
 
 ```sh
 hugo serve
