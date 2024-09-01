@@ -6,7 +6,7 @@ Based on Hugo 0.56+
 
 ## 1. Run the Website
 
-Download load and install the latest NodeJS.
+Download and install the latest NodeJS.
 
 Change directory to `gollahalli.com` (if not already there) and install the dependencies
 
