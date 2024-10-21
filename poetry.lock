@@ -479,13 +479,13 @@ files = [
 
 [[package]]
 name = "uhugo"
-version = "1.3.5"
+version = "1.3.6"
 description = "uHugo is a CLI tool to install and update Hugo binary as well as updating any cloud providers"
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "uhugo-1.3.5-py3-none-any.whl", hash = "sha256:513e77ca87a26b503e5bb03cc12bb61d38426dee11d9b0505d24149c16d159a6"},
-    {file = "uhugo-1.3.5.tar.gz", hash = "sha256:d81ccc4452307a204d27b2b97b92f4b1283ae60e4632b28f913c3842d0434073"},
+    {file = "uhugo-1.3.6-py3-none-any.whl", hash = "sha256:eed2cc3e8405de937b73438563c3fd65a2388f293914f335354a045d09aae26d"},
+    {file = "uhugo-1.3.6.tar.gz", hash = "sha256:bf8dcdc6968ab9dfaf91f2a1a2968a906d08ef32ee4a1cda9c385709a40df4bf"},
 ]
 
 [package.dependencies]
@@ -518,4 +518,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2f6dad7301fbf992abff907c78848522ce8927db3746b58d95579173d4eefe4f"
+content-hash = "875374364daa432605f16f6185a6d23bb2d8d64f2d17333cdb391b5c22c1edb3"
