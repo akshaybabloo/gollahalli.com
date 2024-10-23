@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-uhugo = "1.3.5"
+uhugo = "1.3.6"
 requests = "^2.32.3"
 
 
