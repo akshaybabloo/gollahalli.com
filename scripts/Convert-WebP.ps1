@@ -1,7 +1,21 @@
-$webp_version = "1.3.1"
+$webp_version = "1.5.0"
 $user_bin = "$env:USERPROFILE\bin"
 
-if ($env:CI -or !(Get-Command "cwebp" -ErrorAction SilentlyContinue)) {
+function Compare-WebPVersion {
+    param (
+        [string]$toInstall
+    )
+    # Invoke expression, get first line of output as 0.0.0 version and compare it to $toInstall
+    Invoke-Expression "cwebp.exe -version" | Select-Object -First 1 | ForEach-Object {
+        $installedVersion = $_ -replace '.*(\d+\.\d+\.\d+).*', '$1'
+        if ($installedVersion -lt $toInstall) {
+            return $false
+        }
+        return $true
+    }
+}
+
+if ($env:CI -or !(Get-Command "cwebp" -ErrorAction SilentlyContinue) -or !(Compare-WebPVersion $webp_version)) {
     Write-Host "Installing cwebp and gif2webp (forced installation in CI environment)."
 
     if (!(Test-Path $user_bin)) {
@@ -39,19 +53,19 @@ $imageExtensions = @('*.jpg', '*.png', '*.gif')
 $results = [System.Collections.Generic.List[PSCustomObject]]::new()
 
 foreach ($extension in $imageExtensions) {
-    Write-Progress -Activity "Converting images to .webp format in $parentDirectory" -PercentComplete 0
+    Write-Progress -Activity "Converting images to .webp format in $parentDirectory" -Status "Processing $extension files"
 
     $imageFiles = Get-ChildItem -Path $parentDirectory -Filter $extension -File -Recurse
 
     $imageFiles | ForEach-Object -Parallel {
         $cwebp_path = $using:cwebp_path
         $gif2webp_path = $using:gif2webp_path
+        $extension = $using:extension
 
         $newFileName = [IO.Path]::ChangeExtension($_.Name, ".webp")
 
         $originalSize = if ($_.Length -ge 1MB) { "{0:N2} MB" -f ($_.Length / 1MB) } else { "{0:N2} KB" -f ($_.Length / 1KB) }
-
-        if ($extension -eq '*.gif') {
+        if ($extension -like '*.gif') {
             $command = "$gif2webp_path -mt -lossy -q 75 $($_.FullName) -o $(Join-Path $_.Directory.FullName $newFileName)"
         }
         else {
@@ -59,7 +73,8 @@ foreach ($extension in $imageExtensions) {
         }
 
         $conversionError = $null
-        $output = Invoke-Expression $command 2>&1
+        $output = $null
+        Invoke-Expression $command -ErrorVariable conversionError -ErrorAction SilentlyContinue -OutVariable output 2>&1
 
         if ($LASTEXITCODE -eq 0) {
             $newSize = (Get-Item (Join-Path $_.Directory.FullName $newFileName)).Length
@@ -77,7 +92,7 @@ foreach ($extension in $imageExtensions) {
             }
         }
         else {
-            $conversionError = $output | Out-String
+            $conversionError = $output | ForEach-Object { $_.ToString() }
             Write-Output "Failed to convert $($_.Name) ($originalSize) to $newFileName. Error: $conversionError"
             [PSCustomObject]@{
                 'OriginalFile' = $originalFileName

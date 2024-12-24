@@ -1,6 +1,6 @@
 #!/bin/bash
 
-webp_version="1.3.2"
+webp_version="1.5.0"
 
 if [ -n "$CI" ] || ! command -v cwebp &>/dev/null; then
     echo "Installing cwebp and gif2webp (forced installation in CI environment)."
@@ -86,5 +86,8 @@ convert_image() {
 export -f convert_image
 export gif2webp_path
 export cwebp_path
+
+# Clean all files with extension .webp including the ones in subdirectories
+# find "$parentDirectory" -type f -name "*.webp" -delete
 
 find "$parentDirectory" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.gif" \) -print0 | xargs -0 -I {} -P 4 bash -c 'convert_image "$@"' _ {}
