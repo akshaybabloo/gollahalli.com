@@ -12,10 +12,15 @@ enableEmoji = true
 [markup]
 [markup.highlight]
 style = "github-dark"
+[markup.goldmark]
 [markup.goldmark.renderer]
 unsafe = true
 [markup.goldmark.extensions]
 linkify = false
+[markup.goldmark.parser]
+[markup.goldmark.parser.attribute]
+block = true
+title = true
 
 [outputFormats]
 [outputFormats.searchindex]
