@@ -12,7 +12,7 @@ author:
   firstName: 'Akshay Raj'
   lastName: 'Gollahalli'
   honorarySuffix: 'MCIS (FCH)'
-  jobTitle: 'Research Assistant'
+  jobTitle: 'Software Engineer'
   email: 'akshay@gollahalli.com'
   addressCity: 'Hyderabad'
   addressCountry: 'India'
