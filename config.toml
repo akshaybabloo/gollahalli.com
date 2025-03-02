@@ -21,6 +21,10 @@ linkify = false
 [markup.goldmark.parser.attribute]
 block = true
 title = true
+[markup.tableOfContents]
+endLevel = 3
+ordered = false
+startLevel = 2
 
 [outputFormats]
 [outputFormats.searchindex]

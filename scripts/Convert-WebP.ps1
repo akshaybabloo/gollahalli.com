@@ -51,6 +51,7 @@ $parentDirectory = Split-Path $scriptLocation -Parent
 $imageExtensions = @('*.jpg', '*.png', '*.gif')
 
 $results = [System.Collections.Generic.List[PSCustomObject]]::new()
+$skippedCount = 0
 
 foreach ($extension in $imageExtensions) {
     Write-Progress -Activity "Converting images to .webp format in $parentDirectory" -Status "Processing $extension files"
@@ -63,13 +64,33 @@ foreach ($extension in $imageExtensions) {
         $extension = $using:extension
 
         $newFileName = [IO.Path]::ChangeExtension($_.Name, ".webp")
+        $destPath = Join-Path $_.Directory.FullName $newFileName
+        
+        # Check if the webp file already exists
+        if (Test-Path $destPath) {
+            $originalFileName = if ($_.Name.Length -gt 30) { $_.Name.Substring(0, 27) + "..." } else { $_.Name }
+            $newFileNameTruncated = if ($newFileName.Length -gt 30) { $newFileName.Substring(0, 27) + "..." } else { $newFileName }
+            $originalSize = if ($_.Length -ge 1MB) { "{0:N2} MB" -f ($_.Length / 1MB) } else { "{0:N2} KB" -f ($_.Length / 1KB) }
+            $newSize = (Get-Item $destPath).Length
+            $newSize = if ($newSize -ge 1MB) { "{0:N2} MB" -f ($newSize / 1MB) } else { "{0:N2} KB" -f ($newSize / 1KB) }
+            
+            [PSCustomObject]@{
+                'OriginalFile' = $originalFileName
+                'NewFile'      = $newFileNameTruncated
+                'OriginalSize' = $originalSize
+                'NewSize'      = $newSize
+                'Successful'   = [char]0x23e9
+                'Status'       = "Skipped (already exists)"
+            }
+            return # Skip further processing
+        }
 
         $originalSize = if ($_.Length -ge 1MB) { "{0:N2} MB" -f ($_.Length / 1MB) } else { "{0:N2} KB" -f ($_.Length / 1KB) }
         if ($extension -like '*.gif') {
-            $command = "$gif2webp_path -mt -lossy -q 75 $($_.FullName) -o $(Join-Path $_.Directory.FullName $newFileName)"
+            $command = "$gif2webp_path -mt -lossy -q 75 $($_.FullName) -o $destPath"
         }
         else {
-            $command = "$cwebp_path -mt -q 75 $($_.FullName) -o $(Join-Path $_.Directory.FullName $newFileName)"
+            $command = "$cwebp_path -mt -q 75 $($_.FullName) -o $destPath"
         }
 
         $conversionError = $null
@@ -77,7 +98,7 @@ foreach ($extension in $imageExtensions) {
         Invoke-Expression $command -ErrorVariable conversionError -ErrorAction SilentlyContinue -OutVariable output 2>&1
 
         if ($LASTEXITCODE -eq 0) {
-            $newSize = (Get-Item (Join-Path $_.Directory.FullName $newFileName)).Length
+            $newSize = (Get-Item $destPath).Length
             $newSize = if ($newSize -ge 1MB) { "{0:N2} MB" -f ($newSize / 1MB) } else { "{0:N2} KB" -f ($newSize / 1KB) }
 
             $originalFileName = if ($_.Name.Length -gt 30) { $_.Name.Substring(0, 27) + "..." } else { $_.Name }
@@ -89,20 +110,38 @@ foreach ($extension in $imageExtensions) {
                 'OriginalSize' = $originalSize
                 'NewSize'      = $newSize
                 'Successful'   = [char]0x2705
+                'Status'       = "Converted"
             }
         }
         else {
             $conversionError = $output | ForEach-Object { $_.ToString() }
             Write-Output "Failed to convert $($_.Name) ($originalSize) to $newFileName. Error: $conversionError"
+            
+            $originalFileName = if ($_.Name.Length -gt 30) { $_.Name.Substring(0, 27) + "..." } else { $_.Name }
+            $newFileNameTruncated = if ($newFileName.Length -gt 30) { $newFileName.Substring(0, 27) + "..." } else { $newFileName }
+            
             [PSCustomObject]@{
                 'OriginalFile' = $originalFileName
                 'NewFile'      = $newFileNameTruncated
                 'OriginalSize' = $originalSize
                 'NewSize'      = $null
                 'Successful'   = [char]0x274C
+                'Status'       = "Failed"
             }
         }
-    } -ThrottleLimit 5 | ForEach-Object { $results.Add($_) }
+    } -ThrottleLimit 5 | ForEach-Object { 
+        $results.Add($_) 
+        if ($_.Status -eq "Skipped (already exists)") {
+            $skippedCount++
+        }
+    }
 }
 
-$results | Format-Table
+# Print stats
+Write-Host "`nConversion Summary:"
+Write-Host "  Total files processed: $($results.Count)"
+Write-Host "  Files skipped (already exist): $skippedCount"
+Write-Host "  Files converted: $($results.Where({$_.Status -eq 'Converted'}).Count)"
+Write-Host "  Files failed: $($results.Where({$_.Status -eq 'Failed'}).Count)"
+
+$results | Format-Table -Property OriginalFile, NewFile, OriginalSize, NewSize, Successful, Status
