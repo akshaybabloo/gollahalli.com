@@ -4,14 +4,13 @@
   "description": "Gollahalli.com website",
   "private": true,
   "workspaces": [
-    "themes/spark2",
-    "scripts"
+    "themes/spark2"
   ],
   "scripts": {
     "build:dev": "npm run build:dev --workspace spark2",
     "static": "npm run static --workspace spark2",
     "build:prod": "npm run build:prod --workspace spark2",
-    "script:run": "npm run build:start --workspace scripts",
+    "script:run": "uv run python ./scripts/search_index.py",
     "script:bash": "bash ./scripts/convert-webp.sh"
   },
   "repository": {
