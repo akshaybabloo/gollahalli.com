@@ -90,7 +90,7 @@ wheels = [
 
 [[package]]
 name = "algoliasearch"
-version = "4.14.0"
+version = "4.16.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -100,9 +100,9 @@ dependencies = [
     { name = "requests" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/00/89/41c9d7317d84f38c2f26e33ad0cce069a772809aaa60a1edfd6c07e4d1fc/algoliasearch-4.14.0.tar.gz", hash = "sha256:3c3979019bdbe6fc7197032170936878b7baa7ee31b7511bc9f8772836ab586a", size = 338565 }
+sdist = { url = "https://files.pythonhosted.org/packages/c4/6a/566d61ed217804e44f9747c1962fb3444b891aa964614122f1f988bf03f6/algoliasearch-4.16.4.tar.gz", hash = "sha256:a02021de6de547796aa80a5cc3a9154b7eb4c2347ada9d9017d6638845d2c944", size = 339853 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a3/dd/a1d566a1c013fc8d574490dcf8ea124197924d84d3f92fdde81a0f6c12d4/algoliasearch-4.14.0-py3-none-any.whl", hash = "sha256:1ecd1f4d978fc7b733e87b954d9e7f66b343bbae49bde95bc3c619eb121d8516", size = 901979 },
+    { url = "https://files.pythonhosted.org/packages/5a/ee/f9eb3c1c56276bb931a195f0d62842bab522f94479ba9009e47c2e383317/algoliasearch-4.16.4-py3-none-any.whl", hash = "sha256:d0566bf2ebddfb86ab8a8e507dc4c623151fdd75fb6802c775a1bf7cffb8f744", size = 903441 },
 ]
 
 [[package]]
