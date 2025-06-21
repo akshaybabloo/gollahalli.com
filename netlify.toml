@@ -16,11 +16,11 @@ command = "npm install && npm run static && npm run script:bash && npm run build
 command = "npm install && npm run static && npm run script:bash && npm run build:dev && hugo --gc --buildFuture -b $DEPLOY_PRIME_URL"
 
 [context.deploy-preview.environment]
-HUGO_VERSION = "0.147.5"
+HUGO_VERSION = "0.147.8"
 NODE_VERSION = "18.16.0"
 
 [context.production.environment]
-HUGO_VERSION = "0.147.5"
+HUGO_VERSION = "0.147.8"
 HUGO_ENV = "production"
 HUGO_ENABLEGITINFO = "true"
 NODE_VERSION = "18.16.0"
