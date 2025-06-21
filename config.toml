@@ -31,8 +31,7 @@ isPlainText = true
 mediaType = "text/plain"
 baseName = "ads"
 isPlainText = true
-#  [outputFormats.AMP]
-#    permalinkable = false
+
 
 [mediaTypes]
 [mediaTypes."font/woff"]
@@ -41,14 +40,13 @@ suffixes = ["woff"]
 suffixes = ["woff2"]
 
 [outputs]
-home = ["HTML", "RSS", "AMP", "searchindex", "ads"]
-page = ["HTML", "RSS", "AMP"]
-section = ["HTML", "RSS", "AMP"]
+home = ["HTML", "RSS", "searchindex", "ads"]
+page = ["HTML", "RSS"]
+section = ["HTML", "RSS"]
 
 [params]
 googleAds = "7450383714878520"                          # Optional, ignore "ca-pub-"
 repo = "https://github.com/akshaybabloo/gollahalli.com"
-amp = true
 year = 2024
 email = "akshay@gollahalli.com"                 # Optional
 #    pgp = "3570 2F7C E0CF 2579 BF7D 05DD A603 9E24 179E E13D" # Optional
