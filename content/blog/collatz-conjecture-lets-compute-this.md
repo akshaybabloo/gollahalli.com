@@ -6,6 +6,7 @@ categories: ["Tutorial"]
 tags: ["Maths"]
 description: "Everything you wanted to know about Collatz conjecture."
 ads: true
+math: true
 sitemap:
   priority: 0.8
   changeFreq: monthly
@@ -31,11 +32,13 @@ Basically, the problem states that all positive whole numbers should eventually 
 <!--adsense-->
 
 $$
+\begin{aligned}
 a\_{n} =
 \begin{cases}
 \frac{1}{2}a\_{n-1},  & \text{if $a\_{n-1}$ is even} \\\
 3n+1, & \text{if $a\_{n-1}$ is odd}
 \end{cases}
+\end{aligned}
 $$
 
 The above equation says, at every iteration, check if the input number is even or odd. If the number is even then divide it by $2$ i.e., $\frac{number}{2}$ else multiply $3$ and add $1$ to the number i.e., $3 \ast number+1$.
@@ -57,12 +60,3 @@ def compute(number):
 if __name__ == '__main__':
     compute(10)
 ```
-
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
-});
-</script>

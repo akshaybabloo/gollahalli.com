@@ -17,6 +17,10 @@ style = "github-dark"
 unsafe = true
 [markup.goldmark.extensions]
 linkify = false
+[markup.goldmark.extensions.passthrough]
+[markup.goldmark.extensions.passthrough.delimiters]
+block = [['\[', '\]'], ['$$', '$$']]
+inline = [['\\(', '\\)'], ['$', '$']]
 [markup.goldmark.parser]
 [markup.goldmark.parser.attribute]
 block = true
