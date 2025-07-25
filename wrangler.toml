@@ -4,10 +4,10 @@ compatibility_date = "2023-03-14"
 
 [vars]
 HUGO_ENV = "production"
-HUGO_VERSION = "0.147.8"
+HUGO_VERSION = "0.148.1"
 YARN_VERSION = "1.22.19"
 
 [env.production.vars]
 HUGO_ENV = "production"
-HUGO_VERSION = "0.147.8"
+HUGO_VERSION = "0.148.1"
 WEBPACK_ENV = "production"
