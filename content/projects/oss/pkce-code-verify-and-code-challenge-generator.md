@@ -7,6 +7,6 @@ tags: ["Go"]
 description: "A module to generate Proof Key for Code Exchange (PKCE) verify and challenge code"
 images: []
 externalUrl: "https://github.com/akshaybabloo/pkce"
-_build:
+build:
     render: never
 ---

@@ -7,6 +7,6 @@ tags: ["Azure", "Java"]
 description: "CRUD functions for Azure Blob"
 images: []
 externalUrl: "https://github.com/akshaybabloo/azure-blob-explorer"
-_build:
+build:
     render: never
 ---

@@ -7,6 +7,6 @@ tags: ["Java", "Java Fx"]
 description: "Mortgage calculator based on Java Fx"
 images: []
 externalUrl: "https://github.com/akshaybabloo/JCal"
-_build:
+build:
     render: never
 ---

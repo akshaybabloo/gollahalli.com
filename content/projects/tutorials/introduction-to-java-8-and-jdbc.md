@@ -7,6 +7,6 @@ tags: ["Java"]
 description: "A tutorial on using Java 8 and JDBC."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Java-JDBC-notes"
-_build:
+build:
     render: never
 ---

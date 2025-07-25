@@ -7,6 +7,6 @@ tags: ["Python"]
 description: "A complete guide to programming in Python 3."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Python3-notes"
-_build:
+build:
     render: never
 ---

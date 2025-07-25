@@ -7,6 +7,6 @@ tags: ["Go"]
 description: "A CLI utility to recursively delete node_modules folder in a given directory tree"
 images: []
 externalUrl: "https://github.com/akshaybabloo/dnode"
-_build:
+build:
     render: never
 ---

@@ -7,6 +7,6 @@ tags: ["Go"]
 description: "A Library for Parsing a Directory Tree Recursively"
 images: []
 externalUrl: "https://github.com/akshaybabloo/go-walk"
-_build:
+build:
     render: never
 ---

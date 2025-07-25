@@ -7,6 +7,6 @@ tags: ["Angular", "Cookiecutter", "TypeScript", "Firebase"]
 description: "A generic Cookiecutter template for Angular framework with support for Firebase and Material component"
 images: []
 externalUrl: "https://github.com/akshaybabloo/angular-firebase-material-template"
-_build:
+build:
     render: never
 ---

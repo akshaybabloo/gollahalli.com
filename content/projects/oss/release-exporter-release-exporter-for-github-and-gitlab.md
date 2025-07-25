@@ -7,6 +7,6 @@ tags: ["Python"]
 description: "Create a changelog in markdown or rst or json based on the release description of GitHub or GitLab."
 images: []
 externalUrl: "https://github.com/akshaybabloo/release-exporter"
-_build:
+build:
     render: never
 ---

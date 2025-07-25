@@ -7,6 +7,6 @@ tags: ["Python", "Django", "VueJS", "GraphQL", "Docker", "Azure", "Java", "JavaS
 description: "An on-demand platform as a service to train/test spatio-temporal data with Spiking Neural Network (SNN)."
 images: []
 externalUrl: "https://www.neucube.io"
-_build:
+build:
     render: never
 ---

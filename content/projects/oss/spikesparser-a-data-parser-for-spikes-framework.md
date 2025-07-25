@@ -7,6 +7,6 @@ tags: ["Python", "NumPy"]
 description: "Also comes with SML parser."
 images: []
 externalUrl: "https://github.com/akshaybabloo/SpikesParser"
-_build:
+build:
     render: never
 ---

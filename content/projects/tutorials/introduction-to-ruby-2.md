@@ -7,6 +7,6 @@ tags: ["Ruby"]
 description: "An introduction to Ruby 2 programming language."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Ruby-notes"
-_build:
+build:
     render: never
 ---

@@ -7,6 +7,6 @@ tags: ["Go"]
 description: "Fundamental introduction to Go programming language"
 images: []
 externalUrl: "https://github.com/akshaybabloo/Go-Notes"
-_build:
+build:
     render: never
 ---

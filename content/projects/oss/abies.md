@@ -7,6 +7,6 @@ tags: ["Python", "Django"]
 description: "A Django based all-in-one web creator."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Abies"
-_build:
+build:
     render: never
 ---

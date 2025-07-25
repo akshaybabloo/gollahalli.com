@@ -7,6 +7,6 @@ tags: ["Java", "Java Fx"]
 description: "A Minimalistic Markdown Editor"
 images: []
 ExternalUrl: "https://github.com/akshaybabloo/JMark"
-_build:
+build:
     render: never
 ---

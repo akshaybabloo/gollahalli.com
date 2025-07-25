@@ -7,6 +7,6 @@ tags: ["MongoDB", "Go"]
 description: "Writing MongoDB APIs in Go language made easy with a twist."
 images: ["/img/blog/mongo-a-mongodb-helper-for-go-language/mongo.jpg"]
 externalUrl: "https://github.com/akshaybabloo/mongo"
-_build:
+build:
     render: never
 ---

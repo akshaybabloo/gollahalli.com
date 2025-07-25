@@ -7,6 +7,6 @@ tags: ["Matlab", "Emotiv"]
 description: "An Emotiv SDK wrapper for Matlab."
 images: []
 externalUrl: "https://github.com/akshaybabloo/Emotiv-Matlab"
-_build:
+build:
     render: never
 ---

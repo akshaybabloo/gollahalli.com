@@ -7,6 +7,6 @@ tags: ["Java"]
 description: "Introduction on using Log4J with SLF4J in Java 8"
 images: []
 externalUrl: "https://github.com/akshaybabloo/Using-Log4J-SLF4J"
-_build:
+build:
     render: never
 ---

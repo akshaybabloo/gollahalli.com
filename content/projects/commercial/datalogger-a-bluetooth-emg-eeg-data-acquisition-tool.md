@@ -7,6 +7,6 @@ tags: ["C++", "Qt", "Bluetooth"]
 description: "A Qt based data acquisition and UDP broadcast tool for bluetooth devices"
 images: []
 externalUrl: "https://github.com/akshaybabloo/DataLogger"
-_build:
+build:
     render: never
 ---

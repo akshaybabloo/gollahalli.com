@@ -7,6 +7,6 @@ tags: ["Go"]
 description: "A minimalistic JWT decoder and validator"
 images: []
 externalUrl: "https://github.com/akshaybabloo/jwt"
-_build:
+build:
     render: never
 ---

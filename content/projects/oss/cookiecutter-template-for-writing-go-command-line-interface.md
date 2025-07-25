@@ -7,6 +7,6 @@ tags: ["Go", "Cookiecutter"]
 description: "A Go language template for building command line interface made easy by cookiecutter"
 images: []
 externalUrl: "https://github.com/akshaybabloo/go-cli-template"
-_build:
+build:
     render: never
 ---

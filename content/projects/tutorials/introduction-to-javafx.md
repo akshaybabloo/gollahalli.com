@@ -7,6 +7,6 @@ tags: ["Java"]
 description: "An introduction to JavaFx 8."
 images: []
 externalUrl: "https://github.com/akshaybabloo/JavaFX"
-_build:
+build:
     render: never
 ---

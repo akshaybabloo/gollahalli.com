@@ -7,6 +7,6 @@ tags: ["Nginx"]
 description: "An introduction to Nginx server"
 images: []
 externalUrl: "https://github.com/akshaybabloo/nginx-notes"
-_build:
+build:
     render: never
 ---

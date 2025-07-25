@@ -7,6 +7,6 @@ tags: ["Python"]
 description: "A CLI utility to download latest Hugo binary files, update it, and update cloud providers settings"
 images: []
 externalUrl: "https://github.com/akshaybabloo/uHugo"
-_build:
+build:
     render: never
 ---
