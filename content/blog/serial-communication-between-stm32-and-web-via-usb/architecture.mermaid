@@ -1,0 +1,39 @@
+---
+config:
+  theme: dark
+---
+stateDiagram-v2
+    direction LR
+    Chrome --> CppBackend: C++ Backend
+    CppBackend --> Chrome: Response from Backend
+    CppBackend --> Hardware: Hardware Communication
+    Hardware --> CppBackend: Response from STM32
+    Chrome: Chrome Web Browser
+    state Chrome {
+        [*] --> wb
+        wb --> ExtensionWorker: Communicate with Extension
+        ExtensionWorker --> wb: Any reply
+        state ExtensionWorker {
+            ext --> extw
+            extw --> ext
+            extw: Chrome Extension Worker
+            ext: Chrome Extension
+        }
+        ExtensionWorker --> [*]: Native Message
+        wb: Web Page (Vue)
+    }
+    CppBackend: C++ Backend
+    state CppBackend {
+        [*] --> dc: Native Message
+        dc --> pm
+        pm --> [*]: To serial port
+        dc: Decode Message
+        pm: Process Message
+    }
+    state Hardware {
+        [*] --> sp1
+        sp1 --> STM32
+        STM32 --> [*]
+        sp1: Serial Port
+        STM32: STM32 NUCLEO-WB55RG
+    }
