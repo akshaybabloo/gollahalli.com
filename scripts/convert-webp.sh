@@ -1,6 +1,6 @@
 #!/bin/bash
 
-webp_version="1.5.0"
+webp_version="1.6.0"
 
 if [ -n "$CI" ] || ! command -v cwebp &>/dev/null; then
     echo "Installing cwebp and gif2webp (forced installation in CI environment)."

@@ -1,11 +1,10 @@
 ---
 title: "Setting up WiFi EAP-PEAP on Linux"
-description: "This post is the secret to enabling EAP-PEAP WiFi connection."
+description: "Do you have problem accessing enterprise WiFi on Linux? Then this article is for you."
 date: 2016-06-25T18:29:02+12:00
 draft: false
 tags: ["Linux"]
 categories: ["Tutorial"]
-description: "Do you have problem accessing enterprise WiFi on Linux? Then this article is for you."
 ads: true
 author:
   prefix: "Mr."

@@ -1,4 +1,4 @@
-$webp_version = "1.5.0"
+$webp_version = "1.6.0"
 $user_bin = "$env:USERPROFILE\bin"
 
 function Compare-WebPVersion {
