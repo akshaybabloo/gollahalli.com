@@ -20,8 +20,6 @@ author:
   addressCountry: "New Zealand"
 ---
 
-# About Me
-
 My name is Akshay Raj Gollahalli (Akshay for short). I survive mostly on coffee. I am a designer, developer, software engineer, animal lover and a [Ph.D. student](https://kedri.aut.ac.nz/staff/staff-profiles/akshay-raj-gollahalli).
 
 In the year 1998, I went out with my mother, who is a social worker, to a free plastic surgery camp for poor in Hyderabad, India and then decided to become a doctor (a real one). That same year my father, who is an engineer, took me to a steel rolling mill, and then I decided to become an engineer. On 12th October 1999, my father bought me a computer, Intel Pentium III with 256 MB RAM (WHAT!?). I instantly fell in love with it.

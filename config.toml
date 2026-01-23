@@ -1,13 +1,16 @@
 baseURL = "https://www.gollahalli.com/"
 languageCode = "en-us"
 title = "Akshay Raj Gollahalli"
-theme = "spark2"
+theme = "spark"
 
 googleAnalytics = "G-7WDESHJKMH"   # Optional
 disqusShortname = "gollahalli-com" # Optional
 pygmentsCodeFences = true
 enableRobotsTXT = true
 enableEmoji = true
+
+[pagination]
+pagerSize = 12
 
 [markup]
 [markup.highlight]
@@ -72,6 +75,11 @@ github = "https://github.com/akshaybabloo"      # Optional
 linkedin = "https://linkedin.com/in/gollahalli" # Optional
 twitter = "http://twitter.com/akshaybabloo"     # Optional
 
+# [params.profiles]
+# googleScholar = "https://scholar.google.com/citations?user=VXn8sR8AAAAJ&hl=en"
+# researchGate = "https://www.researchgate.net/profile/Akshay_Gollahalli"
+# orcid = "https://orcid.org/0000-0003-2306-3850"
+
 [params.sponsor]
 enable = true
 link = "https://github.com/sponsors/akshaybabloo"
@@ -81,16 +89,46 @@ body = "Stay home, protect yourself and everyone around you from COVID-19. For m
 type = "danger"
 icon = ""
 
-[params.scss]
-primary = "#c9cacc"
-secondary = "#c9cacc"
-backgroundColor = "#1a202c"
-backgroundColorLight = "#0d2d42"
-textColor = "#c9cacc"
-subTextColor = "gray"
-labelBackgroundColor = "#e2e8f0"
-labelTextColor = "#1a202c"
-headers = "#fc8181"
+[params.sectionThemes]
+    [params.sectionThemes.default] # Ruby Red (Home)
+    accent = "#fb7185"
+    bg = "#4c0519"
+    surface = "#881337"
+    surfaceHover = "#9f1239"
+    textSecondary = "#ffe4e6" # Rose 100
+    textMuted = "#fb7185"     # Rose 400 (Darker/Saturated)
+
+    [params.sectionThemes.projects] # Sapphire Blue
+    accent = "#60a5fa"
+    bg = "#172554"
+    surface = "#1e3a8a"
+    surfaceHover = "#1d4ed8"
+    textSecondary = "#dbeafe" # Blue 100
+    textMuted = "#93c5fd"     # Blue 300 (Brighter)
+
+    [params.sectionThemes.blog] # Amethyst Purple
+    accent = "#c084fc"
+    bg = "#3b0764"
+    surface = "#581c87"
+    surfaceHover = "#6b21a8"
+    textSecondary = "#f3e8ff" # Purple 100
+    textMuted = "#d8b4fe"     # Purple 300 (High Contrast)
+
+    [params.sectionThemes.publications] # Topaz/Bronze
+    accent = "#fbbf24"
+    bg = "#451a03"
+    surface = "#78350f"
+    surfaceHover = "#92400e"
+    textSecondary = "#e7e5e4" # Stone 200
+    textMuted = "#a8a29e"     # Stone 400
+
+    [params.sectionThemes.about] # Emerald Green
+    accent = "#34d399"
+    bg = "#022c22"
+    surface = "#064e3b"
+    surfaceHover = "#065f46"
+    textSecondary = "#ecfdf5" # Emerald 50
+    textMuted = "#34d399"     # Emerald 400
 
 [params.seo]
 noIndexTags = true
