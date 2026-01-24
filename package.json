@@ -3,13 +3,10 @@
   "version": "1.0.0",
   "description": "Gollahalli.com website",
   "private": true,
-  "workspaces": [
-    "themes/spark"
-  ],
   "scripts": {
-    "build:dev": "npm run build:dev --workspace spark3",
-    "static": "npm run static --workspace spark3",
-    "build:prod": "npm run build:prod --workspace spark3",
+    "build:dev": "pnpm --filter spark3 run build:dev ",
+    "static": "pnpm --filter spark3 run static",
+    "build:prod": "pnpm --filter spark3 run build:prod",
     "script:run": "uv run python ./scripts/search_index.py",
     "script:bash": "bash ./scripts/convert-webp.sh"
   },

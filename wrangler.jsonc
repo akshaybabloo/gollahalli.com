@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "gollahalli-com",
+	"name": "gollahalli-com-2",
 	"compatibility_date": "2025-09-27",
 	"assets": {
 		"directory": "./public"
@@ -13,11 +13,23 @@
 		"enabled": false
 	},
     "build": {
-        "command": "uv sync && npm install && npm run static && npm run script:bash && npm run build:prod && hugo --gc --minify && npm run script:run"
+        "command": "uv sync && pnpm install && pnpm run static && pnpm run script:bash && pnpm run build:prod && hugo --gc --minify && pnpm run script:run"
     },
-    "vars": {
-        "HUGO_ENV": "production",
-        "HUGO_VERSION": "0.133.1"
+    "env": {
+		"production": {
+			"vars": {
+				"HUGO_ENV": "production",
+				"HUGO_VERSION": "0.154.5",
+				"NODE_VERSION": "24.13.0",
+			}
+		},
+		"development": {
+			"vars": {
+				"HUGO_ENV": "production",
+				"HUGO_VERSION": "0.154.5",
+				"NODE_VERSION": "24.13.0",
+			}
+		}
     }
 	/**
 	 * Smart Placement

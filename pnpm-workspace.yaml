@@ -1,0 +1,8 @@
+packages:
+  - themes/spark
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - esbuild
+  - sharp
+  - workerd
