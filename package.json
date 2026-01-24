@@ -3,13 +3,10 @@
   "version": "1.0.0",
   "description": "Gollahalli.com website",
   "private": true,
-  "workspaces": [
-    "themes/spark2"
-  ],
   "scripts": {
-    "build:dev": "npm run build:dev --workspace spark2",
-    "static": "npm run static --workspace spark2",
-    "build:prod": "npm run build:prod --workspace spark2",
+    "build:dev": "pnpm --filter spark3 run build:dev ",
+    "static": "pnpm --filter spark3 run static",
+    "build:prod": "pnpm --filter spark3 run build:prod",
     "script:run": "uv run python ./scripts/search_index.py",
     "script:bash": "bash ./scripts/convert-webp.sh"
   },
@@ -22,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/akshaybabloo/gollahalli.com/issues"
   },
-  "homepage": "https://gollahalli.com"
+  "homepage": "https://gollahalli.com",
+  "devDependencies": {
+    "wrangler": "^4.60.0"
+  }
 }

@@ -35,3 +35,5 @@ themes/Spark2/static/js/vendors*
 themes/Spark2/static/js/runtime*
 themes/Spark2/static/css/style.*
 *.webp
+
+.env

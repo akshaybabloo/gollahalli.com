@@ -10,8 +10,6 @@ priority: 0.8
 changeFreq: monthly
 ---
 
-# Publications
-
 ## Journal
 
 2018 - Maryam Gholami Doborjeh, Zohreh Gholami Doborjeh, **`Akshay Raj Gollahalli`**, Kaushalya Kumarasinghe, Vivienne Breen, Neelava Sengupta, Josafath Israel Espinosa Ramos, Reggio Hartono, Elisa Capecci, Hideaki Kawano, et al. From von neumann architecture and atanasoff’s abc to neuromorphic computation and kasabov’s neucube. part ii: Applications. In Practical Issues of Intelligent Innovations, pages 17–36. Springer, 2018.
