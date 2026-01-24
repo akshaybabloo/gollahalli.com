@@ -3,7 +3,7 @@ name = "gollahalli-com"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11.5"
+requires-python = ">=3.12"
 dependencies = [
     "algoliasearch>=4.13.2",
     "requests>=2.32.3",
