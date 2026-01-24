@@ -8,4 +8,5 @@ dependencies = [
     "algoliasearch>=4.13.2",
     "requests>=2.32.3",
     "rich>=13.9.4",
+    "toml>=0.10.2",
 ]
