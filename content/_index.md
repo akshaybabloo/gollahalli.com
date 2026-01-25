@@ -4,7 +4,7 @@ date: 2018-09-20T16:37:20+12:00
 draft: false
 categories: []
 tags: []
-description: "Hello my fellow comp-sci geeks, my name is Akshay. I’m currently defying testosterone laws and multi-tasking, working as a Software Engineer and running to the finish line to complete my PhD in Computational Neuroscience using Spiking Neural Network. In my down time, I enjoy writing blogs for my peers, develop open-source softwares, or daydream."
+description: "Hello! I’m Akshay, a Software Engineer and PhD student specializing in Computational Neuroscience and Spiking Neural Networks. I’m a multitasker at heart - if I’m not coding or researching, you’ll find me writing blogs for my peers, developing open-source software, or lost in a good daydream."
 sitemapImage: []
 images: ["/img/akshay.jpg"]
 siteMapImages:
@@ -17,4 +17,4 @@ sitemap:
   changeFreq: monthly
 ---
 
-Hello my fellow comp-sci geeks, my name is Akshay. I'm currently defying testosterone laws and multi-tasking, working as a Software Engineer and running to the finish line to complete my PhD in Computational Neuroscience using Spiking Neural Network. In my down time, I enjoy writing blogs for my peers, develop open-source softwares, or daydream.
+Hello! I’m Akshay, a Software Engineer and PhD student specializing in Computational Neuroscience and Spiking Neural Networks. I’m a multitasker at heart - if I’m not coding or researching, you’ll find me writing blogs for my peers, developing open-source software, or lost in a good daydream.

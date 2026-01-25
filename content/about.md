@@ -29,13 +29,3 @@ My journey started with computers nearly 19 years ago, and I am very passionate 
 I constantly enjoy developing new software with functionality that would provide better user experience. I believe open sourcing software produces good and better results.
 
 This website showcases my personal work, publications and tutorials. While you are at it, don't forget to see me blog and please feel free to [contact me](mailto:akshay@gollahalli.com).
-
-## Research Interests
-
-- Machine Learning (Spiking and Artificial - Neural Network)
-- Computational Neuroscience
-- Brain Computer Interface
-- Robotics
-- Neuromorphic Systems
-- Self-Driving Cars
-- Computer Vision
