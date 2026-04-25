@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "algoliasearch>=4.38.1",
+    "algoliasearch>=4.39.0",
     "requests>=2.32.3",
     "rich>=15.0.0",
     "toml>=0.10.2",
