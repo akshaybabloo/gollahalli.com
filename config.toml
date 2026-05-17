@@ -75,7 +75,7 @@ clarity = "im383wjll4"
 [params.social]
 github = "https://github.com/akshaybabloo"      # Optional
 linkedin = "https://linkedin.com/in/gollahalli" # Optional
-twitter = "http://twitter.com/akshaybabloo"     # Optional
+twitter = "https://twitter.com/akshaybabloo"     # Optional
 
 # [params.profiles]
 # googleScholar = "https://scholar.google.com/citations?user=VXn8sR8AAAAJ&hl=en"
