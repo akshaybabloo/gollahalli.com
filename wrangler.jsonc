@@ -19,7 +19,7 @@
 		"production": {
 			"vars": {
 				"HUGO_ENV": "production",
-				"HUGO_VERSION": "0.154.5",
+				"HUGO_VERSION": "0.161.1",
 				"NODE_VERSION": "24.13.0",
 			},"name": "gollahalli-com-2"
 		},
