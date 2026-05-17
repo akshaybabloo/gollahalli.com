@@ -7,6 +7,14 @@ allowBuilds:
   sharp: true
   workerd: true
 
+minimumReleaseAgeExclude:
+  - picomatch@2.3.2
+  - picomatch@4.0.4
+  - postcss@8.5.10
+  - immutable@5.1.5
+  - '@xmldom/xmldom@0.8.12'
+  - '@xmldom/xmldom@0.8.13'
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
