@@ -15,18 +15,24 @@
     "build": {
         "command": "uv sync && pnpm install && pnpm run static && pnpm run script:bash && pnpm run build:prod && hugo --gc --minify && pnpm run script:run"
     },
+	"vars": {
+		"HUGO_ENV": "production",
+		"HUGO_VERSION": "0.161.1",
+		"NODE_VERSION": "24.13.0",
+	},
     "env": {
 		"production": {
 			"vars": {
 				"HUGO_ENV": "production",
 				"HUGO_VERSION": "0.161.1",
 				"NODE_VERSION": "24.13.0",
-			},"name": "gollahalli-com-2"
+			},
+			"name": "gollahalli-com-2"
 		},
 		"development": {
 			"vars": {
 				"HUGO_ENV": "production",
-				"HUGO_VERSION": "0.154.5",
+				"HUGO_VERSION": "0.161.1",
 				"NODE_VERSION": "24.13.0",
 			}
 		}
