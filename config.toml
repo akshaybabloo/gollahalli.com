@@ -1,5 +1,5 @@
 baseURL = "https://www.gollahalli.com/"
-languageCode = "en-us"
+local = "en-us"
 title = "Akshay Raj Gollahalli"
 theme = "spark"
 
@@ -67,7 +67,7 @@ algoliaIndexName = "gollahalli-website"
 thumbnailUrl = "/img/akshay.jpg"
 acknowledge = false
 homeAnimation = true                                   # Background animation on the homepage. Optional
-homeAnimationType = "life"                             # Animation: "life" (Game of Life) or "mandelbrot"
+homeAnimationType = "bubble"                             # Animation: "life", "mandelbrot", "julia", "attractors", "rd", "physarum", "boids", "lsystem", "lissajous", "penrose", "bubble"
 homeAnimationShape = "circle"                          # Game of Life cell shape: "circle" or "square" (life only)
 convertAssetsToInline = false                          # Converts external assets into minified inline assets
 cloudflareInsight = "83b998816e3e4417be0a7582d7645cd3"
